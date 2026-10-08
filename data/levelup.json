@@ -1,0 +1,5 @@
+[
+	{"id": "levelup_strong_marrow", "name": "levelup_strong_marrow_name", "desc": "levelup_strong_marrow_desc", "stats": {"hp_pct": 0.10}, "heal_pct": 0.10, "icon": "ui_levelup_strong_marrow"},
+	{"id": "levelup_sharp_femur", "name": "levelup_sharp_femur_name", "desc": "levelup_sharp_femur_desc", "stats": {"atk_pct": 0.10}, "icon": "ui_levelup_sharp_femur"},
+	{"id": "levelup_empty_eye", "name": "levelup_empty_eye_name", "desc": "levelup_empty_eye_desc", "stats": {"crit": 0.05}, "icon": "ui_levelup_empty_eye"}
+]

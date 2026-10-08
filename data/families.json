@@ -1,0 +1,8 @@
+[
+	{"id": "family_beast", "name": "family_beast_name", "aura": "#ffaa3c", "detail": "#96602f", "synergy2": {"stats": {"atk_pct": 0.10}, "desc": "family_beast_syn2"}, "form": "form_werewolf"},
+	{"id": "family_insect", "name": "family_insect_name", "aura": "#96eb3c", "detail": "#468c28", "synergy2": {"stats": {"poison_bonus": 0.20}, "desc": "family_insect_syn2"}, "form": "form_swarm_queen"},
+	{"id": "family_marine", "name": "family_marine_name", "aura": "#3cdcd2", "detail": "#287882", "synergy2": {"stats": {"def": 15}, "desc": "family_marine_syn2"}, "form": "form_leviathan"},
+	{"id": "family_dragon", "name": "family_dragon_name", "aura": "#ff5032", "detail": "#96281e", "synergy2": {"stats": {"fire_bonus": 0.20}, "desc": "family_dragon_syn2"}, "form": "form_bone_wyrm"},
+	{"id": "family_construct", "name": "family_construct_name", "aura": "#5aa0ff", "detail": "#505f78", "synergy2": {"stats": {"shield_start": 0.15}, "desc": "family_construct_syn2"}, "form": "form_colossus"},
+	{"id": "family_shadow", "name": "family_shadow_name", "aura": "#aa5aff", "detail": "#46286e", "synergy2": {"stats": {"lifesteal": 0.05}, "desc": "family_shadow_syn2"}, "form": "form_lich"}
+]

@@ -11,3 +11,215 @@ iap_mock_processing,Procesando compra simulada…
 price_brl,R$ %s
 price_usd,US$ %s
 ad_place_interstitial,ninguna
+bone_skull_basic_name,Cráneo básico
+bone_skull_basic_desc,El cráneo con el que despertó Huesito. Sin adornos.
+bone_skull_basic_part,Hueso
+bone_skull_basic_adj,Huesudo
+bone_ribs_basic_name,Costillas básicas
+bone_ribs_basic_desc,Una caja torácica honesta. Protege el vacío de adentro.
+bone_ribs_basic_part,Hueso
+bone_ribs_basic_adj,Huesudo
+bone_skull_wolf_name,Cráneo de Lobo
+bone_skull_wolf_desc,+15% de probabilidad de crítico.
+bone_skull_wolf_part,Lobo
+bone_skull_wolf_adj,Lupino
+bone_claw_bear_name,Garra de Oso
+bone_claw_bear_desc,+4 de ataque. Los golpes causan sangrado.
+bone_claw_bear_part,Oso
+bone_claw_bear_adj,Feroz
+bone_legs_spider_name,Patas de Araña
+bone_legs_spider_desc,+25% de esquiva.
+bone_legs_spider_part,Araña
+bone_legs_spider_adj,Tejedor
+bone_wings_bat_name,Alas de Murciélago
+bone_wings_bat_desc,Robo de vida del 10%.
+bone_wings_bat_part,Murciélago
+bone_wings_bat_adj,Nocturno
+bone_tail_scorpion_name,Cola de Escorpión
+bone_tail_scorpion_desc,Veneno acumulativo: cada golpe suma una dosis.
+bone_tail_scorpion_part,Escorpión
+bone_tail_scorpion_adj,Venenoso
+bone_tail_rat_name,Cola de Rata
+bone_tail_rat_desc,+20% de polvo de hueso.
+bone_tail_rat_part,Rata
+bone_tail_rat_adj,Real
+creature_name_format,{skull}-{legs} {adj}
+name_empty_part,Hueso
+name_empty_adj,Huesudo
+slot_skull,Cráneo
+slot_ribs,Costillas
+slot_arm_left,Brazo izquierdo
+slot_arm_right,Brazo derecho
+slot_legs,Piernas
+slot_back,Espalda
+slot_tail,Cola
+slot_extra,Extra
+slot_arm_third,Tercer brazo
+family_beast_name,Bestia
+family_insect_name,Insecto
+family_marine_name,Marino
+family_dragon_name,Dragón
+family_construct_name,Constructo
+family_shadow_name,Sombra
+family_beast_syn2,+10% de ataque
+family_insect_syn2,+20% de daño de veneno
+family_marine_syn2,+15 de defensa
+family_dragon_syn2,+20% de daño de fuego
+family_construct_syn2,Escudo del 15% de la vida al inicio del combate
+family_shadow_syn2,+5% de robo de vida
+rarity_basic,Básico
+rarity_common,Común
+rarity_rare,Raro
+rarity_legendary,Legendario
+monster_crypt_wolf_name,Lobo de las Criptas
+monster_corpse_bear_name,Oso Cadavérico
+monster_weaver_spider_name,Araña Tejedora
+monster_vampire_bat_name,Murciélago Vampiro
+monster_dune_scorpion_name,Escorpión de las Dunas
+minion_skeleton_rat_name,Rata Esqueleto
+minion_hungry_mimic_name,Mímico Hambriento
+boss_rat_king_name,Rey Rata
+ally_bone_insect_name,Insecto de Hueso
+floor_forgotten_crypt,La Cripta Olvidada
+levelup_strong_marrow_name,Médula Fuerte
+levelup_strong_marrow_desc,+10% de vida máxima
+levelup_sharp_femur_name,Fémur Afilado
+levelup_sharp_femur_desc,+10% de ataque
+levelup_empty_eye_name,Ojo Vacío
+levelup_empty_eye_desc,+5% de probabilidad de crítico
+form_night_manticore_name,Mantícora Nocturna
+form_night_manticore_desc,Cada crítico aplica veneno.
+form_discovered,¡Forma secreta descubierta: %s!
+form_activated,Forma: %s
+btn_swap,Cambiar
+btn_crush,Triturar
+btn_share,Compartir
+btn_continue,Continuar
+btn_back,Volver
+btn_give_up,Rendirse
+btn_revive_ad,Revivir (anuncio)
+btn_double_dust_ad,Duplicar polvo (anuncio)
+btn_view_card,Ver Tarjeta de Criatura
+btn_play_again,Jugar de nuevo
+btn_menu,Menú
+btn_speed,Velocidad
+opt_fight,Pelear
+opt_leave,Seguir adelante
+card_challenge,¿Puedes armar algo peor?
+card_floor,Piso %d
+card_saved,Imagen guardada: %s
+card_share_text,¡Armé un %s en Bone Tribe! ¿Puedes armar algo peor?
+hud_level,Nv %d
+hud_floor,Piso %d/%d
+event_type_combat,Combate
+event_type_choice,Elección
+event_type_chest,Cofre
+event_type_boss,Jefe
+bone_found_title,¡Hueso encontrado!
+bone_found_occupied,La ranura %s ya está ocupada.
+bone_current,Actual
+bone_new,Nuevo
+bone_crush_value,Triturar da %d de polvo de hueso
+bone_equipped,¡%s encajado!
+bone_crushed,+%d de polvo de hueso
+choose_arm,¿En qué brazo?
+levelup_title,¡Subiste de nivel!
+levelup_subtitle,Elige un bono
+death_title,Huesito se desarmó…
+death_sub,¿Revivir con 50% de vida?
+victory_title,¡La Cripta fue vencida!
+run_end_title,Fin de la partida
+run_end_floor,Piso alcanzado: %d
+run_end_dust,Polvo de hueso: +%s
+run_end_bosses,Jefes vencidos: %d
+combat_flee,¡%s huyó!
+combat_miss,¡Esquivó!
+combat_blocked,¡Bloqueado!
+combat_crit,¡Crítico!
+combat_summon,¡Invocación!
+combat_stun,¡Aturdido!
+combat_tap_focus,Toca un enemigo para enfocarlo
+status_bleed,Sangrado
+status_poison,Veneno
+status_stack_poison,Veneno
+status_stun,Aturdido
+dust_short,polvo
+demo_mode,MODO DEMOSTRACIÓN
+ad_place_revive,Revivir con 50% de vida
+ad_place_double_dust,Duplicar el polvo de hueso
+result_hp_lost,-%d de vida
+result_hp_gain,+%d de vida
+result_max_hp,+%d de vida máxima
+result_nothing,No pasa nada.
+event_rats_cheese_text,Tres ratas esqueleto se pelean por un queso petrificado. Se detienen y te miran.
+event_rats_cheese_opt_sneak,Escabullirte
+event_rats_cheese_res_sneak,Pasas de puntitas. El queso les importa más que tú.
+event_rats_cheese_res_caught,Una rata decide que tú también pareces petrificado. Y sabroso.
+event_witch_bone_text,Una bruja ofrece un hueso brillante a cambio de la mitad de tu vida. ¿Aceptar o rechazar?
+event_witch_bone_opt_accept,Aceptar
+event_witch_bone_opt_refuse,Rechazar
+event_witch_bone_res_refuse,"La bruja se encoge de hombros y guarda el hueso en su sombrero. —Tú te lo pierdes, cariño."
+event_creaky_chest_text,"Un cofre cruje solo. Puede ser un tesoro, puede ser un mímico con hambre."
+event_creaky_chest_opt_open,Abrirlo
+event_creaky_chest_res_treasure,¡Tesoro! El crujido era solo la bisagra quejándose de la vida.
+event_creaky_chest_res_mimic,El cofre abre la boca. Tiene dientes. Muchos dientes.
+event_creaky_chest_res_leave,Dejas el cofre crujiendo solo. Parece ofendido.
+event_wolf_howl_text,"Un aullido cruza las tumbas. El Lobo de las Criptas olfatea tu médula, que ni siquiera tienes."
+event_wolf_howl_opt_hide,Esconderte en un sarcófago
+event_wolf_howl_res_hidden,"El lobo pasa de largo. El dueño del sarcófago refunfuña, pero te deja quedarte."
+event_wolf_howl_res_found,La tapa del sarcófago cruje. El lobo sonríe. Con todos los dientes.
+event_spider_web_text,"Telarañas gruesas cierran el pasillo. Algo de ocho patas baja despacio, sonriendo con los colmillos."
+event_spider_web_opt_body,Caminar por la telaraña (Patas de Araña)
+event_spider_web_res_body,Tus patas nuevas conocen el camino. La telaraña se vuelve un atajo y la araña aplaude con cuatro manos.
+event_bat_ceiling_text,"Un Murciélago Vampiro duerme cabeza abajo, roncando bajito. Huele a sangre vieja."
+event_bat_ceiling_opt_tiptoe,Pasar de puntitas
+event_bat_ceiling_res_tiptoe,Ni un hueso cruje. Un milagro esquelético.
+event_bat_ceiling_res_awake,Tu rodilla truena. El murciélago despierta. Y llama a su primo.
+event_scorpion_sand_text,La arena de una tumba vieja se mueve. Aparece una cola curva que gotea algo verde.
+event_bear_hibernation_text,Un Oso Cadavérico hiberna sobre una pila de huesos. Algunos parecen útiles.
+event_bear_hibernation_opt_let_sleep,Dejar dormir al oso
+event_bear_hibernation_res_sleep,Descansas un poco al ritmo de los ronquidos. Extrañamente reconfortante.
+event_crypt_ambush_text,Huesos crujen en la oscuridad. Algo viene olfateando tu rastro.
+event_bone_dice_text,Un esqueleto apostador agita dados de falange. —¿Doble o nada con tu polvo de hueso?
+event_bone_dice_opt_bet,Apostar
+event_bone_dice_opt_decline,Rechazar
+event_bone_dice_res_win,Los dados caen en seis. El apostador casi pierde la mandíbula de tanto reír.
+event_bone_dice_res_lose,"Los dados caen en uno. —La casa siempre gana, compadre."
+event_bone_dice_res_decline,"—¡Cobarde! —grita, y vuelve a apostar con una rata."
+event_murky_fountain_text,Una fuente de agua turbia burbujea. Dicen que quien bebe se vuelve más fuerte… o más blando.
+event_murky_fountain_opt_drink,Beber
+event_murky_fountain_res_good,El agua baja por tus costillas y endurece tus huesos. Te sientes firme.
+event_murky_fountain_res_bad,El agua sabía a pantano. Tus huesos se ponen blanditos un rato.
+event_murky_fountain_res_leave,Mejor no. Ni siquiera tienes estómago.
+event_knocking_coffin_text,"Un ataúd tiembla. Adentro, algo golpea tres veces, con educación."
+event_knocking_coffin_opt_open,Abrir la tapa
+event_knocking_coffin_res_bone,"No hay nadie, solo un hueso estupendo esperando un dueño nuevo."
+event_knocking_coffin_res_dust,"Adentro, solo polvo de hueso. Mucho polvo de hueso."
+event_knocking_coffin_res_rats,Eran dos ratas esqueleto jugando a ser fantasmas. No les haces gracia.
+event_knocking_coffin_res_leave,"Los golpes paran. Luego vuelven, un poco ofendidos."
+event_boss_rat_king_text,"Al final de la cripta, sobre un trono de queso y huesos, el Rey Rata alza su corona. —Arrodíllate… ah, no tienes rodillas."
+menu_language,Idioma
+lang_pt_BR,Português
+lang_en_US,English
+lang_es_419,Español
+title_hold_demo,Mantén el logo para el modo demostración
+special_eye_beam,¡Rayo ocular!
+special_fire_breath,¡Aliento de fuego!
+special_golem_punch,¡Puñetazo de Gólem!
+special_wave,¡Ola!
+special_extra_action,¡Acción extra!
+combat_guard_broken,¡Escudo roto!
+collection_new,¡Nuevo en la Colección!
+rejection_drop,¡Rechazo! Fuego y agua no se llevan: %s se cayó del cuerpo.
+form_lich_name,Liche
+menu_settings,Opciones
+menu_vibration,Vibración
+menu_quality,Calidad gráfica
+quality_high,Alta
+quality_low,Reducida
+on,Activada
+off,Desactivada
+card_title,Tarjeta de Criatura
+card_forms,Forma: %s
+card_victory,¡Venció la Cripta!
+combat_turn,Turno %d

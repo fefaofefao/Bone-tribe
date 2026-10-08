@@ -1,0 +1,64 @@
+[
+	{"id": "event_rats_cheese", "type": "combat", "weight": 3, "floors": [1, 30], "prototype": true, "text": "event_rats_cheese_text",
+		"options": [
+			{"label": "opt_fight", "actions": [{"do": "combat", "monsters": ["minion_skeleton_rat", "minion_skeleton_rat", "minion_skeleton_rat"]}]},
+			{"label": "event_rats_cheese_opt_sneak", "actions": [{"do": "chance", "p": 0.6, "then": [{"do": "result", "text": "event_rats_cheese_res_sneak"}], "else": [{"do": "result", "text": "event_rats_cheese_res_caught"}, {"do": "combat", "monsters": ["minion_skeleton_rat", "minion_skeleton_rat", "minion_skeleton_rat"]}]}]}
+		]},
+	{"id": "event_witch_bone", "type": "choice", "weight": 3, "floors": [1, 30], "prototype": true, "text": "event_witch_bone_text",
+		"options": [
+			{"label": "event_witch_bone_opt_accept", "actions": [{"do": "lose_current_pct", "value": 0.5}, {"do": "bone", "pool": {"rarities": ["common", "rare"]}}]},
+			{"label": "event_witch_bone_opt_refuse", "actions": [{"do": "result", "text": "event_witch_bone_res_refuse"}]}
+		]},
+	{"id": "event_creaky_chest", "type": "chest", "weight": 3, "floors": [1, 30], "prototype": true, "text": "event_creaky_chest_text",
+		"options": [
+			{"label": "event_creaky_chest_opt_open", "actions": [{"do": "chance", "p": 0.65, "then": [{"do": "result", "text": "event_creaky_chest_res_treasure"}, {"do": "dust", "min": 20, "max": 40}, {"do": "chance", "p": 0.4, "then": [{"do": "bone", "pool": {"rarities": ["common"]}}]}], "else": [{"do": "result", "text": "event_creaky_chest_res_mimic"}, {"do": "combat", "monsters": ["minion_hungry_mimic"]}]}]},
+			{"label": "opt_leave", "actions": [{"do": "result", "text": "event_creaky_chest_res_leave"}]}
+		]},
+	{"id": "event_wolf_howl", "type": "combat", "weight": 2, "floors": [1, 30], "prototype": true, "text": "event_wolf_howl_text",
+		"options": [
+			{"label": "opt_fight", "actions": [{"do": "combat", "monsters": ["monster_crypt_wolf"]}]},
+			{"label": "event_wolf_howl_opt_hide", "actions": [{"do": "chance", "p": 0.5, "then": [{"do": "result", "text": "event_wolf_howl_res_hidden"}], "else": [{"do": "result", "text": "event_wolf_howl_res_found"}, {"do": "lose_current_pct", "value": 0.1}, {"do": "combat", "monsters": ["monster_crypt_wolf"]}]}]}
+		]},
+	{"id": "event_spider_web", "type": "combat", "weight": 2, "floors": [1, 30], "prototype": true, "body": true, "text": "event_spider_web_text",
+		"options": [
+			{"label": "opt_fight", "actions": [{"do": "combat", "monsters": ["monster_weaver_spider"]}]},
+			{"label": "event_spider_web_opt_body", "requires": {"bone": "bone_legs_spider"}, "actions": [{"do": "result", "text": "event_spider_web_res_body"}, {"do": "dust", "min": 15, "max": 25}]}
+		]},
+	{"id": "event_bat_ceiling", "type": "combat", "weight": 2, "floors": [1, 30], "prototype": true, "text": "event_bat_ceiling_text",
+		"options": [
+			{"label": "opt_fight", "actions": [{"do": "combat", "monsters": ["monster_vampire_bat"]}]},
+			{"label": "event_bat_ceiling_opt_tiptoe", "actions": [{"do": "chance", "p": 0.4, "then": [{"do": "result", "text": "event_bat_ceiling_res_tiptoe"}], "else": [{"do": "result", "text": "event_bat_ceiling_res_awake"}, {"do": "combat", "monsters": ["monster_vampire_bat", "monster_vampire_bat"]}]}]}
+		]},
+	{"id": "event_scorpion_sand", "type": "combat", "weight": 2, "floors": [2, 30], "prototype": true, "text": "event_scorpion_sand_text",
+		"options": [
+			{"label": "opt_fight", "actions": [{"do": "combat", "monsters": ["monster_dune_scorpion"]}]}
+		]},
+	{"id": "event_bear_hibernation", "type": "combat", "weight": 2, "floors": [2, 30], "prototype": true, "text": "event_bear_hibernation_text",
+		"options": [
+			{"label": "opt_fight", "actions": [{"do": "combat", "monsters": ["monster_corpse_bear"]}]},
+			{"label": "event_bear_hibernation_opt_let_sleep", "actions": [{"do": "result", "text": "event_bear_hibernation_res_sleep"}, {"do": "heal_pct", "value": 0.1}]}
+		]},
+	{"id": "event_crypt_ambush", "type": "combat", "weight": 1, "floors": [1, 30], "prototype": true, "repeatable": true, "text": "event_crypt_ambush_text",
+		"options": [
+			{"label": "opt_fight", "actions": [{"do": "combat", "pool": "floor", "count": 1}]}
+		]},
+	{"id": "event_bone_dice", "type": "choice", "weight": 2, "floors": [1, 30], "prototype": true, "text": "event_bone_dice_text",
+		"options": [
+			{"label": "event_bone_dice_opt_bet", "requires": {"dust": 10}, "actions": [{"do": "chance", "p": 0.5, "then": [{"do": "result", "text": "event_bone_dice_res_win"}, {"do": "dust_mult", "value": 2.0}], "else": [{"do": "result", "text": "event_bone_dice_res_lose"}, {"do": "dust_mult", "value": 0.5}]}]},
+			{"label": "event_bone_dice_opt_decline", "actions": [{"do": "result", "text": "event_bone_dice_res_decline"}]}
+		]},
+	{"id": "event_murky_fountain", "type": "choice", "weight": 2, "floors": [1, 30], "prototype": true, "text": "event_murky_fountain_text",
+		"options": [
+			{"label": "event_murky_fountain_opt_drink", "actions": [{"do": "chance", "p": 0.6, "then": [{"do": "result", "text": "event_murky_fountain_res_good"}, {"do": "max_hp_pct", "value": 0.1}, {"do": "heal_pct", "value": 0.2}], "else": [{"do": "result", "text": "event_murky_fountain_res_bad"}, {"do": "lose_current_pct", "value": 0.15}]}]},
+			{"label": "opt_leave", "actions": [{"do": "result", "text": "event_murky_fountain_res_leave"}]}
+		]},
+	{"id": "event_knocking_coffin", "type": "chest", "weight": 2, "floors": [1, 30], "prototype": true, "text": "event_knocking_coffin_text",
+		"options": [
+			{"label": "event_knocking_coffin_opt_open", "actions": [{"do": "roll", "table": [
+				{"w": 5, "actions": [{"do": "result", "text": "event_knocking_coffin_res_bone"}, {"do": "bone", "pool": {"rarities": ["common"]}}]},
+				{"w": 3, "actions": [{"do": "result", "text": "event_knocking_coffin_res_dust"}, {"do": "dust", "min": 25, "max": 45}]},
+				{"w": 2, "actions": [{"do": "result", "text": "event_knocking_coffin_res_rats"}, {"do": "combat", "monsters": ["minion_skeleton_rat", "minion_skeleton_rat"]}]}
+			]}]},
+			{"label": "opt_leave", "actions": [{"do": "result", "text": "event_knocking_coffin_res_leave"}]}
+		]}
+]

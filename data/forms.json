@@ -1,0 +1,3 @@
+[
+	{"id": "form_night_manticore", "secret": true, "name": "form_night_manticore_name", "desc": "form_night_manticore_desc", "recipe": {"bones": ["bone_skull_wolf", "bone_wings_bat", "bone_tail_scorpion"]}, "aura": "#b45cff", "tint": "#d9c6ff", "stats": {}, "effects": [{"type": "crit_status", "status": "poison"}], "priority": 10}
+]

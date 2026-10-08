@@ -11,3 +11,215 @@ iap_mock_processing,Processing simulated purchase…
 price_brl,R$ %s
 price_usd,US$ %s
 ad_place_interstitial,none
+bone_skull_basic_name,Basic Skull
+bone_skull_basic_desc,The skull Bonesy woke up with. No frills.
+bone_skull_basic_part,Bone
+bone_skull_basic_adj,Bony
+bone_ribs_basic_name,Basic Ribs
+bone_ribs_basic_desc,An honest rib cage. Protects the emptiness inside.
+bone_ribs_basic_part,Bone
+bone_ribs_basic_adj,Bony
+bone_skull_wolf_name,Wolf Skull
+bone_skull_wolf_desc,+15% critical chance.
+bone_skull_wolf_part,Wolf
+bone_skull_wolf_adj,Lupine
+bone_claw_bear_name,Bear Claw
+bone_claw_bear_desc,+4 attack. Hits cause bleeding.
+bone_claw_bear_part,Bear
+bone_claw_bear_adj,Fierce
+bone_legs_spider_name,Spider Legs
+bone_legs_spider_desc,+25% dodge.
+bone_legs_spider_part,Spider
+bone_legs_spider_adj,Weaving
+bone_wings_bat_name,Bat Wings
+bone_wings_bat_desc,10% life steal.
+bone_wings_bat_part,Bat
+bone_wings_bat_adj,Nocturnal
+bone_tail_scorpion_name,Scorpion Tail
+bone_tail_scorpion_desc,Stacking poison: every hit adds a dose.
+bone_tail_scorpion_part,Scorpion
+bone_tail_scorpion_adj,Venomous
+bone_tail_rat_name,Rat Tail
+bone_tail_rat_desc,+20% bone dust.
+bone_tail_rat_part,Rat
+bone_tail_rat_adj,Royal
+creature_name_format,{adj} {skull}-{legs}
+name_empty_part,Bone
+name_empty_adj,Bony
+slot_skull,Skull
+slot_ribs,Ribs
+slot_arm_left,Left arm
+slot_arm_right,Right arm
+slot_legs,Legs
+slot_back,Back
+slot_tail,Tail
+slot_extra,Extra
+slot_arm_third,Third arm
+family_beast_name,Beast
+family_insect_name,Insect
+family_marine_name,Marine
+family_dragon_name,Dragon
+family_construct_name,Construct
+family_shadow_name,Shadow
+family_beast_syn2,+10% attack
+family_insect_syn2,+20% poison damage
+family_marine_syn2,+15 defense
+family_dragon_syn2,+20% fire damage
+family_construct_syn2,Shield of 15% HP at the start of combat
+family_shadow_syn2,+5% life steal
+rarity_basic,Basic
+rarity_common,Common
+rarity_rare,Rare
+rarity_legendary,Legendary
+monster_crypt_wolf_name,Crypt Wolf
+monster_corpse_bear_name,Corpse Bear
+monster_weaver_spider_name,Weaver Spider
+monster_vampire_bat_name,Vampire Bat
+monster_dune_scorpion_name,Dune Scorpion
+minion_skeleton_rat_name,Skeleton Rat
+minion_hungry_mimic_name,Hungry Mimic
+boss_rat_king_name,Rat King
+ally_bone_insect_name,Bone Insect
+floor_forgotten_crypt,The Forgotten Crypt
+levelup_strong_marrow_name,Strong Marrow
+levelup_strong_marrow_desc,+10% max HP
+levelup_sharp_femur_name,Sharp Femur
+levelup_sharp_femur_desc,+10% attack
+levelup_empty_eye_name,Empty Eye
+levelup_empty_eye_desc,+5% critical chance
+form_night_manticore_name,Night Manticore
+form_night_manticore_desc,Every critical hit applies poison.
+form_discovered,Secret form discovered: %s!
+form_activated,Form: %s
+btn_swap,Swap
+btn_crush,Crush
+btn_share,Share
+btn_continue,Continue
+btn_back,Back
+btn_give_up,Give up
+btn_revive_ad,Revive (ad)
+btn_double_dust_ad,Double dust (ad)
+btn_view_card,View Creature Card
+btn_play_again,Play again
+btn_menu,Menu
+btn_speed,Speed
+opt_fight,Fight
+opt_leave,Move on
+card_challenge,Can you build something worse?
+card_floor,Floor %d
+card_saved,Image saved: %s
+card_share_text,I built a %s in Bone Tribe! Can you build something worse?
+hud_level,Lv %d
+hud_floor,Floor %d/%d
+event_type_combat,Combat
+event_type_choice,Choice
+event_type_chest,Chest
+event_type_boss,Boss
+bone_found_title,Bone found!
+bone_found_occupied,The %s slot is already taken.
+bone_current,Current
+bone_new,New
+bone_crush_value,Crushing gives %d bone dust
+bone_equipped,%s attached!
+bone_crushed,+%d bone dust
+choose_arm,Which arm?
+levelup_title,Level up!
+levelup_subtitle,Choose a bonus
+death_title,Bonesy fell apart…
+death_sub,Revive with 50% HP?
+victory_title,The Crypt is conquered!
+run_end_title,Run over
+run_end_floor,Floor reached: %d
+run_end_dust,Bone dust: +%s
+run_end_bosses,Bosses defeated: %d
+combat_flee,%s fled!
+combat_miss,Dodged!
+combat_blocked,Blocked!
+combat_crit,Critical!
+combat_summon,Summon!
+combat_stun,Stunned!
+combat_tap_focus,Tap an enemy to focus
+status_bleed,Bleeding
+status_poison,Poison
+status_stack_poison,Poison
+status_stun,Stunned
+dust_short,dust
+demo_mode,DEMO MODE
+ad_place_revive,Revive with 50% HP
+ad_place_double_dust,Double bone dust
+result_hp_lost,-%d HP
+result_hp_gain,+%d HP
+result_max_hp,+%d max HP
+result_nothing,Nothing happens.
+event_rats_cheese_text,Three skeleton rats are fighting over a petrified cheese. They stop and stare at you.
+event_rats_cheese_opt_sneak,Sneak away
+event_rats_cheese_res_sneak,You tiptoe past. The cheese matters more than you do.
+event_rats_cheese_res_caught,One rat decides you look petrified too. And tasty.
+event_witch_bone_text,A witch offers a glowing bone in exchange for half your life. Accept or refuse?
+event_witch_bone_opt_accept,Accept
+event_witch_bone_opt_refuse,Refuse
+event_witch_bone_res_refuse,"The witch shrugs and tucks the bone into her hat. 'Your loss, sweetie.'"
+event_creaky_chest_text,A chest creaks all by itself. It could be treasure. It could be a hungry mimic.
+event_creaky_chest_opt_open,Open it
+event_creaky_chest_res_treasure,Treasure! The creak was just the hinge complaining about life.
+event_creaky_chest_res_mimic,The chest opens its mouth. It has teeth. Lots of teeth.
+event_creaky_chest_res_leave,You leave the chest creaking alone. It looks offended.
+event_wolf_howl_text,"A howl rolls through the tombs. The Crypt Wolf sniffs for your marrow, which you don't even have."
+event_wolf_howl_opt_hide,Hide in a sarcophagus
+event_wolf_howl_res_hidden,The wolf walks right by. The sarcophagus owner grumbles but lets you stay.
+event_wolf_howl_res_found,The sarcophagus lid creaks. The wolf grins. With every tooth.
+event_spider_web_text,"Thick webs seal the corridor. Something with eight legs descends slowly, smiling with its fangs."
+event_spider_web_opt_body,Walk the web (Spider Legs)
+event_spider_web_res_body,"Your new legs know the way. The web becomes a shortcut, and the spider claps with four hands."
+event_bat_ceiling_text,"A Vampire Bat sleeps upside down, snoring softly. It smells of old blood."
+event_bat_ceiling_opt_tiptoe,Tiptoe past
+event_bat_ceiling_res_tiptoe,Not a single bone creaks. A skeletal miracle.
+event_bat_ceiling_res_awake,Your knee pops. The bat wakes up. And calls its cousin.
+event_scorpion_sand_text,"The sand of an old tomb shifts. A curved tail rises, dripping something green."
+event_bear_hibernation_text,A Corpse Bear hibernates on a pile of bones. Some of them look useful.
+event_bear_hibernation_opt_let_sleep,Let the bear sleep
+event_bear_hibernation_res_sleep,You rest a little to the sound of snoring. Strangely comforting.
+event_crypt_ambush_text,Bones crack in the dark. Something is sniffing along your trail.
+event_bone_dice_text,A gambling skeleton rattles knucklebone dice. 'Double or nothing on your bone dust?'
+event_bone_dice_opt_bet,Bet
+event_bone_dice_opt_decline,Decline
+event_bone_dice_res_win,The dice land on six. The gambler nearly loses his jaw laughing.
+event_bone_dice_res_lose,"The dice land on one. 'The house always wins, partner.'"
+event_bone_dice_res_decline,"'Coward!' he shouts, and goes back to betting with a rat."
+event_murky_fountain_text,A murky fountain bubbles. They say whoever drinks gets stronger… or softer.
+event_murky_fountain_opt_drink,Drink
+event_murky_fountain_res_good,The water runs down your ribs and hardens your bones. You feel sturdy.
+event_murky_fountain_res_bad,The water tasted like swamp. Your bones go wobbly for a while.
+event_murky_fountain_res_leave,Better not. You don't even have a stomach.
+event_knocking_coffin_text,"A coffin shakes. Inside, something knocks three times, politely."
+event_knocking_coffin_opt_open,Open the lid
+event_knocking_coffin_res_bone,"Nobody home, just a fine bone waiting for a new owner."
+event_knocking_coffin_res_dust,"Inside, only bone dust. Lots of bone dust."
+event_knocking_coffin_res_rats,It was two skeleton rats playing ghost. They don't find you funny.
+event_knocking_coffin_res_leave,"The knocking stops. Then starts again, a little offended."
+event_boss_rat_king_text,"At the end of the crypt, on a throne of cheese and bones, the Rat King raises his crown. 'Kneel… ah, you have no knees.'"
+menu_language,Language
+lang_pt_BR,Português
+lang_en_US,English
+lang_es_419,Español
+title_hold_demo,Hold the logo for demo mode
+special_eye_beam,Eye beam!
+special_fire_breath,Fire breath!
+special_golem_punch,Golem punch!
+special_wave,Wave!
+special_extra_action,Extra action!
+combat_guard_broken,Shield broken!
+collection_new,New in the Collection!
+rejection_drop,Rejection! Fire and water don't get along: %s fell off.
+form_lich_name,Lich
+menu_settings,Settings
+menu_vibration,Vibration
+menu_quality,Graphics quality
+quality_high,High
+quality_low,Reduced
+on,On
+off,Off
+card_title,Creature Card
+card_forms,Form: %s
+card_victory,Beat the Crypt!
+combat_turn,Turn %d

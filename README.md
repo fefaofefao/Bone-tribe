@@ -34,6 +34,45 @@ JDK 17 em *Editor > Editor Settings > Export > Android*, depois:
 godot --headless --path . --install-android-build-template --export-release "Android" build/BoneTribe.aab
 ```
 
+## Modo demonstração
+
+Na tela de título, segure o logo **Bone Tribe** por 3 segundos. O Ossinho joga sozinho,
+preenche todos os encaixes e forma a Manticora Noturna (bom para gravar vídeos).
+
+## Como adicionar um osso novo
+
+1. Acrescente uma entrada em `data/bones.json`, por exemplo:
+
+   ```json
+   {"id": "bone_skull_owl", "slot": "slot_skull", "family": "family_shadow", "rarity": "common",
+    "monster": "monster_crypt_wolf", "name": "bone_skull_owl_name", "desc": "bone_skull_owl_desc",
+    "name_part": "bone_skull_owl_part", "adjective": "bone_skull_owl_adj",
+    "stats": {"crit": 0.10}, "effects": []}
+   ```
+
+   - `slot` (ou `slots` para braços), `family` e `rarity` usam os IDs existentes.
+   - `stats` soma atributos (`hp`, `atk`, `def`, `crit`, `dodge`, `speed`, `lifesteal`,
+     `reflect`, `regen`, `dust_bonus`, `shield_start`...).
+   - `effects` usa os efeitos de combate prontos (`on_hit_status`, `multi_hit`,
+     `periodic`, `first_strike`, `extra_slot`...). Veja exemplos no próprio arquivo.
+2. Os campos `name`, `desc`, `name_part` e `adjective` são chaves de tradução: acrescente
+   as quatro linhas nos três arquivos de `i18n/` (ou use `python3 tools/i18n.py upsert`).
+3. Para o monstro soltar o osso, coloque o ID em `drops` no `data/monsters.json`.
+4. Rode `python3 tools/gen_art.py bones`: ossos sem desenho próprio ganham um placeholder
+   automático `art/bones/<id>.png` no tamanho e no ponto de encaixe do slot
+   (`data/skeleton.json`). A arte final substitui esse PNG sem mexer em código.
+5. Rode os testes: eles conferem traduções, encaixes, monstros e arte de todos os ossos.
+
+## Ferramentas
+
+| Comando | O que faz |
+| --- | --- |
+| `godot --headless --path . res://tests/TestRunner.tscn` | Testes automáticos (rodam no CI) |
+| `godot --headless --path . res://tests/BalanceSim.tscn -- players=60 runs=4` | Simula jogadores novos para calibrar o equilíbrio |
+| `python3 tools/gen_art.py all` | Regera todos os placeholders de arte |
+| `python3 tools/preview_body.py saida.png slot_skull=bone_skull_wolf ...` | Prévia do Ossinho montado |
+| `python3 tools/i18n.py check` | Valida os três arquivos de tradução |
+
 ## Estrutura
 
 | Pasta | Conteúdo |

@@ -8,6 +8,8 @@ import random
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
 
 SS = 4
+# Deslocamento global (em pixels finais) aplicado a todas as coordenadas.
+ORIGIN = [0, 0]
 
 IVORY = (236, 226, 200)
 IVORY_SHADOW = (170, 150, 120)
@@ -29,6 +31,7 @@ class Layer:
     """Uma máscara em alta resolução (modo L)."""
 
     def __init__(self, w, h):
+        w, h = w + 2 * ORIGIN[0], h + 2 * ORIGIN[1]
         self.w, self.h = w, h
         self.img = Image.new("L", (w * SS, h * SS), 0)
         self.d = ImageDraw.Draw(self.img)
@@ -37,9 +40,11 @@ class Layer:
         return v * SS
 
     def pts(self, pts):
-        return [(x * SS, y * SS) for x, y in pts]
+        return [((x + ORIGIN[0]) * SS, (y + ORIGIN[1]) * SS) for x, y in pts]
 
     def ellipse(self, cx, cy, rx, ry, fill=255):
+        cx += ORIGIN[0]
+        cy += ORIGIN[1]
         self.d.ellipse([(cx - rx) * SS, (cy - ry) * SS, (cx + rx) * SS, (cy + ry) * SS], fill=fill)
 
     def circle(self, cx, cy, r, fill=255):
@@ -54,6 +59,10 @@ class Layer:
             self.circle(p[0], p[1], width / 2, fill)
 
     def rrect(self, x0, y0, x1, y1, r, fill=255):
+        x0 += ORIGIN[0]
+        x1 += ORIGIN[0]
+        y0 += ORIGIN[1]
+        y1 += ORIGIN[1]
         self.d.rounded_rectangle([x0 * SS, y0 * SS, x1 * SS, y1 * SS], radius=r * SS, fill=fill)
 
     def capsule(self, a, b, r, fill=255):
@@ -126,16 +135,27 @@ def _shift(mask, dx, dy):
 
 def paint(canvas, mask, base=IVORY, shadow=IVORY_SHADOW, light=IVORY_LIGHT, outline=OUTLINE,
           outline_w=3.0, shade=True, grain=True, light_dir=(-1, -1), alpha=255):
-    """Pinta uma máscara no canvas RGBA (alta resolução) com contorno e sombreado."""
-    m = mask.img
+    """Pinta uma máscara no canvas RGBA (alta resolução) com contorno e sombreado.
+    Trabalha só no recorte da máscara (mais rápido)."""
+    full = mask.img
+    bb = full.getbbox()
+    if not bb:
+        return
+    pad = int((outline_w + 14) * SS)
+    x0, y0 = max(0, bb[0] - pad), max(0, bb[1] - pad)
+    x1, y1 = min(full.width, bb[2] + pad), min(full.height, bb[3] + pad)
+    m = full.crop((x0, y0, x1, y1))
     size = m.size
+    layer = Image.new("RGBA", size, (0, 0, 0, 0))
     ow = max(1, int(outline_w * SS))
     if outline_w > 0:
-        dil = m.filter(ImageFilter.MaxFilter(ow * 2 + 1)) if ow < 12 else m.filter(ImageFilter.GaussianBlur(ow * 0.5)).point(lambda v: 255 if v > 20 else 0)
-        canvas.alpha_composite(Image.composite(_solid(size, outline, alpha), Image.new("RGBA", size, (0, 0, 0, 0)), dil))
+        if ow < 12:
+            dil = m.filter(ImageFilter.MaxFilter(ow * 2 + 1))
+        else:
+            dil = m.filter(ImageFilter.GaussianBlur(ow * 0.5)).point(lambda v: 255 if v > 20 else 0)
+        layer.alpha_composite(Image.composite(_solid(size, outline, alpha), Image.new("RGBA", size, (0, 0, 0, 0)), dil))
     body = _solid(size, base, alpha)
     if shade:
-        # Sombra interna oposta à luz.
         r = int(9 * SS)
         sh = _shift(m, light_dir[0] * r, light_dir[1] * r)
         inner_shadow = ImageChops.subtract(m, sh).filter(ImageFilter.GaussianBlur(5 * SS))
@@ -149,22 +169,36 @@ def paint(canvas, mask, base=IVORY, shadow=IVORY_SHADOW, light=IVORY_LIGHT, outl
         noise = Image.effect_noise(size, 22).point(lambda v: 255 if v > 150 else 0).filter(ImageFilter.GaussianBlur(SS))
         noise = noise.point(lambda v: int(v * 0.18))
         body = Image.composite(_solid(size, shadow, alpha), body, noise)
-    canvas.alpha_composite(Image.composite(body, Image.new("RGBA", size, (0, 0, 0, 0)), m))
+    layer.alpha_composite(Image.composite(body, Image.new("RGBA", size, (0, 0, 0, 0)), m))
+    canvas.alpha_composite(layer, (x0, y0))
+
+
+def _crop_box(img, pad):
+    bb = img.getbbox()
+    if not bb:
+        return None
+    return (max(0, bb[0] - pad), max(0, bb[1] - pad), min(img.width, bb[2] + pad), min(img.height, bb[3] + pad))
 
 
 def fill(canvas, mask, color, alpha=255, blur=0):
-    m = mask.img
+    box = _crop_box(mask.img, int(blur * SS * 3) + 2)
+    if not box:
+        return
+    m = mask.img.crop(box)
     if blur:
         m = m.filter(ImageFilter.GaussianBlur(blur * SS))
     if alpha < 255:
         m = m.point(lambda v: int(v * alpha / 255))
-    canvas.alpha_composite(Image.composite(_solid(m.size, color), Image.new("RGBA", m.size, (0, 0, 0, 0)), m))
+    canvas.alpha_composite(Image.composite(_solid(m.size, color), Image.new("RGBA", m.size, (0, 0, 0, 0)), m), (box[0], box[1]))
 
 
 def glow(canvas, mask, color, radius=8, strength=1.0):
-    m = mask.img.filter(ImageFilter.GaussianBlur(radius * SS))
+    box = _crop_box(mask.img, int(radius * SS * 3) + 2)
+    if not box:
+        return
+    m = mask.img.crop(box).filter(ImageFilter.GaussianBlur(radius * SS))
     m = m.point(lambda v: min(255, int(v * strength)))
-    canvas.alpha_composite(Image.composite(_solid(m.size, color), Image.new("RGBA", m.size, (0, 0, 0, 0)), m))
+    canvas.alpha_composite(Image.composite(_solid(m.size, color), Image.new("RGBA", m.size, (0, 0, 0, 0)), m), (box[0], box[1]))
 
 
 def new_canvas(w, h):

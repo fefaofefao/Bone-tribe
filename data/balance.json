@@ -1,0 +1,161 @@
+{
+	"_doc": "Valores de equilíbrio (GDD > Valores de equilíbrio). n = andar (cada evento da partida é um andar; chefes nos andares 10, 20 e 30).",
+	"hero": {
+		"hp": 100,
+		"atk": 10,
+		"def": 0,
+		"crit": 0.05,
+		"crit_mult": 1.5,
+		"speed": 10
+	},
+	"enemy": {
+		"hp_base": 32.0,
+		"hp_growth": 1.05,
+		"atk_base": 5.238,
+		"atk_growth": 1.05,
+		"_doc": "GDD: 30x1,12^n e 5x1,10^n. Ajustado conforme o próprio GDD (mexer primeiro nos multiplicadores) mantendo o andar 1 em 33,6 de vida e 5,5 de ataque."
+	},
+	"boss": {
+		"hp_mult": 5,
+		"atk_mult": 1.2,
+		"_doc": "GDD: 8x vida e 1,5x ataque. Ajustado pela simulação (tests/BalanceSim.tscn)."
+	},
+	"defense_k": 50,
+	"xp": {
+		"base": 20,
+		"exp": 1.5,
+		"per_kill_base": 14,
+		"per_kill_per_floor": 4.0,
+		"boss_mult": 4
+	},
+	"ossuary": {
+		"cost_base": 50,
+		"cost_growth": 1.25,
+		"max_level": 30,
+		"per_level": {
+			"hp": 0.05,
+			"atk": 0.05,
+			"def": 1,
+			"drop": 0.01
+		}
+	},
+	"drops": {
+		"common": 0.35,
+		"rare": 0.08,
+		"legendary_first": 1.0,
+		"legendary_repeat": 0.1
+	},
+	"dust": {
+		"per_floor": 10,
+		"per_boss": 50,
+		"per_kill": 3,
+		"crush": {
+			"basic": 5,
+			"common": 20,
+			"rare": 50,
+			"legendary": 120
+		}
+	},
+	"combat": {
+		"max_turns": 15,
+		"boss_max_turns": 99,
+		"max_enemies": 3
+	},
+	"run": {
+		"floors": 30,
+		"boss_floors": {
+			"10": "boss_rat_king",
+			"20": "boss_forgotten_golem",
+			"30": "boss_ancient_dragon"
+		},
+		"secret_floor": 31,
+		"secret_boss": "boss_hydra",
+		"secret_requires_form": "form_bone_wyrm",
+		"prototype_floors": 10,
+		"prototype_mode": true
+	},
+	"event_weights": {
+		"combat": 45,
+		"choice": 20,
+		"chest": 10,
+		"merchant": 8,
+		"ally": 5,
+		"altar": 5,
+		"rest": 5,
+		"rare": 2
+	},
+	"prototype_event_weights": {
+		"combat": 60,
+		"choice": 20,
+		"chest": 20
+	},
+	"status": {
+		"bleed_power": 0.25,
+		"bleed_turns": 3,
+		"poison_power": 0.18,
+		"poison_turns": 3,
+		"stack_poison_power": 0.06,
+		"stun_turns": 1
+	},
+	"rejection": {
+		"pairs": [
+			[
+				"family_dragon",
+				"family_marine"
+			]
+		],
+		"damage_bonus": 0.25,
+		"drop_chance": 0.1
+	},
+	"bone_level_bonus": 0.25,
+	"bone_max_level": 5,
+	"revive_pct": 0.5,
+	"rest_heal_pct": 0.3,
+	"demo": {
+		"_doc": "Modo demonstração: sequência fixa que preenche todos os encaixes e forma a Manticora Noturna.",
+		"plan": [
+			{
+				"monster": "monster_crypt_wolf",
+				"text": "event_wolf_howl_text"
+			},
+			{
+				"monster": "monster_corpse_bear",
+				"text": "event_bear_hibernation_text"
+			},
+			{
+				"monster": "monster_weaver_spider",
+				"text": "event_spider_web_text"
+			},
+			{
+				"monster": "monster_corpse_bear",
+				"text": "event_crypt_ambush_text"
+			},
+			{
+				"monster": "monster_vampire_bat",
+				"text": "event_bat_ceiling_text"
+			},
+			{
+				"monster": "monster_dune_scorpion",
+				"text": "event_scorpion_sand_text"
+			},
+			{
+				"event": "event_creaky_chest"
+			},
+			{
+				"event": "event_spider_web"
+			},
+			{
+				"event": "event_murky_fountain"
+			}
+		],
+		"target": {
+			"slot_skull": "bone_skull_wolf",
+			"slot_arm_left": "bone_claw_bear",
+			"slot_arm_right": "bone_claw_bear",
+			"slot_legs": "bone_legs_spider",
+			"slot_back": "bone_wings_bat",
+			"slot_tail": "bone_tail_scorpion"
+		}
+	},
+	"levelup_heal_pct": 0.25
+}

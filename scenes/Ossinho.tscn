@@ -1,0 +1,103 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/scenes/ossinho.gd" id="1"]
+
+[node name="Ossinho" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Skeleton2D" type="Skeleton2D" parent="Body"]
+
+[node name="Root" type="Bone2D" parent="Body/Skeleton2D"]
+rest = Transform2D(1, 0, 0, 1, 0, 0)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="ossinho_spine" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(0, -112)
+rest = Transform2D(1, 0, 0, 1, 0, -112)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/ossinho_spine"]
+
+[node name="ossinho_pelvis" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(0, -112)
+rest = Transform2D(1, 0, 0, 1, 0, -112)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/ossinho_pelvis"]
+
+[node name="slot_skull" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(6, -214)
+rest = Transform2D(1, 0, 0, 1, 6, -214)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_skull"]
+
+[node name="slot_ribs" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(0, -214)
+rest = Transform2D(1, 0, 0, 1, 0, -214)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_ribs"]
+
+[node name="slot_arm_left" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(-12, -206)
+rest = Transform2D(1, 0, 0, 1, -12, -206)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_arm_left"]
+
+[node name="slot_arm_right" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(16, -204)
+rest = Transform2D(1, 0, 0, 1, 16, -204)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_arm_right"]
+
+[node name="slot_legs" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(0, -112)
+rest = Transform2D(1, 0, 0, 1, 0, -112)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_legs"]
+
+[node name="slot_back" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(-6, -192)
+rest = Transform2D(1, 0, 0, 1, -6, -192)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_back"]
+
+[node name="slot_tail" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(-14, -108)
+rest = Transform2D(1, 0, 0, 1, -14, -108)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_tail"]
+
+[node name="slot_extra" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(0, -112)
+rest = Transform2D(1, 0, 0, 1, 0, -112)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_extra"]
+
+[node name="slot_arm_third" type="Bone2D" parent="Body/Skeleton2D/Root"]
+position = Vector2(-6, -222)
+rest = Transform2D(1, 0, 0, 1, -6, -222)
+auto_calculate_length_and_angle = false
+length = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="Body/Skeleton2D/Root/slot_arm_third"]

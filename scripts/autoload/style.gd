@@ -182,6 +182,7 @@ func bold(text: String, size: int = 26, color: Color = C_TEXT, align: int = HORI
 func button(text: String, variation: String = "", min_h: int = 84) -> Button:
 	var b := Button.new()
 	b.text = text
+	b.add_theme_font_size_override("font_size", 28)
 	b.custom_minimum_size = Vector2(0, min_h)
 	if variation != "":
 		b.theme_type_variation = variation

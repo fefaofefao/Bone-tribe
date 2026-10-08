@@ -24,6 +24,10 @@ func _ready() -> void:
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_layer.add_child(_fade)
 	_debug_capture()
+	var start := OS.get_environment("BT_START")
+	if start != "":
+		await get_tree().process_frame
+		go(start, {"demo": OS.get_environment("BT_DEMO") == "1"})
 
 
 ## Ferramenta de desenvolvimento: BT_SHOT=<arquivo.png> [BT_SHOT_DELAY=s]
