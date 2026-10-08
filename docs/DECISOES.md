@@ -193,3 +193,14 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - `store/` tem `.gdignore` e está no filtro de exportação: as imagens da loja não entram no APK.
 - Painel de combate: largura total para os cartões de inimigo, altura que acompanha o conteúdo (250 a 560 px) e registro com as 4 últimas ações, em resposta ao retorno de que o painel antigo tinha muito espaço vazio.
 - A permissão `INTERNET` continua desligada enquanto os serviços forem simulados; liga junto com os SDKs reais.
+
+## Loja e skins (revisão antes do lançamento)
+- **Bug corrigido:** os ossos ficam dentro de nós Bone2D, que não repassam o material; o shader do Ossinho nunca chegava aos ossos. Por isso as skins antigas (só tingimento) pareciam iguais e o piscar de dano e a cor das formas não apareciam. Agora cada sprite de osso recebe o material diretamente.
+- **Skins com identidade própria** (shader `art/shaders/flash.gdshader` + `data/skins.json -> style`): paleta por luminância, contorno brilhante (com pulso), faixa de brilho que atravessa o corpo e faíscas. Dourado = ouro com brilho; Neon = ossos escuros com contorno ciano pulsando; Pirata = ossos curtidos + chapéu tricórnio e tapa-olho; Cristal = translúcido com faíscas; Recém-Desperto = brilho verde; Lua de Âmbar = âmbar + amuleto de lua; Fundador = violeta + coroa. Na qualidade baixa as faíscas são desligadas.
+- **Acessórios** (`data/accessories.json`, arte em `art/skins/`, gerada por `tools/gen_skin_accessories.py`) presos ao crânio, acompanham as animações.
+- **Prévia na loja** maior, com um corpo completo montado, para mostrar que a skin vale para todos os ossos; cada skin tem descrição.
+- **Cartão da Criatura** com vitrine de skins (GDD: "na loja e no Cartão da Criatura"): troca entre as skins que o jogador tem antes de compartilhar e botão "Mais skins" que abre a loja.
+- **Pacote apoiador:** o apoiador escreve o nome que aparece nos créditos do jogo (campo nos Créditos).
+- **Segurança:** na versão de loja do Android, os provedores simulados nunca aprovam compra nem entregam recompensa de anúncio; se o plugin real não carregar, a loja avisa que está indisponível.
+- Texto "compras simuladas neste protótipo" trocado por "Pagamento seguro pela Google Play".
+- APK com bibliotecas nativas comprimidas (o AAB não muda: a Play entrega só a parte de cada aparelho).

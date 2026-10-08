@@ -1,9 +1,19 @@
 [
-	{"id": "skin_golden", "name": "skin_golden_name", "tint": "#ffd36b", "glow": "#ffcc55", "source": "shop", "diamonds": 300, "iap": "iap_skin_golden"},
-	{"id": "skin_neon", "name": "skin_neon_name", "tint": "#8ff7ff", "glow": "#3dffd9", "source": "shop", "diamonds": 400, "iap": "iap_skin_neon"},
-	{"id": "skin_pirate", "name": "skin_pirate_name", "tint": "#c9a27a", "glow": "#ff6a3d", "source": "shop", "diamonds": 500, "iap": "iap_skin_pirate"},
-	{"id": "skin_crystal", "name": "skin_crystal_name", "tint": "#c8e6ff", "glow": "#9fd0ff", "source": "shop", "diamonds": 600, "iap": "iap_skin_crystal", "alpha": 0.82},
-	{"id": "skin_newly_awakened", "name": "skin_newly_awakened_name", "tint": "#f2fff0", "glow": "#9cff9c", "source": "login_day_7"},
-	{"id": "skin_amber_moon", "name": "skin_amber_moon_name", "tint": "#ffb45e", "glow": "#ff9f2e", "source": "kit24"},
-	{"id": "skin_founder", "name": "skin_founder_name", "tint": "#e3b8ff", "glow": "#c070ff", "source": "supporter"}
+	{"id": "skin_golden", "name": "skin_golden_name", "desc": "skin_golden_desc", "tint": "#ffffff", "glow": "#ffcc55", "source": "shop", "diamonds": 300, "iap": "iap_skin_golden",
+		"style": {"remap": 0.95, "pal_dark": "#7a4708", "pal_light": "#ffd45c", "rim": 0.55, "rim_color": "#ffe27a", "rim_width": 2.0, "sheen": 0.75, "sheen_color": "#fff6d0", "sparkle": 0.6}},
+	{"id": "skin_neon", "name": "skin_neon_name", "desc": "skin_neon_desc", "tint": "#ffffff", "glow": "#3dffd9", "source": "shop", "diamonds": 400, "iap": "iap_skin_neon",
+		"style": {"remap": 1.0, "pal_dark": "#05080f", "pal_light": "#1d3348", "rim": 1.6, "rim_color": "#3dffd9", "rim_width": 3.5, "pulse": 1.0, "sheen": 0.25, "sheen_color": "#ff4fd8"}},
+	{"id": "skin_pirate", "name": "skin_pirate_name", "desc": "skin_pirate_desc", "tint": "#ffffff", "glow": "#ff6a3d", "source": "shop", "diamonds": 500, "iap": "iap_skin_pirate",
+		"style": {"remap": 0.6, "pal_dark": "#4a3018", "pal_light": "#f2e0b4"},
+		"accessories": ["acc_pirate_hat", "acc_eyepatch"]},
+	{"id": "skin_crystal", "name": "skin_crystal_name", "desc": "skin_crystal_desc", "tint": "#ffffff", "glow": "#9fd0ff", "source": "shop", "diamonds": 600, "iap": "iap_skin_crystal",
+		"style": {"remap": 0.9, "pal_dark": "#3f78b8", "pal_light": "#f2fbff", "alpha": 0.72, "rim": 1.1, "rim_color": "#ffffff", "rim_width": 2.5, "sheen": 0.55, "sheen_color": "#d8f0ff", "sparkle": 1.0}},
+	{"id": "skin_newly_awakened", "name": "skin_newly_awakened_name", "desc": "skin_newly_awakened_desc", "tint": "#ffffff", "glow": "#9cff9c", "source": "login_day_7",
+		"style": {"remap": 0.6, "pal_dark": "#2c5a34", "pal_light": "#f2fff0", "rim": 0.7, "rim_color": "#9cff9c", "rim_width": 2.5, "pulse": 1.0}},
+	{"id": "skin_amber_moon", "name": "skin_amber_moon_name", "desc": "skin_amber_moon_desc", "tint": "#ffffff", "glow": "#ff9f2e", "source": "kit24",
+		"style": {"remap": 0.85, "pal_dark": "#5a2606", "pal_light": "#ffd99c", "rim": 0.8, "rim_color": "#ffb04a", "rim_width": 2.5, "sheen": 0.35, "sheen_color": "#ffe1a8"},
+		"accessories": ["acc_moon_charm"]},
+	{"id": "skin_founder", "name": "skin_founder_name", "desc": "skin_founder_desc", "tint": "#ffffff", "glow": "#c070ff", "source": "supporter",
+		"style": {"remap": 0.85, "pal_dark": "#341552", "pal_light": "#f3e2ff", "rim": 0.9, "rim_color": "#d18cff", "rim_width": 2.5, "sheen": 0.4, "sheen_color": "#ffe9a8", "sparkle": 0.5},
+		"accessories": ["acc_founder_crown"]}
 ]

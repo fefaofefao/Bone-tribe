@@ -57,7 +57,7 @@ static func result_text(r: Dictionary) -> String:
 
 static func result_color(r: Dictionary) -> Color:
 	if String(r.get("type", "")) == "skin":
-		return Color(String(GameData.skins.get(r.id, {}).get("tint", "#ffffff")))
+		return Color(String(GameData.skins.get(r.id, {}).get("glow", "#ffffff")))
 	return Color.WHITE
 
 

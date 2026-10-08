@@ -2,7 +2,16 @@ extends Node
 ## Compra simulada: mostra "processando" e aprova. Nenhum pagamento real.
 
 
+## Na versão de loja do Android a compra simulada nunca aprova: se o plugin
+## real não carregou, a loja fica indisponível em vez de entregar de graça.
+static func allowed() -> bool:
+	return OS.get_name() != "Android" or OS.is_debug_build()
+
+
 func purchase(_product_id: String) -> bool:
+	if not allowed():
+		Widgets.toast(tr("iap_unavailable"))
+		return false
 	var layer := CanvasLayer.new()
 	layer.layer = 100
 	get_tree().root.add_child(layer)

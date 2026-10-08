@@ -16,6 +16,8 @@ var aura_color := Color(1, 0.75, 0.4)
 var aura_strength := 0.0
 var form_id := ""
 var skin_tint := Color.WHITE
+var skin_id := ""
+var _accessories: Array = []
 var idle_enabled := true
 var lowered := 0.0          # quanto o corpo desce sem pernas
 var _target_lowered := 0.0
@@ -54,7 +56,7 @@ func _ready() -> void:
 		spr.centered = false
 		spr.offset = -Vector2(s.pivot[0], s.pivot[1])
 		spr.z_index = int(s.z)
-		spr.use_parent_material = true
+		spr.material = _material
 		spr.visible = false
 	set_equipped(GameData.skeleton.get("starting_bones", {}).duplicate())
 
@@ -72,7 +74,7 @@ func _config_sprite(spr: Sprite2D, def: Dictionary, path: String, scale_k: float
 	spr.offset = -Vector2(def.pivot[0], def.pivot[1])
 	spr.scale = Vector2.ONE * scale_k
 	spr.z_index = int(def.get("z", 0))
-	spr.use_parent_material = true
+	spr.material = _material
 
 
 func _build_fx() -> void:
@@ -234,6 +236,49 @@ func refresh_aura() -> void:
 
 func set_skin_tint(c: Color) -> void:
 	skin_tint = c
+	refresh_aura()
+
+
+## Aplica uma skin de data/skins.json: paleta, contorno, brilho e faíscas no
+## shader de todos os ossos, mais os acessórios (chapéu, tapa-olho, coroa).
+## id vazio = Ossinho normal.
+func set_skin(id: String) -> void:
+	skin_id = id
+	var s: Dictionary = GameData.skins.get(id, {})
+	var st: Dictionary = s.get("style", {})
+	var tint := Color(String(s.get("tint", "#ffffff")))
+	tint.a = 1.0
+	skin_tint = tint
+	_material.set_shader_parameter("remap", float(st.get("remap", 0.0)))
+	_material.set_shader_parameter("pal_dark", Color(String(st.get("pal_dark", "#000000"))))
+	_material.set_shader_parameter("pal_light", Color(String(st.get("pal_light", "#ffffff"))))
+	_material.set_shader_parameter("rim", float(st.get("rim", 0.0)))
+	_material.set_shader_parameter("rim_color", Color(String(st.get("rim_color", "#ffffff"))))
+	_material.set_shader_parameter("rim_width", float(st.get("rim_width", 3.0)))
+	_material.set_shader_parameter("pulse", float(st.get("pulse", 0.0)))
+	_material.set_shader_parameter("sheen", float(st.get("sheen", 0.0)))
+	_material.set_shader_parameter("sheen_color", Color(String(st.get("sheen_color", "#ffffff"))))
+	var low: bool = Profile.setting("quality") == "low"
+	_material.set_shader_parameter("sparkle", 0.0 if low else float(st.get("sparkle", 0.0)))
+	_material.set_shader_parameter("skin_alpha", float(st.get("alpha", 1.0)))
+	for a in _accessories:
+		if is_instance_valid(a):
+			a.queue_free()
+	_accessories.clear()
+	for acc_id in s.get("accessories", []):
+		var def: Dictionary = GameData.accessories.get(acc_id, {})
+		var bone: Node2D = slot_nodes.get(String(def.get("slot", "slot_skull")))
+		if def.is_empty() or bone == null:
+			continue
+		var spr := Sprite2D.new()
+		spr.texture = load("res://art/skins/%s.png" % acc_id)
+		spr.position = Vector2(def.pos[0], def.pos[1])
+		spr.scale = Vector2.ONE * float(def.get("scale", 0.5))
+		spr.rotation_degrees = float(def.get("rot", 0.0))
+		spr.z_index = int(def.get("z", 9))
+		spr.light_mask = 2
+		bone.add_child(spr)
+		_accessories.append(spr)
 	refresh_aura()
 
 

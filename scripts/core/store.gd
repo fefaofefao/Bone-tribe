@@ -103,6 +103,11 @@ static func equip_skin(id: String) -> void:
 	Profile.save()
 
 
+static func equipped_skin() -> String:
+	var id := String(Profile.data.skins.get("equipped", ""))
+	return id if GameData.skins.has(id) else ""
+
+
 static func skin_tint() -> Color:
 	var id := String(Profile.data.skins.get("equipped", ""))
 	var s: Dictionary = GameData.skins.get(id, {})

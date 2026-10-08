@@ -186,16 +186,19 @@ func _skins() -> void:
 		var owns := Store.owns_skin(id)
 		if not owns and String(s.get("source", "")) != "shop":
 			continue
-		var tint := Color(String(s.tint))
-		var c := card(Color(tint.darkened(0.8), 0.96), Style.C_CANDLE if equipped == id else Color(tint, 0.5))
+		var tint := Color(String(s.get("glow", "#ffffff")))
+		var c := card(Color(tint.darkened(0.82), 0.96), Style.C_CANDLE if equipped == id else Color(tint, 0.55))
 		c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var v := Style.vbox(6)
 		c.add_child(v)
 		var prev := SkinPreview.new()
-		prev.custom_minimum_size = Vector2(0, 150)
+		prev.custom_minimum_size = Vector2(0, 250)
 		prev.skin_id = id
 		v.add_child(prev)
-		v.add_child(Style.bold(tr(String(s.name)), 20, tint, HORIZONTAL_ALIGNMENT_CENTER))
+		v.add_child(Style.bold(tr(String(s.name)), 21, tint.lightened(0.25), HORIZONTAL_ALIGNMENT_CENTER))
+		var dl := Style.label(tr(String(s.get("desc", ""))), 15, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		dl.custom_minimum_size = Vector2(0, 40)
+		v.add_child(dl)
 		if owns:
 			var eb := Style.button(tr("skin_equipped") if equipped == id else tr("skin_equip"), "DarkButton", 56)
 			eb.disabled = equipped == id

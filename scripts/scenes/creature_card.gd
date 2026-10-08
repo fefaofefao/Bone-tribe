@@ -40,6 +40,7 @@ func _ready() -> void:
 	view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	view.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(view)
+	_build_skin_row(root)
 	var share := Style.button(tr("btn_share"), "CandleButton", 86)
 	share.pressed.connect(_share)
 	root.add_child(share)
@@ -56,6 +57,56 @@ func _ready() -> void:
 	_toast = Style.label("", 22, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_toast.modulate.a = 0.0
 	root.add_child(_toast)
+
+
+## Vitrine de skins no cartão: troca entre as skins que o jogador tem (o cartão
+## muda na hora, antes de compartilhar) e leva à loja para ver as outras.
+func _build_skin_row(root: Control) -> void:
+	var options: Array = [""]
+	for id in GameData.skins:
+		if Store.owns_skin(id):
+			options.append(id)
+	var missing := false
+	for id in GameData.skins:
+		if not Store.owns_skin(id) and String(GameData.skins[id].get("source", "")) == "shop":
+			missing = true
+	var row := Style.hbox(10)
+	root.add_child(row)
+	if options.size() > 1:
+		var name_l := Style.bold("", 22, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER)
+		name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		name_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		var idx := [maxi(0, options.find(Store.equipped_skin()))]
+		var show := func():
+			var sid: String = options[idx[0]]
+			name_l.text = tr("skin_none") if sid == "" else tr(String(GameData.skins[sid].name))
+			var glow := Color(String(GameData.skins.get(sid, {}).get("glow", "#eadfc6")))
+			name_l.add_theme_color_override("font_color", glow.lightened(0.2))
+		var step := func(d: int):
+			idx[0] = posmod(idx[0] + d, options.size())
+			var sid: String = options[idx[0]]
+			Store.equip_skin(sid)
+			creature.set_skin(sid)
+			Haptics.light()
+			show.call()
+		var left := Style.button("‹", "DarkButton", 64)
+		left.custom_minimum_size.x = 76
+		left.pressed.connect(func(): step.call(-1))
+		var right := Style.button("›", "DarkButton", 64)
+		right.custom_minimum_size.x = 76
+		right.pressed.connect(func(): step.call(1))
+		row.add_child(left)
+		row.add_child(name_l)
+		row.add_child(right)
+		show.call()
+	if missing:
+		var more := Style.button(tr("card_more_skins"), "DarkButton", 64)
+		more.add_theme_font_size_override("font_size", 20)
+		more.size_flags_horizontal = Control.SIZE_EXPAND_FILL if options.size() <= 1 else Control.SIZE_FILL
+		more.pressed.connect(func(): Router.go("title", {"tab": "shop"}))
+		row.add_child(more)
+	if row.get_child_count() == 0:
+		row.queue_free()
 
 
 func _build_card(p: Dictionary) -> void:
@@ -104,7 +155,7 @@ func _build_card(p: Dictionary) -> void:
 	world.add_child(creature)
 	creature.set_equipped(equipped)
 	if not bool(p.get("demo", false)):
-		creature.set_skin_tint(Store.skin_tint())
+		creature.set_skin(Store.equipped_skin())
 
 	var logo := Sprite2D.new()
 	logo.texture = load("res://art/ui/ui_logo.png")

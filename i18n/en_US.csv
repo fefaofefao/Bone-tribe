@@ -776,7 +776,7 @@ item_companion_lumi_desc,Unlocks Lumi before you find her in the game.
 odds_curiosity_rare,"Odds: 1 of %d rare items, %s%% each."
 odds_relic_rare_item,"Odds: 1 of %d rare relics, %s%% each."
 diamonds_title,Diamonds
-diamonds_sub,Simulated purchases in this prototype: nothing is charged.
+diamonds_sub,Secure payment through Google Play. Diamonds also drop from bosses and calendars.
 iap_diamonds_handful_name,Handful
 iap_diamonds_sack_name,Sack
 iap_diamonds_chest_name,Chest
@@ -834,3 +834,12 @@ iap_pending,Payment pending: the item arrives as soon as Google confirms it.
 iap_restored,Purchase delivered: %s
 menu_ad_privacy,Ad privacy
 share_saved,Card saved to your gallery!
+skin_golden_desc,Polished gold bones with a shine that sweeps across the body.
+skin_neon_desc,Dark bones with a pulsing neon outline.
+skin_pirate_desc,"Sea-worn bones, a tricorn hat and an eyepatch."
+skin_crystal_desc,Translucent crystal bones that sparkle.
+skin_newly_awakened_desc,Day 7 reward: the green glow of someone who just woke up.
+skin_amber_moon_desc,"Exclusive to the First 24 Hours Kit, with a moon charm."
+skin_founder_desc,"Exclusive to the Supporter Pack, with a founder's crown."
+card_more_skins,More skins
+credits_your_name,Your name in the credits

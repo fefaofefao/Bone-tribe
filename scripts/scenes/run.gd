@@ -71,7 +71,7 @@ func _build_world() -> void:
 	world.add_child(hero_view)
 	hero_view.set_equipped(state.equipped)
 	if not demo:
-		hero_view.set_skin_tint(Store.skin_tint())
+		hero_view.set_skin(Store.equipped_skin())
 	_build_companion_view()
 	fx = FxLayer.new()
 	world.add_child(fx)

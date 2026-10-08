@@ -444,3 +444,40 @@ func test_11_store_and_login() -> void:
 	Backend.provider.offset = offset0
 	Profile.data = backup
 	Profile.save()
+
+
+func test_12_shop_catalog() -> void:
+	var iap_ids := []
+	for p in GameData.shop.get("iap", []):
+		iap_ids.append(String(p.id))
+		check(tr_all(String(p.name)), "nome traduzido do produto %s" % p.id)
+		check(float(p.get("price_usd", 0)) > 0 and float(p.get("price_brl", 0)) > 0, "preço de %s" % p.id)
+		check(["kit24", "remove_ads", "subscription", "supporter", "diamonds", "skin"].has(String(p.get("kind", ""))), "tipo conhecido de %s" % p.id)
+	for id in GameData.skins:
+		var s: Dictionary = GameData.skins[id]
+		check(tr_all(String(s.name)) and tr_all(String(s.get("desc", ""))), "nome e descrição da skin %s" % id)
+		check(not Dictionary(s.get("style", {})).is_empty(), "estilo visual da skin %s" % id)
+		for acc in s.get("accessories", []):
+			check(GameData.accessories.has(acc), "acessório %s definido" % acc)
+			check(ResourceLoader.exists("res://art/skins/%s.png" % acc), "arte do acessório %s" % acc)
+		if String(s.get("source", "")) == "shop":
+			check(int(s.get("diamonds", 0)) > 0, "preço em diamantes da skin %s" % id)
+			check(iap_ids.has(String(s.get("iap", ""))), "produto da Play para a skin %s" % id)
+	# skins exclusivas vêm de um produto ou recompensa
+	var granted := []
+	for p in GameData.shop.get("iap", []):
+		for r in p.get("content", []):
+			if String(r.get("type", "")) == "skin":
+				granted.append(String(r.id))
+	check(granted.has("skin_amber_moon") and granted.has("skin_founder"), "skins exclusivas do Kit e do Apoiador")
+	# a Ossinho aplica a skin sem erro
+	var o: Node2D = load("res://scenes/Ossinho.tscn").instantiate()
+	add_child(o)
+	for id in GameData.skins:
+		o.set_skin(id)
+		check(o.skin_id == id, "Ossinho veste a skin %s" % id)
+	o.set_skin("")
+	check(o._accessories.is_empty(), "tirar a skin remove os acessórios")
+	o.queue_free()
+	# na versão de loja do Android a loja simulada nunca entrega de graça
+	check(load("res://scripts/services/mock_billing_provider.gd").allowed() == (OS.get_name() != "Android" or OS.is_debug_build()), "compra simulada bloqueada no Android de loja")

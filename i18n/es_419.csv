@@ -776,7 +776,7 @@ item_companion_lumi_desc,Libera a Lumi antes de encontrarla en el juego.
 odds_curiosity_rare,"Probabilidades: 1 de %d objetos raros, %s%% cada uno."
 odds_relic_rare_item,"Probabilidades: 1 de %d reliquias raras, %s%% cada una."
 diamonds_title,Diamantes
-diamonds_sub,Compras simuladas en este prototipo: no se cobra nada.
+diamonds_sub,Pago seguro con Google Play. Los diamantes también caen de jefes y calendarios.
 iap_diamonds_handful_name,Puñado
 iap_diamonds_sack_name,Saco
 iap_diamonds_chest_name,Cofre
@@ -834,3 +834,12 @@ iap_pending,Pago pendiente: el objeto llega en cuanto Google lo confirme.
 iap_restored,Compra entregada: %s
 menu_ad_privacy,Privacidad de anuncios
 share_saved,¡Tarjeta guardada en la galería!
+skin_golden_desc,Huesos de oro pulido con un brillo que recorre el cuerpo.
+skin_neon_desc,Huesos oscuros con un contorno neón que late.
+skin_pirate_desc,"Huesos curtidos por el mar, sombrero tricornio y parche."
+skin_crystal_desc,Huesos de cristal translúcido que destellan.
+skin_newly_awakened_desc,Premio del día 7: el brillo verde de quien acaba de despertar.
+skin_amber_moon_desc,"Exclusiva del Kit de las primeras 24 horas, con amuleto de luna."
+skin_founder_desc,"Exclusiva del Paquete de apoyo, con corona de fundador."
+card_more_skins,Más skins
+credits_your_name,Tu nombre en los créditos

@@ -44,6 +44,7 @@ func defaults() -> Dictionary:
 		"ads": {"interstitials_seen": 0, "last_interstitial": 0, "removed": false},
 		"subscription": {"until": 0, "last_daily_day": -1, "last_chest_week": -1, "free_revive_day": -1},
 		"supporter": false,
+		"supporter_name": "",
 		"bigorna_used_run": false,
 	}
 

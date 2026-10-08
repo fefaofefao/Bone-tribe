@@ -69,6 +69,9 @@ func _ready() -> void:
 	Backend.log_event("hub_open", {"runs": Profile.data.runs_played})
 	if Dev.env("BT_TAB") != "":
 		_open_tab.call_deferred(Dev.env("BT_TAB"))
+	elif String(Router.params.get("tab", "")) != "":
+		_open_tab.call_deferred(String(Router.params.tab))
+		return
 	_after_open()
 
 
@@ -144,7 +147,7 @@ func _refresh_hero() -> void:
 	if sb != "" and Meta.can_start_with(sb):
 		eq[GameData.bone_slots(sb)[0]] = sb
 	_hero.set_equipped(eq)
-	_hero.set_skin_tint(Store.skin_tint())
+	_hero.set_skin(Store.equipped_skin())
 	if _companion:
 		_companion.queue_free()
 		_companion = null
@@ -462,7 +465,24 @@ func _credits() -> void:
 	var sup: Array = GameData.app.get("supporters", [])
 	if bool(Profile.data.get("supporter", false)) or not sup.is_empty():
 		v.add_child(Style.bold(tr("credits_supporters"), 24, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER))
-		v.add_child(Style.label(", ".join(sup) if not sup.is_empty() else tr("credits_thanks"), 20, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+		var names: Array = sup.duplicate()
+		var mine := String(Profile.data.get("supporter_name", "")).strip_edges()
+		if mine != "":
+			names.push_front(mine)
+		v.add_child(Style.label(", ".join(names) if not names.is_empty() else tr("credits_thanks"), 20, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+		if bool(Profile.data.get("supporter", false)):
+			# o apoiador escolhe o nome que aparece nos créditos
+			var edit := LineEdit.new()
+			edit.placeholder_text = tr("credits_your_name")
+			edit.text = mine
+			edit.max_length = 24
+			edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+			edit.custom_minimum_size = Vector2(0, 64)
+			edit.add_theme_font_size_override("font_size", 24)
+			edit.text_changed.connect(func(t: String):
+				Profile.data.supporter_name = t.strip_edges()
+				Profile.save())
+			v.add_child(edit)
 	v.add_child(Style.label(tr("credits_version") % String(ProjectSettings.get_setting("application/config/version", "")), 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 	var close := Style.button(tr("btn_back"), "", 70)
 	close.pressed.connect(bg.queue_free)

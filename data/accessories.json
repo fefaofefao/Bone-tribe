@@ -1,0 +1,6 @@
+[
+	{"id": "acc_pirate_hat", "slot": "slot_skull", "pos": [2, -86], "rot": -8, "scale": 0.5, "z": 10},
+	{"id": "acc_eyepatch", "slot": "slot_skull", "pos": [17, -42], "rot": 0, "scale": 0.5, "z": 9},
+	{"id": "acc_founder_crown", "slot": "slot_skull", "pos": [2, -92], "rot": 6, "scale": 0.5, "z": 10},
+	{"id": "acc_moon_charm", "slot": "slot_skull", "pos": [-4, 22], "rot": 0, "scale": 0.45, "z": 9}
+]

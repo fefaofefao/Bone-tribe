@@ -6,12 +6,23 @@ const REWARDED_SECONDS := 2.0
 const INTERSTITIAL_SECONDS := 1.5
 
 
+## Na versão de loja do Android o anúncio simulado não é usado: sem o plugin
+## real, o jogo avisa que não há anúncio e não entrega a recompensa.
+static func allowed() -> bool:
+	return OS.get_name() != "Android" or OS.is_debug_build()
+
+
 func show_rewarded(placement: String) -> bool:
+	if not allowed():
+		Widgets.toast(tr("ad_unavailable"))
+		return false
 	await _overlay("ad_mock_rewarded", REWARDED_SECONDS, placement)
 	return true
 
 
 func show_interstitial() -> bool:
+	if not allowed():
+		return false
 	await _overlay("ad_mock_interstitial", INTERSTITIAL_SECONDS, "interstitial")
 	return true
 
