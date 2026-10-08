@@ -19,8 +19,16 @@
 - Placeholders gerados: 8 ossos, 8 monstros/chefe, cenário, ícones, logo e texturas de efeitos.
 - Simulador de equilíbrio `tests/BalanceSim.tscn` e jogador automático `AutoRunner`.
 
+### Passo 3 — Catálogo completo
+- 20 ossos (12 comuns, 5 raros, 3 lendários) cobrindo os 7 encaixes + Extra e as 6 famílias, com placeholders desenhados para cada um.
+- 6 formas de família (Lobisomem de Osso, Rainha Enxame, Leviatã, Wyrm Ósseo, Colosso, Lich) e 3 secretas (Manticora Noturna, Quimera, Cavaleiro Abissal).
+- 14 monstros comuns/raros, 2 lacaios (Rato-Esqueleto, Mímico Faminto), 3 chefes (Rei Rato, Golem Esquecido com escudo de 3 golpes, Dragão Ancião com sopro que dobra sem defesa contra fogo) e a Hidra secreta (andar 31, só para quem vence o Dragão como Wyrm Ósseo).
+- Partida completa de 30 andares; drops de chefe (1ª vitória garantida, depois 10%); diamantes por chefe.
+- Testes: contagem do catálogo, toda forma alcançável, rejeição, escudo do Golem, sopro do Dragão, drops.
+- Modo de depuração `BT_AUTO=1` (escolhas automáticas sem os reforços do modo demonstração).
+
 ## Em andamento
-- Passo 3 — catálogo completo.
+- Passo 4 — 60 eventos.
 
 ## Problemas
 - O ambiente de desenvolvimento não acessa `dl.google.com`, então o AAB só é gerado e validado no GitHub Actions.

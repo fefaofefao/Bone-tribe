@@ -35,7 +35,7 @@ func _init(opts: Dictionary = {}) -> void:
 	else:
 		rng.randomize()
 	demo = bool(opts.get("demo", false))
-	prototype = bool(opts.get("prototype", GameData.bal("run/prototype_mode", false)))
+	prototype = bool(opts.get("prototype", GameData.bal("run/prototype_mode", false))) or demo
 	total_floors = int(GameData.bal("run/prototype_floors", 10)) if prototype else int(GameData.bal("run/floors", 30))
 	companion_id = String(opts.get("companion", ""))
 	var start: Dictionary = GameData.skeleton.get("starting_bones", {})

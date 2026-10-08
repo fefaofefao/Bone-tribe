@@ -175,3 +175,121 @@ func _collect(dir: String, out: Array) -> void:
 			out.append(dir + "/" + f)
 	for sub in d.get_directories():
 		_collect(dir + "/" + sub, out)
+
+
+func _eq(pairs: Array) -> Dictionary:
+	var out := {}
+	for p in pairs:
+		out[p[0]] = {"id": p[1], "level": int(p[2]) if p.size() > 2 else 1}
+	return out
+
+
+func test_06_catalog_counts() -> void:
+	var cat := GameData.catalog_bones()
+	check(cat.size() == 20, "20 ossos no catálogo (%d)" % cat.size())
+	var r := {"common": 0, "rare": 0, "legendary": 0}
+	for id in cat:
+		r[GameData.bones[id].rarity] += 1
+	check(r.common == 12 and r.rare == 5 and r.legendary == 3, "12 comuns, 5 raros, 3 lendários: %s" % [r])
+	var fams := {}
+	for id in cat:
+		fams[GameData.bones[id].family] = true
+	check(fams.size() == 6, "6 famílias cobertas")
+	var commons := 0
+	var bosses := []
+	for id in GameData.monsters:
+		var k: String = GameData.monsters[id].kind
+		if k == "common" or k == "rare":
+			commons += 1
+		elif k == "boss":
+			bosses.append(id)
+	check(commons == 14, "14 monstros comuns/raros (%d)" % commons)
+	check(bosses.size() == 4 and bosses.has("boss_hydra"), "3 chefes + Hidra")
+	var family_forms := 0
+	var secrets := 0
+	for id in GameData.forms:
+		if GameData.forms[id].get("secret", false):
+			secrets += 1
+		else:
+			family_forms += 1
+	check(family_forms == 6 and secrets == 3, "6 formas de família e 3 secretas")
+	for id in cat:
+		var b: Dictionary = GameData.bones[id]
+		if b.rarity == "legendary":
+			check(String(GameData.monsters[b.monster].kind) == "boss", "lendário só cai de chefe: " + id)
+
+
+func test_07_every_form_reachable() -> void:
+	var cases := {
+		"form_werewolf": _eq([["slot_skull", "bone_skull_wolf"], ["slot_arm_left", "bone_claw_bear"], ["slot_arm_right", "bone_claw_bear"], ["slot_legs", "bone_legs_centaur"]]),
+		"form_swarm_queen": _eq([["slot_legs", "bone_legs_spider"], ["slot_arm_left", "bone_stinger_wasp"], ["slot_back", "bone_shell_beetle"], ["slot_tail", "bone_tail_scorpion"]]),
+		"form_leviathan": _eq([["slot_ribs", "bone_ribs_turtle"], ["slot_arm_left", "bone_pincer_crab"], ["slot_arm_right", "bone_pincer_crab", 2]]),
+		"form_bone_wyrm": _eq([["slot_skull", "bone_skull_dragon"], ["slot_back", "bone_wings_dragon"]]),
+		"form_colossus": _eq([["slot_skull", "bone_skull_cyclops"], ["slot_ribs", "bone_ribs_golem"], ["slot_arm_left", "bone_fist_golem"], ["slot_arm_right", "bone_fist_golem"]]),
+		"form_lich": _eq([["slot_back", "bone_wings_bat", 2], ["slot_tail", "bone_tail_rat", 2]]),
+		"form_night_manticore": _eq([["slot_skull", "bone_skull_wolf"], ["slot_back", "bone_wings_bat"], ["slot_tail", "bone_tail_scorpion"]]),
+		"form_chimera": _eq([["slot_skull", "bone_skull_wolf"], ["slot_ribs", "bone_ribs_turtle"], ["slot_legs", "bone_legs_spider"], ["slot_back", "bone_wings_bat"], ["slot_tail", "bone_tail_lizard"]]),
+		"form_abyssal_knight": _eq([["slot_arm_left", "bone_pincer_crab"], ["slot_back", "bone_shell_beetle"], ["slot_legs", "bone_legs_centaur"]]),
+	}
+	for fid in cases:
+		check(Body.active_forms(cases[fid]).has(fid), "forma alcançável: " + fid)
+	check(not Body.active_forms(_eq([["slot_back", "bone_wings_bat"], ["slot_tail", "bone_tail_rat"]])).has("form_lich"), "Lich não ativa com 2 peças")
+	var rej := _eq([["slot_tail", "bone_tail_lizard"], ["slot_ribs", "bone_ribs_turtle"]])
+	check(Body.rejection_active(rej), "rejeição Dragão + Marinho")
+	var h1 := Body.make_hero(_eq([["slot_tail", "bone_tail_lizard"]]))
+	var h2 := Body.make_hero(rej)
+	check(h2.damage_mult > h1.damage_mult, "rejeição dá +25% de dano")
+
+
+func test_08_bosses() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 3
+	var golem := MonsterFactory.make("boss_forgotten_golem", 20)
+	var hero := Body.make_hero({})
+	hero.max_hp = 99999
+	hero.hp = 99999
+	var c := Combat.new(hero, [golem], {"rng": rng, "max_turns": 2})
+	check(golem.guard_max == 3, "Golem tem escudo de 3 golpes")
+	var before := golem.hp
+	c.step()
+	var single_hit_dmg := before - golem.hp
+	check(single_hit_dmg < hero.atk * 0.6, "escudo do Golem reduz golpe único (%.1f)" % single_hit_dmg)
+	var hero2 := Body.make_hero(_eq([["slot_arm_left", "bone_blade_mantis"], ["slot_arm_right", "bone_blade_mantis"]]))
+	hero2.max_hp = 99999
+	hero2.hp = 99999
+	var golem2 := MonsterFactory.make("boss_forgotten_golem", 20)
+	var c2 := Combat.new(hero2, [golem2], {"rng": rng, "max_turns": 3})
+	var broke := false
+	for i in 3:
+		for ev in c2.step():
+			if ev.t == "guard" and ev.state == "broken":
+				broke = true
+	check(broke, "ataques múltiplos quebram o escudo do Golem")
+	# Dragão: sopro dobra sem defesa contra fogo
+	var dmg_plain := _breath_damage({})
+	var dmg_resist := _breath_damage(_eq([["slot_tail", "bone_tail_lizard"]]))
+	check(dmg_plain > dmg_resist * 1.5, "sopro do Dragão dobra sem defesa contra fogo (%.0f vs %.0f)" % [dmg_plain, dmg_resist])
+	var drops := {}
+	for i in 40:
+		drops[MonsterFactory.boss_drop("boss_forgotten_golem", 0, rng)] = true
+	check(drops.has("bone_ribs_golem") and drops.has("bone_fist_golem"), "Golem solta Gaiola ou Punho")
+	var st := RunState.new({"seed": 1})
+	check(st.boss_for_floor(10) == "boss_rat_king" and st.boss_for_floor(20) == "boss_forgotten_golem" and st.boss_for_floor(30) == "boss_ancient_dragon", "chefes nos andares 10, 20 e 30")
+	check(st.boss_for_floor(31) == "boss_hydra", "Hidra no andar secreto")
+
+
+func _breath_damage(eq: Dictionary) -> float:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 11
+	var hero := Body.make_hero(eq)
+	hero.max_hp = 99999
+	hero.hp = 99999
+	hero.dodge = 0
+	var dragon := MonsterFactory.make("boss_ancient_dragon", 30)
+	dragon.crit = 0
+	var c := Combat.new(hero, [dragon], {"rng": rng, "max_turns": 99})
+	for t in 3:
+		for ev in c.step():
+			if ev.t == "attack" and ev.kind == "fire_breath":
+				return float(ev.dmg)
+	return 0.0

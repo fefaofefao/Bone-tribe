@@ -36,6 +36,7 @@ static func make(monster_id: String, floor_n: int) -> Fighter:
 	f.speed = float(m.get("speed", 10))
 	f.lifesteal = float(m.get("lifesteal", 0.0))
 	f.reflect = float(m.get("reflect", 0.0))
+	f.regen = float(m.get("regen", 0.0))
 	f.effects = (m.get("abilities", []) as Array).duplicate(true)
 	f.flags["floor"] = floor_n
 	return f
@@ -74,3 +75,15 @@ static func xp_for(monster_id: String, floor_n: int) -> int:
 	if String(m.get("kind", "")) == "boss":
 		base *= float(GameData.bal("xp/boss_mult", 4))
 	return int(roundf(base * float(m.get("xp_mult", 1.0))))
+
+
+## Ossos que o chefe solta: garantido na 1ª vitória, 10% nas seguintes; um só,
+## sorteado entre os ossos do chefe (ex.: Gaiola ou Punho de Golem).
+static func boss_drop(monster_id: String, wins_before: int, rng: RandomNumberGenerator) -> String:
+	var drops: Array = GameData.monster(monster_id).get("drops", [])
+	if drops.is_empty():
+		return ""
+	var chance := float(GameData.bal("drops/legendary_first", 1.0)) if wins_before == 0 else float(GameData.bal("drops/legendary_repeat", 0.1))
+	if rng.randf() >= chance:
+		return ""
+	return String(drops[rng.randi() % drops.size()])

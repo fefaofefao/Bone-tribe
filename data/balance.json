@@ -72,7 +72,7 @@
 		"secret_boss": "boss_hydra",
 		"secret_requires_form": "form_bone_wyrm",
 		"prototype_floors": 10,
-		"prototype_mode": true
+		"prototype_mode": false
 	},
 	"event_weights": {
 		"combat": 45,
@@ -157,5 +157,10 @@
 			"slot_tail": "bone_tail_scorpion"
 		}
 	},
-	"levelup_heal_pct": 0.25
+	"levelup_heal_pct": 0.25,
+	"forms_rule": {
+		"_doc": "Peças de família: comum/raro = 1, lendário = 2; cada nível acima do 1 soma +1 peça.",
+		"legendary_pieces": 2,
+		"per_level_pieces": 1
+	}
 }

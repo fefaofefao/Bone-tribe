@@ -25,14 +25,21 @@ static func instance_power(inst: Dictionary) -> float:
 	return p
 
 
+## Peças por família (para sinergias e formas): comum/raro = 1, lendário = 2,
+## e cada nível acima do 1 soma uma peça (ver docs/DECISOES.md).
 static func family_counts(equipped: Dictionary) -> Dictionary:
 	var counts := {}
+	var leg := int(GameData.bal("forms_rule/legendary_pieces", 2))
+	var per_lvl := int(GameData.bal("forms_rule/per_level_pieces", 1))
 	for slot in equipped:
-		var b := GameData.bone(String(equipped[slot].get("id", "")))
+		var inst: Dictionary = equipped[slot]
+		var b := GameData.bone(String(inst.get("id", "")))
 		var fam := String(b.get("family", ""))
 		if fam == "":
 			continue
-		counts[fam] = int(counts.get(fam, 0)) + 1
+		var pieces := leg if instance_rarity(inst) == "legendary" else 1
+		pieces += per_lvl * maxi(0, int(inst.get("level", 1)) - 1)
+		counts[fam] = int(counts.get(fam, 0)) + pieces
 	return counts
 
 

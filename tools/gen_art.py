@@ -360,7 +360,7 @@ def draw_back_bone(bone_id, family):
     if bone_id in ("bone_wings_bat", "bone_wings_dragon"):
         big = bone_id == "bone_wings_dragon"
         mem_col = (160, 44, 32) if big else (84, 46, 118)
-        k = 1.12 if big else 1.0
+        k = 1.0 if big else 0.94
         near = {"elbow": (-70, -112), "tips": [(-196, -150), (-204, -86), (-182, -26), (-128, 22)]}
         # asa de trás (direita, menor e mais escura) e asa da frente (esquerda)
         for side, sc, dim in ((1, 0.72, 0.6), (-1, 1.0, 1.0)):
@@ -786,6 +786,333 @@ def m_rat_king(cv, W, H, fc):
     accent_dots(cv, W, H, [(cx + 4, by - 404)], (220, 40, 60), 6)
 
 
+def m_stone_turtle(cv, W, H, fc):
+    by = H - 40
+    legs = Layer(W, H)
+    for lx in (90, 140, 210, 255):
+        legs.rrect(lx - 18, by - 40, lx + 18, by + 10, 10)
+    paint(cv, legs, base=(150, 140, 120), shadow=(90, 82, 70), outline_w=3)
+    shell = Layer(W, H)
+    shell.ellipse(170, by - 70, 130, 80)
+    paint(cv, shell, base=(110, 108, 100), shadow=(60, 58, 54), light=(170, 166, 156), outline_w=3.4)
+    plates = Layer(W, H)
+    for (x, y, r) in [(170, by - 100, 28), (120, by - 80, 22), (220, by - 80, 22), (90, by - 50, 16), (250, by - 50, 16), (170, by - 50, 20)]:
+        plates.circle(x, y, r)
+    paint(cv, plates, base=(140, 136, 124), shadow=(80, 78, 70), outline_w=2.4)
+    accent_dots(cv, W, H, [(110, by - 110), (230, by - 110), (150, by - 30)], (90, 200, 190), 6)
+    neck = Layer(W, H)
+    neck.capsule((280, by - 50), (310, by - 70), 16)
+    paint(cv, neck, base=(150, 140, 120), outline_w=2.6)
+    draw_skull(cv, W, H, 320, by - 80, 32, snout=0.3, eye_color=fc["aura"])
+
+
+def m_abyssal_crab(cv, W, H, fc):
+    by = H - 30
+    legs = Layer(W, H)
+    for i in range(3):
+        for side in (-1, 1):
+            hx = 170 + side * 40
+            legs.tapered([(hx, by - 60), (hx + side * (60 + i * 20), by - 90 + i * 14), (hx + side * (70 + i * 26), by)], 9, 3)
+    paint(cv, legs, base=(60, 150, 150), shadow=(26, 80, 84), outline_w=2.6)
+    body = Layer(W, H)
+    body.ellipse(170, by - 70, 90, 50)
+    paint(cv, body, base=(50, 130, 140), shadow=(20, 66, 76), light=(130, 220, 220), outline_w=3.2)
+    for side in (-1, 1):
+        claw = Layer(W, H)
+        bx = 170 + side * 70
+        claw.tapered([(bx, by - 90), (bx + side * 40, by - 140)], 16, 12)
+        claw.ellipse(bx + side * 54, by - 162, 34, 26)
+        claw.tapered([(bx + side * 60, by - 180), (bx + side * 96, by - 196), (bx + side * 88, by - 170)], 14, 3)
+        paint(cv, claw, base=(70, 170, 168), shadow=(28, 90, 94), light=(150, 230, 220), outline_w=3)
+    accent_dots(cv, W, H, [(140, by - 100), (205, by - 92), (172, by - 60)], (220, 240, 230), 6)
+    eye_glow(cv, W, H, [(155, by - 118), (190, by - 118)], fc["aura"], 6)
+    stalks = Layer(W, H)
+    stalks.capsule((155, by - 100), (155, by - 116), 3)
+    stalks.capsule((190, by - 100), (190, by - 116), 3)
+    fill(cv, stalks, (40, 100, 100))
+
+
+def m_bone_wasp(cv, W, H, fc):
+    cx, cy = W / 2, H / 2 - 10
+    for side in (-1, 1):
+        wing = Layer(W, H)
+        wing.ellipse(cx + side * 20 - 10, cy - 70, 40, 70)
+        fill(cv, wing, (220, 250, 255), alpha=110)
+        edge = Layer(W, H)
+        edge.ellipse(cx + side * 20 - 10, cy - 70, 40, 70)
+        inner = Layer(W, H)
+        inner.ellipse(cx + side * 20 - 10, cy - 70, 37, 67)
+        edge.cut(inner)
+        fill(cv, edge, (60, 60, 70))
+    abd = Layer(W, H)
+    abd.ellipse(cx - 60, cy + 20, 64, 40)
+    paint(cv, abd, base=(230, 200, 70), shadow=(150, 120, 30), outline_w=3)
+    bands = Layer(W, H)
+    for x in (cx - 90, cx - 60, cx - 30):
+        bands.rrect(x - 7, cy - 14, x + 7, cy + 56, 4)
+    fill(cv, bands, (40, 30, 26))
+    st = Layer(W, H)
+    st.tapered([(cx - 120, cy + 26), (cx - 150, cy + 40)], 14, 1)
+    paint(cv, st, base=(230, 220, 200), outline_w=2)
+    thorax = Layer(W, H)
+    thorax.ellipse(cx + 20, cy + 10, 34, 30)
+    paint(cv, thorax, base=(60, 50, 40), shadow=(30, 24, 20), outline_w=3)
+    legs = Layer(W, H)
+    for i in range(3):
+        legs.tapered([(cx + 10 + i * 12, cy + 30), (cx + i * 16, cy + 70), (cx - 6 + i * 18, cy + 96)], 6, 2)
+    paint(cv, legs, base=(70, 60, 50), outline_w=2)
+    draw_skull(cv, W, H, cx + 66, cy, 30, snout=0.0, eye_color=fc["aura"])
+
+
+def m_giant_mantis(cv, W, H, fc):
+    by = H - 20
+    legs = Layer(W, H)
+    for lx in (90, 140, 190):
+        legs.tapered([(lx, by - 120), (lx - 20, by - 60), (lx - 10, by)], 9, 4)
+    paint(cv, legs, base=(140, 200, 90), shadow=(70, 110, 40), outline_w=2.6)
+    abd = Layer(W, H)
+    abd.ellipse(110, by - 130, 80, 34)
+    paint(cv, abd, base=(150, 210, 100), shadow=(70, 120, 40), light=(210, 250, 160), outline_w=3)
+    thorax = Layer(W, H)
+    thorax.tapered([(180, by - 140), (220, by - 210), (230, by - 260)], 26, 18)
+    paint(cv, thorax, base=(150, 210, 100), shadow=(70, 120, 40), outline_w=3)
+    for dy, k in ((0, 1.0), (24, 0.85)):
+        arm = Layer(W, H)
+        arm.tapered([(226, by - 220 + dy), (290, by - 250 + dy), (300, by - 190 + dy)], 16 * k, 10 * k)
+        arm.poly([(296, by - 196 + dy), (320, by - 160 + dy), (286, by - 186 + dy)])
+        paint(cv, arm, base=(170, 225, 110), shadow=(80, 130, 50), outline_w=3)
+    head = Layer(W, H)
+    head.poly([(220, by - 300), (276, by - 290), (244, by - 250)])
+    paint(cv, head, base=(170, 225, 110), shadow=(80, 130, 50), outline_w=3)
+    eye_glow(cv, W, H, [(232, by - 290), (262, by - 288)], fc["aura"], 7)
+    ant = Layer(W, H)
+    ant.tapered([(240, by - 300), (230, by - 330), (210, by - 336)], 3, 1)
+    ant.tapered([(256, by - 298), (262, by - 330), (282, by - 340)], 3, 1)
+    fill(cv, ant, (60, 90, 30))
+
+
+def m_bone_grasshopper(cv, W, H, fc):
+    by = H - 20
+    hind = Layer(W, H)
+    hind.tapered([(140, by - 80), (90, by - 150), (70, by - 120)], 24, 10)
+    hind.capsule((70, by - 120), (100, by), 6)
+    paint(cv, hind, base=(180, 210, 100), shadow=(100, 130, 50), outline_w=3)
+    body = Layer(W, H)
+    body.ellipse(170, by - 90, 90, 34)
+    paint(cv, body, base=(170, 200, 90), shadow=(90, 120, 40), light=(220, 240, 150), outline_w=3)
+    ribs = rib_mask(W, H, 160, by - 120, 3, 34, 16, 6)
+    paint(cv, ribs, outline_w=2)
+    legs = Layer(W, H)
+    for lx in (200, 230):
+        legs.tapered([(lx, by - 70), (lx + 10, by - 30), (lx + 4, by)], 7, 3)
+    paint(cv, legs, base=(170, 200, 90), outline_w=2.4)
+    draw_skull(cv, W, H, 270, by - 100, 34, snout=0.2, eye_color=fc["aura"])
+    ant = Layer(W, H)
+    ant.tapered([(270, by - 130), (290, by - 180), (320, by - 190)], 4, 1)
+    fill(cv, ant, (90, 110, 40))
+
+
+def m_bony_centaur(cv, W, H, fc):
+    by = H - 20
+    body = Layer(W, H)
+    body.ellipse(150, by - 130, 100, 50)
+    paint(cv, body, base=(140, 96, 60), shadow=(80, 52, 30), light=(190, 140, 100), outline_w=3)
+    ribs = rib_mask(W, H, 150, by - 170, 3, 60, 18, 7)
+    paint(cv, ribs, outline_w=2)
+    legs = Layer(W, H)
+    for lx in (80, 110, 190, 220):
+        legs.bone((lx, by - 100), (lx + 4, by - 50), 7)
+        legs.bone((lx + 4, by - 48), (lx - 2, by - 10), 6)
+    paint(cv, legs, outline_w=2.8)
+    hooves = Layer(W, H)
+    for lx in (78, 108, 188, 218):
+        hooves.rrect(lx - 10, by - 14, lx + 10, by + 4, 4)
+    paint(cv, hooves, base=(60, 44, 36), outline_w=2, grain=False)
+    fur(cv, W, H, 50, by - 140, 8, 34, (110, 70, 40), 7, angle=160, spread=40)
+    torso = rib_mask(W, H, 240, by - 270, 3, 40, 22, 9)
+    paint(cv, torso, outline_w=2.6)
+    spine = Layer(W, H)
+    spine.capsule((240, by - 160), (240, by - 270), 8)
+    paint(cv, spine, outline_w=2.4)
+    arm = Layer(W, H)
+    arm.bone((256, by - 256), (300, by - 210), 7)
+    arm.capsule((300, by - 210), (320, by - 300), 4)
+    paint(cv, arm, outline_w=2.4)
+    spear = Layer(W, H)
+    spear.poly([(312, by - 330), (322, by - 300), (330, by - 330), (322, by - 350)])
+    paint(cv, spear, base=(180, 190, 200), outline_w=2)
+    draw_skull(cv, W, H, 246, by - 304, 36, eye_color=fc["aura"])
+
+
+def m_armored_beetle(cv, W, H, fc):
+    by = H - 30
+    legs = Layer(W, H)
+    for i in range(3):
+        for side in (-1, 1):
+            lx = 120 + i * 50
+            legs.tapered([(lx, by - 40), (lx + side * 12, by - 10), (lx + side * 20, by)], 8, 3)
+    paint(cv, legs, base=(50, 70, 50), outline_w=2.4)
+    shell = Layer(W, H)
+    shell.ellipse(160, by - 80, 110, 70)
+    paint(cv, shell, base=(50, 100, 60), shadow=(20, 50, 26), light=(140, 210, 140), outline_w=3.4)
+    seam = Layer(W, H)
+    seam.line([(70, by - 90), (250, by - 90)], 4)
+    fill(cv, seam, (16, 36, 20))
+    gloss = Layer(W, H)
+    gloss.ellipse(130, by - 120, 40, 12)
+    fill(cv, gloss, (220, 255, 220), alpha=120, blur=2)
+    horn = Layer(W, H)
+    horn.tapered([(270, by - 70), (320, by - 120), (330, by - 160)], 18, 3)
+    paint(cv, horn, base=IVORY, outline_w=3)
+    draw_skull(cv, W, H, 274, by - 56, 30, eye_color=fc["aura"])
+
+
+def m_ash_lizard(cv, W, H, fc):
+    by = H - 20
+    tail = Layer(W, H)
+    tail.tapered([(110, by - 50), (60, by - 40), (20, by - 70)], 26, 4)
+    paint(cv, tail, base=(190, 120, 90), shadow=(110, 60, 40), outline_w=3)
+    body = Layer(W, H)
+    body.ellipse(170, by - 55, 80, 32)
+    paint(cv, body, base=(170, 100, 70), shadow=(90, 50, 30), light=(230, 160, 120), outline_w=3)
+    spikes = Layer(W, H)
+    for i in range(6):
+        x = 110 + i * 22
+        spikes.poly([(x - 8, by - 80), (x, by - 100 - (i % 2) * 8), (x + 8, by - 80)])
+    paint(cv, spikes, base=(200, 70, 40), shadow=(120, 30, 20), outline_w=2, grain=False)
+    legs = Layer(W, H)
+    for lx in (120, 210):
+        legs.tapered([(lx, by - 40), (lx - 20, by - 10), (lx - 10, by)], 12, 6)
+    paint(cv, legs, base=(170, 100, 70), outline_w=2.6)
+    draw_skull(cv, W, H, 268, by - 60, 34, snout=0.8, eye_color=fc["aura"])
+    ember(cv, W, H, [(60, by - 100, 4), (130, by - 120, 3), (210, by - 110, 3), (30, by - 90, 2)], fc["aura"])
+
+
+def m_bony_cyclops(cv, W, H, fc):
+    by = H - 20
+    legs = Layer(W, H)
+    legs.bone((130, by - 140), (120, by - 10), 16)
+    legs.bone((210, by - 140), (222, by - 10), 16)
+    paint(cv, legs, outline_w=3)
+    torso = rib_mask(W, H, 170, by - 300, 5, 80, 30, 13)
+    paint(cv, torso, outline_w=3)
+    belt = Layer(W, H)
+    belt.rrect(100, by - 160, 240, by - 136, 8)
+    paint(cv, belt, base=(110, 120, 140), shadow=(60, 66, 84), outline_w=2.6)
+    runes(cv, W, H, 170, by - 148, 8, fc["aura"])
+    for side in (-1, 1):
+        arm = Layer(W, H)
+        arm.bone((170 + side * 80, by - 280), (170 + side * 110, by - 190), 13)
+        arm.bone((170 + side * 110, by - 186), (170 + side * 100, by - 110), 11)
+        paint(cv, arm, outline_w=3)
+    club = Layer(W, H)
+    club.tapered([(268, by - 120), (300, by - 40), (310, by - 10)], 14, 30)
+    paint(cv, club, base=(120, 90, 60), shadow=(70, 50, 30), outline_w=3)
+    draw_skull(cv, W, H, 176, by - 350, 62, cyclops=True, eye_color=fc["aura"], base=(222, 216, 204))
+    plate = Layer(W, H)
+    plate.rrect(120, by - 420, 220, by - 400, 8)
+    paint(cv, plate, base=(120, 132, 150), shadow=(70, 80, 100), outline_w=2.4)
+
+
+def m_forgotten_golem(cv, W, H, fc):
+    by = H - 20
+    stone = dict(base=(120, 120, 134), shadow=(64, 64, 78), light=(180, 180, 196))
+    legs = Layer(W, H)
+    legs.rrect(150, by - 160, 210, by, 16)
+    legs.rrect(270, by - 160, 330, by, 16)
+    paint(cv, legs, outline_w=3.4, **stone)
+    body = Layer(W, H)
+    body.rrect(110, by - 360, 370, by - 140, 40)
+    paint(cv, body, outline_w=3.6, **stone)
+    cracks = Layer(W, H)
+    cracks.line([(160, by - 330), (190, by - 280), (170, by - 240)], 3)
+    cracks.line([(320, by - 320), (300, by - 270)], 3)
+    fill(cv, cracks, (40, 40, 52))
+    cage = rib_mask(W, H, 240, by - 340, 4, 80, 40, 12)
+    paint(cv, cage, base=(150, 160, 178), shadow=(80, 90, 110), outline_w=3)
+    core = Layer(W, H)
+    core.circle(240, by - 250, 26)
+    glow(cv, core, fc["aura"], radius=20, strength=1.8)
+    fill(cv, core, (200, 230, 255))
+    for side in (-1, 1):
+        arm = Layer(W, H)
+        arm.rrect(240 + side * 150 - 30, by - 340, 240 + side * 150 + 30, by - 150, 24)
+        arm.rrect(240 + side * 150 - 46, by - 170, 240 + side * 150 + 46, by - 80, 22)
+        paint(cv, arm, outline_w=3.4, **stone)
+        runes(cv, W, H, 240 + side * 150, by - 125, 12, fc["aura"])
+    head = Layer(W, H)
+    head.rrect(180, by - 440, 300, by - 350, 26)
+    paint(cv, head, outline_w=3.4, **stone)
+    eye_glow(cv, W, H, [(215, by - 400), (265, by - 400)], fc["aura"], 10)
+    moss = Layer(W, H)
+    for x in (130, 200, 330, 350):
+        moss.ellipse(x, by - 360, 22, 10)
+    fill(cv, moss, (70, 110, 60))
+
+
+def m_ancient_dragon(cv, W, H, fc):
+    by = H - 20
+    root = (250, by - 230)
+    for side, k, dim in ((1, 0.8, 0.6), (-1, 1.0, 1.0)):
+        elbow = (root[0] + side * 90 * k, root[1] - 150 * k)
+        tips = [(root[0] + side * 230 * k, root[1] - 200 * k), (root[0] + side * 250 * k, root[1] - 110 * k),
+                (root[0] + side * 230 * k, root[1] - 30 * k), (root[0] + side * 160 * k, root[1] + 30 * k)]
+        poly = [root, elbow]
+        for i, tp in enumerate(tips):
+            poly.append(tp)
+            if i < len(tips) - 1:
+                n = tips[i + 1]
+                mx, my = (tp[0] + n[0]) / 2, (tp[1] + n[1]) / 2
+                poly.append((mx + (elbow[0] - mx) * 0.25, my + (elbow[1] - my) * 0.25))
+        mem = Layer(W, H)
+        mem.poly(poly)
+        col = tuple(int(c * dim) for c in (160, 44, 32))
+        paint(cv, mem, base=col, shadow=tuple(int(c * 0.5) for c in col), light=tuple(min(255, int(c * 1.6)) for c in col), outline_w=3)
+        bones = Layer(W, H)
+        bones.capsule(root, elbow, 10 * k)
+        for tp in tips:
+            bones.tapered([elbow, tp], 8 * k, 3)
+        paint(cv, bones, base=tuple(int(c * (0.75 + 0.25 * dim)) for c in IVORY), outline_w=2.6)
+    tail = Layer(W, H)
+    tail.tapered([(160, by - 100), (80, by - 60), (20, by - 120), (40, by - 200)], 40, 6)
+    paint(cv, tail, base=(200, 150, 130), shadow=(130, 80, 60), outline_w=3)
+    legs = Layer(W, H)
+    for lx in (170, 300):
+        legs.bone((lx, by - 150), (lx - 10, by - 70), 18)
+        legs.bone((lx - 10, by - 66), (lx + 10, by - 10), 15)
+    paint(cv, legs, outline_w=3)
+    body = Layer(W, H)
+    body.ellipse(240, by - 170, 120, 70)
+    paint(cv, body, base=(170, 60, 40), shadow=(100, 30, 20), light=(230, 120, 80), outline_w=3.4)
+    ribs = rib_mask(W, H, 240, by - 230, 4, 90, 26, 12)
+    paint(cv, ribs, outline_w=3)
+    neck = Layer(W, H)
+    neck.tapered([(330, by - 200), (380, by - 290), (400, by - 340)], 40, 26)
+    paint(cv, neck, base=(200, 150, 130), shadow=(130, 80, 60), outline_w=3)
+    horns = [(-0.6, -0.55, -0.9, -0.8), (-0.2, -0.75, -0.55, -1.0)]
+    draw_skull(cv, W, H, 410, by - 370, 62, snout=0.85, horns=horns, eye_color=fc["aura"], crest=True)
+    ember(cv, W, H, [(470, by - 330, 6), (490, by - 350, 4), (120, by - 300, 4), (300, by - 420, 4), (60, by - 220, 3)], fc["aura"])
+
+
+def m_hydra(cv, W, H, fc):
+    by = H - 20
+    body = Layer(W, H)
+    body.ellipse(240, by - 120, 150, 90)
+    paint(cv, body, base=(150, 50, 40), shadow=(90, 24, 18), light=(220, 110, 80), outline_w=3.4)
+    ribs = rib_mask(W, H, 240, by - 190, 4, 110, 26, 12)
+    paint(cv, ribs, outline_w=3)
+    legs = Layer(W, H)
+    for lx in (140, 340):
+        legs.rrect(lx - 28, by - 80, lx + 28, by, 18)
+    paint(cv, legs, base=(140, 50, 40), shadow=(80, 24, 18), outline_w=3)
+    for i, (nx, ny, ang) in enumerate(((150, by - 380, -0.4), (250, by - 430, 0.0), (350, by - 380, 0.4))):
+        neck = Layer(W, H)
+        neck.tapered([(200 + i * 40, by - 170), (nx - 20 + i * 20, by - 280), (nx, ny + 40)], 34, 22)
+        paint(cv, neck, base=(200, 150, 130), shadow=(130, 80, 60), outline_w=3)
+        draw_skull(cv, W, H, nx, ny, 46, snout=0.6, horns=[(-0.5, -0.6, -0.6, -0.6)], eye_color=fc["aura"])
+    ember(cv, W, H, [(100, by - 260, 4), (400, by - 250, 4), (250, by - 300, 3)], fc["aura"])
+
+
 MONSTER_DRAW = {
     "monster_crypt_wolf": m_crypt_wolf,
     "monster_corpse_bear": m_corpse_bear,
@@ -795,6 +1122,18 @@ MONSTER_DRAW = {
     "minion_skeleton_rat": m_skeleton_rat,
     "minion_hungry_mimic": m_hungry_mimic,
     "boss_rat_king": m_rat_king,
+    "monster_stone_turtle": m_stone_turtle,
+    "monster_abyssal_crab": m_abyssal_crab,
+    "monster_bone_wasp": m_bone_wasp,
+    "monster_giant_mantis": m_giant_mantis,
+    "monster_bone_grasshopper": m_bone_grasshopper,
+    "monster_bony_centaur": m_bony_centaur,
+    "monster_armored_beetle": m_armored_beetle,
+    "monster_ash_lizard": m_ash_lizard,
+    "monster_bony_cyclops": m_bony_cyclops,
+    "boss_forgotten_golem": m_forgotten_golem,
+    "boss_ancient_dragon": m_ancient_dragon,
+    "boss_hydra": m_hydra,
 }
 
 

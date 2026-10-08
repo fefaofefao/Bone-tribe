@@ -15,7 +15,7 @@
 		{"id": "slot_back", "attach": [-6, -192], "canvas": [420, 300], "pivot": [210, 200], "z": 0, "rest_rot": 0, "tag": "back"},
 		{"id": "slot_tail", "attach": [-14, -108], "canvas": [250, 250], "pivot": [210, 150], "z": 1, "rest_rot": 0, "tag": "tail"},
 		{"id": "slot_extra", "attach": [0, -112], "canvas": [90, 240], "pivot": [45, 228], "z": 3, "rest_rot": 0, "tag": "extra", "hidden_until_filled": true},
-		{"id": "slot_arm_third", "attach": [-6, -222], "canvas": [130, 230], "pivot": [65, 22], "z": 0, "rest_rot": 150, "tag": "arm", "requires_effect": "extra_slot"}
+		{"id": "slot_arm_third", "attach": [-6, -222], "canvas": [130, 230], "pivot": [65, 22], "z": 0, "rest_rot": 125, "tag": "arm", "requires_effect": "extra_slot"}
 	],
 	"main_slots": ["slot_skull", "slot_ribs", "slot_arm_left", "slot_arm_right", "slot_legs", "slot_back", "slot_tail"],
 	"starting_bones": {"slot_skull": "bone_skull_basic", "slot_ribs": "bone_ribs_basic"}

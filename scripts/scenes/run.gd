@@ -23,6 +23,8 @@ var enemy_views: Dictionary = {}   # Fighter -> MonsterView
 var combat: Combat
 var speed := 1.0
 var demo := false
+## Escolhas automáticas (modo demonstração ou depuração com BT_AUTO=1).
+var autoplay := false
 var _demo_plan: Array = []
 var _banner: Label
 var _turn_label: Label
@@ -40,6 +42,7 @@ var speed_btn: Button
 func _ready() -> void:
 	var p := Router.params
 	demo = bool(p.get("demo", false))
+	autoplay = demo or OS.get_environment("BT_AUTO") == "1"
 	state = RunState.new({"demo": demo, "companion": String(Profile.data.get("selected_companion", "")), "start_bone": String(p.get("start_bone", ""))})
 	speed = 2.0 if Profile.setting("fast_combat") else 1.0
 	if demo:
@@ -205,14 +208,15 @@ func _wait(t: float) -> void:
 
 func _run_loop() -> void:
 	await _intro()
-	while not state.dead:
-		if state.floor_n >= state.total_floors and not _hydra_unlocked():
-			break
-		if state.floor_n >= state.total_floors + 1:
-			break
+	while not state.dead and state.floor_n < state.total_floors:
 		state.floor_n += 1
 		if state.pending_skip > 0:
-			state.floor_n = mini(state.floor_n + state.pending_skip, state.total_floors - 1)
+			# voo sobre o abismo: pula andares, mas nunca um chefe
+			var target := state.floor_n + state.pending_skip
+			var n := state.floor_n
+			while n < target and not state.is_boss_floor(n + 1):
+				n += 1
+			state.floor_n = n
 			state.pending_skip = 0
 		_refresh_hud()
 		await _walk()
@@ -224,12 +228,7 @@ func _run_loop() -> void:
 			if ev.is_empty():
 				continue
 			await _play_event(ev)
-		if state.dead:
-			break
-		if state.floor_n >= state.total_floors and state.bosses_beaten.has(state.boss_for_floor(state.total_floors)):
-			if not _hydra_unlocked() or state.floor_n > state.total_floors:
-				state.victory = true
-				break
+	state.victory = not state.dead
 	await _end_run()
 
 
@@ -336,7 +335,7 @@ func _play_event(ev: Dictionary) -> void:
 		Widgets.pop_in(b, 0.12 + i * 0.06)
 		buttons.append(b)
 	var choice := -1
-	if demo:
+	if autoplay:
 		await _wait(1.2)
 		choice = 0
 		for i in options.size():
@@ -441,7 +440,7 @@ func _show_result(text: String) -> void:
 	var b := Style.button(tr("btn_continue"), "", 74)
 	panel_box.add_child(b)
 	Widgets.pop_in(b, 0.2)
-	if demo:
+	if autoplay:
 		await _wait(1.4)
 	else:
 		await b.pressed
@@ -820,19 +819,17 @@ func _last_pos(f: Fighter) -> Vector2:
 func _roll_drops(f: Fighter) -> Array:
 	var out := []
 	var m := GameData.monster(f.id)
+	if String(m.get("kind", "")) == "boss":
+		var bid := MonsterFactory.boss_drop(f.id, Profile.boss_wins(f.id), state.rng)
+		if bid != "":
+			out.append(bid)
+		return out
 	var drop_bonus := state.stat("drop_bonus")
-	var kind := String(m.get("kind", ""))
 	for bid in m.get("drops", []):
 		var b := GameData.bone(bid)
-		var chance := 0.0
-		if kind == "boss":
-			chance = 1.0 if Profile.boss_wins(f.id) <= 1 else float(GameData.bal("drops/legendary_repeat", 0.1))
-		else:
-			chance = float(GameData.bal("drops/" + String(b.get("rarity", "common")), 0.25)) + drop_bonus
+		var chance := float(GameData.bal("drops/" + String(b.get("rarity", "common")), 0.25)) + drop_bonus
 		if state.rng.randf() < chance:
 			out.append(bid)
-			if kind == "boss":
-				break
 	return out
 
 
@@ -883,6 +880,14 @@ func _offer_bone(inst: Dictionary, from: Vector2) -> void:
 			return
 	if free != "":
 		await _attach(free, inst, from)
+		return
+	if autoplay:
+		var rank := {"basic": 0, "common": 1, "rare": 2, "legendary": 3}
+		for s2 in state.slots_for(bid):
+			if int(rank.get(Body.instance_rarity(state.equipped.get(s2, {})), 1)) < int(rank.get(Body.instance_rarity(inst), 1)):
+				await _swap(s2, inst, from)
+				return
+		await _crush(inst, from)
 		return
 	var choice: Dictionary = await _bone_choice_dialog(inst)
 	if choice.get("action", "") == "swap":
@@ -1106,7 +1111,7 @@ func _levelup_dialog() -> void:
 			dialog_closed.emit(id))
 		v.add_child(b)
 		Widgets.pop_in(b, 0.1 + i * 0.08)
-	if demo:
+	if autoplay:
 		await _wait(1.0)
 		picked[0] = choices[0]
 	else:
@@ -1122,6 +1127,11 @@ func _death_dialog() -> bool:
 	var can_ad := not bool(state.flags.get("revive_ad_used", false))
 	if demo:
 		return true
+	if autoplay:
+		if can_ad and await Ads.show_rewarded("revive"):
+			state.flags["revive_ad_used"] = true
+			return true
+		return false
 	var parts := _dialog_frame("death_title", Style.C_DANGER)
 	var bg: Control = parts[0]
 	var v: VBoxContainer = parts[1]
@@ -1158,7 +1168,7 @@ func _boss_floor(boss_id: String) -> void:
 	var b := Style.button(tr("opt_fight"), "CandleButton", 80)
 	panel_box.add_child(b)
 	Widgets.pop_in(b, 0.3)
-	if demo:
+	if autoplay:
 		await _wait(1.5)
 	else:
 		await b.pressed
@@ -1167,9 +1177,25 @@ func _boss_floor(boss_id: String) -> void:
 	await _combat([boss_id], true)
 	if state.dead:
 		return
+	var first := Profile.boss_wins(boss_id) == 0
 	state.bosses_beaten.append(boss_id)
 	Profile.register_boss_win(boss_id)
-	Backend.log_event("boss_win", {"boss": boss_id, "floor": state.floor_n})
+	Backend.log_event("boss_win", {"boss": boss_id, "floor": state.floor_n, "first": first})
+	var m := GameData.monster(boss_id)
+	var dia := int(m.get("diamonds_first", 0)) if first else int(m.get("diamonds_repeat", 0))
+	if dia > 0 and not demo:
+		Profile.add_diamonds(dia, "boss_" + boss_id)
+		fx.float_text(hero_view.body_center_global() + Vector2(0, -230), tr("reward_diamonds") % dia, Style.C_DIAMOND, 30)
+		await _wait(0.6)
+	# Hidra: só aparece para quem vence o Dragão Ancião na forma Wyrm Ósseo.
+	if boss_id == "boss_ancient_dragon" and Body.active_forms(state.equipped).has(String(GameData.bal("run/secret_requires_form", "form_bone_wyrm"))):
+		state.flags["hydra_unlocked"] = true
+		state.total_floors = int(GameData.bal("run/secret_floor", 31))
+		_refresh_hud()
+		cam.shake(0.8)
+		Haptics.heavy()
+		_show_banner(tr("hydra_awakens"), Color("ff5032"), 1.6)
+		await _show_result(tr("event_hydra_unlock_text"))
 
 
 # ================================================================ fim
@@ -1206,7 +1232,7 @@ func _end_run() -> void:
 	var card := Style.button(tr("btn_view_card"), "", 84)
 	card.pressed.connect(func(): dialog_closed.emit(true))
 	v.add_child(card)
-	if demo:
+	if autoplay:
 		await _wait(2.5)
 	else:
 		await dialog_closed

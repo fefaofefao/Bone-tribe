@@ -223,3 +223,93 @@ card_title,Creature Card
 card_forms,Form: %s
 card_victory,Beat the Crypt!
 combat_turn,Turn %d
+bone_skull_cyclops_name,Cyclops Skull
+bone_skull_cyclops_desc,"Eye beam every 3 turns, 150% damage."
+bone_skull_cyclops_part,Cyclops
+bone_skull_cyclops_adj,One-Eyed
+bone_skull_dragon_name,Dragon Skull
+bone_skull_dragon_desc,Fire breath on all enemies every 4 turns. Small monsters flee.
+bone_skull_dragon_part,Dragon
+bone_skull_dragon_adj,Ancestral
+bone_ribs_turtle_name,Turtle Ribs
+bone_ribs_turtle_desc,+30% defense.
+bone_ribs_turtle_part,Turtle
+bone_ribs_turtle_adj,Armored
+bone_ribs_golem_name,Golem Cage
+bone_ribs_golem_desc,Shield of 20% HP at the start of each combat.
+bone_ribs_golem_part,Golem
+bone_ribs_golem_adj,Runic
+bone_pincer_crab_name,Crab Pincer
+bone_pincer_crab_desc,+4 attack. 20% chance to stun.
+bone_pincer_crab_part,Crab
+bone_pincer_crab_adj,Abyssal
+bone_stinger_wasp_name,Wasp Stinger
+bone_stinger_wasp_desc,+3 attack. Attacks apply poison.
+bone_stinger_wasp_part,Wasp
+bone_stinger_wasp_adj,Buzzing
+bone_blade_mantis_name,Mantis Blade
+bone_blade_mantis_desc,"+6 attack. Strikes twice per turn, 60% damage each."
+bone_blade_mantis_part,Mantis
+bone_blade_mantis_adj,Razor
+bone_fist_golem_name,Golem Fist
+bone_fist_golem_desc,+8 attack. 200% damage punch every 4 turns.
+bone_fist_golem_part,Golem
+bone_fist_golem_adj,Crushing
+bone_legs_grasshopper_name,Grasshopper Legs
+bone_legs_grasshopper_desc,Avoids 15% of traps and strikes first on turn 1.
+bone_legs_grasshopper_part,Grasshopper
+bone_legs_grasshopper_adj,Hopping
+bone_legs_centaur_name,Centaur Legs
+bone_legs_centaur_desc,Always strikes first.
+bone_legs_centaur_part,Centaur
+bone_legs_centaur_adj,Galloping
+bone_shell_beetle_name,Beetle Shell
+bone_shell_beetle_desc,Reflects 15% of damage taken.
+bone_shell_beetle_part,Beetle
+bone_shell_beetle_adj,Shelled
+bone_wings_dragon_name,Dragon Wings
+bone_wings_dragon_desc,One extra action every 5 turns.
+bone_wings_dragon_part,Dragon
+bone_wings_dragon_adj,Winged
+bone_tail_lizard_name,Lizard Tail
+bone_tail_lizard_desc,Regenerates 3% HP per turn.
+bone_tail_lizard_part,Lizard
+bone_tail_lizard_adj,Blazing
+bone_spine_hydra_name,Hydra Spine
+bone_spine_hydra_desc,Opens a third arm.
+bone_spine_hydra_part,Hydra
+bone_spine_hydra_adj,Many-Headed
+monster_stone_turtle_name,Stone Turtle
+monster_abyssal_crab_name,Abyssal Crab
+monster_bone_wasp_name,Bony Wasp
+monster_giant_mantis_name,Giant Mantis
+monster_bone_grasshopper_name,Bone Grasshopper
+monster_bony_centaur_name,Bony Centaur
+monster_armored_beetle_name,Armored Beetle
+monster_ash_lizard_name,Ash Lizard
+monster_bony_cyclops_name,Bony Cyclops
+boss_forgotten_golem_name,Forgotten Golem
+boss_ancient_dragon_name,Ancient Dragon
+boss_hydra_name,Hydra
+form_werewolf_name,Bone Werewolf
+form_werewolf_desc,"Below 30% HP, attack doubles."
+form_swarm_queen_name,Swarm Queen
+form_swarm_queen_desc,Summons 2 bone insects at the start of each combat.
+form_leviathan_name,Leviathan
+form_leviathan_desc,"Every 5 turns, a wave stuns all enemies."
+form_bone_wyrm_name,Bone Wyrm
+form_bone_wyrm_desc,Fire breath on all enemies every 3 turns.
+form_colossus_name,Colossus
+form_colossus_desc,Immune to the first hit of each combat; size doubles.
+form_lich_desc,Revives once per run with 50% HP.
+form_chimera_name,Chimera
+form_chimera_desc,+8% to all stats per equipped family.
+form_abyssal_knight_name,Abyssal Knight
+form_abyssal_knight_desc,Counterattacks every blocked hit.
+event_boss_forgotten_golem_text,"A pile of stones rises, grinding blue runes. The Forgotten Golem can't remember who it is, but it remembers how to crush."
+event_boss_ancient_dragon_text,The air grows hot. Huge bones uncoil in the dark and two eyes light up like embers. The Ancient Dragon woke up grumpy.
+event_boss_hydra_text,"From the Dragon's ashes, three necks rise. Each head argues with the others about who gets to bite you first."
+hydra_awakens,The Hydra awakens!
+event_hydra_unlock_text,Your Bone Wyrm's fire called something ancient. The floor shakes. The crypt has one more floor.
+reward_diamonds,+%d diamonds
+special_bite,Triple bite!

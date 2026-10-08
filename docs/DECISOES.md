@@ -74,3 +74,27 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
   exige um plugin Android, que fica para quando os SDKs reais entrarem.
 - **Modo demonstração**: sequência fixa em `balance.json -> demo`, escolhas automáticas,
   Ossinho reforçado e revive garantido, para gravar vídeos sem falhas.
+
+## Catálogo completo (Passo 3)
+
+- **Partida completa**: 30 andares (eventos), chefes nos andares 10 (Rei Rato), 20 (Golem
+  Esquecido) e 30 (Dragão Ancião). Quem vence o Dragão com o Wyrm Ósseo ativo destrava o
+  andar 31 com a Hidra. O protótipo de 10 andares continua disponível (`run.prototype_mode`)
+  e é usado pelo modo demonstração.
+- **Peças de família**: com 20 ossos, Sombra tem só 2 ossos e Marinho 3, e os ossos de Dragão
+  que formariam o Wyrm só caem do próprio Dragão. Para todas as formas serem possíveis:
+  osso **lendário conta 2 peças** e **cada nível acima do 1 soma +1 peça**
+  (`balance.json -> forms_rule`). Isso também dá peso às melhorias de osso (descanso,
+  Bigorna, Caçador de Ossos). Sinergias de 2 peças usam a mesma contagem.
+- **Duas Lâminas de Louva-a-deus** somam golpes (1 + 1 + 1 = 3 golpes de 60%), o que quebra o
+  escudo do Golem num turno, como o GDD pede ("ensina ataques múltiplos").
+- **Colosso**: "o tamanho dobra" foi feito como 1,8× para o corpo caber na tela em retrato.
+- **Ciclope Ossudo** dispara um raio ocular a cada 3 turnos; **Lagarto de Cinzas** regenera;
+  **Hidra** morde 3 vezes por turno e regenera 3% por turno.
+- **Chefes soltam um osso** sorteado entre os seus (Gaiola ou Punho de Golem; Crânio ou Asas
+  de Dragão): garantido na 1ª vitória e 10% depois. Diamantes por chefe conforme o GDD.
+- **Quimera** aparece com frequência quando o corpo está cheio de famílias variadas
+  (+8% por família, como no GDD); o equilíbrio dos chefes finais já considera isso.
+- **Equilíbrio dos chefes** (simulação de 50 jogadores × 12 partidas, antes das relíquias e
+  companheiros): Rei Rato 1ª vitória na partida ~3; Golem ~6,5; Dragão 0% na 1ª partida e
+  1ª vitória média na partida ~7. Multiplicadores por chefe em `monsters.json`.

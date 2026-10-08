@@ -32,6 +32,12 @@ func _ready() -> void:
 			s.bones += st.non_basic_bones().size()
 			if st.dead:
 				s.dead += 1
+			if args.has("debug") and st.bosses_beaten.has("boss_ancient_dragon") and r < 3:
+				var parts := []
+				for sl in st.equipped:
+					parts.append("%s:%s+%d" % [String(sl).replace("slot_", ""), String(st.equipped[sl].id).replace("bone_", ""), int(st.equipped[sl].level) - 1])
+				var hf := st.make_hero()
+				print("vitória sobre o Dragão (partida %d) nível %d: %s | vida %d atk %.1f def %.0f crit %.2f esq %.2f regen %.2f roubo %.2f formas %s" % [r + 1, st.level, ", ".join(parts), hf.max_hp, hf.atk, hf.def, hf.crit, hf.dodge, hf.regen, hf.lifesteal, Body.active_forms(st.equipped)])
 			for b in st.bosses_beaten:
 				s.bosses[b] = int(s.bosses.get(b, 0)) + 1
 				var key := "%d:%s" % [p, b]

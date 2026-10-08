@@ -91,10 +91,11 @@ func step() -> Array:
 			_tick_statuses(en)
 	if _check_end():
 		return _log
-	if hero.regen > 0.0 and hero.alive():
-		var h := hero.heal(hero.max_hp * hero.regen)
-		if h > 0.5:
-			_emit({"t": "heal", "dst": hero, "amount": h, "source": "regen"})
+	for f: Fighter in [hero] + alive_enemies():
+		if f.regen > 0.0 and f.alive() and f.hp < f.max_hp:
+			var h := f.heal(f.max_hp * f.regen)
+			if h > 0.5:
+				_emit({"t": "heal", "dst": f, "amount": h, "source": "regen"})
 	_companion_turn()
 	for en in enemies:
 		if en.alive() and en.guard_max > 0 and en.guard_broken_turns > 0:
@@ -199,9 +200,10 @@ func _hero_target() -> Fighter:
 func _hero_basic_attack() -> void:
 	var hits := 1
 	var mult := 1.0
+	# cada osso de golpe múltiplo soma golpes (duas Lâminas = 3 golpes)
 	for e in hero.effects_of("multi_hit"):
-		hits = maxi(hits, int(e.get("hits", 2)))
-		mult = float(e.get("mult", 0.6))
+		hits += int(e.get("hits", 2)) - 1
+		mult = minf(mult, float(e.get("mult", 0.6)))
 	for i in hits:
 		var target := _hero_target()
 		if target == null:
@@ -257,6 +259,11 @@ func _enemy_act(en: Fighter) -> void:
 				if not hero.fire_resist:
 					mult *= float(a.get("no_resist_mult", 2.0))
 				_attack(en, hero, mult, "fire_breath", "fire", true)
+				acted_special = true
+			"special":
+				var sname := String(a.get("name", "special"))
+				_emit({"t": "special", "src": en, "name": sname})
+				_attack(en, hero, float(a.get("mult", 1.3)), sname, String(a.get("element", "")), true)
 				acted_special = true
 	if acted_special or not hero.alive():
 		return

@@ -26,6 +26,9 @@ func play() -> RunState:
 			_combat([boss], true)
 			if not state.dead:
 				state.bosses_beaten.append(boss)
+				if boss == "boss_ancient_dragon" and Body.active_forms(state.equipped).has("form_bone_wyrm"):
+					state.flags["hydra_unlocked"] = true
+					state.total_floors = int(GameData.bal("run/secret_floor", 31))
 			continue
 		var ev := state.pick_event()
 		if ev.is_empty():
@@ -121,14 +124,16 @@ func _combat(ids: Array, is_boss: bool) -> void:
 		xp += MonsterFactory.xp_for(e.id, state.floor_n)
 		state.add_dust(int(GameData.bal("dust/per_kill", 3)))
 		var m := GameData.monster(e.id)
+		if String(m.get("kind", "")) == "boss":
+			var bb := MonsterFactory.boss_drop(e.id, 0, state.rng)
+			if bb != "":
+				offer({"id": bb, "level": 1})
+			continue
 		for bid in m.get("drops", []):
 			var b := GameData.bone(bid)
 			var chance := float(GameData.bal("drops/" + String(b.get("rarity", "common")), 0.25)) + state.stat("drop_bonus")
-			if String(m.get("kind", "")) == "boss":
-				chance = 1.0
 			if state.rng.randf() < chance:
 				offer({"id": bid, "level": 1})
-				break
 	_levelups(state.add_xp(xp))
 
 

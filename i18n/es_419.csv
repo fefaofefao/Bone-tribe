@@ -223,3 +223,93 @@ card_title,Tarjeta de Criatura
 card_forms,Forma: %s
 card_victory,¡Venció la Cripta!
 combat_turn,Turno %d
+bone_skull_cyclops_name,Cráneo de Cíclope
+bone_skull_cyclops_desc,"Rayo ocular cada 3 turnos, 150% de daño."
+bone_skull_cyclops_part,Cíclope
+bone_skull_cyclops_adj,Tuerto
+bone_skull_dragon_name,Cráneo de Dragón
+bone_skull_dragon_desc,Aliento de fuego a todos los enemigos cada 4 turnos. Los monstruos pequeños huyen.
+bone_skull_dragon_part,Dragón
+bone_skull_dragon_adj,Ancestral
+bone_ribs_turtle_name,Costillas de Tortuga
+bone_ribs_turtle_desc,+30% de defensa.
+bone_ribs_turtle_part,Tortuga
+bone_ribs_turtle_adj,Blindado
+bone_ribs_golem_name,Jaula de Gólem
+bone_ribs_golem_desc,Escudo del 20% de la vida al inicio de cada combate.
+bone_ribs_golem_part,Gólem
+bone_ribs_golem_adj,Rúnico
+bone_pincer_crab_name,Pinza de Cangrejo
+bone_pincer_crab_desc,+4 de ataque. 20% de probabilidad de aturdir.
+bone_pincer_crab_part,Cangrejo
+bone_pincer_crab_adj,Abisal
+bone_stinger_wasp_name,Aguijón de Avispa
+bone_stinger_wasp_desc,+3 de ataque. Los ataques aplican veneno.
+bone_stinger_wasp_part,Avispa
+bone_stinger_wasp_adj,Zumbador
+bone_blade_mantis_name,Hoja de Mantis
+bone_blade_mantis_desc,"+6 de ataque. Ataca 2 veces por turno, 60% de daño cada una."
+bone_blade_mantis_part,Mantis
+bone_blade_mantis_adj,Afilado
+bone_fist_golem_name,Puño de Gólem
+bone_fist_golem_desc,+8 de ataque. Puñetazo de 200% de daño cada 4 turnos.
+bone_fist_golem_part,Gólem
+bone_fist_golem_adj,Aplastante
+bone_legs_grasshopper_name,Patas de Saltamontes
+bone_legs_grasshopper_desc,Evita el 15% de las trampas y ataca primero en el 1.er turno.
+bone_legs_grasshopper_part,Saltamontes
+bone_legs_grasshopper_adj,Saltarín
+bone_legs_centaur_name,Patas de Centauro
+bone_legs_centaur_desc,Siempre ataca primero.
+bone_legs_centaur_part,Centauro
+bone_legs_centaur_adj,Galopante
+bone_shell_beetle_name,Caparazón de Escarabajo
+bone_shell_beetle_desc,Refleja el 15% del daño recibido.
+bone_shell_beetle_part,Escarabajo
+bone_shell_beetle_adj,Acorazado
+bone_wings_dragon_name,Alas de Dragón
+bone_wings_dragon_desc,Una acción extra cada 5 turnos.
+bone_wings_dragon_part,Dragón
+bone_wings_dragon_adj,Alado
+bone_tail_lizard_name,Cola de Lagarto
+bone_tail_lizard_desc,Regenera el 3% de la vida por turno.
+bone_tail_lizard_part,Lagarto
+bone_tail_lizard_adj,Llameante
+bone_spine_hydra_name,Columna de Hidra
+bone_spine_hydra_desc,Abre un tercer brazo.
+bone_spine_hydra_part,Hidra
+bone_spine_hydra_adj,Policéfalo
+monster_stone_turtle_name,Tortuga de Piedra
+monster_abyssal_crab_name,Cangrejo Abisal
+monster_bone_wasp_name,Avispa Huesuda
+monster_giant_mantis_name,Mantis Gigante
+monster_bone_grasshopper_name,Saltamontes de Huesos
+monster_bony_centaur_name,Centauro Huesudo
+monster_armored_beetle_name,Escarabajo Blindado
+monster_ash_lizard_name,Lagarto de Cenizas
+monster_bony_cyclops_name,Cíclope Huesudo
+boss_forgotten_golem_name,Gólem Olvidado
+boss_ancient_dragon_name,Dragón Anciano
+boss_hydra_name,Hidra
+form_werewolf_name,Hombre Lobo de Hueso
+form_werewolf_desc,"Por debajo del 30% de vida, el ataque se duplica."
+form_swarm_queen_name,Reina Enjambre
+form_swarm_queen_desc,Invoca 2 insectos de hueso al inicio de cada combate.
+form_leviathan_name,Leviatán
+form_leviathan_desc,"Cada 5 turnos, una ola aturde a todos los enemigos."
+form_bone_wyrm_name,Wyrm Óseo
+form_bone_wyrm_desc,Aliento de fuego a todos los enemigos cada 3 turnos.
+form_colossus_name,Coloso
+form_colossus_desc,Inmune al primer golpe de cada combate; el tamaño se duplica.
+form_lich_desc,Revive una vez por partida con el 50% de la vida.
+form_chimera_name,Quimera
+form_chimera_desc,+8% a todos los atributos por familia equipada.
+form_abyssal_knight_name,Caballero Abisal
+form_abyssal_knight_desc,Contraataca cada golpe bloqueado.
+event_boss_forgotten_golem_text,"Una pila de piedras se levanta, rechinando runas azules. El Gólem Olvidado no recuerda quién es, pero sí cómo aplastar."
+event_boss_ancient_dragon_text,El aire se calienta. Huesos enormes se desenroscan en la oscuridad y dos ojos se encienden como brasas. El Dragón Anciano despertó de mal humor.
+event_boss_hydra_text,De las cenizas del Dragón se alzan tres cuellos. Cada cabeza discute con las otras quién te morderá primero.
+hydra_awakens,¡La Hidra despertó!
+event_hydra_unlock_text,El fuego de tu Wyrm Óseo llamó a algo antiguo. El suelo tiembla. La cripta tiene un piso más.
+reward_diamonds,+%d diamantes
+special_bite,¡Mordida triple!
