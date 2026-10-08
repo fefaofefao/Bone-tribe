@@ -1,12 +1,16 @@
 extends RefCounted
-## Provedor simulado do Firebase. Não faz rede e não usa credenciais.
-## O horário "do servidor" é o relógio do sistema mais um deslocamento de teste
-## persistido em user://mock_backend.json.
+## Provedor local do backend (sem Firebase e sem credenciais).
+## Horário: relógio do aparelho + deslocamento. O deslocamento é corrigido
+## pelo horário de rede (BackendService.sync_network_time) e fica salvo em
+## user://mock_backend.json, junto com o maior horário já visto: voltar o
+## relógio do celular não faz o tempo do jogo andar para trás.
+## Analytics: grava os eventos em user://analytics_mock.log.
 
 const STATE_PATH := "user://mock_backend.json"
 const LOG_PATH := "user://analytics_mock.log"
 
 var offset := 0
+var last_seen := 0
 var _synced_at := 0
 
 
@@ -15,18 +19,34 @@ func sync_time() -> void:
 		var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(STATE_PATH))
 		if typeof(d) == TYPE_DICTIONARY:
 			offset = int(d.get("offset", 0))
+			last_seen = int(d.get("last_seen", 0))
 	_synced_at = int(Time.get_unix_time_from_system())
 
 
 func server_now() -> int:
-	return int(Time.get_unix_time_from_system()) + offset
+	var t := int(Time.get_unix_time_from_system()) + offset
+	if t > last_seen:
+		last_seen = t
+	return last_seen
+
+
+## Horário confiável recebido da rede.
+func set_server_time(unix_time: int) -> void:
+	offset = unix_time - int(Time.get_unix_time_from_system())
+	# com horário de rede confiável, o maior horário visto volta a ser o real
+	last_seen = unix_time
+	_save()
 
 
 func debug_advance(seconds: int) -> void:
 	offset += seconds
+	_save()
+
+
+func _save() -> void:
 	var f := FileAccess.open(STATE_PATH, FileAccess.WRITE)
 	if f:
-		f.store_string(JSON.stringify({"offset": offset}))
+		f.store_string(JSON.stringify({"offset": offset, "last_seen": last_seen}))
 
 
 func log_event(event_name: String, params: Dictionary) -> void:

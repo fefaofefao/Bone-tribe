@@ -21,6 +21,7 @@ var shop: Dictionary = {}
 var login: Dictionary = {}
 var skins: Dictionary = {}
 var app: Dictionary = {}
+var admob: Dictionary = {}
 
 var bone_order: Array = []
 var monster_order: Array = []
@@ -56,6 +57,7 @@ func reload() -> void:
 	login = _read("login.json", {})
 	skins = _index(_read("skins.json", []), [])
 	app = _read("app.json", {})
+	admob = _read("admob.json", {})
 	for e in load_errors:
 		push_error(e)
 

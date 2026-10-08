@@ -1,0 +1,7 @@
+{
+	"_doc": "IDs do AdMob. Os valores abaixo são os IDs de TESTE do Google. O workflow do GitHub troca pelos IDs reais quando as variáveis ADMOB_APP_ID, ADMOB_REWARDED_ID e ADMOB_INTERSTITIAL_ID existem no repositório (Settings > Secrets and variables > Actions > Variables).",
+	"app_id": "ca-app-pub-3940256099942544~3347511713",
+	"rewarded": "ca-app-pub-3940256099942544/5224354917",
+	"interstitial": "ca-app-pub-3940256099942544/1033173712",
+	"max_ad_content_rating": "T"
+}

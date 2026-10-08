@@ -3,6 +3,7 @@ extends Control
 ## e desafio. Compartilhar exporta a imagem em 1080x1920.
 
 const CARD_SIZE := Vector2i(1080, 1920)
+const NativeShare := preload("res://scripts/core/native_share.gd")
 
 var viewport: SubViewport
 var creature: Node2D
@@ -147,8 +148,15 @@ func _share() -> void:
 	DirAccess.make_dir_recursive_absolute("user://cards")
 	var path := "user://cards/bonetribe_%d.png" % Backend.now()
 	img.save_png(path)
-	Backend.log_event("card_share", {"name": Body.creature_name(equipped)})
-	# Compartilhamento nativo exige plugin Android; aqui o arquivo fica salvo.
+	var creature_name := Body.creature_name(equipped)
+	Backend.log_event("card_share", {"name": creature_name})
+	var text := tr("card_share_text") % creature_name
+	var link := String(GameData.app.get("store_url", ""))
+	if link != "":
+		text += " " + link
+	if NativeShare.share_image(path, text, tr("btn_share")):
+		return
+	# sem Android (ou se o menu falhar), o arquivo fica salvo no aparelho
 	_toast.text = tr("card_saved") % ProjectSettings.globalize_path(path).get_file()
 	var tw := create_tween()
 	tw.tween_property(_toast, "modulate:a", 1.0, 0.2)

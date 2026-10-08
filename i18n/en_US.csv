@@ -827,3 +827,10 @@ log_summon,%s called for help!
 log_special,%s uses %s!
 log_death,%s fell apart!
 log_stunned,%s is stunned
+ad_unavailable,No ad available right now. Try again in a moment.
+iap_unavailable,The Google Play store is not available right now.
+iap_failed,The purchase was not completed. You were not charged.
+iap_pending,Payment pending: the item arrives as soon as Google confirms it.
+iap_restored,Purchase delivered: %s
+menu_ad_privacy,Ad privacy
+share_saved,Card saved to your gallery!

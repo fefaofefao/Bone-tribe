@@ -1,7 +1,8 @@
 {
-	"_doc": "Dados de publicação. privacy_url e support_email precisam ser preenchidos antes de enviar para a Google Play (ver docs/PUBLICACAO.md).",
+	"_doc": "Dados de publicação. privacy_url e support_email precisam ser preenchidos antes de enviar para a Google Play (ver docs/PUBLICACAO.md). store_url vai no texto do compartilhamento.",
 	"privacy_url": "",
 	"support_email": "",
 	"author": "Fernando Martins Sampaio",
-	"supporters": []
+	"supporters": [],
+	"store_url": "https://play.google.com/store/apps/details?id=com.bonetribe.game"
 }

@@ -13,3 +13,8 @@ export_credentials.cfg
 *.jks
 # Python
 __pycache__/
+# Binários Android dos plugins (baixados pelo workflow do GitHub)
+/addons/admob/android/bin/
+/addons/admob/ios/bin/
+/addons/admob/downloads/
+/addons/GodotGooglePlayBilling/bin/

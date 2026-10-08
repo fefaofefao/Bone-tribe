@@ -103,8 +103,31 @@ jobs:
           echo "versionName=$NAME versionCode=$CODE"
           grep -n "^version/" export_presets.cfg
 
-      - name: Importar recursos
-        run: godot --headless --import --path . || true
+      - name: Plugin Google Play Billing (AARs do release oficial)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BILLING_VERSION: "3.3.0"
+        run: |
+          set -e
+          mkdir -p /tmp/billing addons/GodotGooglePlayBilling/bin/debug addons/GodotGooglePlayBilling/bin/release
+          gh release download "$BILLING_VERSION" -R godot-sdk-integrations/godot-google-play-billing -p '*.zip' -D /tmp/billing
+          cd /tmp/billing && for z in *.zip; do unzip -o -q "$z"; done && cd -
+          cp "$(find /tmp/billing -name 'GodotGooglePlayBilling-debug.aar' | head -1)" addons/GodotGooglePlayBilling/bin/debug/
+          cp "$(find /tmp/billing -name 'GodotGooglePlayBilling-release.aar' | head -1)" addons/GodotGooglePlayBilling/bin/release/
+          ls -la addons/GodotGooglePlayBilling/bin/*
+
+      - name: IDs do AdMob (variáveis do repositório; sem elas ficam os IDs de teste)
+        env:
+          ADMOB_APP_ID: ${{ vars.ADMOB_APP_ID }}
+          ADMOB_REWARDED_ID: ${{ vars.ADMOB_REWARDED_ID }}
+          ADMOB_INTERSTITIAL_ID: ${{ vars.ADMOB_INTERSTITIAL_ID }}
+        run: python3 tools/admob_ids.py
+
+      - name: Importar recursos (baixa também os binários Android do AdMob)
+        run: |
+          godot --headless --import --path . || true
+          test -f addons/admob/android/bin/ads/poing_godot_admob_ads.gd
+          grep -n "app_id" project.godot || echo "AdMob: usando o ID de app de teste"
 
       - name: Testes automáticos
         run: godot --headless --path . res://tests/TestRunner.tscn

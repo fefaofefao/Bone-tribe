@@ -827,3 +827,10 @@ log_summon,¡%s llamó refuerzos!
 log_special,¡%s usa %s!
 log_death,¡%s se desarmó!
 log_stunned,%s está aturdido
+ad_unavailable,No hay anuncios disponibles ahora. Inténtalo de nuevo en un momento.
+iap_unavailable,La tienda de Google Play no está disponible ahora.
+iap_failed,La compra no se completó. No se cobró nada.
+iap_pending,Pago pendiente: el objeto llega en cuanto Google lo confirme.
+iap_restored,Compra entregada: %s
+menu_ad_privacy,Privacidad de anuncios
+share_saved,¡Tarjeta guardada en la galería!

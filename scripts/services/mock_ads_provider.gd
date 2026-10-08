@@ -11,8 +11,9 @@ func show_rewarded(placement: String) -> bool:
 	return true
 
 
-func show_interstitial() -> void:
+func show_interstitial() -> bool:
 	await _overlay("ad_mock_interstitial", INTERSTITIAL_SECONDS, "interstitial")
+	return true
 
 
 func _overlay(title_key: String, seconds: float, placement: String) -> void:

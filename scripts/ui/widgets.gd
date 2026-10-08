@@ -58,6 +58,32 @@ static func dim_overlay(parent: Node, alpha := 0.72) -> ColorRect:
 	return bg
 
 
+## Aviso curto no rodapé da tela (some sozinho).
+static func toast(text: String, seconds := 2.4) -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	var layer := CanvasLayer.new()
+	layer.layer = 110
+	tree.root.add_child(layer)
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", Style.flat_box(Color(0.08, 0.06, 0.09, 0.95), Color(Style.C_CANDLE, 0.6), 18, 2, 14))
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var l := Style.label(text, 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	p.add_child(l)
+	p.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	p.offset_left = -320
+	p.offset_right = 320
+	p.offset_top = -230
+	p.offset_bottom = -150
+	layer.add_child(p)
+	pop_in(p)
+	var tw := p.create_tween()
+	tw.tween_interval(seconds)
+	tw.tween_property(p, "modulate:a", 0.0, 0.3)
+	tw.tween_callback(layer.queue_free)
+
+
 ## Entrada animada de um painel (sobe e aparece).
 static func pop_in(c: Control, delay := 0.0) -> void:
 	c.modulate.a = 0.0

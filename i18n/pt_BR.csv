@@ -827,3 +827,10 @@ log_summon,%s chamou reforços!
 log_special,%s usa %s!
 log_death,%s se desmontou!
 log_stunned,%s está atordoado
+ad_unavailable,Nenhum anúncio disponível agora. Tente de novo daqui a pouco.
+iap_unavailable,A loja da Google Play não está disponível agora.
+iap_failed,A compra não foi concluída. Nada foi cobrado.
+iap_pending,Pagamento pendente: o item chega assim que a Google confirmar.
+iap_restored,Compra entregue: %s
+menu_ad_privacy,Privacidade dos anúncios
+share_saved,Cartão salvo na galeria!

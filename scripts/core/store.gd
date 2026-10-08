@@ -270,19 +270,27 @@ static func reward_shop_ad() -> int:
 	return n
 
 
-# ----------------------------------------------------- compras (simuladas)
+# ------------------------------------------------- compras com dinheiro
 
 static func iap(id: String) -> Dictionary:
 	return Billing.product(id)
 
 
-## Compra com dinheiro (Google Play Billing simulado). Use com await.
+## Compra com dinheiro (Google Play Billing). Use com await.
 static func buy_iap(id: String, rng: RandomNumberGenerator) -> Array:
 	var p := iap(id)
 	if p.is_empty():
 		return []
 	var ok: bool = await Billing.purchase(id)
 	if not ok:
+		return []
+	return deliver_iap(id, rng)
+
+
+## Entrega o conteúdo de uma compra confirmada (também usada ao restaurar).
+static func deliver_iap(id: String, rng: RandomNumberGenerator) -> Array:
+	var p := iap(id)
+	if p.is_empty():
 		return []
 	var purchases: Dictionary = Profile.data.shop.purchases
 	purchases[id] = int(purchases.get(id, 0)) + 1
@@ -298,6 +306,7 @@ static func buy_iap(id: String, rng: RandomNumberGenerator) -> Array:
 			out = [{"type": "subscription"}]
 		_:
 			out = grant(p.get("content", []), rng, "iap")
+	Profile.save()
 	Backend.log_event("iap_revenue", {"product": id, "usd": p.get("price_usd", 0)})
 	return out
 
