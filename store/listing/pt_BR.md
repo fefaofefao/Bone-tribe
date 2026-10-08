@@ -12,7 +12,7 @@ Cada partida dura poucos minutos e termina com uma criatura única. Asas de morc
 
 🦴 CORPO MONTÁVEL
 • 7 encaixes: crânio, costelas, dois braços, pernas, costas e cauda
-• 20 ossos de 6 famílias de monstros
+• 67 ossos de 6 famílias de monstros: mais de 10 opções para cada parte do corpo
 • Junte peças da mesma família para despertar formas como a Manticora Noturna
 • Descubra 3 formas secretas… e cuidado com a rejeição!
 

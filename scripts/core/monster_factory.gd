@@ -77,6 +77,19 @@ static func xp_for(monster_id: String, floor_n: int) -> int:
 	return int(roundf(base * float(m.get("xp_mult", 1.0))))
 
 
+## Osso de um monstro comum: sorteia uma das partes que ele tem e testa a chance
+## pela raridade dela. No máximo um osso por monstro, então ter mais variações
+## não aumenta a quantidade de ossos por partida.
+static func roll_bone_drop(monster_id: String, rng: RandomNumberGenerator, drop_bonus := 0.0) -> String:
+	var drops: Array = GameData.monster(monster_id).get("drops", [])
+	if drops.is_empty():
+		return ""
+	var bid := String(drops[rng.randi() % drops.size()])
+	var b := GameData.bone(bid)
+	var chance := float(GameData.bal("drops/" + String(b.get("rarity", "common")), 0.25)) + drop_bonus
+	return bid if rng.randf() < chance else ""
+
+
 ## Ossos que o chefe solta: garantido na 1ª vitória, 10% nas seguintes; um só,
 ## sorteado entre os ossos do chefe (ex.: Gaiola ou Punho de Golem).
 static func boss_drop(monster_id: String, wins_before: int, rng: RandomNumberGenerator) -> String:

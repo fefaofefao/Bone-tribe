@@ -534,10 +534,25 @@ def draw_generic_bone(bone_id, slot, family):
     finish(cv, W, H, out("bones", bone_id + ".png"))
 
 
+def _extra_drawers():
+    """Ossos da expansão (mais de 10 por parte), desenhados em módulos separados."""
+    draw = {}
+    for mod in ("art_extra_head", "art_extra_limbs", "art_extra_back"):
+        try:
+            draw.update(__import__(mod).DRAW)
+        except ImportError:
+            pass
+    return draw
+
+
 def gen_bones():
     draw_base_parts()
+    extra = _extra_drawers()
     for b in data("bones.json"):
         slot = b.get("slot") or b["slots"][0]
+        if b["id"] in extra:
+            extra[b["id"]](b["id"], b.get("family", ""))
+            continue
         if b["id"] not in KNOWN_BONES:
             draw_generic_bone(b["id"], slot, b.get("family", ""))
             continue

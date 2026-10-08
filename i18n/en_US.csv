@@ -843,3 +843,195 @@ skin_amber_moon_desc,"Exclusive to the First 24 Hours Kit, with a moon charm."
 skin_founder_desc,"Exclusive to the Supporter Pack, with a founder's crown."
 card_more_skins,More skins
 credits_your_name,Your name in the credits
+bone_skull_bear_name,Bear Skull
+bone_skull_bear_desc,+4 attack and +15 HP.
+bone_skull_bear_part,Bear
+bone_skull_bear_adj,Ferocious
+bone_skull_turtle_name,Turtle Skull
+bone_skull_turtle_desc,+15 defense and +15 HP.
+bone_skull_turtle_part,Turtle
+bone_skull_turtle_adj,Patient
+bone_skull_bat_name,Bat Skull
+bone_skull_bat_desc,8% life steal and +8% dodge.
+bone_skull_bat_part,Bat
+bone_skull_bat_adj,Vampiric
+bone_skull_mantis_name,Mantis Skull
+bone_skull_mantis_desc,+18% critical chance and 45% stronger crits.
+bone_skull_mantis_part,Mantis
+bone_skull_mantis_adj,Precise
+bone_skull_lizard_name,Lizard Skull
+bone_skull_lizard_desc,+22% fire damage and +15 HP.
+bone_skull_lizard_part,Lizard
+bone_skull_lizard_adj,Ashen
+bone_skull_rat_name,Rat Skull
+bone_skull_rat_desc,+15% bone dust and +8% dodge.
+bone_skull_rat_part,Rat
+bone_skull_rat_adj,Sneaky
+bone_skull_centaur_name,Centaur Skull
+bone_skull_centaur_desc,"+6 attack, +3 speed and +8% critical chance."
+bone_skull_centaur_part,Centaur
+bone_skull_centaur_adj,Galloping
+bone_skull_wasp_name,Wasp Skull
+bone_skull_wasp_desc,+30% poison damage and +8% critical chance.
+bone_skull_wasp_part,Wasp
+bone_skull_wasp_adj,Buzzing
+bone_ribs_bear_name,Bear Ribs
+bone_ribs_bear_desc,+38 HP.
+bone_ribs_bear_part,Bear
+bone_ribs_bear_adj,Sturdy
+bone_ribs_wolf_name,Wolf Ribs
+bone_ribs_wolf_desc,+22 HP and +2 speed.
+bone_ribs_wolf_part,Wolf
+bone_ribs_wolf_adj,Hungry
+bone_ribs_crab_name,Crab Carapace
+bone_ribs_crab_desc,+22 defense and reflects 8% of damage.
+bone_ribs_crab_part,Crab
+bone_ribs_crab_adj,Abyssal
+bone_ribs_beetle_name,Beetle Thorax
+bone_ribs_beetle_desc,+30 defense.
+bone_ribs_beetle_part,Beetle
+bone_ribs_beetle_adj,Armored
+bone_ribs_bat_name,Bat Ribs
+bone_ribs_bat_desc,8% life steal and +15 HP.
+bone_ribs_bat_part,Bat
+bone_ribs_bat_adj,Shadowy
+bone_ribs_lizard_name,Lizard Ribs
+bone_ribs_lizard_desc,Regenerates 3% HP per turn and +15 HP.
+bone_ribs_lizard_part,Lizard
+bone_ribs_lizard_adj,Scaly
+bone_ribs_mimic_name,Mimic Ribs
+bone_ribs_mimic_desc,+12% bone drop chance and +15 HP.
+bone_ribs_mimic_part,Mimic
+bone_ribs_mimic_adj,Greedy
+bone_ribs_cyclops_name,Cyclops Ribs
+bone_ribs_cyclops_desc,+45 HP and +15 defense.
+bone_ribs_cyclops_part,Cyclops
+bone_ribs_cyclops_adj,Colossal
+bone_ribs_rat_king_name,Rat King Chest
+bone_ribs_rat_king_desc,+38 HP and +15% bone dust.
+bone_ribs_rat_king_part,Rat King
+bone_ribs_rat_king_adj,Royal
+bone_claw_wolf_name,Wolf Claw
+bone_claw_wolf_desc,+4 attack and +8% critical chance.
+bone_claw_wolf_part,Wolf
+bone_claw_wolf_adj,Scratching
+bone_claw_bat_name,Bat Claw
+bone_claw_bat_desc,+3 attack and 8% life steal.
+bone_claw_bat_part,Bat
+bone_claw_bat_adj,Draining
+bone_claw_lizard_name,Lizard Claw
+bone_claw_lizard_desc,"+4 attack. Every 3 turns, a fire strike."
+bone_claw_lizard_part,Lizard
+bone_claw_lizard_adj,Scorched
+bone_fang_spider_name,Spider Fang
+bone_fang_spider_desc,+3 attack and 50% chance to poison.
+bone_fang_spider_part,Spider
+bone_fang_spider_adj,Toxic
+bone_flipper_turtle_name,Turtle Flipper
+bone_flipper_turtle_desc,+3 attack and +12 defense.
+bone_flipper_turtle_part,Turtle
+bone_flipper_turtle_adj,Seafaring
+bone_scepter_rat_king_name,Rat King Scepter
+bone_scepter_rat_king_desc,"+8 attack. Every 4 turns, a rat swarm hits everyone."
+bone_scepter_rat_king_part,Rat King
+bone_scepter_rat_king_adj,Majestic
+bone_legs_wolf_name,Wolf Legs
+bone_legs_wolf_desc,+4 speed and +8% dodge.
+bone_legs_wolf_part,Wolf
+bone_legs_wolf_adj,Swift
+bone_legs_bear_name,Bear Legs
+bone_legs_bear_desc,+22 HP and +8 defense.
+bone_legs_bear_part,Bear
+bone_legs_bear_adj,Heavy
+bone_legs_crab_name,Crab Legs
+bone_legs_crab_desc,+15% dodge and +8 defense.
+bone_legs_crab_part,Crab
+bone_legs_crab_adj,Sideways
+bone_legs_turtle_name,Turtle Legs
+bone_legs_turtle_desc,+18 defense and +15 HP.
+bone_legs_turtle_part,Turtle
+bone_legs_turtle_adj,Steady
+bone_legs_lizard_name,Lizard Legs
+bone_legs_lizard_desc,+4 speed and regenerates 1% HP per turn.
+bone_legs_lizard_part,Lizard
+bone_legs_lizard_adj,Nimble
+bone_legs_beetle_name,Beetle Legs
+bone_legs_beetle_desc,+12 defense and reflects 8% of damage.
+bone_legs_beetle_part,Beetle
+bone_legs_beetle_adj,Plated
+bone_legs_rat_name,Rat Legs
+bone_legs_rat_desc,+6 speed and 15% chance to dodge traps.
+bone_legs_rat_part,Rat
+bone_legs_rat_adj,Scurrying
+bone_legs_golem_name,Golem Legs
+bone_legs_golem_desc,+45 HP and +22 defense.
+bone_legs_golem_part,Golem
+bone_legs_golem_adj,Unshakable
+bone_wings_wasp_name,Wasp Wings
+bone_wings_wasp_desc,+3 speed and +12% dodge.
+bone_wings_wasp_part,Wasp
+bone_wings_wasp_adj,Winged
+bone_wings_mantis_name,Mantis Wings
+bone_wings_mantis_desc,+4 speed and an extra action every 6 turns.
+bone_wings_mantis_part,Mantis
+bone_wings_mantis_adj,Fluttering
+bone_shell_turtle_name,Turtle Shell
+bone_shell_turtle_desc,+22 defense and reflects 8% of damage.
+bone_shell_turtle_part,Turtle
+bone_shell_turtle_adj,Shelled
+bone_shell_crab_name,Crab Shell
+bone_shell_crab_desc,+15 defense and reflects 15% of damage.
+bone_shell_crab_part,Crab
+bone_shell_crab_adj,Spiky
+bone_wings_grasshopper_name,Grasshopper Wings
+bone_wings_grasshopper_desc,+4 speed and 15% chance to dodge traps.
+bone_wings_grasshopper_part,Grasshopper
+bone_wings_grasshopper_adj,Hopping
+bone_spikes_lizard_name,Lizard Spikes
+bone_spikes_lizard_desc,Reflects 15% of damage and +15% fire damage.
+bone_spikes_lizard_part,Lizard
+bone_spikes_lizard_adj,Thorny
+bone_quiver_centaur_name,Centaur Quiver
+bone_quiver_centaur_desc,"+3 attack. Every 3 turns, a volley of arrows hits everyone."
+bone_quiver_centaur_part,Centaur
+bone_quiver_centaur_adj,Archer
+bone_lid_mimic_name,Mimic Lid
+bone_lid_mimic_desc,+12 defense and +12% bone drop chance.
+bone_lid_mimic_part,Mimic
+bone_lid_mimic_adj,Toothy
+bone_tail_wolf_name,Wolf Tail
+bone_tail_wolf_desc,+3 speed and +8% critical chance.
+bone_tail_wolf_part,Wolf
+bone_tail_wolf_adj,Howling
+bone_tail_centaur_name,Centaur Tail
+bone_tail_centaur_desc,+4 speed and +12% dodge.
+bone_tail_centaur_part,Centaur
+bone_tail_centaur_adj,Wild
+bone_tail_bat_name,Bat Tail
+bone_tail_bat_desc,+12% dodge and 4% life steal.
+bone_tail_bat_part,Bat
+bone_tail_bat_adj,Twilight
+bone_tail_skeleton_rat_name,Skeleton Rat Tail
+bone_tail_skeleton_rat_desc,+15% bone dust.
+bone_tail_skeleton_rat_part,Rat
+bone_tail_skeleton_rat_adj,Gnawing
+bone_tail_turtle_name,Turtle Tail
+bone_tail_turtle_desc,+12 defense and +12 HP.
+bone_tail_turtle_part,Turtle
+bone_tail_turtle_adj,Serene
+bone_tail_wasp_name,Wasp Stinger Tail
+bone_tail_wasp_desc,+2 attack and 50% chance to poison.
+bone_tail_wasp_part,Wasp
+bone_tail_wasp_adj,Stinging
+bone_tail_golem_name,Golem Tail
+bone_tail_golem_desc,"+15 HP. Every 4 turns, a tail slam."
+bone_tail_golem_part,Golem
+bone_tail_golem_adj,Stony
+bone_tail_dragon_name,Dragon Tail
+bone_tail_dragon_desc,"+8 attack, +22 HP and +30% fire damage."
+bone_tail_dragon_part,Dragon
+bone_tail_dragon_adj,Ancient
+special_flame_claw,Flame claw!
+special_rat_swarm,Rat swarm!
+special_arrow_volley,Arrow volley!
+special_tail_slam,Tail slam!

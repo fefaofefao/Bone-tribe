@@ -165,11 +165,9 @@ func _combat(ids: Array, is_boss: bool) -> void:
 			if bb != "":
 				offer({"id": bb, "level": 1})
 			continue
-		for bid in m.get("drops", []):
-			var b := GameData.bone(bid)
-			var chance := float(GameData.bal("drops/" + String(b.get("rarity", "common")), 0.25)) + state.stat("drop_bonus")
-			if state.rng.randf() < chance:
-				offer({"id": bid, "level": 1})
+		var bid := MonsterFactory.roll_bone_drop(e.id, state.rng, state.stat("drop_bonus"))
+		if bid != "":
+			offer({"id": bid, "level": 1})
 	_levelups(state.add_xp(xp))
 
 

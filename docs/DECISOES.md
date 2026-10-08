@@ -204,3 +204,11 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - **Segurança:** na versão de loja do Android, os provedores simulados nunca aprovam compra nem entregam recompensa de anúncio; se o plugin real não carregar, a loja avisa que está indisponível.
 - Texto "compras simuladas neste protótipo" trocado por "Pagamento seguro pela Google Play".
 - APK com bibliotecas nativas comprimidas (o AAB não muda: a Play entrega só a parte de cada aparelho).
+
+## Mais variações de ossos (pedido do dono do projeto)
+- O catálogo passou de 20 para **67 ossos**: **11 opções por parte do corpo** (crânio, costelas, braços, pernas, costas e cauda), além do básico. O GDD previa 20 no MVP; a expansão foi pedida explicitamente.
+- Nenhum monstro novo: cada osso novo vem de um monstro que já existe e **tem aquela parte** (regra "Origem" do GDD) — ex.: o Lobo das Criptas agora solta crânio, costelas, garra, patas e cauda. Os chefes ganharam ossos raros/lendários (Pernas e Cauda de Golem, Cetro e Peito do Rei Rato, Cauda de Dragão).
+- **Quedas:** um monstro comum sorteia **uma** das partes que tem e testa a chance pela raridade dela (no máximo um osso por monstro). Assim, mais variações não aumentam a quantidade de ossos por partida.
+- **Equilíbrio:** os atributos dos ossos novos foram calibrados na simulação (`tests/BalanceSim.tscn`, 40 jogadores x 6 partidas). Na 1ª versão o jogo ficou mais difícil (os ossos novos diluíam os antigos); com +50% nos atributos a curva voltou à de antes: Rei Rato 95%, Golem 85%, Dragão 32% dos jogadores vencem até a 6ª partida.
+- Novas habilidades periódicas: Garra flamejante (fogo), Enxurrada de ratos e Chuva de flechas (atingem todos), Pancada de cauda.
+- Arte placeholder em `tools/art_extra_head.py`, `tools/art_extra_limbs.py` e `tools/art_extra_back.py`, chamada por `tools/gen_art.py bones`.

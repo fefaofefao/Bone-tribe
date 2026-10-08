@@ -1424,12 +1424,9 @@ func _roll_drops(f: Fighter) -> Array:
 		if bid != "":
 			out.append(bid)
 		return out
-	var drop_bonus := state.stat("drop_bonus")
-	for bid in m.get("drops", []):
-		var b := GameData.bone(bid)
-		var chance := float(GameData.bal("drops/" + String(b.get("rarity", "common")), 0.25)) + drop_bonus
-		if state.rng.randf() < chance:
-			out.append(bid)
+	var bid := MonsterFactory.roll_bone_drop(f.id, state.rng, state.stat("drop_bonus"))
+	if bid != "":
+		out.append(bid)
 	return out
 
 

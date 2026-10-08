@@ -12,7 +12,7 @@ Each run takes a few minutes and ends with a one-of-a-kind creature. Bat wings, 
 
 🦴 BUILD YOUR BODY
 • 7 slots: skull, ribs, two arms, legs, back and tail
-• 20 bones from 6 monster families
+• 67 bones from 6 monster families: more than 10 options for every body part
 • Match pieces from the same family to awaken forms like the Night Manticore
 • Discover 3 secret forms… and watch out for rejection!
 

@@ -843,3 +843,195 @@ skin_amber_moon_desc,"Exclusiva do Kit das primeiras 24 horas, com amuleto de lu
 skin_founder_desc,"Exclusiva do Pacote apoiador, com coroa de fundador."
 card_more_skins,Mais skins
 credits_your_name,Seu nome nos créditos
+bone_skull_bear_name,Crânio de Urso
+bone_skull_bear_desc,+4 de ataque e +15 de vida.
+bone_skull_bear_part,Urso
+bone_skull_bear_adj,Feroz
+bone_skull_turtle_name,Crânio de Tartaruga
+bone_skull_turtle_desc,+15 de defesa e +15 de vida.
+bone_skull_turtle_part,Tartaruga
+bone_skull_turtle_adj,Paciente
+bone_skull_bat_name,Crânio de Morcego
+bone_skull_bat_desc,8% de roubo de vida e +8% de esquiva.
+bone_skull_bat_part,Morcego
+bone_skull_bat_adj,Vampiro
+bone_skull_mantis_name,Crânio de Louva-a-deus
+bone_skull_mantis_desc,+18% de crítico e críticos 45% mais fortes.
+bone_skull_mantis_part,Louva-a-deus
+bone_skull_mantis_adj,Certeiro
+bone_skull_lizard_name,Crânio de Lagarto
+bone_skull_lizard_desc,+22% de dano de fogo e +15 de vida.
+bone_skull_lizard_part,Lagarto
+bone_skull_lizard_adj,Cinzento
+bone_skull_rat_name,Crânio de Rato
+bone_skull_rat_desc,+15% de pó de osso e +8% de esquiva.
+bone_skull_rat_part,Rato
+bone_skull_rat_adj,Sorrateiro
+bone_skull_centaur_name,Crânio de Centauro
+bone_skull_centaur_desc,"+6 de ataque, +3 de velocidade e +8% de crítico."
+bone_skull_centaur_part,Centauro
+bone_skull_centaur_adj,Galopante
+bone_skull_wasp_name,Crânio de Vespa
+bone_skull_wasp_desc,+30% de dano de veneno e +8% de crítico.
+bone_skull_wasp_part,Vespa
+bone_skull_wasp_adj,Zumbidor
+bone_ribs_bear_name,Costelas de Urso
+bone_ribs_bear_desc,+38 de vida.
+bone_ribs_bear_part,Urso
+bone_ribs_bear_adj,Robusto
+bone_ribs_wolf_name,Costelas de Lobo
+bone_ribs_wolf_desc,+22 de vida e +2 de velocidade.
+bone_ribs_wolf_part,Lobo
+bone_ribs_wolf_adj,Faminto
+bone_ribs_crab_name,Carapaça de Caranguejo
+bone_ribs_crab_desc,+22 de defesa e reflete 8% do dano.
+bone_ribs_crab_part,Caranguejo
+bone_ribs_crab_adj,Abissal
+bone_ribs_beetle_name,Tórax de Besouro
+bone_ribs_beetle_desc,+30 de defesa.
+bone_ribs_beetle_part,Besouro
+bone_ribs_beetle_adj,Blindado
+bone_ribs_bat_name,Costelas de Morcego
+bone_ribs_bat_desc,8% de roubo de vida e +15 de vida.
+bone_ribs_bat_part,Morcego
+bone_ribs_bat_adj,Sombrio
+bone_ribs_lizard_name,Costelas de Lagarto
+bone_ribs_lizard_desc,Regenera 3% da vida por turno e +15 de vida.
+bone_ribs_lizard_part,Lagarto
+bone_ribs_lizard_adj,Escamoso
+bone_ribs_mimic_name,Costelas de Mímico
+bone_ribs_mimic_desc,+12% de chance de osso e +15 de vida.
+bone_ribs_mimic_part,Mímico
+bone_ribs_mimic_adj,Guloso
+bone_ribs_cyclops_name,Costelas de Ciclope
+bone_ribs_cyclops_desc,+45 de vida e +15 de defesa.
+bone_ribs_cyclops_part,Ciclope
+bone_ribs_cyclops_adj,Colossal
+bone_ribs_rat_king_name,Peito do Rei Rato
+bone_ribs_rat_king_desc,+38 de vida e +15% de pó de osso.
+bone_ribs_rat_king_part,Rei Rato
+bone_ribs_rat_king_adj,Real
+bone_claw_wolf_name,Garra de Lobo
+bone_claw_wolf_desc,+4 de ataque e +8% de crítico.
+bone_claw_wolf_part,Lobo
+bone_claw_wolf_adj,Arranhador
+bone_claw_bat_name,Garra de Morcego
+bone_claw_bat_desc,+3 de ataque e 8% de roubo de vida.
+bone_claw_bat_part,Morcego
+bone_claw_bat_adj,Sugador
+bone_claw_lizard_name,Garra de Lagarto
+bone_claw_lizard_desc,"+4 de ataque. A cada 3 turnos, um golpe de fogo."
+bone_claw_lizard_part,Lagarto
+bone_claw_lizard_adj,Chamuscado
+bone_fang_spider_name,Presa de Aranha
+bone_fang_spider_desc,+3 de ataque e 50% de chance de envenenar.
+bone_fang_spider_part,Aranha
+bone_fang_spider_adj,Peçonhento
+bone_flipper_turtle_name,Nadadeira de Tartaruga
+bone_flipper_turtle_desc,+3 de ataque e +12 de defesa.
+bone_flipper_turtle_part,Tartaruga
+bone_flipper_turtle_adj,Marinho
+bone_scepter_rat_king_name,Cetro do Rei Rato
+bone_scepter_rat_king_desc,"+8 de ataque. A cada 4 turnos, uma enxurrada de ratos atinge todos."
+bone_scepter_rat_king_part,Rei Rato
+bone_scepter_rat_king_adj,Majestoso
+bone_legs_wolf_name,Patas de Lobo
+bone_legs_wolf_desc,+4 de velocidade e +8% de esquiva.
+bone_legs_wolf_part,Lobo
+bone_legs_wolf_adj,Veloz
+bone_legs_bear_name,Patas de Urso
+bone_legs_bear_desc,+22 de vida e +8 de defesa.
+bone_legs_bear_part,Urso
+bone_legs_bear_adj,Pesado
+bone_legs_crab_name,Patas de Caranguejo
+bone_legs_crab_desc,+15% de esquiva e +8 de defesa.
+bone_legs_crab_part,Caranguejo
+bone_legs_crab_adj,Lateral
+bone_legs_turtle_name,Patas de Tartaruga
+bone_legs_turtle_desc,+18 de defesa e +15 de vida.
+bone_legs_turtle_part,Tartaruga
+bone_legs_turtle_adj,Firme
+bone_legs_lizard_name,Patas de Lagarto
+bone_legs_lizard_desc,+4 de velocidade e regenera 1% da vida por turno.
+bone_legs_lizard_part,Lagarto
+bone_legs_lizard_adj,Ligeiro
+bone_legs_beetle_name,Patas de Besouro
+bone_legs_beetle_desc,+12 de defesa e reflete 8% do dano.
+bone_legs_beetle_part,Besouro
+bone_legs_beetle_adj,Couraçado
+bone_legs_rat_name,Patas de Rato
+bone_legs_rat_desc,+6 de velocidade e 15% de chance de escapar de armadilhas.
+bone_legs_rat_part,Rato
+bone_legs_rat_adj,Esgueirado
+bone_legs_golem_name,Pernas de Golem
+bone_legs_golem_desc,+45 de vida e +22 de defesa.
+bone_legs_golem_part,Golem
+bone_legs_golem_adj,Inabalável
+bone_wings_wasp_name,Asas de Vespa
+bone_wings_wasp_desc,+3 de velocidade e +12% de esquiva.
+bone_wings_wasp_part,Vespa
+bone_wings_wasp_adj,Alado
+bone_wings_mantis_name,Asas de Louva-a-deus
+bone_wings_mantis_desc,+4 de velocidade e uma ação extra a cada 6 turnos.
+bone_wings_mantis_part,Louva-a-deus
+bone_wings_mantis_adj,Esvoaçante
+bone_shell_turtle_name,Casco de Tartaruga
+bone_shell_turtle_desc,+22 de defesa e reflete 8% do dano.
+bone_shell_turtle_part,Tartaruga
+bone_shell_turtle_adj,Encouraçado
+bone_shell_crab_name,Concha de Caranguejo
+bone_shell_crab_desc,+15 de defesa e reflete 15% do dano.
+bone_shell_crab_part,Caranguejo
+bone_shell_crab_adj,Espinhoso
+bone_wings_grasshopper_name,Asas de Gafanhoto
+bone_wings_grasshopper_desc,+4 de velocidade e 15% de chance de escapar de armadilhas.
+bone_wings_grasshopper_part,Gafanhoto
+bone_wings_grasshopper_adj,Saltitante
+bone_spikes_lizard_name,Espinhos de Lagarto
+bone_spikes_lizard_desc,Reflete 15% do dano e +15% de dano de fogo.
+bone_spikes_lizard_part,Lagarto
+bone_spikes_lizard_adj,Espinhento
+bone_quiver_centaur_name,Aljava de Centauro
+bone_quiver_centaur_desc,"+3 de ataque. A cada 3 turnos, uma chuva de flechas atinge todos."
+bone_quiver_centaur_part,Centauro
+bone_quiver_centaur_adj,Arqueiro
+bone_lid_mimic_name,Tampa de Mímico
+bone_lid_mimic_desc,+12 de defesa e +12% de chance de osso.
+bone_lid_mimic_part,Mímico
+bone_lid_mimic_adj,Dentuço
+bone_tail_wolf_name,Cauda de Lobo
+bone_tail_wolf_desc,+3 de velocidade e +8% de crítico.
+bone_tail_wolf_part,Lobo
+bone_tail_wolf_adj,Uivante
+bone_tail_centaur_name,Cauda de Centauro
+bone_tail_centaur_desc,+4 de velocidade e +12% de esquiva.
+bone_tail_centaur_part,Centauro
+bone_tail_centaur_adj,Selvagem
+bone_tail_bat_name,Cauda de Morcego
+bone_tail_bat_desc,+12% de esquiva e 4% de roubo de vida.
+bone_tail_bat_part,Morcego
+bone_tail_bat_adj,Crepuscular
+bone_tail_skeleton_rat_name,Rabo de Rato-Esqueleto
+bone_tail_skeleton_rat_desc,+15% de pó de osso.
+bone_tail_skeleton_rat_part,Rato
+bone_tail_skeleton_rat_adj,Roedor
+bone_tail_turtle_name,Cauda de Tartaruga
+bone_tail_turtle_desc,+12 de defesa e +12 de vida.
+bone_tail_turtle_part,Tartaruga
+bone_tail_turtle_adj,Sereno
+bone_tail_wasp_name,Ferrão de Vespa
+bone_tail_wasp_desc,+2 de ataque e 50% de chance de envenenar.
+bone_tail_wasp_part,Vespa
+bone_tail_wasp_adj,Ferroador
+bone_tail_golem_name,Cauda de Golem
+bone_tail_golem_desc,"+15 de vida. A cada 4 turnos, uma pancada de cauda."
+bone_tail_golem_part,Golem
+bone_tail_golem_adj,Pétreo
+bone_tail_dragon_name,Cauda de Dragão
+bone_tail_dragon_desc,"+8 de ataque, +22 de vida e +30% de dano de fogo."
+bone_tail_dragon_part,Dragão
+bone_tail_dragon_adj,Ancestral
+special_flame_claw,Garra flamejante!
+special_rat_swarm,Enxurrada de ratos!
+special_arrow_volley,Chuva de flechas!
+special_tail_slam,Pancada de cauda!

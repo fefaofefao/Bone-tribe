@@ -196,11 +196,19 @@ func _eq(pairs: Array) -> Dictionary:
 
 func test_06_catalog_counts() -> void:
 	var cat := GameData.catalog_bones()
-	check(cat.size() == 20, "20 ossos no catálogo (%d)" % cat.size())
+	check(cat.size() == 67, "67 ossos no catálogo (%d)" % cat.size())
 	var r := {"common": 0, "rare": 0, "legendary": 0}
 	for id in cat:
 		r[GameData.bones[id].rarity] += 1
-	check(r.common == 12 and r.rare == 5 and r.legendary == 3, "12 comuns, 5 raros, 3 lendários: %s" % [r])
+	check(r.common == 48 and r.rare == 15 and r.legendary == 4, "48 comuns, 15 raros, 4 lendários: %s" % [r])
+	# mais de 10 variações para cada parte do corpo
+	for slot in ["slot_skull", "slot_ribs", "slot_arm_left", "slot_legs", "slot_back", "slot_tail"]:
+		var n := GameData.bones_by({"slot": slot}).size()
+		check(n > 10, "mais de 10 ossos para %s (%d)" % [slot, n])
+	# todo osso novo cai de um monstro que existe e o lista nas quedas
+	for bid in cat:
+		var mon := String(GameData.bone(bid).get("monster", ""))
+		check(GameData.monster(mon).get("drops", []).has(bid), "%s cai de %s" % [bid, mon])
 	var fams := {}
 	for id in cat:
 		fams[GameData.bones[id].family] = true
