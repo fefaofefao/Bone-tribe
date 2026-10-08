@@ -156,7 +156,7 @@ jobs:
           set -x
           BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
           echo "build-tools: $BT"
-          "$BT/aapt2" dump badging build/BoneTribe.apk | grep -E "package:|sdkVersion|targetSdkVersion|native-code" || true
+          "$BT/aapt2" dump badging build/BoneTribe.apk | grep -iE "package:|sdkVersion|native-code" || true
           unzip -l build/BoneTribe.apk | grep -E "AndroidManifest|resources.arsc|classes.dex|\.so$" | head -20 || true
           "$BT/zipalign" -c -P 16 4 build/BoneTribe.apk && echo "zipalign OK" || echo "::warning::APK não alinhado"
           "$BT/apksigner" verify --verbose --print-certs build/BoneTribe.apk
@@ -174,6 +174,22 @@ jobs:
           name: BoneTribe-apk
           path: build/BoneTribe.apk
           if-no-files-found: error
+
+      # APK direto (sem .zip) para instalar no celular: a página "APK de teste"
+      # é atualizada a cada build. O instalador do Android não abre APK de dentro de .zip.
+      - name: Publicar APK de teste (arquivo direto)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-teste
+          name: "APK de teste (última versão)"
+          prerelease: true
+          make_latest: false
+          overwrite_files: true
+          body: |
+            APK de teste gerado automaticamente a partir do commit ${{ github.sha }} (execução ${{ github.run_number }}).
+            No celular: toque em BoneTribe.apk para baixar e depois abra o arquivo baixado.
+          files: build/BoneTribe.apk
 
       - name: Publicar Release (tags v*)
         if: startsWith(github.ref, 'refs/tags/v')
