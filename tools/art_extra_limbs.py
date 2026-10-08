@@ -79,19 +79,19 @@ def draw_claw_wolf(bone_id, family):
     arm = _arm_base(W, H, cx, top, lower_len=0.85)
     paint(cv, arm, outline_w=3)
     # pata estreita e comprida
+    fur(cv, W, H, cx, Y(160), 12, 24, FUR_GREY, 11, angle=90, spread=55)
     paw = Layer(W, H)
-    paw.ellipse(cx, Y(182), 20, 18)
-    paw.ellipse(cx, Y(196), 22, 12)
+    paw.ellipse(cx, Y(184), 24, 20)
+    paw.ellipse(cx, Y(198), 26, 13)
     paint(cv, paw, base=(150, 148, 154), shadow=(86, 84, 92), light=(200, 198, 206), outline_w=3)
     pads = Layer(W, H)
-    for dx in (-13, -4.5, 4.5, 13):
-        pads.circle(cx + dx, Y(200), 3.6)
+    for dx in (-15, -5, 5, 15):
+        pads.circle(cx + dx, Y(201), 4)
     fill(cv, pads, (70, 52, 60))
     claws = Layer(W, H)
-    for dx, bend in ((-15, -6), (-5, -2), (5, 2), (15, 6)):
-        claws.tapered([(cx + dx, Y(204)), (cx + dx + bend * 0.4, Y(216)), (cx + dx + bend, Y(226))], 7, 1)
+    for dx, bend in ((-18, -9), (-6, -3), (6, 3), (18, 9)):
+        claws.tapered([(cx + dx, Y(204)), (cx + dx + bend * 0.2 + 3, Y(216)), (cx + dx + bend, Y(228))], 8, 1)
     paint(cv, claws, base=IVORY_LIGHT, outline_w=2.2, grain=False)
-    fur(cv, W, H, cx, Y(166), 11, 22, FUR_GREY, 11, angle=90, spread=75)
     accent_dots(cv, W, H, [(cx + 2, Y(98))], fc["aura"], 3.5)
     finish(cv, W, H, out("bones", bone_id + ".png"))
 
@@ -189,7 +189,7 @@ def draw_flipper_turtle(bone_id, family):
     paint(cv, fl, base=TEAL, shadow=TEAL_SH, light=TEAL_LT, outline_w=3)
     ridges = Layer(W, H)
     for ex, ey in ((-6, 200), (14, 210), (34, 196), (46, 172)):
-        ridges.tapered([(cx + 2, Y(130)), (cx + ex * 0.5 + 4, Y((130 + ey) / 2)), (cx + ex, top + ey)], 7, 3)
+        ridges.tapered([(cx + 2, Y(130)), (cx + ex * 0.5 + 4, Y((130 + ey) / 2)), (cx + ex, Y(ey))], 7, 3)
     paint(cv, ridges, base=IVORY, outline_w=1.8, shade=False, grain=False)
     accent_dots(cv, W, H, [(cx - 12, Y(150)), (cx + 30, Y(150))], (210, 240, 230), 3.6)
     finish(cv, W, H, out("bones", bone_id + ".png"))
@@ -200,13 +200,13 @@ def draw_scepter_rat_king(bone_id, family):
     fc = fam(family)
     # cetro atrás da mão, de baixo até o topo à esquerda
     rod = Layer(W, H)
-    rod.capsule((cx + 22, Y(226)), (cx - 30, Y(92)), 5.5)
+    rod.capsule((cx + 20, Y(214)), (cx - 30, Y(92)), 5.5)
     glow(cv, rod, GOLD, radius=6, strength=0.9)
     paint(cv, rod, base=GOLD, shadow=GOLD_SH, light=GOLD_LT, outline_w=2.6)
     bands = Layer(W, H)
     for t in (0.25, 0.6):
-        x = cx + 22 + (-52) * t
-        y = Y(226) - 134 * t
+        x = cx + 20 + (-50) * t
+        y = Y(214) + (Y(92) - Y(214)) * t
         bands.circle(x, y, 8)
     paint(cv, bands, base=GOLD, shadow=GOLD_SH, light=GOLD_LT, outline_w=2.2, grain=False)
     # crânio de rato no topo + gema roxa
@@ -245,6 +245,10 @@ def draw_scepter_rat_king(bone_id, family):
 def draw_legs_wolf(bone_id, family):
     s, W, H, cv, cx, top = _legs_canvas()
     fc = fam(family)
+    for side in (-1, 1):
+        for k, y in enumerate((top + 24, top + 46, top + 66)):
+            fur(cv, W, H, cx + side * (40 + k * 3), y, 6, 24, FUR_GREY, 21 + k + side,
+                angle=90 - side * 50, spread=22)
     paint(cv, _pelvis(W, H, cx, top), outline_w=3)
     legs = Layer(W, H)
     for side in (-1, 1):
@@ -257,8 +261,6 @@ def draw_legs_wolf(bone_id, family):
         legs.capsule(hock, ankle, 7)
         legs.circle(hock[0], hock[1], 10)
     paint(cv, legs, outline_w=3)
-    fur(cv, W, H, cx - 34, top + 30, 9, 26, FUR_GREY, 21, angle=150, spread=40)
-    fur(cv, W, H, cx + 34, top + 30, 9, 26, FUR_GREY, 22, angle=30, spread=40)
     paws = Layer(W, H)
     for side in (-1, 1):
         paws.ellipse(cx + side * 36, H - 20, 22, 12)
@@ -316,19 +318,20 @@ def draw_legs_crab(bone_id, family):
     tips = []
     joints = []
     for side in (-1, 1):
-        for k, (kx, ky, fx) in enumerate(((104, 10, 112), (78, 30, 80), (48, 60, 46))):
-            hip = (cx + side * (16 + k * 2), top + 8 + k * 10)
-            knee = (cx + side * kx, top - 14 + ky)
-            ft = (cx + side * fx, H - 8 - k * 4)
-            mid = (knee[0] + side * (8 - k * 2), knee[1] + (ft[1] - knee[1]) * 0.45)
-            _jointed(legs, [hip, knee, mid], 15 - k * 2, 11 - k * 2)
-            legs.tapered([mid, ft], 11 - k * 2, 3)
+        for k, (kx, ky, mx, my, fx) in enumerate(((84, -30, 106, 70, 94), (60, -18, 78, 92, 62), (36, 4, 48, 112, 30))):
+            hip = (cx + side * (14 + k * 4), top + 6 + k * 10)
+            knee = (cx + side * kx, top + ky)
+            mid = (cx + side * mx, top + my)
+            ft = (cx + side * fx, H - 12)
+            legs.tapered([hip, knee], 13 - k, 15 - k)
+            legs.tapered([knee, mid], 14 - k, 11 - k)
+            legs.tapered([mid, ft], 11 - k, 2)
             tips.append((mid, ft))
             joints += [knee, mid]
     paint(cv, legs, base=TEAL, shadow=TEAL_SH, light=TEAL_LT, outline_w=3)
     tipm = Layer(W, H)
     for mid, ft in tips:
-        a = (mid[0] + (ft[0] - mid[0]) * 0.62, mid[1] + (ft[1] - mid[1]) * 0.62)
+        a = (mid[0] + (ft[0] - mid[0]) * 0.72, mid[1] + (ft[1] - mid[1]) * 0.72)
         tipm.tapered([a, ft], 7, 2.6)
     paint(cv, tipm, base=(214, 76, 56), shadow=(130, 36, 26), light=(250, 150, 110), outline_w=2, grain=False)
     body = Layer(W, H)
@@ -376,7 +379,7 @@ def draw_legs_lizard(bone_id, family):
     for side in (-1, 1):
         hip = (cx + side * 26, top + 8)
         knee = (cx + side * 96, top + 60)
-        ankle = (cx + side * 70, H - 40)
+        ankle = (cx + side * 70, H - 52)
         legs.bone(hip, knee, 9)
         legs.bone(knee, ankle, 7.5)
         feet.append(ankle)
@@ -391,10 +394,10 @@ def draw_legs_lizard(bone_id, family):
     ft = Layer(W, H)
     claws = Layer(W, H)
     for side, (ax, ay) in zip((-1, 1), feet):
-        ft.ellipse(ax, ay + 8, 18, 12)
-        for a in (-50, -10, 30):
+        ft.ellipse(ax, ay + 10, 18, 12)
+        for a in (-70, -25, 20):
             ang = math.radians(90 + side * a)
-            ex, ey = ax + math.cos(ang) * 34, ay + 8 + math.sin(ang) * 30
+            ex, ey = ax + math.cos(ang) * 30, ay + 10 + math.sin(ang) * 22
             ft.tapered([(ax, ay + 8), (ex, ey)], 9, 6)
             claws.tapered([(ex, ey), (ex + math.cos(ang) * 10, ey + math.sin(ang) * 10 + 2)], 6, 1)
     paint(cv, ft, base=SCALE_RED, shadow=SCALE_RED_SH, light=SCALE_RED_LT, outline_w=3)
@@ -411,13 +414,13 @@ def draw_legs_beetle(bone_id, family):
     hooks = Layer(W, H)
     joints = []
     for side in (-1, 1):
-        for k, (kx, ky, fx) in enumerate(((70, -10, 108), (92, 30, 80), (60, 70, 34))):
+        for k, (kx, ky, fx) in enumerate(((66, -10, 96), (90, 30, 72), (58, 70, 30))):
             hip = (cx + side * 18, top + 4 + k * 12)
             knee = (cx + side * kx, top + ky)
             ft = (cx + side * fx, H - 16 - k * 3)
             mid = ((knee[0] + ft[0]) / 2 + side * 6, (knee[1] + ft[1]) / 2)
             _jointed(legs, [hip, knee, mid, ft], 9, 5)
-            hooks.tapered([ft, (ft[0] + side * 10, ft[1] + 4), (ft[0] + side * 12, ft[1] - 4)], 4.5, 1.5)
+            hooks.tapered([ft, (ft[0] + side * 9, ft[1] + 5), (ft[0] + side * 12, ft[1] - 3)], 5, 1.5)
             joints += [knee, mid]
     paint(cv, legs, base=green, shadow=green_sh, light=green_lt, outline_w=3)
     paint(cv, hooks, base=green, shadow=green_sh, light=green_lt, outline_w=2, grain=False)
@@ -459,8 +462,6 @@ def draw_legs_rat(bone_id, family):
             ex = ax + side * dx
             toes.tapered([(ax + side * 6, ay + 12), ((ax + side * 6 + ex) / 2, H - 18), (ex, H - 9)], 4, 2)
     paint(cv, toes, base=(220, 170, 176), shadow=(150, 100, 110), light=(250, 210, 214), outline_w=2.2, grain=False)
-    fur(cv, W, H, cx - 26, top + 26, 6, 18, (90, 80, 96), 41, angle=160, spread=40)
-    fur(cv, W, H, cx + 26, top + 26, 6, 18, (90, 80, 96), 42, angle=20, spread=40)
     accent_dots(cv, W, H, [(cx - 36, top + 84), (cx + 36, top + 84)], fc["aura"], 3.4, glow_r=3)
     finish(cv, W, H, out("bones", bone_id + ".png"))
 
