@@ -1,0 +1,13 @@
+keys,en_US
+hero_name,Bonesy
+game_title,Bone Tribe
+store_title,Bone Tribe: Skeleton Roguelike
+btn_play,Play
+title_tagline,Build your body from monster bones
+ad_mock_rewarded,Simulated ad
+ad_mock_interstitial,Simulated break
+ad_mock_placement,Reward: %s
+iap_mock_processing,Processing simulated purchase…
+price_brl,R$ %s
+price_usd,US$ %s
+ad_place_interstitial,none

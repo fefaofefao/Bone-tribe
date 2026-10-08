@@ -1,0 +1,22 @@
+{
+	"_doc": "Esqueleto do Ossinho. attach = posição do encaixe em pixels de jogo (origem nos pés, +x à direita, +y para baixo). canvas e pivot = tamanho da imagem e ponto de encaixe em pixels da textura (resolução 2x). A arte final deve manter canvas e pivot.",
+	"texture_scale": 0.5,
+	"rarity_scale": {"basic": 1.0, "common": 1.0, "rare": 1.12, "legendary": 1.25},
+	"base_parts": [
+		{"id": "ossinho_spine", "attach": [0, -112], "canvas": [60, 230], "pivot": [30, 220], "z": 2},
+		{"id": "ossinho_pelvis", "attach": [0, -112], "canvas": [140, 80], "pivot": [70, 30], "z": 3}
+	],
+	"slots": [
+		{"id": "slot_skull", "attach": [6, -224], "canvas": [220, 210], "pivot": [104, 184], "z": 8, "rest_rot": 0, "tag": "skull"},
+		{"id": "slot_ribs", "attach": [0, -214], "canvas": [180, 160], "pivot": [90, 22], "z": 5, "rest_rot": 0, "tag": "ribs"},
+		{"id": "slot_arm_left", "attach": [-12, -206], "canvas": [130, 230], "pivot": [65, 22], "z": 1, "rest_rot": 14, "tag": "arm"},
+		{"id": "slot_arm_right", "attach": [16, -204], "canvas": [130, 230], "pivot": [65, 22], "z": 9, "rest_rot": -12, "tag": "arm"},
+		{"id": "slot_legs", "attach": [0, -112], "canvas": [190, 240], "pivot": [95, 16], "z": 4, "rest_rot": 0, "tag": "legs"},
+		{"id": "slot_back", "attach": [-8, -196], "canvas": [340, 260], "pivot": [210, 160], "z": 0, "rest_rot": 0, "tag": "back"},
+		{"id": "slot_tail", "attach": [-14, -110], "canvas": [230, 160], "pivot": [206, 30], "z": 1, "rest_rot": 0, "tag": "tail"},
+		{"id": "slot_extra", "attach": [0, -112], "canvas": [90, 240], "pivot": [45, 228], "z": 3, "rest_rot": 0, "tag": "extra", "hidden_until_filled": true},
+		{"id": "slot_arm_third", "attach": [-6, -222], "canvas": [130, 230], "pivot": [65, 22], "z": 0, "rest_rot": 150, "tag": "arm", "requires_effect": "extra_slot"}
+	],
+	"main_slots": ["slot_skull", "slot_ribs", "slot_arm_left", "slot_arm_right", "slot_legs", "slot_back", "slot_tail"],
+	"starting_bones": {"slot_skull": "bone_skull_basic", "slot_ribs": "bone_ribs_basic"}
+}

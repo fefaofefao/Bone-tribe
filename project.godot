@@ -1,0 +1,62 @@
+; Engine configuration file.
+; Bone Tribe — projeto Godot "BoneTribe".
+
+config_version=5
+
+[application]
+
+config/name="BoneTribe"
+config/description="Bone Tribe — roguelite de eventos com corpo montável."
+config/version="0.1.0"
+run/main_scene="res://scenes/TitleScreen.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+boot_splash/bg_color=Color(0.055, 0.043, 0.063, 1)
+boot_splash/show_image=false
+config/icon="res://art/ui/ui_app_icon.png"
+
+[autoload]
+
+GameData="*res://scripts/autoload/game_data.gd"
+Backend="*res://scripts/autoload/backend_service.gd"
+Profile="*res://scripts/autoload/profile.gd"
+Ads="*res://scripts/autoload/ads_service.gd"
+Billing="*res://scripts/autoload/billing_service.gd"
+Haptics="*res://scripts/autoload/haptics.gd"
+Style="*res://scripts/autoload/style.gd"
+Router="*res://scripts/autoload/router.gd"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/size/window_width_override=450
+window/size/window_height_override=800
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://i18n/pt_BR.pt_BR.translation", "res://i18n/en_US.en_US.translation", "res://i18n/es_419.es.translation")
+locale/fallback="en_US"
+
+[physics]
+
+common/physics_ticks_per_second=60
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+textures/canvas_textures/default_texture_filter=1
+environment/defaults/default_clear_color=Color(0.055, 0.043, 0.063, 1)
+2d/snap/snap_2d_transforms_to_pixel=false

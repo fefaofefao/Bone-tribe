@@ -1,0 +1,15 @@
+# Godot
+.godot/
+/android/
+*.translation
+export.cfg
+export_credentials.cfg
+*.tmp
+# Build
+/build/
+*.aab
+*.apk
+*.keystore
+*.jks
+# Python
+__pycache__/
