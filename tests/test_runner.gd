@@ -9,7 +9,7 @@ var checks := 0
 
 func _ready() -> void:
 	for f in _suites():
-		call(f)
+		await call(f)
 	print("")
 	print("Testes: %d verificações, %d falhas" % [checks, failures.size()])
 	for msg in failures:
@@ -489,3 +489,75 @@ func test_12_shop_catalog() -> void:
 	o.queue_free()
 	# na versão de loja do Android a loja simulada nunca entrega de graça
 	check(load("res://scripts/services/mock_billing_provider.gd").allowed() == (OS.get_name() != "Android" or OS.is_debug_build()), "compra simulada bloqueada no Android de loja")
+
+
+func test_13_touch_scroll() -> void:
+	var sc: ScrollContainer = load("res://scripts/ui/touch_scroll.gd").new()
+	sc.position = Vector2(0, 0)
+	sc.size = Vector2(400, 300)
+	var layer := CanvasLayer.new()
+	layer.layer = 120
+	add_child(layer)
+	layer.add_child(sc)
+	var box := VBoxContainer.new()
+	box.custom_minimum_size = Vector2(400, 0)
+	sc.add_child(box)
+	var presses := [0]
+	for i in 12:
+		var b := Button.new()
+		b.text = "b%d" % i
+		b.custom_minimum_size = Vector2(400, 90)
+		b.pressed.connect(func(): presses[0] += 1)
+		box.add_child(b)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var vp := get_viewport()
+	var send := func(ev: InputEvent): vp.push_input(ev, true)
+	# como no celular: cada toque chega como evento de toque + mouse emulado
+	var mv := func(p: Vector2, held: bool):
+		if held:
+			var d := InputEventScreenDrag.new()
+			d.position = p
+			send.call(d)
+		var e := InputEventMouseMotion.new()
+		e.position = p
+		e.global_position = p
+		e.button_mask = MOUSE_BUTTON_MASK_LEFT if held else 0
+		send.call(e)
+	var btn := func(p: Vector2, down: bool):
+		var t := InputEventScreenTouch.new()
+		t.position = p
+		t.pressed = down
+		send.call(t)
+		var e := InputEventMouseButton.new()
+		e.position = p
+		e.global_position = p
+		e.button_index = MOUSE_BUTTON_LEFT
+		e.pressed = down
+		e.button_mask = MOUSE_BUTTON_MASK_LEFT if down else 0
+		send.call(e)
+	# toque curto aperta o botão
+	mv.call(Vector2(200, 150), false)
+	btn.call(Vector2(200, 150), true)
+	btn.call(Vector2(200, 150), false)
+	await get_tree().process_frame
+	check(presses[0] == 1, "toque curto aperta o botão (%d)" % presses[0])
+	presses[0] = 0
+	# arrastar começando em cima de um botão rola a página e não aperta o botão
+	mv.call(Vector2(200, 250), false)
+	btn.call(Vector2(200, 250), true)
+	for k in 10:
+		mv.call(Vector2(200, 250 - k * 20), true)
+	btn.call(Vector2(200, 70), false)
+	await get_tree().process_frame
+	check(sc.scroll_vertical > 100, "arrastar sobre um botão rola a página (%d)" % sc.scroll_vertical)
+	check(presses[0] == 0, "arrastar não aperta o botão")
+	# depois de rolar, um toque curto volta a apertar
+	sc.set("_velocity", 0.0)
+	await get_tree().process_frame
+	mv.call(Vector2(200, 150), false)
+	btn.call(Vector2(200, 150), true)
+	btn.call(Vector2(200, 150), false)
+	await get_tree().process_frame
+	check(presses[0] == 1, "toque curto depois de rolar aperta o botão (%d)" % presses[0])
+	layer.queue_free()

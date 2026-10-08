@@ -135,7 +135,7 @@ func _fit_panel() -> void:
 		panel.offset_top = -(want + 14.0)
 	elif cur - want > 0.5:
 		# encolhe suave, sem sobrar espaço vazio
-		panel.offset_top = -(lerpf(cur, want, 0.3) + 14.0)
+		panel.offset_top = -(lerpf(cur, want, 0.45) + 14.0)
 
 
 ## Vinheta cinematográfica e pulso vermelho quando a vida está baixa.
@@ -170,6 +170,7 @@ func _build_vignette() -> void:
 
 
 const PANEL_MIN_H := 120.0
+const COMBAT_MIN_H := 340.0
 const PANEL_MAX_H := 560.0
 
 
@@ -248,7 +249,7 @@ func _build_ui() -> void:
 	panel.offset_right = -14
 	panel.offset_bottom = -14
 	hud.add_child(panel)
-	var scroll := ScrollContainer.new()
+	var scroll := TouchScroll.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	panel.add_child(scroll)
 	panel_box = Style.vbox(14)
@@ -465,10 +466,11 @@ func _panel_text(text: String) -> RichTextLabel:
 	r.text = text
 	r.add_theme_font_size_override("normal_font_size", 27)
 	r.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	r.visible_ratio = 0.0
+	# aparece suave já com o tamanho final: o painel não muda de altura enquanto o texto surge
+	r.modulate.a = 0.0
 	panel_box.add_child(r)
 	var tw := r.create_tween()
-	tw.tween_property(r, "visible_ratio", 1.0, clampf(text.length() / 90.0, 0.25, 1.2) / speed)
+	tw.tween_property(r, "modulate:a", 1.0, 0.25 / speed)
 	return r
 
 
@@ -1074,6 +1076,9 @@ func _combat_panel(enemies: Array) -> void:
 	_clear_panel()
 	combat_panel = CombatPanel.new()
 	combat_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# altura mínima: o topo do painel fica perto dos personagens, sem colar
+	var h := COMBAT_MIN_H if Dev.env("BT_COMBAT_H") == "" else float(Dev.env("BT_COMBAT_H"))
+	combat_panel.custom_minimum_size.y = h
 	panel_box.add_child(combat_panel)
 	combat_panel.setup(combat, state, enemies[0].is_boss)
 	combat_panel.focus_requested.connect(_set_focus)

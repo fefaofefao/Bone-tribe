@@ -18,7 +18,7 @@ func _ready() -> void:
 	bg.color = Color(0.04, 0.03, 0.05, 0.94)
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
-	scroll = ScrollContainer.new()
+	scroll = TouchScroll.new()
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	scroll.offset_top = 96
 	scroll.offset_bottom = -112

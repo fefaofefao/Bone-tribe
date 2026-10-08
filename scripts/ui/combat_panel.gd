@@ -25,8 +25,8 @@ func setup(p_combat: Combat, p_state: RunState, is_boss: bool) -> void:
 	# cabeçalho
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 10)
-	head.add_child(Widgets.icon("res://art/ui/ui_event_%s.png" % ("boss" if is_boss else "combat"), 40))
-	var t := Style.nowrap(Style.bold(tr("event_type_boss" if is_boss else "event_type_combat"), 24, Style.C_CANDLE))
+	head.add_child(Widgets.icon("res://art/ui/ui_event_%s.png" % ("boss" if is_boss else "combat"), 44))
+	var t := Style.nowrap(Style.bold(tr("event_type_boss" if is_boss else "event_type_combat"), 26, Style.C_CANDLE))
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	t.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(t)
@@ -46,7 +46,7 @@ func setup(p_combat: Combat, p_state: RunState, is_boss: bool) -> void:
 	# registro
 	var log_panel := PanelContainer.new()
 	log_panel.add_theme_stylebox_override("panel", Style.flat_box(Color(0, 0, 0, 0.32), Color(1, 1, 1, 0.05), 12, 1, 8))
-	log_panel.custom_minimum_size = Vector2(0, 4 * 22 + 16)
+	log_panel.custom_minimum_size = Vector2(0, LOG_LINES * 25 + 18)
 	_log_box = VBoxContainer.new()
 	_log_box.add_theme_constant_override("separation", 2)
 	log_panel.add_child(_log_box)
@@ -75,7 +75,7 @@ func _enemy_card(f: Fighter) -> Dictionary:
 	var panel := Button.new()
 	panel.theme_type_variation = "DarkButton"
 	var w := 210.0 if combat.enemies.size() > 2 else 300.0
-	panel.custom_minimum_size = Vector2(w, 118)
+	panel.custom_minimum_size = Vector2(w, 132)
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.add_theme_stylebox_override("normal", Style.flat_box(Color(0.13, 0.09, 0.12, 0.96), Color(1, 1, 1, 0.1), 14, 2, 8))
 	panel.add_theme_stylebox_override("hover", Style.flat_box(Color(0.16, 0.11, 0.14, 0.96), Color(1, 1, 1, 0.2), 14, 2, 8))
@@ -90,28 +90,28 @@ func _enemy_card(f: Fighter) -> Dictionary:
 	h.offset_bottom = -6
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(h)
-	var portrait := Widgets.icon(GameData.monster_texture_path(f.id) if f.id != "boss_bone_hunter" else "res://art/monsters/boss_bone_hunter_hood.png", 72)
+	var portrait := Widgets.icon(GameData.monster_texture_path(f.id) if f.id != "boss_bone_hunter" else "res://art/monsters/boss_bone_hunter_hood.png", 84)
 	h.add_child(portrait)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 3)
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(v)
-	var name_l := Style.nowrap(Style.bold(tr(f.name_key), 18, Style.C_DANGER.lightened(0.3) if f.is_boss else Style.C_TEXT))
+	var name_l := Style.nowrap(Style.bold(tr(f.name_key), 20, Style.C_DANGER.lightened(0.3) if f.is_boss else Style.C_TEXT))
 	name_l.clip_text = true
 	name_l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(name_l)
 	var bar: Control = preload("res://scripts/ui/hud_bar.gd").new()
-	bar.custom_minimum_size = Vector2(0, 20)
+	bar.custom_minimum_size = Vector2(0, 24)
 	bar.fill_color = Color("b23a8f") if f.is_boss else Style.C_DANGER
-	bar.font_size = 15
+	bar.font_size = 17
 	v.add_child(bar)
 	var status := HBoxContainer.new()
 	status.add_theme_constant_override("separation", 4)
 	status.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(status)
-	var next := Style.label("", 15, Style.C_MUTED)
+	var next := Style.label("", 16, Style.C_MUTED)
 	next.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(next)
 	_cards_box.add_child(panel)
@@ -165,15 +165,15 @@ func _hero_section() -> Control:
 	var hero := combat.hero
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
-	var who := Style.nowrap(Style.bold(tr("hero_name"), 20, Style.C_BONE))
+	var who := Style.nowrap(Style.bold(tr("hero_name"), 22, Style.C_BONE))
 	row.add_child(who)
 	for item in [["ui_icon_attack", str(int(roundf(hero.atk)))], ["ui_icon_shield", str(int(roundf(hero.def)))],
 			["ui_levelup_empty_eye", "%d%%" % int(roundf(hero.crit * 100))], ["ui_levelup_quick_knees", "%d%%" % int(roundf(hero.dodge * 100))]]:
 		var h := HBoxContainer.new()
 		h.add_theme_constant_override("separation", 3)
 		h.size_flags_horizontal = Control.SIZE_EXPAND | Control.SIZE_SHRINK_END
-		h.add_child(Widgets.icon("res://art/ui/%s.png" % item[0], 28))
-		h.add_child(Style.nowrap(Style.bold(item[1], 19, Style.C_TEXT)))
+		h.add_child(Widgets.icon("res://art/ui/%s.png" % item[0], 32))
+		h.add_child(Style.nowrap(Style.bold(item[1], 22, Style.C_TEXT)))
 		row.add_child(h)
 	v.add_child(row)
 	var chips := HFlowContainer.new()
@@ -260,7 +260,7 @@ func _pip(text: String, color: Color) -> Control:
 func log_line(text: String, color: Color = Style.C_TEXT) -> void:
 	if _log_box == null:
 		return
-	var l := Style.label(text, 17, color)
+	var l := Style.label(text, 19, color)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.clip_text = true
 	l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
