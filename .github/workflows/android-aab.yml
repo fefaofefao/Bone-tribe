@@ -1,4 +1,4 @@
-name: Android AAB
+name: Android AAB e APK
 
 on:
   push:
@@ -102,9 +102,22 @@ jobs:
           ls -la build
           test -s build/BoneTribe.aab
 
-      - name: Publicar artefato
+      - name: Exportar APK de teste
+        run: |
+          godot --headless --path . --export-release "Android APK" build/BoneTribe.apk
+          ls -la build
+          test -s build/BoneTribe.apk
+
+      - name: Publicar AAB
         uses: actions/upload-artifact@v4
         with:
           name: BoneTribe-aab
           path: build/BoneTribe.aab
+          if-no-files-found: error
+
+      - name: Publicar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: BoneTribe-apk
+          path: build/BoneTribe.apk
           if-no-files-found: error

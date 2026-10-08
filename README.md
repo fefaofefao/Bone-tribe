@@ -27,6 +27,9 @@ godot --headless --path . res://tests/TestRunner.tscn
 cadastre os secrets `ANDROID_RELEASE_KEYSTORE_BASE64` (keystore em base64),
 `ANDROID_RELEASE_KEYSTORE_USER` (alias) e `ANDROID_RELEASE_KEYSTORE_PASSWORD`.
 
+**APK de teste**: o mesmo workflow também gera `BoneTribe.apk` (artefato `BoneTribe-apk`),
+instalável direto no celular (ative "instalar apps de fontes desconhecidas").
+
 **Localmente**: instale os templates de exportação 4.7.2, configure o Android SDK e o
 JDK 17 em *Editor > Editor Settings > Export > Android*, depois:
 
