@@ -212,3 +212,8 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - **Equilíbrio:** os atributos dos ossos novos foram calibrados na simulação (`tests/BalanceSim.tscn`, 40 jogadores x 6 partidas). Na 1ª versão o jogo ficou mais difícil (os ossos novos diluíam os antigos); com +50% nos atributos a curva voltou à de antes: Rei Rato 95%, Golem 85%, Dragão 32% dos jogadores vencem até a 6ª partida.
 - Novas habilidades periódicas: Garra flamejante (fogo), Enxurrada de ratos e Chuva de flechas (atingem todos), Pancada de cauda.
 - Arte (placeholder no estilo do jogo, tamanho e pivô finais) em `tools/art_extra_head.py`, `tools/art_extra_limbs.py` e `tools/art_extra_back.py`, chamada por `tools/gen_art.py bones`.
+
+## Revisão de UX (telas e painéis)
+- **Tela inicial:** o bloco de baixo cresce para cima a partir das abas, então o botão **Jogar** nunca fica escondido (antes ficava cortado atrás da barra de abas). Companheiro e osso inicial viraram dois cartões lado a lado, tocáveis, que abrem o Ossuário e a Coleção. Abaixo do Jogar aparece o recorde ("Seu recorde: andar N") ou um convite na primeira vez. O calendário virou um botão flutuante "Prêmios" com ponto vermelho quando há recompensa. A barra do topo ficou só com as moedas e "⚙ Opções"; o idioma passou a ser o primeiro item de Opções.
+- **Painel da partida:** sem altura mínima grande. Ele cresce na hora quando entra conteúdo (botões nunca cortados) e encolhe suave quando sai; se não há conteúdo (título do andar, transições), o painel some em vez de ficar vazio.
+- Princípios usados: ação principal grande e na zona do polegar; nenhuma área vazia reservada; informação secundária compacta e tocável; um só ponto de configurações; avisos (ponto vermelho) só quando há algo a fazer.

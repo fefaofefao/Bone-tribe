@@ -1035,3 +1035,10 @@ special_flame_claw,Flame claw!
 special_rat_swarm,Rat swarm!
 special_arrow_volley,Arrow volley!
 special_tail_slam,Tail slam!
+login_short,Rewards
+loadout_companion,Companion
+loadout_start_bone,Starting bone
+loadout_none,None
+loadout_choose,Choose
+home_best_floor,Your record: floor %d
+home_first_run,The Forgotten Crypt awaits you

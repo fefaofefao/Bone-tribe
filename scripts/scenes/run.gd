@@ -118,10 +118,24 @@ var _danger: TextureRect
 func _fit_panel() -> void:
 	if panel == null or panel_box == null:
 		return
-	var want := clampf(panel_box.get_combined_minimum_size().y + 48.0, PANEL_MIN_H, PANEL_MAX_H)
+	# painel sem conteúdo (entre eventos, título do andar) some em vez de ficar vazio
+	var has_content := false
+	for c in panel_box.get_children():
+		if c is Control and not c.is_queued_for_deletion() and c.visible:
+			has_content = true
+			break
+	var target_a := 1.0 if has_content else 0.0
+	panel.modulate.a = move_toward(panel.modulate.a, target_a, 0.12)
+	if not has_content:
+		return
+	var want :=clampf(panel_box.get_combined_minimum_size().y + 48.0, PANEL_MIN_H, PANEL_MAX_H)
 	var cur := -panel.offset_top - 14.0
-	if absf(cur - want) > 0.5:
-		panel.offset_top = -(lerpf(cur, want, 0.25) + 14.0)
+	if want > cur + 0.5:
+		# cresce na hora: botões e textos nunca ficam cortados
+		panel.offset_top = -(want + 14.0)
+	elif cur - want > 0.5:
+		# encolhe suave, sem sobrar espaço vazio
+		panel.offset_top = -(lerpf(cur, want, 0.3) + 14.0)
 
 
 ## Vinheta cinematográfica e pulso vermelho quando a vida está baixa.
@@ -155,7 +169,7 @@ func _build_vignette() -> void:
 			r.modulate.a = 0.0
 
 
-const PANEL_MIN_H := 250.0
+const PANEL_MIN_H := 120.0
 const PANEL_MAX_H := 560.0
 
 

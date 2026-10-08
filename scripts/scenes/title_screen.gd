@@ -31,6 +31,9 @@ var _dust_label: Label
 var _dia_label: Label
 var _companion: Sprite2D
 var _chips: VBoxContainer
+var _play_hint: Label
+var _cal_btn: Button
+var _cal_dot: Panel
 
 
 func _ready() -> void:
@@ -195,45 +198,123 @@ func _build_home() -> void:
 	tag.offset_right = -40
 	_home.add_child(tag)
 
-	var bottom := Style.vbox(14)
+	# Parte de baixo: cresce para cima a partir da barra de abas, então o
+	# botão Jogar nunca fica escondido, qualquer que seja o conteúdo.
+	var bottom := Style.vbox(12)
 	bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	bottom.offset_left = 50
-	bottom.offset_right = -50
-	bottom.offset_top = -400
-	bottom.offset_bottom = -132
+	bottom.offset_left = 28
+	bottom.offset_right = -28
+	bottom.offset_top = -140
+	bottom.offset_bottom = -128
+	bottom.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	bottom.alignment = BoxContainer.ALIGNMENT_END
 	_home.add_child(bottom)
-	_chips = Style.vbox(6)
+	_chips = Style.vbox(10)
 	bottom.add_child(_chips)
-	_refresh_chips()
-	var play := Style.button(tr("btn_play"), "CandleButton", 108)
-	play.add_theme_font_size_override("font_size", 42)
+	var play := Style.button(tr("btn_play"), "CandleButton", 112)
+	play.add_theme_font_size_override("font_size", 44)
 	play.pressed.connect(func(): Router.go("run", {}))
 	bottom.add_child(play)
+	_play_hint = Style.label("", 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	bottom.add_child(_play_hint)
+	_refresh_chips()
 	var tw := create_tween().set_loops()
 	tw.tween_property(play, "scale", Vector2(1.03, 1.03), 0.8).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(play, "scale", Vector2.ONE, 0.8).set_trans(Tween.TRANS_SINE)
+	play.resized.connect(func(): play.pivot_offset = play.size * 0.5)
+
+	# Calendário: botão flutuante no canto, com aviso quando há prêmio
+	_cal_btn = Button.new()
+	_cal_btn.theme_type_variation = "DarkButton"
+	_cal_btn.icon = load("res://art/ui/ui_bone_chest.png")
+	_cal_btn.expand_icon = true
+	_cal_btn.add_theme_constant_override("icon_max_width", 52)
+	_cal_btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_cal_btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	_cal_btn.text = tr("login_short")
+	_cal_btn.add_theme_font_size_override("font_size", 16)
+	_cal_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_cal_btn.offset_left = -124
+	_cal_btn.offset_right = -20
+	_cal_btn.offset_top = 430
+	_cal_btn.offset_bottom = 530
+	_cal_btn.pressed.connect(_open_calendar)
+	Style.juice(_cal_btn)
+	_home.add_child(_cal_btn)
+	_cal_dot = Panel.new()
+	_cal_dot.add_theme_stylebox_override("panel", Style.flat_box(Style.C_DANGER, Color(1, 1, 1, 0.9), 12, 2, 0))
+	_cal_dot.custom_minimum_size = Vector2(22, 22)
+	_cal_dot.size = Vector2(22, 22)
+	_cal_dot.position = Vector2(90, -6)
+	_cal_dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_cal_btn.add_child(_cal_dot)
+	_refresh_cal_dot()
+
+
+func _refresh_cal_dot() -> void:
+	if _cal_dot:
+		_cal_dot.visible = Store.can_claim_login()
 
 
 func _refresh_chips() -> void:
 	for c in _chips.get_children():
 		c.queue_free()
+	# Equipamento da próxima partida: dois cartões lado a lado, tocáveis
+	var row := Style.hbox(10)
+	_chips.add_child(row)
 	var cid := String(Profile.data.get("selected_companion", ""))
 	if cid != "" and Meta.companion_unlocked(cid):
-		_chips.add_child(_chip("res://art/ui/%s.png" % cid, tr("chip_companion") % tr(String(GameData.companions[cid].name))))
+		row.add_child(_loadout_card("res://art/ui/%s.png" % cid, tr("loadout_companion"), tr(String(GameData.companions[cid].name)).get_slice(",", 0), "ossuary"))
+	else:
+		row.add_child(_loadout_card("res://art/ui/companion_ossudo.png", tr("loadout_companion"), tr("loadout_none"), "ossuary"))
 	var sb := String(Profile.data.get("starting_bone", ""))
 	if sb != "" and Meta.can_start_with(sb):
-		_chips.add_child(_chip(GameData.bone_texture_path(sb), tr("chip_start_bone") % tr(String(GameData.bone(sb).name))))
+		row.add_child(_loadout_card(GameData.bone_texture_path(sb), tr("loadout_start_bone"), tr(String(GameData.bone(sb).name)), "collection"))
+	else:
+		row.add_child(_loadout_card(GameData.bone_texture_path("bone_skull_basic"), tr("loadout_start_bone"), tr("loadout_choose"), "collection"))
 	var stolen := Meta.hunter_stolen()
 	if not stolen.is_empty():
 		_chips.add_child(_chip(GameData.bone_texture_path(String(stolen[-1].id)), tr("chip_hunter") % stolen.size(), Color("e07a8a")))
-	var cal := Style.button(tr("login_open") + ("  •" if Store.can_claim_login() else ""), "DarkButton", 56)
-	cal.icon = load("res://art/ui/ui_bone_chest.png")
-	cal.expand_icon = true
-	cal.add_theme_constant_override("icon_max_width", 36)
-	cal.add_theme_font_size_override("font_size", 20)
-	cal.pressed.connect(_open_calendar)
-	_chips.add_child(cal)
+	if _play_hint:
+		var best := int(Profile.data.get("best_index", 0))
+		_play_hint.text = tr("home_best_floor") % best if best > 0 else tr("home_first_run")
+	_refresh_cal_dot()
+
+
+## Cartão do equipamento (companheiro / osso inicial): toca e abre a aba certa.
+func _loadout_card(icon_path: String, caption: String, value: String, tab: String) -> Control:
+	var b := Button.new()
+	b.theme_type_variation = "DarkButton"
+	b.custom_minimum_size = Vector2(0, 84)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.clip_contents = true
+	b.pressed.connect(func(): _open_tab(tab))
+	var h := Style.hbox(10)
+	h.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	h.offset_left = 12
+	h.offset_right = -10
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(h)
+	h.add_child(Widgets.icon(icon_path, 56))
+	var v := VBoxContainer.new()
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_theme_constant_override("separation", 0)
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.add_child(v)
+	var c := Style.nowrap(Style.label(caption, 15, Style.C_MUTED))
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(c)
+	var t := Style.nowrap(Style.bold(value, 19, Style.C_TEXT))
+	t.clip_text = true
+	t.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(t)
+	var arrow := Style.nowrap(Style.bold("›", 30, Style.C_MUTED))
+	arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.add_child(arrow)
+	Style.juice(b)
+	return b
 
 
 func _chip(icon_path: String, text: String, color := Style.C_TEXT) -> Control:
@@ -265,11 +346,7 @@ func _build_top_bar() -> void:
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(spacer)
-	var lang := Style.button(tr("menu_language"), "DarkButton", 60)
-	lang.add_theme_font_size_override("font_size", 20)
-	lang.pressed.connect(_language_menu)
-	h.add_child(lang)
-	var opts := Style.button(tr("menu_settings"), "DarkButton", 60)
+	var opts := Style.button("⚙  " + tr("menu_settings"), "DarkButton", 60)
 	opts.add_theme_font_size_override("font_size", 20)
 	opts.pressed.connect(_settings_menu)
 	h.add_child(opts)
@@ -427,6 +504,7 @@ func _settings_menu() -> void:
 	var vib: bool = Profile.setting("vibration")
 	var q: String = Profile.setting("quality")
 	var items := [
+		[tr("menu_language") + ": " + tr("lang_" + Profile.current_locale()), _language_menu],
 		[tr("menu_vibration") + ": " + tr("on" if vib else "off"), func(): Profile.set_setting("vibration", not vib)],
 		[tr("menu_quality") + ": " + tr("quality_" + q), func():
 			Profile.set_setting("quality", "low" if q == "high" else "high")
