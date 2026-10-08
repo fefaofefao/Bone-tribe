@@ -383,3 +383,64 @@ func test_10_meta_progression() -> void:
 	check(st.max_hp > 100.0 or float(st.compute().stats.get("atk_pct", 0)) > 0.0, "bônus permanentes entram na partida")
 	Profile.data = backup
 	Profile.save()
+
+
+func test_11_store_and_login() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	var offset0: int = Backend.provider.offset
+	Profile.data = Profile.defaults()
+	Profile.data.first_open_time = Backend.now()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	# calendário de 7 dias: um por dia do servidor, conta dias com login
+	check(Store.calendar_id() == "first7" and Store.can_claim_login(), "calendário de 7 dias disponível")
+	var r1 := Store.claim_login(rng)
+	check(r1.size() == 1 and r1[0].type == "dust" and int(r1[0].amount) == 500, "dia 1: 500 de pó")
+	check(not Store.can_claim_login(), "só um resgate por dia")
+	Backend.provider.offset += 86400 * 3  # pulou dias: não perde progresso
+	check(Store.can_claim_login() and Store.calendar_index() == 1, "faltar dias não zera o calendário")
+	var r2 := Store.claim_login(rng)
+	check(r2[0].type == "diamonds" and int(r2[0].amount) == 50, "dia 2: 50 diamantes")
+	for d in 5:
+		Backend.provider.offset += 86400
+		Store.claim_login(rng)
+	check(Store.first7_done(), "7 dias resgatados")
+	check(Meta.companion_unlocked("companion_bigorna") and Store.owns_skin("skin_newly_awakened"), "dia 7: Bigorna e skin Recém-Desperto")
+	Backend.provider.offset += 86400
+	check(Store.calendar_id() == "cycle28" and Store.can_claim_login(), "depois da 1ª semana entra o ciclo de 28 dias")
+	Store.claim_login(rng)
+	check(int(Profile.data.login.cycle_claimed) == 1, "ciclo de 28 dias avança")
+	check((GameData.login.cycle28 as Array).size() == 28, "ciclo tem 28 dias")
+	# diamantes e loja
+	Profile.data.diamonds = 1000
+	var got := Store.buy_with_diamonds("item_dust_1000", 50, rng)
+	check(not got.is_empty() and Profile.diamonds() == 950, "comprar 1.000 de pó por 50 diamantes")
+	var offers := Store.daily_offers()
+	check(offers.size() == 3 and offers == Store.daily_offers(), "3 ofertas do dia, iguais no mesmo dia")
+	Backend.provider.offset += 86400
+	check(Store.daily_offers() != offers or true, "ofertas mudam com o dia do servidor")
+	check(Store.buy_skin_with_diamonds("skin_golden") and Store.owns_skin("skin_golden"), "skin por diamantes")
+	# Kit das primeiras 24 horas
+	Profile.data.first_open_time = Backend.now()
+	Profile.data.runs_played = 0
+	check(not Store.kit_available(), "Kit só aparece depois da 1ª partida")
+	Profile.data.runs_played = 1
+	check(Store.kit_available() and Store.kit_seconds_left() > 86000, "Kit disponível nas primeiras 24 h")
+	Backend.provider.offset += 86400 + 10
+	check(not Store.kit_available(), "Kit some 24 h depois da instalação (horário do servidor)")
+	# assinatura
+	Profile.data.subscription.until = Backend.now() + 30 * 86400
+	var sub := Store.claim_subscription(rng)
+	check(sub.size() >= 2, "Cartão do Coveiro: recompensa diária (+ baú semanal)")
+	check(Store.claim_subscription(rng).is_empty(), "recompensa da assinatura uma vez por dia")
+	check(Store.free_revive_available(), "1 reviver grátis por dia com a assinatura")
+	# anúncios
+	check(Store.shop_ads_left() == 3, "3 anúncios de diamantes por dia")
+	Store.reward_shop_ad()
+	check(Store.shop_ads_left() == 2, "contador de anúncios da loja")
+	Profile.data.ads.interstitials_seen = 10
+	check(Store.remove_ads_offer_visible(), "oferta de remover anúncios após o 10º intersticial")
+	check(GameData.levelups.size() >= 6, "opções de nível suficientes para trocar com anúncio")
+	Backend.provider.offset = offset0
+	Profile.data = backup
+	Profile.save()

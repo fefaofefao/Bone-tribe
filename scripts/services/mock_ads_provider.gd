@@ -21,7 +21,7 @@ func _overlay(title_key: String, seconds: float, placement: String) -> void:
 	get_tree().root.add_child(layer)
 	var bg := ColorRect.new()
 	bg.color = Color(0, 0, 0, 0.92)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_STOP
 	layer.add_child(bg)
 	var box := VBoxContainer.new()

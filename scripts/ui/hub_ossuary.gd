@@ -211,7 +211,7 @@ func _open_chest() -> void:
 	Haptics.heavy()
 	var bg := Widgets.dim_overlay(self, 0.8)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.add_child(center)
 	var p := Style.panel()
 	p.custom_minimum_size = Vector2(560, 0)
@@ -247,7 +247,7 @@ func _open_chest() -> void:
 func _switch_relic(slot: String) -> void:
 	var bg := Widgets.dim_overlay(self, 0.8)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.add_child(center)
 	var p := Style.panel()
 	p.custom_minimum_size = Vector2(560, 0)

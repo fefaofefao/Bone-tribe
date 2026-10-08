@@ -150,3 +150,37 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
   Nas partidas seguintes há ~60% de chance de ele aparecer uma vez (andares 4–27) como chefe
   opcional, desenhado com o mesmo esqueleto do Ossinho vestindo os ossos roubados e um capuz.
   Vencer devolve o osso mais recente com +1 nível e dá pó de osso.
+
+## Loja, diamantes e calendários (Passo 6)
+
+- **Serviços simulados**: `Backend` (Firebase), `Ads` (AdMob) e `Billing` (Google Play Billing)
+  são fachadas com provedores simulados em `scripts/services/`. Para o lançamento, basta
+  escrever provedores reais com os mesmos métodos; nenhum SDK ou credencial foi adicionado.
+  A loja avisa que as compras são simuladas.
+- **Horário do servidor** em tudo que é recompensa: calendários, ofertas do dia (trocam à
+  meia-noite UTC), Kit 24h, limites diários de anúncios e assinatura. No simulado, o "servidor"
+  é o relógio do sistema com um deslocamento de teste (`Backend.debug_advance`).
+- **Calendário de 7 dias** exatamente como no GDD (500 de pó, 50, baú de curiosidades raro, 100,
+  relíquia rara, 150, Bigorna + skin Ossinho Recém-Desperto). Depois, o **ciclo de 28 dias**:
+  dias comuns alternam pó, baú comum e 10 diamantes; dia 7 = 50 diamantes, dia 14 = baú raro,
+  dia 21 = 50 diamantes, dia 28 = item de curiosidade garantido. Um resgate por dia do servidor,
+  contando dias com login (faltar não zera).
+- **"Raro" no Gabinete**: os itens não têm raridade no GDD; os que caem de chefes e de eventos
+  raros contam como raros para o "Baú de curiosidades raro".
+- **Kit das primeiras 24 horas**: aparece ao fim da 1ª partida (abre a aba Loja uma vez) e some
+  24 h depois da primeira abertura, pelo horário do servidor; cronômetro visível na aba Loja;
+  uma compra por conta. Mostra o valor equivalente (850 diamantes) e a economia.
+- **Chances visíveis** antes de comprar itens aleatórios (baú de curiosidades raro, relíquia
+  rara, baú de ossos), como exige a Google Play.
+- **Trocar as 3 opções de habilidade** (anúncio, 3 por partida) exigia mais que 3 bônus de
+  nível: foram criados 7 novos no mesmo estilo (Costelas de Ferro, Joelhos Ligeiros, Mandíbula
+  Faminta, Tutano Quente, Falange da Sorte, Crânio Pesado, Ossos Grossos).
+- **Reviver**: anúncio (1 por partida), Reviver extra (item de 30 diamantes, estocável), reviver
+  grátis diário do Cartão do Coveiro, ou pagar 30 diamantes na hora.
+- **Intersticiais** só a partir da 3ª partida, no máximo 1 a cada 3 minutos, sempre ao voltar
+  ao hub (nunca em combate). Depois do 10º, aparece a oferta de remover anúncios
+  (que também dá +10% de pó permanente).
+- **Skins** pintam todos os ossos (tom e transparência) no jogo, no hub e no Cartão da Criatura.
+  Dourado, Neon, Pirata e Cristal estão à venda por diamantes (300–600) ou dinheiro;
+  Recém-Desperto vem do dia 7, Lua de Âmbar do Kit e Fundador do Pacote apoiador
+  (oferecido depois de vencer o Dragão Ancião, fim do capítulo 1).

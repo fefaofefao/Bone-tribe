@@ -77,6 +77,8 @@ func _sample_profile() -> void:
 	data.relics = {"owned": [{"uid": 1, "id": "relic_moon_amulet", "level": 3}, {"uid": 2, "id": "relic_knuckle_ring", "level": 2}, {"uid": 3, "id": "relic_gravedigger_lantern", "level": 1}], "equipped": {"relic_amulet": 1, "relic_ring": 2, "relic_lantern": 3}, "next_uid": 4}
 	data.cabinet = {"cur_melted_candle": 2, "cur_holed_coin": 1, "cur_gold_tooth": 3, "cur_rusty_shovel": 1, "cur_holed_hat": 1, "cur_loaded_die": 4, "cur_bone_goblet": 1}
 	data.hunter = {"stolen": [{"id": "bone_blade_mantis", "level": 1}, {"id": "bone_wings_bat", "level": 2}]}
+	data.runs_played = 1
+	data.skins = {"owned": ["skin_newly_awakened"], "equipped": ""}
 
 
 func _merge(base: Dictionary, incoming: Dictionary) -> void:

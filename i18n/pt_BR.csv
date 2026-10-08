@@ -696,3 +696,98 @@ cur_triple_scale_name,Escama Tripla
 cur_triple_scale_desc,+3 de defesa
 cur_serpent_eye_name,Olho de Serpente
 cur_serpent_eye_desc,+2% de crítico
+levelup_iron_ribs_name,Costelas de Ferro
+levelup_iron_ribs_desc,+6 de defesa
+levelup_quick_knees_name,Joelhos Ligeiros
+levelup_quick_knees_desc,+5% de esquiva
+levelup_hungry_jaw_name,Mandíbula Faminta
+levelup_hungry_jaw_desc,+4% de roubo de vida
+levelup_warm_marrow_name,Tutano Quente
+levelup_warm_marrow_desc,Regenera 1% da vida por turno
+levelup_lucky_phalanx_name,Falange da Sorte
+levelup_lucky_phalanx_desc,+10% de pó de osso
+levelup_heavy_skull_name,Crânio Pesado
+levelup_heavy_skull_desc,Críticos causam +15% de dano
+levelup_thick_bones_name,Ossos Grossos
+levelup_thick_bones_desc,+20 de vida máxima
+btn_reroll_ad,"Trocar opções (anúncio, %d)"
+ad_place_reroll_levelup,Trocar as 3 opções de habilidade
+ad_place_shop_diamonds,5 diamantes
+btn_revive_free,Reviver grátis (Cartão do Coveiro)
+btn_revive_extra,Usar Reviver extra (%d)
+btn_revive_diamonds,Reviver por %d
+btn_not_now,Agora não
+rewards_title,Recompensas!
+reward_dust,%s de pó de osso
+reward_skin,Skin %s
+reward_extra_revive,Reviver extra
+reward_rare_start_token,Ficha de osso inicial raro
+reward_remove_ads,Anúncios removidos e +10% de pó
+reward_supporter,Seu nome nos créditos. Obrigado!
+reward_subscription,Cartão do Coveiro ativo
+reward_curiosity,Curiosidade
+reward_curiosity_chest_rare,Baú de curiosidades raro
+reward_relic,Relíquia rara
+reward_bone_chest,Baú comum
+reward_bone_chest_rare,Baú raro
+reward_companion,Companheiro
+login_first7_title,Bônus dos primeiros 7 dias
+login_first7_sub,"Conta dias com login, não dias seguidos. O 7º dia é o melhor!"
+login_cycle_title,Bônus diário
+login_cycle_sub,"Um ciclo de 28 dias que recomeça. Dias 7, 14 e 21 são especiais; o 28 dá uma curiosidade."
+login_day,Dia %d
+login_claim,Resgatar
+login_come_back,Volte em %s
+login_open,Calendário de recompensas
+skin_newly_awakened_name,Ossinho Recém-Desperto
+skin_amber_moon_name,Ossinho Lua de Âmbar
+skin_founder_name,Ossinho Fundador
+skin_golden_name,Dourado
+skin_neon_name,Neon
+skin_pirate_name,Pirata
+skin_crystal_name,Cristal
+skins_title,Skins
+skins_sub,Estilos visuais para todos os ossos. Aparecem no Cartão da Criatura!
+skin_equip,Usar
+skin_equipped,Em uso
+skin_none,Sem skin
+iap_kit24_name,Kit das primeiras 24 horas
+kit_ends_in,Termina em %s
+kit_value,Vale %d diamantes: economize %d%%
+kit_once,Oferta única por conta.
+daily_title,Ofertas do dia
+daily_resets_in,Novas ofertas em %s
+sold_out,Comprado
+shop_items_title,Itens
+shop_items_sub,"Diamantes caem de chefes, calendários e anúncios. Comprar só acelera."
+owned_n,Você tem: %d
+item_extra_revive_name,Reviver extra
+item_extra_revive_desc,Revive sem assistir anúncio.
+item_dust_1000_name,1.000 de pó de osso
+item_dust_1000_desc,Acelera as melhorias do Ossuário.
+item_rare_start_bone_name,Osso inicial raro
+item_rare_start_bone_desc,Começa a próxima partida com um osso raro à escolha (Coleção).
+item_curiosity_chest_rare_name,Baú de curiosidades raro
+item_curiosity_chest_rare_desc,"Um item do Gabinete de Curiosidades, raro ou melhor."
+item_relic_rare_name,Relíquia rara
+item_relic_rare_desc,Uma relíquia rara aleatória.
+item_companion_lumi_name,Companheira Lumi
+item_companion_lumi_desc,Libera a Lumi antes de encontrá-la no jogo.
+odds_curiosity_rare,"Chances: 1 de %d itens raros, %s%% cada."
+odds_relic_rare_item,"Chances: 1 de %d relíquias raras, %s%% cada."
+diamonds_title,Diamantes
+diamonds_sub,Compras simuladas neste protótipo: nada é cobrado.
+iap_diamonds_handful_name,Punhado
+iap_diamonds_sack_name,Saco
+iap_diamonds_chest_name,Baú
+iap_diamonds_vault_name,Cofre
+shop_ad_diamonds,Assistir anúncio: +%d (%d hoje)
+iap_gravedigger_card_name,Cartão do Coveiro
+iap_gravedigger_card_desc,"30 dias: 30 diamantes e 300 de pó por dia, 1 reviver grátis por dia e 1 baú raro por semana."
+subscription_active,Ativo: %d dia(s) restantes
+subscription_daily,Cartão do Coveiro
+per_month,30 dias
+iap_remove_ads_name,Remover anúncios
+iap_remove_ads_desc,Fim dos anúncios entre partidas e +10% de pó de osso para sempre. Os anúncios com recompensa continuam opcionais.
+iap_supporter_name,Pacote apoiador
+iap_supporter_desc,Skin exclusiva Ossinho Fundador e seu nome nos créditos.

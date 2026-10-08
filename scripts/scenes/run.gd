@@ -70,6 +70,8 @@ func _build_world() -> void:
 	hero_view.position = HERO_POS
 	world.add_child(hero_view)
 	hero_view.set_equipped(state.equipped)
+	if not demo:
+		hero_view.set_skin_tint(Store.skin_tint())
 	_build_companion_view()
 	fx = FxLayer.new()
 	world.add_child(fx)
@@ -113,7 +115,7 @@ func _build_ui() -> void:
 	ui.layer = 10
 	add_child(ui)
 	hud = Control.new()
-	hud.set_anchors_preset(Control.PRESET_FULL_RECT)
+	hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(hud)
 
@@ -189,7 +191,7 @@ func _build_ui() -> void:
 	_update_speed_btn()
 
 	overlay_root = Control.new()
-	overlay_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(overlay_root)
 
@@ -1457,7 +1459,7 @@ func _transformation(fid: String) -> void:
 func _dialog_frame(title_key: String, title_color := Style.C_CANDLE) -> Array:
 	var bg := Widgets.dim_overlay(overlay_root)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.add_child(center)
 	var p := Style.panel(Color(Style.C_PANEL, 0.98), Style.C_EDGE, 26)
 	p.custom_minimum_size = Vector2(650, 0)
@@ -1527,6 +1529,18 @@ func _levelup_dialog() -> void:
 	v.add_child(Style.label(tr("levelup_subtitle"), 24, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 	var choices := state.levelup_choices(3)
 	var picked := [""]
+	var reroll_used := int(state.flags.get("rerolls", 0))
+	var reroll_lim := Ads.limit("reroll_levelup")
+	if not autoplay and reroll_used < reroll_lim:
+		var rb := Style.button(tr("btn_reroll_ad") % (reroll_lim - reroll_used), "DarkButton", 62)
+		rb.add_theme_font_size_override("font_size", 22)
+		rb.pressed.connect(func():
+			rb.disabled = true
+			if await Ads.show_rewarded("reroll_levelup"):
+				state.flags["rerolls"] = int(state.flags.get("rerolls", 0)) + 1
+				picked[0] = "__reroll__"
+				dialog_closed.emit("__reroll__"))
+		v.add_child(rb)
 	for i in choices.size():
 		var id: String = choices[i]
 		var lu: Dictionary = GameData.levelups[id]
@@ -1559,6 +1573,10 @@ func _levelup_dialog() -> void:
 		picked[0] = choices[0]
 	else:
 		await dialog_closed
+	if picked[0] == "__reroll__":
+		_close_dialog(bg)
+		await _levelup_dialog()
+		return
 	state.apply_levelup(picked[0])
 	_refresh_hud()
 	_close_dialog(bg)
@@ -1579,8 +1597,23 @@ func _death_dialog() -> bool:
 	var bg: Control = parts[0]
 	var v: VBoxContainer = parts[1]
 	var res := [false]
+	v.add_child(Style.label(tr("death_sub"), 24, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	if Store.free_revive_available():
+		var fb := Style.button(tr("btn_revive_free"), "CandleButton", 80)
+		fb.pressed.connect(func():
+			Store.use_free_revive()
+			res[0] = true
+			dialog_closed.emit(true))
+		v.add_child(fb)
+	if int(Profile.data.extra_revives) > 0:
+		var eb := Style.button(tr("btn_revive_extra") % int(Profile.data.extra_revives), "CandleButton", 80)
+		eb.pressed.connect(func():
+			Profile.data.extra_revives = int(Profile.data.extra_revives) - 1
+			Profile.save()
+			res[0] = true
+			dialog_closed.emit(true))
+		v.add_child(eb)
 	if can_ad:
-		v.add_child(Style.label(tr("death_sub"), 24, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 		var b := Style.button(tr("btn_revive_ad"), "CandleButton", 84)
 		b.pressed.connect(func():
 			var ok: bool = await Ads.show_rewarded("revive")
@@ -1589,7 +1622,18 @@ func _death_dialog() -> bool:
 				res[0] = true
 				dialog_closed.emit(true))
 		v.add_child(b)
-	var g := Style.button(tr("btn_give_up"), "DarkButton", 78)
+	var price := int(Store.diamond_item("item_extra_revive").get("price", 30))
+	var db := Style.button(tr("btn_revive_diamonds") % price, "DarkButton", 74)
+	db.icon = load("res://art/ui/ui_icon_diamond.png")
+	db.expand_icon = true
+	db.add_theme_constant_override("icon_max_width", 34)
+	db.disabled = Profile.diamonds() < price
+	db.pressed.connect(func():
+		if Profile.spend_diamonds(price, "revive"):
+			res[0] = true
+			dialog_closed.emit(true))
+	v.add_child(db)
+	var g := Style.button(tr("btn_give_up"), "DarkButton", 74)
 	g.pressed.connect(func(): dialog_closed.emit(false))
 	v.add_child(g)
 	await dialog_closed

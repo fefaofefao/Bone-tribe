@@ -16,7 +16,7 @@ func _ready() -> void:
 	equipped = p.get("equipped", GameData.skeleton.get("starting_bones", {}).duplicate())
 	var bg := ColorRect.new()
 	bg.color = Style.C_BG
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 
 	viewport = SubViewport.new()
@@ -102,6 +102,8 @@ func _build_card(p: Dictionary) -> void:
 	creature.scale = Vector2.ONE * 2.5
 	world.add_child(creature)
 	creature.set_equipped(equipped)
+	if not bool(p.get("demo", false)):
+		creature.set_skin_tint(Store.skin_tint())
 
 	var logo := Sprite2D.new()
 	logo.texture = load("res://art/ui/ui_logo.png")

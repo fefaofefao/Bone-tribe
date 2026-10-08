@@ -79,7 +79,7 @@ func _bone_cell(id: String, is_start: bool) -> Control:
 func _bone_detail(id: String) -> void:
 	var bg := Widgets.dim_overlay(self, 0.8)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.add_child(center)
 	var v := Style.vbox(12)
 	v.custom_minimum_size = Vector2(520, 0)

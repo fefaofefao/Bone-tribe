@@ -1,0 +1,311 @@
+{
+	"_doc": "Loja: produtos de compra simulada (iap), itens por diamantes, ofertas do dia e limites de anúncios. Preços por país vêm da Play Console no lançamento.",
+	"iap": [
+		{
+			"id": "iap_kit24",
+			"kind": "kit24",
+			"price_usd": 1.99,
+			"price_brl": 4.9,
+			"name": "iap_kit24_name",
+			"content": [
+				{
+					"type": "diamonds",
+					"amount": 300
+				},
+				{
+					"type": "relic_id",
+					"id": "relic_gravedigger_lantern"
+				},
+				{
+					"type": "skin",
+					"id": "skin_amber_moon"
+				},
+				{
+					"type": "dust",
+					"amount": 1000
+				}
+			],
+			"value_diamonds": 850
+		},
+		{
+			"id": "iap_remove_ads",
+			"kind": "remove_ads",
+			"price_usd": 4.99,
+			"price_brl": 9.9,
+			"name": "iap_remove_ads_name",
+			"content": [
+				{
+					"type": "remove_ads"
+				}
+			],
+			"show_after_interstitials": 10
+		},
+		{
+			"id": "iap_gravedigger_card",
+			"kind": "subscription",
+			"price_usd": 4.99,
+			"price_brl": 9.9,
+			"name": "iap_gravedigger_card_name",
+			"days": 30,
+			"daily": [
+				{
+					"type": "diamonds",
+					"amount": 30
+				},
+				{
+					"type": "dust",
+					"amount": 300
+				}
+			],
+			"daily_free_revive": 1,
+			"weekly": [
+				{
+					"type": "bone_chest_rare"
+				}
+			]
+		},
+		{
+			"id": "iap_supporter",
+			"kind": "supporter",
+			"price_usd": 9.99,
+			"price_brl": 24.9,
+			"name": "iap_supporter_name",
+			"content": [
+				{
+					"type": "skin",
+					"id": "skin_founder"
+				},
+				{
+					"type": "supporter"
+				}
+			],
+			"requires_boss": "boss_ancient_dragon"
+		},
+		{
+			"id": "iap_diamonds_handful",
+			"kind": "diamonds",
+			"price_usd": 0.99,
+			"price_brl": 2.9,
+			"name": "iap_diamonds_handful_name",
+			"content": [
+				{
+					"type": "diamonds",
+					"amount": 100
+				}
+			]
+		},
+		{
+			"id": "iap_diamonds_sack",
+			"kind": "diamonds",
+			"price_usd": 4.99,
+			"price_brl": 9.9,
+			"name": "iap_diamonds_sack_name",
+			"content": [
+				{
+					"type": "diamonds",
+					"amount": 550
+				}
+			]
+		},
+		{
+			"id": "iap_diamonds_chest",
+			"kind": "diamonds",
+			"price_usd": 9.99,
+			"price_brl": 19.9,
+			"name": "iap_diamonds_chest_name",
+			"content": [
+				{
+					"type": "diamonds",
+					"amount": 1200
+				}
+			]
+		},
+		{
+			"id": "iap_diamonds_vault",
+			"kind": "diamonds",
+			"price_usd": 19.99,
+			"price_brl": 39.9,
+			"name": "iap_diamonds_vault_name",
+			"content": [
+				{
+					"type": "diamonds",
+					"amount": 2600
+				}
+			]
+		},
+		{
+			"id": "iap_skin_golden",
+			"kind": "skin",
+			"price_usd": 1.99,
+			"price_brl": 4.9,
+			"name": "skin_golden_name",
+			"content": [
+				{
+					"type": "skin",
+					"id": "skin_golden"
+				}
+			]
+		},
+		{
+			"id": "iap_skin_neon",
+			"kind": "skin",
+			"price_usd": 2.99,
+			"price_brl": 6.9,
+			"name": "skin_neon_name",
+			"content": [
+				{
+					"type": "skin",
+					"id": "skin_neon"
+				}
+			]
+		},
+		{
+			"id": "iap_skin_pirate",
+			"kind": "skin",
+			"price_usd": 2.99,
+			"price_brl": 6.9,
+			"name": "skin_pirate_name",
+			"content": [
+				{
+					"type": "skin",
+					"id": "skin_pirate"
+				}
+			]
+		},
+		{
+			"id": "iap_skin_crystal",
+			"kind": "skin",
+			"price_usd": 3.99,
+			"price_brl": 9.9,
+			"name": "skin_crystal_name",
+			"content": [
+				{
+					"type": "skin",
+					"id": "skin_crystal"
+				}
+			]
+		}
+	],
+	"diamond_items": [
+		{
+			"id": "item_extra_revive",
+			"price": 30,
+			"name": "item_extra_revive_name",
+			"desc": "item_extra_revive_desc",
+			"content": [
+				{
+					"type": "extra_revive"
+				}
+			],
+			"icon": "ui_icon_heart"
+		},
+		{
+			"id": "item_dust_1000",
+			"price": 50,
+			"name": "item_dust_1000_name",
+			"desc": "item_dust_1000_desc",
+			"content": [
+				{
+					"type": "dust",
+					"amount": 1000
+				}
+			],
+			"icon": "ui_icon_dust"
+		},
+		{
+			"id": "item_rare_start_bone",
+			"price": 80,
+			"name": "item_rare_start_bone_name",
+			"desc": "item_rare_start_bone_desc",
+			"content": [
+				{
+					"type": "rare_start_token"
+				}
+			],
+			"icon": "bone_skull_cyclops",
+			"icon_dir": "bones"
+		},
+		{
+			"id": "item_curiosity_chest_rare",
+			"price": 150,
+			"name": "item_curiosity_chest_rare_name",
+			"desc": "item_curiosity_chest_rare_desc",
+			"content": [
+				{
+					"type": "curiosity_chest_rare"
+				}
+			],
+			"icon": "ui_bone_chest",
+			"random": true
+		},
+		{
+			"id": "item_relic_rare",
+			"price": 200,
+			"name": "item_relic_rare_name",
+			"desc": "item_relic_rare_desc",
+			"content": [
+				{
+					"type": "relic",
+					"rarity": "rare"
+				}
+			],
+			"icon": "relic_moon_amulet",
+			"random": true
+		},
+		{
+			"id": "item_companion_lumi",
+			"price": 400,
+			"name": "item_companion_lumi_name",
+			"desc": "item_companion_lumi_desc",
+			"content": [
+				{
+					"type": "companion",
+					"id": "companion_lumi"
+				}
+			],
+			"icon": "companion_lumi"
+		}
+	],
+	"daily_offers": {
+		"count": 3,
+		"discount_min": 0.2,
+		"discount_max": 0.5,
+		"pool": [
+			"item_extra_revive",
+			"item_dust_1000",
+			"item_rare_start_bone",
+			"item_curiosity_chest_rare",
+			"item_relic_rare"
+		]
+	},
+	"ads": {
+		"revive": {
+			"limit": 1,
+			"per": "run"
+		},
+		"double_dust": {
+			"limit": 1,
+			"per": "run"
+		},
+		"reroll_levelup": {
+			"limit": 3,
+			"per": "run"
+		},
+		"extra_chest": {
+			"limit": 3,
+			"per": "day"
+		},
+		"shop_diamonds": {
+			"limit": 3,
+			"per": "day",
+			"diamonds": 5
+		},
+		"interstitial": {
+			"min_runs": 3,
+			"min_interval_s": 180
+		}
+	},
+	"kit24": {
+		"window_s": 86400
+	}
+}

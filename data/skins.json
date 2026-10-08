@@ -1,0 +1,9 @@
+[
+	{"id": "skin_golden", "name": "skin_golden_name", "tint": "#ffd36b", "glow": "#ffcc55", "source": "shop", "diamonds": 300, "iap": "iap_skin_golden"},
+	{"id": "skin_neon", "name": "skin_neon_name", "tint": "#8ff7ff", "glow": "#3dffd9", "source": "shop", "diamonds": 400, "iap": "iap_skin_neon"},
+	{"id": "skin_pirate", "name": "skin_pirate_name", "tint": "#c9a27a", "glow": "#ff6a3d", "source": "shop", "diamonds": 500, "iap": "iap_skin_pirate"},
+	{"id": "skin_crystal", "name": "skin_crystal_name", "tint": "#c8e6ff", "glow": "#9fd0ff", "source": "shop", "diamonds": 600, "iap": "iap_skin_crystal", "alpha": 0.82},
+	{"id": "skin_newly_awakened", "name": "skin_newly_awakened_name", "tint": "#f2fff0", "glow": "#9cff9c", "source": "login_day_7"},
+	{"id": "skin_amber_moon", "name": "skin_amber_moon_name", "tint": "#ffb45e", "glow": "#ff9f2e", "source": "kit24"},
+	{"id": "skin_founder", "name": "skin_founder_name", "tint": "#e3b8ff", "glow": "#c070ff", "source": "supporter"}
+]

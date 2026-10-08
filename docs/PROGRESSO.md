@@ -41,8 +41,16 @@
 - Arte: retratos dos 3 companheiros, ícones das 12 relíquias e dos 30 itens, capuz do Caçador, Baú de ossos.
 - Correção importante: o tema visual não chegava aos controles dentro de CanvasLayer; agora é mesclado no tema padrão do motor.
 
+### Passo 6 — Calendários, diamantes, loja e Kit 24h
+- Calendário de boas-vindas de 7 dias e ciclo diário de 28 dias (pop-up ao abrir o hub e botão no Início), pelo horário do servidor simulado.
+- Diamantes: chefes, calendários, anúncio na loja (5, até 3 por dia), compras simuladas (Punhado, Saco, Baú, Cofre).
+- Aba Loja: Kit das primeiras 24 horas com cronômetro, ofertas do dia (3 itens com desconto, trocam à meia-noite do servidor), itens por diamantes com chances visíveis, skins com prévia do Ossinho, pacotes de diamantes, Cartão do Coveiro (assinatura de 30 dias), remover anúncios e pacote apoiador.
+- Na partida: reviver por anúncio, Reviver extra, reviver grátis da assinatura ou por diamantes; trocar as opções de nível por anúncio (3 por partida, 10 bônus de nível no total).
+- Intersticiais limitados entre partidas e oferta de remover anúncios após o 10º.
+- Correção: diálogos criados por código agora usam âncoras e margens completas (ficavam desalinhados).
+
 ## Em andamento
-- Passo 6 — calendários de login, diamantes, loja e Kit das primeiras 24 horas.
+- Passo 7 — acabamento visual.
 
 ## Problemas
 - O ambiente de desenvolvimento não acessa `dl.google.com`, então o AAB só é gerado e validado no GitHub Actions.

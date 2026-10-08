@@ -1,5 +1,12 @@
 [
-	{"id": "levelup_strong_marrow", "name": "levelup_strong_marrow_name", "desc": "levelup_strong_marrow_desc", "stats": {"hp_pct": 0.10}, "heal_pct": 0.10, "icon": "ui_levelup_strong_marrow"},
-	{"id": "levelup_sharp_femur", "name": "levelup_sharp_femur_name", "desc": "levelup_sharp_femur_desc", "stats": {"atk_pct": 0.10}, "icon": "ui_levelup_sharp_femur"},
-	{"id": "levelup_empty_eye", "name": "levelup_empty_eye_name", "desc": "levelup_empty_eye_desc", "stats": {"crit": 0.05}, "icon": "ui_levelup_empty_eye"}
+	{"id": "levelup_strong_marrow", "name": "levelup_strong_marrow_name", "desc": "levelup_strong_marrow_desc", "stats": {"hp_pct": 0.1}, "heal_pct": 0.1, "icon": "ui_levelup_strong_marrow"},
+	{"id": "levelup_sharp_femur", "name": "levelup_sharp_femur_name", "desc": "levelup_sharp_femur_desc", "stats": {"atk_pct": 0.1}, "icon": "ui_levelup_sharp_femur"},
+	{"id": "levelup_empty_eye", "name": "levelup_empty_eye_name", "desc": "levelup_empty_eye_desc", "stats": {"crit": 0.05}, "icon": "ui_levelup_empty_eye"},
+	{"id": "levelup_iron_ribs", "name": "levelup_iron_ribs_name", "desc": "levelup_iron_ribs_desc", "stats": {"def": 6}, "icon": "ui_icon_shield"},
+	{"id": "levelup_quick_knees", "name": "levelup_quick_knees_name", "desc": "levelup_quick_knees_desc", "stats": {"dodge": 0.05}, "icon": "ui_levelup_quick_knees"},
+	{"id": "levelup_hungry_jaw", "name": "levelup_hungry_jaw_name", "desc": "levelup_hungry_jaw_desc", "stats": {"lifesteal": 0.04}, "icon": "ui_levelup_hungry_jaw"},
+	{"id": "levelup_warm_marrow", "name": "levelup_warm_marrow_name", "desc": "levelup_warm_marrow_desc", "stats": {"regen": 0.01}, "icon": "ui_levelup_warm_marrow"},
+	{"id": "levelup_lucky_phalanx", "name": "levelup_lucky_phalanx_name", "desc": "levelup_lucky_phalanx_desc", "stats": {"dust_bonus": 0.1}, "icon": "ui_icon_dust"},
+	{"id": "levelup_heavy_skull", "name": "levelup_heavy_skull_name", "desc": "levelup_heavy_skull_desc", "stats": {"crit_mult": 0.15}, "icon": "ui_levelup_heavy_skull"},
+	{"id": "levelup_thick_bones", "name": "levelup_thick_bones_name", "desc": "levelup_thick_bones_desc", "stats": {"hp": 20}, "icon": "ui_icon_heart"}
 ]

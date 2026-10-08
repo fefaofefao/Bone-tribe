@@ -47,18 +47,18 @@ func _ready() -> void:
 	var layer := CanvasLayer.new()
 	add_child(layer)
 	_ui = Control.new()
-	_ui.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(_ui)
 
 	_home = Control.new()
-	_home.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_home.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_home.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ui.add_child(_home)
 	_build_home()
 
 	_page_root = Control.new()
-	_page_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_page_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_page_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ui.add_child(_page_root)
 
@@ -72,9 +72,70 @@ func _ready() -> void:
 	_after_open()
 
 
-## Ganchos de abertura (login, ofertas, intersticial) — completados no Passo 6.
+## Ao abrir o hub: intersticial entre partidas, oferta de remover anúncios,
+## Kit das primeiras 24 horas, recompensa diária do Cartão do Coveiro e calendário.
 func _after_open() -> void:
-	pass
+	if OS.get_environment("BT_TAB") != "" or OS.get_environment("BT_SHOT") != "" and OS.get_environment("BT_POPUPS") == "":
+		return
+	await get_tree().create_timer(0.5).timeout
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	if bool(Router.params.get("after_run", false)):
+		var before := int(Profile.data.ads.interstitials_seen)
+		await Ads.maybe_show_interstitial()
+		var p := Store.iap("iap_remove_ads")
+		if before < int(p.get("show_after_interstitials", 10)) and Store.remove_ads_offer_visible():
+			await _offer_popup("iap_remove_ads", "iap_remove_ads_desc")
+		if Store.kit_available() and not bool(Profile.data.kit24.offered):
+			Profile.data.kit24.offered = true
+			Profile.save()
+			_open_tab("shop")
+			return
+	var sub := Store.claim_subscription(rng)
+	if not sub.is_empty():
+		await RewardPopup.show_on(_ui, "subscription_daily", sub).closed
+	if Store.can_claim_login():
+		await _open_calendar()
+	_refresh_currency()
+
+
+func _open_calendar() -> void:
+	var pop := LoginPopup.new()
+	_ui.add_child(pop)
+	await pop.closed
+	_refresh_currency()
+	_refresh_hero()
+	_refresh_chips()
+
+
+func _offer_popup(pid: String, desc_key: String) -> void:
+	var bg := Widgets.dim_overlay(_ui, 0.8)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.add_child(center)
+	var p := Style.panel()
+	p.custom_minimum_size = Vector2(560, 0)
+	center.add_child(p)
+	var v := Style.vbox(14)
+	p.add_child(v)
+	v.add_child(Style.title(tr(String(Store.iap(pid).name)), 44, Style.C_CANDLE))
+	v.add_child(Style.label(tr(desc_key), 22, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	var done := [false]
+	var buy := Style.button(Billing.price_text(pid), "CandleButton", 80)
+	buy.pressed.connect(func():
+		var rng := RandomNumberGenerator.new()
+		await Store.buy_iap(pid, rng)
+		bg.queue_free()
+		done[0] = true)
+	v.add_child(buy)
+	var no := Style.button(tr("btn_not_now"), "DarkButton", 66)
+	no.pressed.connect(func():
+		bg.queue_free()
+		done[0] = true)
+	v.add_child(no)
+	Widgets.pop_in(p)
+	while not done[0]:
+		await get_tree().process_frame
 
 
 func _refresh_hero() -> void:
@@ -83,6 +144,7 @@ func _refresh_hero() -> void:
 	if sb != "" and Meta.can_start_with(sb):
 		eq[GameData.bone_slots(sb)[0]] = sb
 	_hero.set_equipped(eq)
+	_hero.set_skin_tint(Store.skin_tint())
 	if _companion:
 		_companion.queue_free()
 		_companion = null
@@ -162,6 +224,13 @@ func _refresh_chips() -> void:
 	var stolen := Meta.hunter_stolen()
 	if not stolen.is_empty():
 		_chips.add_child(_chip(GameData.bone_texture_path(String(stolen[-1].id)), tr("chip_hunter") % stolen.size(), Color("e07a8a")))
+	var cal := Style.button(tr("login_open") + ("  •" if Store.can_claim_login() else ""), "DarkButton", 56)
+	cal.icon = load("res://art/ui/ui_bone_chest.png")
+	cal.expand_icon = true
+	cal.add_theme_constant_override("icon_max_width", 36)
+	cal.add_theme_font_size_override("font_size", 20)
+	cal.pressed.connect(_open_calendar)
+	_chips.add_child(cal)
 
 
 func _chip(icon_path: String, text: String, color := Style.C_TEXT) -> Control:
@@ -296,8 +365,17 @@ func _on_logo_input(event: InputEvent) -> void:
 		_hold_ring.progress = 0.0
 
 
+var _timer_acc := 0.0
+
+
 func _process(delta: float) -> void:
 	_logo.rotation = sin(Time.get_ticks_msec() / 900.0) * 0.015
+	_timer_acc += delta
+	if _timer_acc >= 1.0:
+		_timer_acc = 0.0
+		var shop_btn: Button = _tab_buttons.get("shop")
+		if shop_btn:
+			shop_btn.text = tr("tab_shop") + ("\n" + Store.format_time(Store.kit_seconds_left()) if Store.kit_available() else "")
 	if _hold >= 0.0:
 		_hold += delta
 		_hold_ring.progress = _hold / DEMO_HOLD
@@ -312,7 +390,7 @@ func _process(delta: float) -> void:
 func _menu(title_key: String, items: Array) -> void:
 	var bg := Widgets.dim_overlay(_ui)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.add_child(center)
 	var p := Style.panel()
 	p.custom_minimum_size = Vector2(560, 0)

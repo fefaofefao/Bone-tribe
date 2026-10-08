@@ -11,6 +11,7 @@ static func permanent_extras() -> Array:
 		{"stats": collection_stats(), "effects": []},
 		{"stats": relic_stats(), "effects": []},
 		{"stats": cabinet_stats(), "effects": []},
+		{"stats": {"dust_bonus": 0.10} if bool(Profile.data.ads.get("removed", false)) else {}, "effects": []},
 	]
 
 

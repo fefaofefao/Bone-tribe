@@ -696,3 +696,98 @@ cur_triple_scale_name,Escama Triple
 cur_triple_scale_desc,+3 de defensa
 cur_serpent_eye_name,Ojo de Serpiente
 cur_serpent_eye_desc,+2% de crítico
+levelup_iron_ribs_name,Costillas de Hierro
+levelup_iron_ribs_desc,+6 de defensa
+levelup_quick_knees_name,Rodillas Ligeras
+levelup_quick_knees_desc,+5% de esquiva
+levelup_hungry_jaw_name,Mandíbula Hambrienta
+levelup_hungry_jaw_desc,+4% de robo de vida
+levelup_warm_marrow_name,Médula Caliente
+levelup_warm_marrow_desc,Regenera el 1% de la vida por turno
+levelup_lucky_phalanx_name,Falange de la Suerte
+levelup_lucky_phalanx_desc,+10% de polvo de hueso
+levelup_heavy_skull_name,Cráneo Pesado
+levelup_heavy_skull_desc,Los críticos causan +15% de daño
+levelup_thick_bones_name,Huesos Gruesos
+levelup_thick_bones_desc,+20 de vida máxima
+btn_reroll_ad,"Cambiar opciones (anuncio, %d)"
+ad_place_reroll_levelup,Cambiar las 3 opciones de habilidad
+ad_place_shop_diamonds,5 diamantes
+btn_revive_free,Revivir gratis (Tarjeta del Sepulturero)
+btn_revive_extra,Usar Revivir extra (%d)
+btn_revive_diamonds,Revivir por %d
+btn_not_now,Ahora no
+rewards_title,¡Recompensas!
+reward_dust,%s de polvo de hueso
+reward_skin,Skin %s
+reward_extra_revive,Revivir extra
+reward_rare_start_token,Ficha de hueso inicial raro
+reward_remove_ads,Anuncios eliminados y +10% de polvo
+reward_supporter,Tu nombre en los créditos. ¡Gracias!
+reward_subscription,Tarjeta del Sepulturero activa
+reward_curiosity,Curiosidad
+reward_curiosity_chest_rare,Cofre de curiosidades raro
+reward_relic,Reliquia rara
+reward_bone_chest,Cofre común
+reward_bone_chest_rare,Cofre raro
+reward_companion,Compañero
+login_first7_title,Bono de los primeros 7 días
+login_first7_sub,"Cuenta los días con inicio de sesión, no días seguidos. ¡El 7.º día es el mejor!"
+login_cycle_title,Bono diario
+login_cycle_sub,"Un ciclo de 28 días que se reinicia. Los días 7, 14 y 21 son especiales; el 28 da una curiosidad."
+login_day,Día %d
+login_claim,Reclamar
+login_come_back,Vuelve en %s
+login_open,Calendario de recompensas
+skin_newly_awakened_name,Huesito Recién Despertado
+skin_amber_moon_name,Huesito Luna de Ámbar
+skin_founder_name,Huesito Fundador
+skin_golden_name,Dorado
+skin_neon_name,Neón
+skin_pirate_name,Pirata
+skin_crystal_name,Cristal
+skins_title,Skins
+skins_sub,Estilos visuales para todos los huesos. ¡Aparecen en la Tarjeta de Criatura!
+skin_equip,Usar
+skin_equipped,En uso
+skin_none,Sin skin
+iap_kit24_name,Kit de las primeras 24 horas
+kit_ends_in,Termina en %s
+kit_value,Vale %d diamantes: ahorra %d%%
+kit_once,Oferta única por cuenta.
+daily_title,Ofertas del día
+daily_resets_in,Nuevas ofertas en %s
+sold_out,Comprado
+shop_items_title,Objetos
+shop_items_sub,"Los diamantes caen de jefes, calendarios y anuncios. Comprar solo acelera."
+owned_n,Tienes: %d
+item_extra_revive_name,Revivir extra
+item_extra_revive_desc,Revive sin ver un anuncio.
+item_dust_1000_name,1.000 de polvo de hueso
+item_dust_1000_desc,Acelera las mejoras del Osario.
+item_rare_start_bone_name,Hueso inicial raro
+item_rare_start_bone_desc,Empieza la próxima partida con un hueso raro a tu elección (Colección).
+item_curiosity_chest_rare_name,Cofre de curiosidades raro
+item_curiosity_chest_rare_desc,"Un objeto del Gabinete de Curiosidades, raro o mejor."
+item_relic_rare_name,Reliquia rara
+item_relic_rare_desc,Una reliquia rara aleatoria.
+item_companion_lumi_name,Compañera Lumi
+item_companion_lumi_desc,Libera a Lumi antes de encontrarla en el juego.
+odds_curiosity_rare,"Probabilidades: 1 de %d objetos raros, %s%% cada uno."
+odds_relic_rare_item,"Probabilidades: 1 de %d reliquias raras, %s%% cada una."
+diamonds_title,Diamantes
+diamonds_sub,Compras simuladas en este prototipo: no se cobra nada.
+iap_diamonds_handful_name,Puñado
+iap_diamonds_sack_name,Saco
+iap_diamonds_chest_name,Cofre
+iap_diamonds_vault_name,Bóveda
+shop_ad_diamonds,Ver anuncio: +%d (%d hoy)
+iap_gravedigger_card_name,Tarjeta del Sepulturero
+iap_gravedigger_card_desc,"30 días: 30 diamantes y 300 de polvo por día, 1 revivir gratis por día y 1 cofre raro por semana."
+subscription_active,Activa: %d día(s) restantes
+subscription_daily,Tarjeta del Sepulturero
+per_month,30 días
+iap_remove_ads_name,Quitar anuncios
+iap_remove_ads_desc,Se acaban los anuncios entre partidas y +10% de polvo de hueso para siempre. Los anuncios con recompensa siguen siendo opcionales.
+iap_supporter_name,Paquete de apoyo
+iap_supporter_desc,Skin exclusiva Huesito Fundador y tu nombre en los créditos.

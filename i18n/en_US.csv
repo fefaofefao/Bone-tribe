@@ -696,3 +696,98 @@ cur_triple_scale_name,Triple Scale
 cur_triple_scale_desc,+3 defense
 cur_serpent_eye_name,Serpent Eye
 cur_serpent_eye_desc,+2% critical
+levelup_iron_ribs_name,Iron Ribs
+levelup_iron_ribs_desc,+6 defense
+levelup_quick_knees_name,Quick Knees
+levelup_quick_knees_desc,+5% dodge
+levelup_hungry_jaw_name,Hungry Jaw
+levelup_hungry_jaw_desc,+4% life steal
+levelup_warm_marrow_name,Warm Marrow
+levelup_warm_marrow_desc,Regenerates 1% HP per turn
+levelup_lucky_phalanx_name,Lucky Phalanx
+levelup_lucky_phalanx_desc,+10% bone dust
+levelup_heavy_skull_name,Heavy Skull
+levelup_heavy_skull_desc,Critical hits deal +15% damage
+levelup_thick_bones_name,Thick Bones
+levelup_thick_bones_desc,+20 max HP
+btn_reroll_ad,"Reroll options (ad, %d)"
+ad_place_reroll_levelup,Reroll the 3 skill options
+ad_place_shop_diamonds,5 diamonds
+btn_revive_free,Free revive (Gravedigger's Card)
+btn_revive_extra,Use Extra revive (%d)
+btn_revive_diamonds,Revive for %d
+btn_not_now,Not now
+rewards_title,Rewards!
+reward_dust,%s bone dust
+reward_skin,Skin %s
+reward_extra_revive,Extra revive
+reward_rare_start_token,Rare starting bone token
+reward_remove_ads,Ads removed and +10% dust
+reward_supporter,Your name in the credits. Thank you!
+reward_subscription,Gravedigger's Card active
+reward_curiosity,Curiosity
+reward_curiosity_chest_rare,Rare curiosity chest
+reward_relic,Rare relic
+reward_bone_chest,Common chest
+reward_bone_chest_rare,Rare chest
+reward_companion,Companion
+login_first7_title,First 7 days bonus
+login_first7_sub,"Counts days you log in, not consecutive days. Day 7 is the best!"
+login_cycle_title,Daily bonus
+login_cycle_sub,"A 28-day cycle that restarts. Days 7, 14 and 21 are special; day 28 gives a curiosity."
+login_day,Day %d
+login_claim,Claim
+login_come_back,Come back in %s
+login_open,Rewards calendar
+skin_newly_awakened_name,Freshly Awakened Bonesy
+skin_amber_moon_name,Amber Moon Bonesy
+skin_founder_name,Founder Bonesy
+skin_golden_name,Golden
+skin_neon_name,Neon
+skin_pirate_name,Pirate
+skin_crystal_name,Crystal
+skins_title,Skins
+skins_sub,Visual styles for every bone. They show on the Creature Card!
+skin_equip,Equip
+skin_equipped,Equipped
+skin_none,No skin
+iap_kit24_name,First 24 Hours Kit
+kit_ends_in,Ends in %s
+kit_value,Worth %d diamonds: save %d%%
+kit_once,One-time offer per account.
+daily_title,Daily deals
+daily_resets_in,New deals in %s
+sold_out,Bought
+shop_items_title,Items
+shop_items_sub,"Diamonds drop from bosses, calendars and ads. Buying only speeds things up."
+owned_n,You have: %d
+item_extra_revive_name,Extra revive
+item_extra_revive_desc,Revive without watching an ad.
+item_dust_1000_name,"1,000 bone dust"
+item_dust_1000_desc,Speeds up Ossuary upgrades.
+item_rare_start_bone_name,Rare starting bone
+item_rare_start_bone_desc,Start your next run with a rare bone of your choice (Collection).
+item_curiosity_chest_rare_name,Rare curiosity chest
+item_curiosity_chest_rare_desc,"One Cabinet of Curiosities item, rare or better."
+item_relic_rare_name,Rare relic
+item_relic_rare_desc,A random rare relic.
+item_companion_lumi_name,Companion Lumi
+item_companion_lumi_desc,Unlocks Lumi before you find her in the game.
+odds_curiosity_rare,"Odds: 1 of %d rare items, %s%% each."
+odds_relic_rare_item,"Odds: 1 of %d rare relics, %s%% each."
+diamonds_title,Diamonds
+diamonds_sub,Simulated purchases in this prototype: nothing is charged.
+iap_diamonds_handful_name,Handful
+iap_diamonds_sack_name,Sack
+iap_diamonds_chest_name,Chest
+iap_diamonds_vault_name,Vault
+shop_ad_diamonds,Watch ad: +%d (%d today)
+iap_gravedigger_card_name,Gravedigger's Card
+iap_gravedigger_card_desc,"30 days: 30 diamonds and 300 dust per day, 1 free revive per day and 1 rare chest per week."
+subscription_active,Active: %d day(s) left
+subscription_daily,Gravedigger's Card
+per_month,30 days
+iap_remove_ads_name,Remove ads
+iap_remove_ads_desc,No more ads between runs and +10% bone dust forever. Rewarded ads stay optional.
+iap_supporter_name,Supporter pack
+iap_supporter_desc,Exclusive Founder Bonesy skin and your name in the credits.

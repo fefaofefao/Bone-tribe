@@ -50,7 +50,7 @@ static func bone_card(inst: Dictionary, header: String = "", compact := false) -
 static func dim_overlay(parent: Node, alpha := 0.72) -> ColorRect:
 	var bg := ColorRect.new()
 	bg.color = Color(0.02, 0.01, 0.03, 0.0)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_STOP
 	parent.add_child(bg)
 	var tw := bg.create_tween()

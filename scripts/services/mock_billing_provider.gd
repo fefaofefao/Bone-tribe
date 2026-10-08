@@ -8,7 +8,7 @@ func purchase(_product_id: String) -> bool:
 	get_tree().root.add_child(layer)
 	var bg := ColorRect.new()
 	bg.color = Color(0, 0, 0, 0.8)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_STOP
 	layer.add_child(bg)
 	var label := Label.new()

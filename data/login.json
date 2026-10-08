@@ -1,0 +1,315 @@
+{
+	"_doc": "Calendários de login (contam dias com login, não dias seguidos). Data do servidor (Backend).",
+	"first7": [
+		{
+			"day": 1,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 500
+				}
+			]
+		},
+		{
+			"day": 2,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 50
+				}
+			]
+		},
+		{
+			"day": 3,
+			"rewards": [
+				{
+					"type": "curiosity_chest_rare"
+				}
+			]
+		},
+		{
+			"day": 4,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 100
+				}
+			]
+		},
+		{
+			"day": 5,
+			"rewards": [
+				{
+					"type": "relic",
+					"rarity": "rare"
+				}
+			]
+		},
+		{
+			"day": 6,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 150
+				}
+			]
+		},
+		{
+			"day": 7,
+			"rewards": [
+				{
+					"type": "companion",
+					"id": "companion_bigorna"
+				},
+				{
+					"type": "skin",
+					"id": "skin_newly_awakened"
+				}
+			]
+		}
+	],
+	"cycle28": [
+		{
+			"day": 1,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 110
+				}
+			]
+		},
+		{
+			"day": 2,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 3,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 4,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 140
+				}
+			]
+		},
+		{
+			"day": 5,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 6,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 7,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 50
+				}
+			]
+		},
+		{
+			"day": 8,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 9,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 10,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 200
+				}
+			]
+		},
+		{
+			"day": 11,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 12,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 13,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 230
+				}
+			]
+		},
+		{
+			"day": 14,
+			"rewards": [
+				{
+					"type": "bone_chest_rare"
+				}
+			]
+		},
+		{
+			"day": 15,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 16,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 260
+				}
+			]
+		},
+		{
+			"day": 17,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 18,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 19,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 290
+				}
+			]
+		},
+		{
+			"day": 20,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 21,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 50
+				}
+			]
+		},
+		{
+			"day": 22,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 320
+				}
+			]
+		},
+		{
+			"day": 23,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 24,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 25,
+			"rewards": [
+				{
+					"type": "dust",
+					"amount": 350
+				}
+			]
+		},
+		{
+			"day": 26,
+			"rewards": [
+				{
+					"type": "bone_chest"
+				}
+			]
+		},
+		{
+			"day": 27,
+			"rewards": [
+				{
+					"type": "diamonds",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"day": 28,
+			"rewards": [
+				{
+					"type": "curiosity"
+				}
+			]
+		}
+	]
+}
