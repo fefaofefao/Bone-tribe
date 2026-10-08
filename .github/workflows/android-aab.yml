@@ -145,6 +145,16 @@ jobs:
           ls -la build
           test -s build/BoneTribe.apk
 
+      - name: Verificar APK (instalável no celular)
+        run: |
+          set -x
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          echo "build-tools: $BT"
+          "$BT/aapt2" dump badging build/BoneTribe.apk | grep -E "package:|sdkVersion|targetSdkVersion|native-code" || true
+          unzip -l build/BoneTribe.apk | grep -E "AndroidManifest|resources.arsc|classes.dex|\.so$" | head -20 || true
+          "$BT/zipalign" -c -P 16 4 build/BoneTribe.apk && echo "zipalign OK" || echo "::warning::APK não alinhado"
+          "$BT/apksigner" verify --verbose --print-certs build/BoneTribe.apk
+
       - name: Publicar AAB
         uses: actions/upload-artifact@v4
         with:
