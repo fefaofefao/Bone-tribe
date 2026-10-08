@@ -304,8 +304,40 @@ func _panel_text(text: String) -> RichTextLabel:
 	return r
 
 
+var _prop: Sprite2D
+
+
+func _show_prop(prop_id: String) -> void:
+	_hide_prop()
+	var path := "res://art/props/%s.png" % prop_id
+	if prop_id == "" or not ResourceLoader.exists(path):
+		return
+	_prop = Sprite2D.new()
+	_prop.texture = load(path)
+	_prop.centered = false
+	_prop.offset = Vector2(-_prop.texture.get_width() * 0.5, -_prop.texture.get_height() + 10)
+	_prop.position = Vector2(540, ENEMY_BASE_Y)
+	_prop.scale = Vector2.ONE * 0.6
+	world.add_child(_prop)
+	world.move_child(_prop, hero_view.get_index())
+	_prop.modulate.a = 0.0
+	var tw := create_tween()
+	tw.tween_property(_prop, "modulate:a", 1.0, 0.3)
+	fx.dust_puff(_prop.position, Color(0.8, 0.75, 0.7, 0.4), 4)
+
+
+func _hide_prop() -> void:
+	if _prop and is_instance_valid(_prop):
+		var p := _prop
+		var tw := create_tween()
+		tw.tween_property(p, "modulate:a", 0.0, 0.25)
+		tw.tween_callback(p.queue_free)
+	_prop = null
+
+
 func _play_event(ev: Dictionary) -> void:
 	_clear_panel()
+	_show_prop(String(ev.get("prop", "")))
 	var type := String(ev.get("type", "combat"))
 	_panel_header(type, "event_type_" + type)
 	_panel_text(tr(String(ev.text)))
@@ -347,7 +379,18 @@ func _play_event(ev: Dictionary) -> void:
 	for b in buttons:
 		b.disabled = true
 	Backend.log_event("event_choice", {"event": ev.id, "option": options[choice].get("label", "")})
-	await _exec(options[choice].get("actions", []))
+	var acts: Array = options[choice].get("actions", [])
+	if _has_combat(acts):
+		_hide_prop()
+	await _exec(acts)
+	_hide_prop()
+
+
+func _has_combat(actions: Array) -> bool:
+	for a in actions:
+		if String(a.get("do", "")) == "combat":
+			return true
+	return false
 
 
 func _exec(actions: Array) -> void:
@@ -430,8 +473,196 @@ func _do(a: Dictionary) -> void:
 					break
 		"xp":
 			await _gain_xp(int(a.get("amount", 10)))
+		"pay":
+			var cost := int(a.get("dust", 0))
+			state.add_dust(-cost)
+			fx.float_text(hero_view.body_center_global() + Vector2(0, -120), "-" + Style.num(cost) + " " + tr("dust_short"), Style.C_DUST)
+			_refresh_hud()
+			await _wait(0.3)
+		"stat":
+			var st: Dictionary = a.get("stats", {})
+			for k in st:
+				state.bonus_stats[k] = float(state.bonus_stats.get(k, 0.0)) + float(st[k])
+			state.recalc()
+			hero_view.flash(Style.C_CANDLE, 0.8, 0.4)
+			fx.spark_burst(hero_view.body_center_global(), Style.C_CANDLE, 14, 300)
+			fx.float_text(hero_view.body_center_global() + Vector2(0, -140), tr("result_power_up"), Style.C_CANDLE)
+			_refresh_hud()
+			await _wait(0.6)
+		"trap":
+			if state.rng.randf() < state.stat("trap_avoid"):
+				await _show_result(tr("trap_avoided"))
+			else:
+				var d2 := maxf(1.0, roundf(state.max_hp * float(a.get("value", GameData.bal("trap/default", 0.15)))))
+				state.hp = maxf(1.0, state.hp - d2)
+				hero_view.hit_anim()
+				cam.shake(0.45)
+				Haptics.medium()
+				fx.damage_number(hero_view.body_center_global() + Vector2(0, -60), "-%d" % int(d2), Style.C_DANGER)
+				_refresh_hud()
+				await _show_result(tr("trap_hit"))
+		"skip":
+			state.pending_skip = int(a.get("n", 3))
+			await _fly_over()
+		"ally":
+			var aid := String(a.get("id", ""))
+			state.allies.append(aid)
+			var tmp := MonsterFactory.make_ally(aid, state.floor_n)
+			if tmp:
+				var v := MonsterView.new()
+				v.position = ALLY_SPOTS[(state.allies.size() - 1) % ALLY_SPOTS.size()]
+				world.add_child(v)
+				v.setup(tmp)
+				v.display_scale *= 0.85
+				v.appear_anim()
+				fx.spark_burst(v.center_global(), Style.C_HEAL, 12, 260)
+				fx.float_text(v.top_global(), tr("ally_joined") % tr(tmp.name_key), Style.C_HEAL, 26)
+				await _wait(0.9)
+				v.queue_free()
+		"merchant":
+			await _merchant(int(a.get("stock", 3)), a.get("rarities", []))
+		"sell_bone":
+			var slot := await _choose_bone_dialog("choose_bone_sell", true)
+			if slot != "":
+				var inst := state.unequip(slot)
+				var value := int(state.crush_value(inst) * float(GameData.bal("merchant/sell_mult", 2.0)))
+				hero_view.set_slot(slot, {})
+				fx.bone_burst(hero_view.slot_global_position(slot), 8)
+				_gain_dust(value, hero_view.body_center_global())
+				await _wait(0.5)
+		"altar":
+			var slot2 := await _choose_bone_dialog("choose_bone_altar", false)
+			if slot2 != "":
+				var old := state.unequip(slot2)
+				hero_view.set_slot(slot2, {})
+				fx.smoke(hero_view.slot_global_position(slot2), Color(0.6, 0.4, 0.9, 0.7), 6)
+				cam.shake(0.3)
+				await _wait(0.5)
+				var nb := MonsterFactory.altar_bone(String(old.id), state.rng)
+				if nb != "":
+					await _offer_bone({"id": nb, "level": int(old.get("level", 1))}, Vector2(540, 600))
+		"upgrade_bone":
+			var slot3 := await _choose_bone_dialog("choose_bone_upgrade", false)
+			if slot3 != "":
+				var inst3: Dictionary = state.equipped[slot3]
+				var max_lvl := int(GameData.bal("bone_max_level", 5))
+				inst3["level"] = mini(max_lvl, int(inst3.get("level", 1)) + 1)
+				state.recalc()
+				hero_view.set_slot(slot3, inst3)
+				hero_view.pop_slot(slot3)
+				fx.spark_burst(hero_view.slot_global_position(slot3), Style.C_CANDLE, 18, 360)
+				fx.float_text(hero_view.slot_global_position(slot3) + Vector2(0, -50), tr("bone_upgraded") % [tr(String(GameData.bone(String(inst3.id)).name)), int(inst3.level) - 1], Style.C_CANDLE, 26)
+				Haptics.medium()
+				_refresh_hud()
+				await _wait(0.7)
+				await _check_forms()
 		_:
 			push_warning("ação desconhecida: " + str(a))
+
+
+## Voo sobre o abismo: o Ossinho levanta voo e a câmera acompanha.
+func _fly_over() -> void:
+	Haptics.medium()
+	stage.dim(0.6, 0.3)
+	var tw: Tween = hero_view.float_up(140.0, 0.5)
+	fx.dust_puff(HERO_POS, Color(0.8, 0.75, 0.7, 0.5), 8)
+	await tw.finished
+	for i in 3:
+		fx.embers(hero_view.body_center_global(), Color(0.8, 0.7, 1.0), 6, 40)
+		await _wait(0.25)
+	hero_view.land(0.4)
+	stage.dim(0.0, 0.4)
+	await _wait(0.4)
+
+
+func _choose_bone_dialog(title_key: String, show_value: bool) -> String:
+	var slots := state.non_basic_bones()
+	if slots.is_empty():
+		return ""
+	if autoplay:
+		return slots[state.rng.randi() % slots.size()]
+	var parts := _dialog_frame(title_key)
+	var bg: Control = parts[0]
+	var v: VBoxContainer = parts[1]
+	var picked := [""]
+	for s in slots:
+		var inst: Dictionary = state.equipped[s]
+		var b := GameData.bone(String(inst.id))
+		var label := tr(String(b.name))
+		if int(inst.get("level", 1)) > 1:
+			label += " +%d" % (int(inst.level) - 1)
+		if show_value:
+			label += "  (+%d)" % int(state.crush_value(inst) * float(GameData.bal("merchant/sell_mult", 2.0)))
+		var btn := Style.button(label, "DarkButton", 74)
+		btn.icon = load(GameData.bone_texture_path(String(inst.id)))
+		btn.expand_icon = true
+		btn.add_theme_constant_override("icon_max_width", 56)
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		var slot_id: String = s
+		btn.pressed.connect(func():
+			picked[0] = slot_id
+			dialog_closed.emit(slot_id))
+		v.add_child(btn)
+	var cancel := Style.button(tr("btn_back"), "", 70)
+	cancel.pressed.connect(func(): dialog_closed.emit(""))
+	v.add_child(cancel)
+	await dialog_closed
+	_close_dialog(bg)
+	return picked[0]
+
+
+func _merchant(count: int, rarities: Array) -> void:
+	var stock := MonsterFactory.merchant_stock(count, rarities, state.rng)
+	while true:
+		if autoplay:
+			for o in stock:
+				if state.dust >= int(o.price) and state.free_slot_for(String(o.id)) != "":
+					state.add_dust(-int(o.price))
+					stock.erase(o)
+					await _offer_bone({"id": o.id, "level": 1}, Vector2(540, 620))
+					break
+			return
+		var parts := _dialog_frame("merchant_title")
+		var bg: Control = parts[0]
+		var v: VBoxContainer = parts[1]
+		v.add_child(Style.bold(tr("merchant_dust") % Style.num(state.dust), 24, Style.C_DUST, HORIZONTAL_ALIGNMENT_CENTER))
+		var row := Style.hbox(10)
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		v.add_child(row)
+		var bought := [-1]
+		for i in stock.size():
+			var o: Dictionary = stock[i]
+			var col := Style.vbox(8)
+			col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			var card := Widgets.bone_card({"id": o.id, "level": 1}, "", true)
+			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			col.add_child(card)
+			var buy := Style.button(str(o.price), "CandleButton", 64)
+			buy.icon = load("res://art/ui/ui_icon_dust.png")
+			buy.expand_icon = true
+			buy.add_theme_constant_override("icon_max_width", 34)
+			buy.disabled = state.dust < int(o.price)
+			var idx := i
+			buy.pressed.connect(func():
+				bought[0] = idx
+				dialog_closed.emit(idx))
+			col.add_child(buy)
+			row.add_child(col)
+		var leave := Style.button(tr("btn_leave_shop"), "DarkButton", 70)
+		leave.pressed.connect(func(): dialog_closed.emit(-1))
+		v.add_child(leave)
+		await dialog_closed
+		_close_dialog(bg)
+		if bought[0] < 0:
+			return
+		var o2: Dictionary = stock[bought[0]]
+		stock.remove_at(bought[0])
+		state.add_dust(-int(o2.price))
+		_refresh_hud()
+		Haptics.light()
+		await _offer_bone({"id": o2.id, "level": 1}, Vector2(540, 620))
+		if stock.is_empty():
+			return
 
 
 func _show_result(text: String) -> void:
@@ -515,9 +746,15 @@ func _combat(ids: Array, is_boss := false) -> void:
 	for i in enemies.size():
 		_spawn_view(enemies[i], pos[i])
 	var hero := state.make_hero()
-	var comp: Dictionary = {}
-	combat = Combat.new(hero, enemies, {"rng": state.rng, "is_boss": is_boss,
+	var comp: Dictionary = _companion_combat()
+	var allies := []
+	for aid in state.allies:
+		var af := MonsterFactory.make_ally(String(aid), state.floor_n)
+		if af:
+			allies.append(af)
+	combat = Combat.new(hero, enemies, {"rng": state.rng, "is_boss": is_boss, "allies": allies,
 		"max_turns": int(GameData.bal("combat/boss_max_turns" if is_boss else "combat/max_turns", 15)), "companion": comp})
+	_spawn_ally_views()
 	_combat_panel(enemies)
 	await _wait(0.5)
 	var killed: Array = []
@@ -560,6 +797,33 @@ func _combat(ids: Array, is_boss := false) -> void:
 	await _combat_rewards(killed, is_boss)
 
 
+var ally_views: Dictionary = {}
+const ALLY_SPOTS := [Vector2(105, 768), Vector2(62, 712), Vector2(150, 700), Vector2(40, 780)]
+
+
+func _spawn_ally_views() -> void:
+	for f in ally_views:
+		if is_instance_valid(ally_views[f]):
+			ally_views[f].queue_free()
+	ally_views.clear()
+	var i := 0
+	for al in combat.allies:
+		var v: MonsterView = MonsterView.new()
+		v.position = ALLY_SPOTS[i % ALLY_SPOTS.size()]
+		world.add_child(v)
+		world.move_child(v, hero_view.get_index())
+		v.setup(al)
+		v.display_scale *= 0.85
+		v.appear_anim()
+		ally_views[al] = v
+		i += 1
+
+
+## Companheiro escolhido (Lumi cura em combate; os outros agem fora dele).
+func _companion_combat() -> Dictionary:
+	return Meta.companion_combat(state.companion_id) if state.companion_id != "" else {}
+
+
 func _refresh_hud_from(hero: Fighter) -> void:
 	state.hp = clampf(hero.hp, 0.0, state.max_hp)
 	_refresh_hud()
@@ -581,6 +845,9 @@ func _combat_panel(enemies: Array) -> void:
 func _view_of(f: Fighter) -> Node2D:
 	if f == null or f.is_hero:
 		return hero_view
+	if f.is_ally:
+		var av: Variant = ally_views.get(f)
+		return av if av != null and is_instance_valid(av) else null
 	var v: Variant = enemy_views.get(f)
 	if v != null and is_instance_valid(v):
 		return v
@@ -588,8 +855,11 @@ func _view_of(f: Fighter) -> Node2D:
 
 
 func _pos_of(f: Fighter) -> Vector2:
-	if f.is_hero or f.is_ally:
+	if f.is_hero:
 		return hero_view.body_center_global()
+	if f.is_ally:
+		var av := _view_of(f)
+		return av.center_global() if av else hero_view.body_center_global()
 	var v := _view_of(f)
 	return v.center_global() if v else Vector2(520, 640)
 
@@ -687,8 +957,9 @@ func _anim_attack(ev: Dictionary) -> void:
 		src_view.attack_anim(dir, false)
 		await _wait(0.12)
 	elif kind == "ally":
-		fx.spark_burst(hero_view.body_center_global() + Vector2(40, -40), Color(0.6, 1, 0.4), 4, 200)
-		fx.beam(hero_view.body_center_global() + Vector2(30, -30), _pos_of(dst), Color(0.6, 1.0, 0.4, 0.8), 6, 0.15)
+		if src_view:
+			src_view.attack_anim(1.0, false)
+		fx.beam(_pos_of(src), _pos_of(dst), Color(0.75, 1.0, 0.6, 0.7), 5, 0.15)
 	var hit_pos := _pos_of(dst)
 	if ev.dodged:
 		if dst_view:

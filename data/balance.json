@@ -162,5 +162,64 @@
 		"_doc": "Peças de família: comum/raro = 1, lendário = 2; cada nível acima do 1 soma +1 peça.",
 		"legendary_pieces": 2,
 		"per_level_pieces": 1
+	},
+	"merchant": {
+		"prices": {
+			"common": 35,
+			"rare": 90,
+			"legendary": 220
+		},
+		"rare_weight": 0.3,
+		"legendary_chance": 0.15,
+		"sell_mult": 2.0
+	},
+	"trap": {
+		"default": 0.15
+	},
+	"hunter": {
+		"_doc": "Caçador de Ossos: rouba o melhor osso quando o Ossinho morre e reaparece como chefe opcional.",
+		"appear_chance": 0.35,
+		"floors": [
+			4,
+			27
+		],
+		"hp_mult": 3.5,
+		"atk_mult": 1.25,
+		"dust_reward": [
+			40,
+			70
+		],
+		"max_stolen": 7
+	},
+	"relics": {
+		"upgrade_cost_base": 80,
+		"upgrade_cost_growth": 1.4,
+		"max_level": 10,
+		"per_level": 0.15,
+		"chest": {
+			"dust_cost": 300,
+			"ad_per_day": 3,
+			"odds": {
+				"relic_common": 45,
+				"relic_rare": 20,
+				"relic_legendary": 5,
+				"curiosity": 30
+			}
+		}
+	},
+	"collection": {
+		"family_complete_bonus": 0.05,
+		"start_bone_rarities_free": [
+			"common"
+		]
+	},
+	"curiosity_drop": {
+		"chest": 0.12,
+		"boss_first": 1.0,
+		"rare": 0.35,
+		"choice": 0.04,
+		"merchant": 0.06,
+		"rest": 0.08,
+		"altar": 0.1
 	}
 }

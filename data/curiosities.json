@@ -1,0 +1,439 @@
+{
+	"_doc": "Gabinete de Curiosidades: 30 itens em 10 conjuntos. Cada estrela (1 a 5) aumenta o bônus do item em 50%.",
+	"star_bonus": 0.5,
+	"max_stars": 5,
+	"sets": [
+		{
+			"id": "set_crypt",
+			"name": "set_crypt_name",
+			"desc": "set_crypt_desc",
+			"items": [
+				"cur_melted_candle",
+				"cur_holed_coin",
+				"cur_gold_tooth"
+			],
+			"bonus": {
+				"atk_pct": 0.05
+			}
+		},
+		{
+			"id": "set_gravedigger",
+			"name": "set_gravedigger_name",
+			"desc": "set_gravedigger_desc",
+			"items": [
+				"cur_rusty_shovel",
+				"cur_old_lantern",
+				"cur_torn_map"
+			],
+			"bonus": {
+				"chest_per_floor": 1
+			}
+		},
+		{
+			"id": "set_witch",
+			"name": "set_witch_name",
+			"desc": "set_witch_desc",
+			"items": [
+				"cur_holed_hat",
+				"cur_cracked_cauldron",
+				"cur_bald_broom"
+			],
+			"bonus": {
+				"hp_pct": 0.05
+			}
+		},
+		{
+			"id": "set_golem",
+			"name": "set_golem_name",
+			"desc": "set_golem_desc",
+			"items": [
+				"cur_broken_rune",
+				"cur_eternal_moss",
+				"cur_bent_gear"
+			],
+			"bonus": {
+				"def": 5
+			}
+		},
+		{
+			"id": "set_dragon",
+			"name": "set_dragon_name",
+			"desc": "set_dragon_desc",
+			"items": [
+				"cur_scorched_scale",
+				"cur_eternal_ember",
+				"cur_chipped_claw"
+			],
+			"bonus": {
+				"fire_bonus": 0.15
+			}
+		},
+		{
+			"id": "set_library",
+			"name": "set_library_name",
+			"desc": "set_library_desc",
+			"items": [
+				"cur_endless_book",
+				"cur_crow_quill",
+				"cur_cracked_glasses"
+			],
+			"bonus": {
+				"crit": 0.03
+			}
+		},
+		{
+			"id": "set_merchant",
+			"name": "set_merchant_name",
+			"desc": "set_merchant_desc",
+			"items": [
+				"cur_rigged_scale",
+				"cur_ancient_receipt",
+				"cur_empty_purse"
+			],
+			"bonus": {
+				"dust_bonus": 0.08
+			}
+		},
+		{
+			"id": "set_party",
+			"name": "set_party_name",
+			"desc": "set_party_desc",
+			"items": [
+				"cur_loaded_die",
+				"cur_bone_goblet",
+				"cur_grinning_mask"
+			],
+			"bonus": {
+				"lifesteal": 0.03
+			}
+		},
+		{
+			"id": "set_shadow",
+			"name": "set_shadow_name",
+			"desc": "set_shadow_desc",
+			"items": [
+				"cur_murky_mirror",
+				"cur_black_candle",
+				"cur_silent_bell"
+			],
+			"bonus": {
+				"dodge": 0.03
+			}
+		},
+		{
+			"id": "set_hydra",
+			"name": "set_hydra_name",
+			"desc": "set_hydra_desc",
+			"items": [
+				"cur_hydra_tooth",
+				"cur_triple_scale",
+				"cur_serpent_eye"
+			],
+			"bonus": {
+				"regen": 0.01
+			}
+		}
+	],
+	"items": [
+		{
+			"id": "cur_melted_candle",
+			"set": "set_crypt",
+			"name": "cur_melted_candle_name",
+			"desc": "cur_melted_candle_desc",
+			"source": "chest",
+			"stats": {
+				"hp_pct": 0.02
+			}
+		},
+		{
+			"id": "cur_holed_coin",
+			"set": "set_crypt",
+			"name": "cur_holed_coin_name",
+			"desc": "cur_holed_coin_desc",
+			"source": "merchant",
+			"stats": {
+				"dust_bonus": 0.03
+			}
+		},
+		{
+			"id": "cur_gold_tooth",
+			"set": "set_crypt",
+			"name": "cur_gold_tooth_name",
+			"desc": "cur_gold_tooth_desc",
+			"source": "boss_rat_king",
+			"stats": {
+				"crit": 0.02
+			}
+		},
+		{
+			"id": "cur_rusty_shovel",
+			"set": "set_gravedigger",
+			"name": "cur_rusty_shovel_name",
+			"desc": "cur_rusty_shovel_desc",
+			"source": "choice",
+			"stats": {
+				"drop_bonus": 0.05
+			}
+		},
+		{
+			"id": "cur_old_lantern",
+			"set": "set_gravedigger",
+			"name": "cur_old_lantern_name",
+			"desc": "cur_old_lantern_desc",
+			"source": "chest",
+			"stats": {
+				"rare_event_bonus": 0.05
+			}
+		},
+		{
+			"id": "cur_torn_map",
+			"set": "set_gravedigger",
+			"name": "cur_torn_map_name",
+			"desc": "cur_torn_map_desc",
+			"source": "rare",
+			"stats": {
+				"reveal_next": 1
+			}
+		},
+		{
+			"id": "cur_holed_hat",
+			"set": "set_witch",
+			"name": "cur_holed_hat_name",
+			"desc": "cur_holed_hat_desc",
+			"source": "choice",
+			"stats": {
+				"hp_pct": 0.02
+			}
+		},
+		{
+			"id": "cur_cracked_cauldron",
+			"set": "set_witch",
+			"name": "cur_cracked_cauldron_name",
+			"desc": "cur_cracked_cauldron_desc",
+			"source": "merchant",
+			"stats": {
+				"heal_bonus": 0.05
+			}
+		},
+		{
+			"id": "cur_bald_broom",
+			"set": "set_witch",
+			"name": "cur_bald_broom_name",
+			"desc": "cur_bald_broom_desc",
+			"source": "chest",
+			"stats": {
+				"speed": 1
+			}
+		},
+		{
+			"id": "cur_broken_rune",
+			"set": "set_golem",
+			"name": "cur_broken_rune_name",
+			"desc": "cur_broken_rune_desc",
+			"source": "boss_forgotten_golem",
+			"stats": {
+				"shield_start": 0.03
+			}
+		},
+		{
+			"id": "cur_eternal_moss",
+			"set": "set_golem",
+			"name": "cur_eternal_moss_name",
+			"desc": "cur_eternal_moss_desc",
+			"source": "rest",
+			"stats": {
+				"regen": 0.005
+			}
+		},
+		{
+			"id": "cur_bent_gear",
+			"set": "set_golem",
+			"name": "cur_bent_gear_name",
+			"desc": "cur_bent_gear_desc",
+			"source": "chest",
+			"stats": {
+				"def": 2
+			}
+		},
+		{
+			"id": "cur_scorched_scale",
+			"set": "set_dragon",
+			"name": "cur_scorched_scale_name",
+			"desc": "cur_scorched_scale_desc",
+			"source": "boss_ancient_dragon",
+			"stats": {
+				"fire_bonus": 0.05
+			}
+		},
+		{
+			"id": "cur_eternal_ember",
+			"set": "set_dragon",
+			"name": "cur_eternal_ember_name",
+			"desc": "cur_eternal_ember_desc",
+			"source": "rare",
+			"stats": {
+				"atk_pct": 0.02
+			}
+		},
+		{
+			"id": "cur_chipped_claw",
+			"set": "set_dragon",
+			"name": "cur_chipped_claw_name",
+			"desc": "cur_chipped_claw_desc",
+			"source": "chest",
+			"stats": {
+				"crit": 0.01
+			}
+		},
+		{
+			"id": "cur_endless_book",
+			"set": "set_library",
+			"name": "cur_endless_book_name",
+			"desc": "cur_endless_book_desc",
+			"source": "rare",
+			"stats": {
+				"xp_bonus": 0.05
+			}
+		},
+		{
+			"id": "cur_crow_quill",
+			"set": "set_library",
+			"name": "cur_crow_quill_name",
+			"desc": "cur_crow_quill_desc",
+			"source": "choice",
+			"stats": {
+				"crit": 0.01
+			}
+		},
+		{
+			"id": "cur_cracked_glasses",
+			"set": "set_library",
+			"name": "cur_cracked_glasses_name",
+			"desc": "cur_cracked_glasses_desc",
+			"source": "chest",
+			"stats": {
+				"drop_bonus": 0.02
+			}
+		},
+		{
+			"id": "cur_rigged_scale",
+			"set": "set_merchant",
+			"name": "cur_rigged_scale_name",
+			"desc": "cur_rigged_scale_desc",
+			"source": "merchant",
+			"stats": {
+				"dust_bonus": 0.02
+			}
+		},
+		{
+			"id": "cur_ancient_receipt",
+			"set": "set_merchant",
+			"name": "cur_ancient_receipt_name",
+			"desc": "cur_ancient_receipt_desc",
+			"source": "merchant",
+			"stats": {
+				"merchant_discount": 0.05
+			}
+		},
+		{
+			"id": "cur_empty_purse",
+			"set": "set_merchant",
+			"name": "cur_empty_purse_name",
+			"desc": "cur_empty_purse_desc",
+			"source": "chest",
+			"stats": {
+				"dust_bonus": 0.02
+			}
+		},
+		{
+			"id": "cur_loaded_die",
+			"set": "set_party",
+			"name": "cur_loaded_die_name",
+			"desc": "cur_loaded_die_desc",
+			"source": "choice",
+			"stats": {
+				"crit": 0.01
+			}
+		},
+		{
+			"id": "cur_bone_goblet",
+			"set": "set_party",
+			"name": "cur_bone_goblet_name",
+			"desc": "cur_bone_goblet_desc",
+			"source": "rest",
+			"stats": {
+				"lifesteal": 0.01
+			}
+		},
+		{
+			"id": "cur_grinning_mask",
+			"set": "set_party",
+			"name": "cur_grinning_mask_name",
+			"desc": "cur_grinning_mask_desc",
+			"source": "chest",
+			"stats": {
+				"dodge": 0.01
+			}
+		},
+		{
+			"id": "cur_murky_mirror",
+			"set": "set_shadow",
+			"name": "cur_murky_mirror_name",
+			"desc": "cur_murky_mirror_desc",
+			"source": "rare",
+			"stats": {
+				"dodge": 0.01
+			}
+		},
+		{
+			"id": "cur_black_candle",
+			"set": "set_shadow",
+			"name": "cur_black_candle_name",
+			"desc": "cur_black_candle_desc",
+			"source": "altar",
+			"stats": {
+				"atk_pct": 0.02
+			}
+		},
+		{
+			"id": "cur_silent_bell",
+			"set": "set_shadow",
+			"name": "cur_silent_bell_name",
+			"desc": "cur_silent_bell_desc",
+			"source": "chest",
+			"stats": {
+				"hp_pct": 0.02
+			}
+		},
+		{
+			"id": "cur_hydra_tooth",
+			"set": "set_hydra",
+			"name": "cur_hydra_tooth_name",
+			"desc": "cur_hydra_tooth_desc",
+			"source": "boss_hydra",
+			"stats": {
+				"atk_pct": 0.03
+			}
+		},
+		{
+			"id": "cur_triple_scale",
+			"set": "set_hydra",
+			"name": "cur_triple_scale_name",
+			"desc": "cur_triple_scale_desc",
+			"source": "boss_hydra",
+			"stats": {
+				"def": 3
+			}
+		},
+		{
+			"id": "cur_serpent_eye",
+			"set": "set_hydra",
+			"name": "cur_serpent_eye_name",
+			"desc": "cur_serpent_eye_desc",
+			"source": "boss_hydra",
+			"stats": {
+				"crit": 0.02
+			}
+		}
+	]
+}

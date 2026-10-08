@@ -1,0 +1,14 @@
+[
+	{"id": "relic_vertebra_amulet", "slot": "relic_amulet", "rarity": "common", "name": "relic_vertebra_amulet_name", "desc": "relic_vertebra_amulet_desc", "stats": {"hp_pct": 0.05}},
+	{"id": "relic_moon_amulet", "slot": "relic_amulet", "rarity": "rare", "name": "relic_moon_amulet_name", "desc": "relic_moon_amulet_desc", "stats": {"hp_pct": 0.08, "lifesteal": 0.03}},
+	{"id": "relic_ancestor_amulet", "slot": "relic_amulet", "rarity": "legendary", "name": "relic_ancestor_amulet_name", "desc": "relic_ancestor_amulet_desc", "stats": {"hp_pct": 0.12, "regen": 0.01}},
+	{"id": "relic_knuckle_ring", "slot": "relic_ring", "rarity": "common", "name": "relic_knuckle_ring_name", "desc": "relic_knuckle_ring_desc", "stats": {"atk_pct": 0.05}},
+	{"id": "relic_ember_ring", "slot": "relic_ring", "rarity": "rare", "name": "relic_ember_ring_name", "desc": "relic_ember_ring_desc", "stats": {"atk_pct": 0.08, "fire_bonus": 0.1}},
+	{"id": "relic_king_ring", "slot": "relic_ring", "rarity": "legendary", "name": "relic_king_ring_name", "desc": "relic_king_ring_desc", "stats": {"atk_pct": 0.12, "crit": 0.04}},
+	{"id": "relic_shroud_cloak", "slot": "relic_cloak", "rarity": "common", "name": "relic_shroud_cloak_name", "desc": "relic_shroud_cloak_desc", "stats": {"def": 4}},
+	{"id": "relic_bat_cloak", "slot": "relic_cloak", "rarity": "rare", "name": "relic_bat_cloak_name", "desc": "relic_bat_cloak_desc", "stats": {"def": 6, "dodge": 0.04}},
+	{"id": "relic_shadow_cloak", "slot": "relic_cloak", "rarity": "legendary", "name": "relic_shadow_cloak_name", "desc": "relic_shadow_cloak_desc", "stats": {"def": 10, "dodge": 0.06}},
+	{"id": "relic_tin_lantern", "slot": "relic_lantern", "rarity": "common", "name": "relic_tin_lantern_name", "desc": "relic_tin_lantern_desc", "stats": {"dust_bonus": 0.05}},
+	{"id": "relic_gravedigger_lantern", "slot": "relic_lantern", "rarity": "rare", "name": "relic_gravedigger_lantern_name", "desc": "relic_gravedigger_lantern_desc", "stats": {"dust_bonus": 0.08, "drop_bonus": 0.03, "rare_event_bonus": 0.05}},
+	{"id": "relic_soul_lantern", "slot": "relic_lantern", "rarity": "legendary", "name": "relic_soul_lantern_name", "desc": "relic_soul_lantern_desc", "stats": {"dust_bonus": 0.12, "drop_bonus": 0.05}}
+]

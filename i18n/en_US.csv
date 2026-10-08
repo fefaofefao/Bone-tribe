@@ -313,3 +313,188 @@ hydra_awakens,The Hydra awakens!
 event_hydra_unlock_text,Your Bone Wyrm's fire called something ancient. The floor shakes. The crypt has one more floor.
 reward_diamonds,+%d diamonds
 special_bite,Triple bite!
+event_rats_cheese_res_body1,"The rats see your dragon skull, drop the cheese and flee squeaking. The cheese is yours. Still petrified."
+event_rats_cheese_opt_body1,Intimidate (Dragon Skull)
+event_wolf_howl_res_body1,"The wolf flattens its ears, wags awkwardly and leaves a chewed bone as an offering."
+event_wolf_howl_opt_body1,Intimidate (Dragon Skull)
+event_crypt_ambush_res_body1,You roar through the dragon skull. Whatever lurked in the dark suddenly remembers another appointment.
+event_crypt_ambush_opt_body1,Intimidate (Dragon Skull)
+event_turtle_shrine_text,A Stone Turtle naps on an abandoned altar. The altar looks valuable. The turtle looks heavy.
+event_crab_puddle_text,"A dark puddle bubbles. Two pincers rise out of it and go clack-clack, itching for a fight."
+event_wasp_nest_text,A wasp nest made of bones hums on the ceiling. A Bony Wasp comes out to see who's being noisy.
+event_wasp_nest_res_1,You buzz louder than they do. It works.
+event_wasp_nest_res_2,The whole swarm decides to walk you out. With stingers.
+event_wasp_nest_opt_1,Run with your hands over your ears
+event_mantis_prayer_text,"A Giant Mantis prays before a tomb. When you arrive, it opens its eyes. And its blades."
+event_mantis_prayer_res_1,"You pray in silence. It finishes, bows, and leaves. You feel blessed."
+event_mantis_prayer_res_2,You pray too loudly. The mantis considers it heresy.
+event_mantis_prayer_opt_1,Pray along
+event_grasshopper_choir_text,Bone Grasshoppers sing in a choir. One of them goes off-key on purpose when it sees you.
+event_grasshopper_choir_res_1,The choir bows and plays you out with an encore. Musical experience gained.
+event_grasshopper_choir_res_2,You clapped off-beat. Unforgivable.
+event_grasshopper_choir_opt_1,Applaud politely
+event_centaur_patrol_text,Hooves echo down the hall. A Bony Centaur patrols the crypt as if it owned the place.
+event_centaur_patrol_res_1,"Hooves against hooves! You win by a vertebra. The centaur pays the bet, offended."
+event_centaur_patrol_opt_1,Challenge it to a race (Centaur Legs)
+event_beetle_wall_text,An Armored Beetle blocks the passage. It doesn't seem to want to move. Or be able to.
+event_beetle_wall_res_1,BONK! The shell cracks and the beetle runs off in its underwear. It leaves its stash behind.
+event_beetle_wall_opt_1,Punch the shell (Golem Fist)
+event_lizard_embers_text,"An Ash Lizard warms itself on a brazier. Every time you blink, it seems a little bigger."
+event_cyclops_watch_text,A Bony Cyclops guards the bridge with its single eye. It blinks. With the whole eye.
+event_cyclops_watch_res_1,"Eye to eye. Nobody blinks. After a long minute, the cyclops tears up, admits defeat and lets you pass."
+event_cyclops_watch_opt_1,Stare back (Cyclops Skull)
+event_double_trouble_text,Two shapes approach together. They argue quietly about who attacks first.
+event_dune_tunnel_text,"Sand trickles from a tunnel. Dune Scorpions dig in circles, looking for a bony dinner."
+event_angry_bear_text,"A Corpse Bear stuck its face in a wasp nest and is now very, very angry."
+event_wolf_pack_text,Three pairs of eyes light up in the dark. The crypt pack has learned to hunt together.
+event_rat_parade_text,A procession of Skeleton Rats carries a cheese as if it were a king.
+event_bat_swarm_text,"A cloud of bats screeches past. Two Vampire Bats stay behind, hungry."
+event_spider_queen_eggs_text,"Glowing eggs cover the wall. A Weaver Spider guards the nest, and another drops from the ceiling."
+event_abyss_bridge_text,"A rotten bridge spans a bottomless abyss. On the other side, something glitters."
+event_abyss_bridge_res_1,"The planks creak but hold. On the other side, a handful of bone dust."
+event_abyss_bridge_res_2,A plank gives way. You dangle by your ribs until you climb back up.
+event_abyss_bridge_opt_1,Cross the bridge
+event_abyss_bridge_res_3,"You spread your wings and glide over the void, skipping three rooms straight to a forgotten chest."
+event_abyss_bridge_opt_2,Fly over the abyss (Wings)
+event_abyss_bridge_res_4,The long way is safer. And more boring.
+event_abyss_bridge_opt_3,Go around
+event_flooded_corridor_text,The corridor is flooded up to your ribs. Bubbles rise from somewhere below.
+event_flooded_corridor_res_1,"Your marine bones know how to swim. At the bottom, caught in the seaweed, a perfect bone."
+event_flooded_corridor_opt_1,Dive (2 Marine pieces)
+event_flooded_corridor_res_2,"The icy water softens your bones, but you find a few dust coins on the way."
+event_flooded_corridor_opt_2,Wade through carefully
+event_flooded_corridor_opt_3,Turn back
+event_locked_gate_text,A locked iron gate guards a chest. The lock is shaped like a grinning skull.
+event_locked_gate_res_1,"Slash, slash! The bars fall like twigs. The chest is all yours."
+event_locked_gate_opt_1,Slice the bars (Mantis Blade)
+event_locked_gate_res_2,Click! The lock's skull giggles and opens.
+event_locked_gate_res_3,The lock bites your finger. Literally.
+event_locked_gate_opt_2,Pick the lock
+event_poison_swamp_text,"An acid-green swamp bubbles. In the middle, a gleaming bone points at the ceiling."
+event_poison_swamp_res_1,Insects don't mind poison. You grab the bone and even take a sip as a souvenir.
+event_poison_swamp_opt_1,Cross fearlessly (2 Insect pieces)
+event_poison_swamp_res_2,"It burns, but you reach the bone."
+event_poison_swamp_res_3,"It burns, and the bone sinks before you get there."
+event_poison_swamp_opt_2,Run through the swamp
+event_fire_pit_text,A pit of embers blocks the way. The flames dance as if laughing at you.
+event_fire_pit_res_1,The fire recognizes kin. You come out the other side glowing and stronger.
+event_fire_pit_opt_1,Walk through the fire (Dragon bone)
+event_fire_pit_res_2,A perfect jump! Only slightly singed.
+event_fire_pit_res_3,"You landed right in the middle. It's fine. Everything's on fire, but it's fine."
+event_fire_pit_opt_2,Jump over the embers
+event_fire_pit_opt_3,Go around
+event_sleeping_giant_text,A stone giant sleeps on a pile of bone dust. It snores like an earthquake.
+event_sleeping_giant_res_1,You become a pebble among pebbles. The giant doesn't notice you filling your pockets.
+event_sleeping_giant_opt_1,Hide in your shell and steal (Beetle Shell)
+event_sleeping_giant_res_2,It rolls over and keeps snoring. Mission accomplished.
+event_sleeping_giant_res_3,The giant sneezes. You fly into the wall.
+event_sleeping_giant_opt_2,"Take a little, on tiptoe"
+event_crypt_cat_text,A skeleton cat blocks the way and refuses to move. It wants pets. Or a fight. Maybe both.
+event_crypt_cat_res_1,It purrs like a rattle. You feel strangely refreshed.
+event_crypt_cat_res_2,It was a fight. Definitely a fight.
+event_crypt_cat_opt_1,Pet it
+event_bone_tailor_text,"A skeleton tailor offers adjustments: 'I can tighten those bones, you know. Only a small fee.'"
+event_bone_tailor_opt_1,Pay 40 dust for a fitting
+event_bone_tailor_res_1,"'Don't complain when an arm falls off,' he grumbles."
+event_bone_tailor_opt_2,Decline
+event_cursed_crown_text,A rusty crown rests on a velvet pillow. It whispers your name... wrong.
+event_cursed_crown_res_1,The crown squeezes your skull. You feel powerful and a little more fragile.
+event_cursed_crown_opt_1,Wear the crown
+event_talking_skull_text,A skull on a shelf whispers: 'Take me with you? I promise not to talk much.'
+event_talking_skull_res_1,It talks a lot. But it knows every shortcut and secret of the crypt.
+event_talking_skull_opt_1,Take the skull
+event_three_chests_text,Three identical chests stand in a row. One of them is breathing.
+event_three_chests_opt_1,Open the left one
+event_three_chests_opt_2,Open the middle one
+event_three_chests_opt_3,Open the right one
+event_collapsing_ceiling_text,The ceiling creaks and starts to collapse! Something glitters in the rubble.
+event_collapsing_ceiling_opt_1,Run
+event_collapsing_ceiling_res_1,"Boing, boing, boing! You bounce between the stones and grab the shiny thing too."
+event_collapsing_ceiling_opt_2,Leap between the blocks (Grasshopper Legs)
+event_spike_corridor_text,Floor plates bear the marks of crushed bones. Someone clearly didn't read the sign.
+event_spike_corridor_opt_1,Step carefully
+event_golden_sarcophagus_text,"A golden sarcophagus. A sign warns: DO NOT OPEN. Another, smaller sign: seriously."
+event_golden_sarcophagus_res_1,"Inside, a rare bone wrapped in silk."
+event_golden_sarcophagus_res_2,Gold coins turn into bone dust in your hand. Still worth it.
+event_golden_sarcophagus_res_3,A curse flies out and bites your ribs. You were warned.
+event_golden_sarcophagus_opt_1,Open it anyway
+event_clinging_skeleton_text,"A skeleton hugs a chest tightly. It's already dead, but it still won't let go."
+event_clinging_skeleton_res_1,"After a lot of effort, the chest is yours. The skeleton looks relieved."
+event_clinging_skeleton_opt_1,Pry it loose finger by finger
+event_wandering_gravedigger_text,The Wandering Gravedigger sells used bones: 'Seven-day warranty or your skull back.'
+event_wandering_gravedigger_opt_1,Browse the wares
+event_bone_pawnshop_text,"A tiny bony pawnshop accepts anything. 'I sell, I buy, I trade. Mostly sell.'"
+event_bone_pawnshop_opt_1,Browse the wares
+event_bone_pawnshop_opt_2,Sell a bone
+event_marrow_soup_text,"A marrow soup vendor stirs a cauldron. 'Warms the bones, dearie!'"
+event_marrow_soup_opt_1,Small bowl (20 dust)
+event_marrow_soup_opt_2,Giant bowl (45 dust)
+event_hooded_merchant_text,"A hooded merchant opens his coat. Inside, only rare bones. 'Don't ask where they came from.'"
+event_hooded_merchant_opt_1,Browse the wares
+event_bone_banker_text,A skeleton banker offers interest: hand over your dust now and get more back... maybe.
+event_bone_banker_res_1,The investment pays off! The banker returns it with interest and a wink.
+event_bone_banker_res_2,"'The bone market crashed,' he says, pocketing your dust."
+event_bone_banker_opt_1,Invest 30 dust
+event_caged_skeleton_text,"A skeleton trapped in a cage begs for help. Freeing it costs bone dust, but it will fight by your side."
+event_caged_skeleton_res_1,"The cage opens. 'Thanks, boss! I'll handle the hitting.'"
+event_caged_skeleton_opt_1,Pay 30 dust to free it
+event_caged_skeleton_res_2,"Snip! The chains fall for free. The skeleton hugs your pincer, moved."
+event_caged_skeleton_opt_2,Cut the chains (Crab Pincer)
+event_lost_squire_text,A skeleton squire lost its knight. 'Can I follow you? I'll carry things!'
+event_lost_squire_res_1,"It doesn't carry anything, but it bashes with its shield very enthusiastically."
+event_lost_squire_opt_1,Accept
+event_lost_squire_opt_2,Decline
+event_ghost_hound_text,A ghost hound wags its see-through tail. It seems to have lost its owner some three hundred years ago.
+event_ghost_hound_res_1,The hound howls with joy and starts biting your enemies' ankles.
+event_ghost_hound_opt_1,Adopt it
+event_exchange_altar_text,"The altar accepts one of your bones and returns one from another family, without saying which."
+event_exchange_altar_opt_1,Offer a bone
+event_blood_altar_text,An altar demands blood. You have no blood. It'll take life instead.
+event_blood_altar_res_1,The altar drinks and returns strength. Your blows grow heavier.
+event_blood_altar_opt_1,Offer life
+event_moon_altar_text,A moonlit altar turns bone dust into stronger bones.
+event_moon_altar_opt_1,Offer 50 dust
+event_blue_campfire_text,A campfire of blue candles: heal 30% of your HP or upgrade a bone by one level.
+event_blue_campfire_opt_1,Rest (heal 30%)
+event_blue_campfire_opt_2,Upgrade a bone
+event_quiet_ossuary_text,A quiet ossuary full of cozy niches. A great place for a nap.
+event_quiet_ossuary_opt_1,Nap (heal 40%)
+event_quiet_ossuary_res_1,You meditate on the nature of bones. Conclusion: they're great.
+event_quiet_ossuary_opt_2,Meditate
+event_candle_shrine_text,A shrine of candles that never go out. The wax drips in the shape of bones.
+event_candle_shrine_opt_1,Pray
+event_candle_shrine_res_1,The candle whispers 'thank you' and turns into bone dust in your hand.
+event_candle_shrine_opt_2,Take a candle
+event_mirror_lake_text,Your reflection in the lake has one more bone. It reaches out its hand.
+event_mirror_lake_res_1,"The water chills you to the marrow. When you pull your hand back, it holds a bone that wasn't there before."
+event_mirror_lake_opt_1,Shake the reflection's hand
+event_mirror_lake_res_2,The reflection shrugs and goes back to being just you.
+event_mirror_lake_opt_2,Back away slowly
+event_fortune_skull_text,A fortune-telling skull shuffles bone cards. 'One card. Just one.'
+event_fortune_skull_res_1,The Tower of Bones: your body grows stronger.
+event_fortune_skull_res_2,The Wheel of Dust: riches ahead!
+event_fortune_skull_res_3,The Wise Skeleton: you learn something new.
+event_fortune_skull_opt_1,Draw a card
+event_bone_comet_text,A comet of bones streaks across the crypt ceiling. Make a wish!
+event_bone_comet_opt_1,Wish for strength
+event_bone_comet_opt_2,Wish for health
+event_bone_comet_opt_3,Wish for riches
+result_power_up,Stronger!
+trap_avoided,Your nimble legs leap over the trap just in time!
+trap_hit,"Trap! Something snaps, drops and hits you square on."
+ally_joined,%s joined the party!
+choose_bone_sell,Which bone to sell?
+choose_bone_altar,Which bone to offer?
+choose_bone_upgrade,Which bone to upgrade?
+bone_upgraded,%s +%d!
+merchant_title,Wares
+merchant_dust,Your bone dust: %s
+btn_leave_shop,Leave
+ally_caged_skeleton_name,Freed Skeleton
+ally_lost_squire_name,Lost Squire
+ally_ghost_hound_name,Ghost Hound
+event_type_merchant,Merchant
+event_type_ally,Ally
+event_type_altar,Trade altar
+event_type_rest,Rest
+event_type_rare,Rare

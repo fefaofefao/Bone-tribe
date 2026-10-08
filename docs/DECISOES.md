@@ -98,3 +98,28 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - **Equilíbrio dos chefes** (simulação de 50 jogadores × 12 partidas, antes das relíquias e
   companheiros): Rei Rato 1ª vitória na partida ~3; Golem ~6,5; Dragão 0% na 1ª partida e
   1ª vitória média na partida ~7. Multiplicadores por chefe em `monsters.json`.
+
+## Eventos (Passo 4)
+
+- **60 eventos** sorteados pelos pesos do GDD: combate 23, escolha 13, baú/armadilha 7,
+  mercador 5, aliado 3, altar de troca 3, descanso 3, raro 3. Os 3 exemplos do GDD do
+  protótipo e os 4 da tabela de tipos (Coveiro Ambulante, esqueleto na jaula, altar, fogueira
+  de velas azuis, reflexo no lago) estão entre eles.
+- **Exatamente 15 eventos ligados ao corpo** (o GDD diz "cerca de 15"; o pedido diz 15):
+  Asas sobrevoam o abismo e pulam 3 andares direto para um baú; Patas de Aranha transformam a
+  teia em atalho; Pinça de Caranguejo corta as correntes do aliado de graça; Crânio de Dragão
+  traz a opção "Intimidar" em 3 eventos; e mais 8 (Pernas de Centauro, Punho de Golem, Crânio de
+  Ciclope, 2 peças Marinhas, Lâmina de Louva-a-deus, 2 peças de Inseto, ossos de Dragão,
+  Carapaça de Besouro, Patas de Gafanhoto).
+- **Voar sobre o abismo** nunca pula um chefe: o salto para no andar anterior.
+- **Mercador**: vende 3 ossos comuns/raros por pó da partida (35/90). O mercador encapuzado
+  pode vender um lendário **já descoberto** na Coleção (220). Isso deixa o Wyrm Ósseo — e a
+  Hidra — possível antes de vencer o Dragão, sem quebrar "lendários só caem de chefes" na
+  primeira vez.
+- **Altar de troca**: o osso novo é de outra família e, quando existe, do mesmo encaixe, para o
+  jogador não ficar com um osso que não pode usar. O nível do osso entregue é mantido.
+- **Aliados** (Esqueleto Liberto, Escudeiro Perdido, Cão Fantasma) lutam até o fim da partida,
+  atacam todo turno e não são alvo dos inimigos.
+- **Armadilhas** tiram uma porcentagem da vida máxima; as Patas de Gafanhoto evitam 15%.
+- Cada evento pode ter um **cenário** (`prop`) desenhado no lugar do inimigo: Coveiro, bruxa,
+  jaula, altar, fogueira azul, baú, caixão, apostador, lago, fonte, abismo, portão e gato.

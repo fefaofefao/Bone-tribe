@@ -313,3 +313,188 @@ hydra_awakens,¡La Hidra despertó!
 event_hydra_unlock_text,El fuego de tu Wyrm Óseo llamó a algo antiguo. El suelo tiembla. La cripta tiene un piso más.
 reward_diamonds,+%d diamantes
 special_bite,¡Mordida triple!
+event_rats_cheese_res_body1,"Las ratas ven tu cráneo de dragón, sueltan el queso y huyen chillando. El queso es tuyo. Sigue petrificado."
+event_rats_cheese_opt_body1,Intimidar (Cráneo de Dragón)
+event_wolf_howl_res_body1,"El lobo agacha las orejas, mueve la cola sin gracia y deja un hueso mordido como ofrenda."
+event_wolf_howl_opt_body1,Intimidar (Cráneo de Dragón)
+event_crypt_ambush_res_body1,Ruges con el cráneo de dragón. Lo que acechaba en la oscuridad recuerda de pronto otra cita.
+event_crypt_ambush_opt_body1,Intimidar (Cráneo de Dragón)
+event_turtle_shrine_text,"Una Tortuga de Piedra dormita sobre un altar abandonado. El altar parece valioso. La tortuga, pesada."
+event_crab_puddle_text,"Un charco oscuro burbujea. De adentro suben dos pinzas que hacen clac-clac, buscando pelea."
+event_wasp_nest_text,Un nido de avispas hecho de huesos zumba en el techo. Una Avispa Huesuda sale a ver quién hace ruido.
+event_wasp_nest_res_1,Pasas zumbando más fuerte que ellas. Funciona.
+event_wasp_nest_res_2,Todo el enjambre decide acompañarte a la salida. Con aguijones.
+event_wasp_nest_opt_1,Correr tapándote los oídos
+event_mantis_prayer_text,"Una Mantis Gigante reza ante una tumba. Cuando llegas, abre los ojos. Y las cuchillas."
+event_mantis_prayer_res_1,"Rezan en silencio. Termina, hace una reverencia y se va. Te sientes bendecido."
+event_mantis_prayer_res_2,Rezas demasiado fuerte. La mantis lo considera una herejía.
+event_mantis_prayer_opt_1,Rezar con ella
+event_grasshopper_choir_text,Saltamontes de Huesos cantan en coro. Uno desafina a propósito cuando te ve.
+event_grasshopper_choir_res_1,El coro hace una reverencia y te despide con un bis. Experiencia musical adquirida.
+event_grasshopper_choir_res_2,Aplaudiste a destiempo. Imperdonable.
+event_grasshopper_choir_opt_1,Aplaudir con educación
+event_centaur_patrol_text,Cascos resuenan en el pasillo. Un Centauro Huesudo patrulla la cripta como si fuera suya.
+event_centaur_patrol_res_1,"¡Cascos contra cascos! Ganas por una vértebra. El centauro paga la apuesta, ofendido."
+event_centaur_patrol_opt_1,Retarlo a una carrera (Patas de Centauro)
+event_beetle_wall_text,Un Escarabajo Blindado bloquea el paso. No parece querer moverse. Ni poder.
+event_beetle_wall_res_1,¡POC! El caparazón se raja y el escarabajo huye en calzones. Deja lo que guardaba.
+event_beetle_wall_opt_1,Golpear el caparazón (Puño de Gólem)
+event_lizard_embers_text,"Un Lagarto de Cenizas se calienta en un brasero. Cada vez que parpadeas, parece un poco más grande."
+event_cyclops_watch_text,Un Cíclope Huesudo vigila el puente con su único ojo. Parpadea. Con el ojo entero.
+event_cyclops_watch_res_1,"Ojo a ojo. Nadie parpadea. Tras un largo minuto, el cíclope llora, admite la derrota y te deja pasar."
+event_cyclops_watch_opt_1,Devolverle la mirada (Cráneo de Cíclope)
+event_double_trouble_text,Dos sombras se acercan juntas. Discuten en voz baja quién ataca primero.
+event_dune_tunnel_text,La arena cae de un túnel. Escorpiones de las Dunas cavan en círculos buscando una cena huesuda.
+event_angry_bear_text,"Un Oso Cadavérico metió la cara en un nido de avispas y ahora está muy, muy enojado."
+event_wolf_pack_text,Tres pares de ojos se encienden en la oscuridad. La manada de las criptas aprendió a cazar en grupo.
+event_rat_parade_text,Una procesión de Ratas Esqueleto carga un queso como si fuera un rey.
+event_bat_swarm_text,"Una nube de murciélagos pasa chillando. Dos Murciélagos Vampiro se quedan atrás, hambrientos."
+event_spider_queen_eggs_text,Huevos brillantes cubren la pared. Una Araña Tejedora cuida el nido y otra baja del techo.
+event_abyss_bridge_text,"Un puente podrido cruza un abismo sin fondo. Del otro lado, algo brilla."
+event_abyss_bridge_res_1,"Las tablas crujen, pero aguantan. Del otro lado, un puñado de polvo de hueso."
+event_abyss_bridge_res_2,Una tabla cede. Quedas colgado de las costillas hasta que logras subir.
+event_abyss_bridge_opt_1,Cruzar el puente
+event_abyss_bridge_res_3,"Abres las alas y planeas sobre el vacío, saltando tres salas directo a un cofre olvidado."
+event_abyss_bridge_opt_2,Sobrevolar el abismo (Alas)
+event_abyss_bridge_res_4,El camino largo es más seguro. Y más aburrido.
+event_abyss_bridge_opt_3,Dar la vuelta
+event_flooded_corridor_text,El pasillo está inundado hasta las costillas. Suben burbujas desde algún lugar abajo.
+event_flooded_corridor_res_1,"Tus huesos marinos saben nadar. En el fondo, atrapado entre algas, un hueso perfecto."
+event_flooded_corridor_opt_1,Bucear (2 piezas Marinas)
+event_flooded_corridor_res_2,"El agua helada ablanda tus huesos, pero encuentras unas monedas de polvo en el camino."
+event_flooded_corridor_opt_2,Cruzar con cuidado
+event_flooded_corridor_opt_3,Volver
+event_locked_gate_text,Una reja de hierro cerrada guarda un cofre. La cerradura tiene forma de cráneo sonriente.
+event_locked_gate_res_1,"¡Zas, zas! Los barrotes caen como palillos. El cofre es todo tuyo."
+event_locked_gate_opt_1,Rebanar los barrotes (Hoja de Mantis)
+event_locked_gate_res_2,¡Clic! El cráneo de la cerradura suelta una risita y se abre.
+event_locked_gate_res_3,La cerradura te muerde el dedo. Literalmente.
+event_locked_gate_opt_2,Forzar la cerradura
+event_poison_swamp_text,"Un pantano verde ácido burbujea. En medio, un hueso reluciente apunta al techo."
+event_poison_swamp_res_1,A los insectos no les importa el veneno. Tomas el hueso y hasta un sorbo de recuerdo.
+event_poison_swamp_opt_1,Cruzar sin miedo (2 piezas de Insecto)
+event_poison_swamp_res_2,"Arde, pero alcanzas el hueso."
+event_poison_swamp_res_3,"Arde, y el hueso se hunde antes de que llegues."
+event_poison_swamp_opt_2,Correr por el pantano
+event_fire_pit_text,Un pozo de brasas bloquea el camino. Las llamas bailan como si se rieran de ti.
+event_fire_pit_res_1,El fuego reconoce a un pariente. Sales del otro lado brillando y más fuerte.
+event_fire_pit_opt_1,Caminar por el fuego (hueso de Dragón)
+event_fire_pit_res_2,¡Un salto perfecto! Solo se chamuscó un poquito.
+event_fire_pit_res_3,"Caíste justo en medio. Todo bien. Todo está en llamas, pero todo bien."
+event_fire_pit_opt_2,Saltar las brasas
+event_fire_pit_opt_3,Dar la vuelta
+event_sleeping_giant_text,Un gigante de piedra duerme sobre una pila de polvo de hueso. Ronca como un terremoto.
+event_sleeping_giant_res_1,Te vuelves una piedrita entre piedras. El gigante ni nota que llenas tus bolsillos.
+event_sleeping_giant_opt_1,Esconderte en el caparazón y robar (Caparazón de Escarabajo)
+event_sleeping_giant_res_2,Se da la vuelta y sigue roncando. Misión cumplida.
+event_sleeping_giant_res_3,El gigante estornuda. Sales volando contra la pared.
+event_sleeping_giant_opt_2,"Tomar un poco, de puntillas"
+event_crypt_cat_text,Un gato esqueleto bloquea el camino y se niega a moverse. Quiere mimos. O pelea. Tal vez ambos.
+event_crypt_cat_res_1,Ronronea como un sonajero. Te sientes extrañamente renovado.
+event_crypt_cat_res_2,Era pelea. Definitivamente pelea.
+event_crypt_cat_opt_1,Acariciarlo
+event_bone_tailor_text,"Un sastre esqueleto ofrece ajustes: —Puedo apretar esos huesos, ¿sabes? Solo cobro un poquito."
+event_bone_tailor_opt_1,Pagar 40 de polvo por un ajuste
+event_bone_tailor_res_1,—Después no te quejes cuando se te caiga un brazo —refunfuña.
+event_bone_tailor_opt_2,Rechazar
+event_cursed_crown_text,Una corona oxidada descansa sobre un cojín de terciopelo. Susurra tu nombre... mal.
+event_cursed_crown_res_1,La corona aprieta el cráneo. Te sientes poderoso y un poco más frágil.
+event_cursed_crown_opt_1,Ponerte la corona
+event_talking_skull_text,Una calavera en un estante susurra: —¿Me llevas contigo? Prometo no hablar mucho.
+event_talking_skull_res_1,Habla mucho. Pero conoce todos los atajos y secretos de la cripta.
+event_talking_skull_opt_1,Llevar la calavera
+event_three_chests_text,Tres cofres idénticos están en fila. Uno de ellos respira.
+event_three_chests_opt_1,Abrir el de la izquierda
+event_three_chests_opt_2,Abrir el del medio
+event_three_chests_opt_3,Abrir el de la derecha
+event_collapsing_ceiling_text,¡El techo cruje y empieza a derrumbarse! Algo brilla entre los escombros.
+event_collapsing_ceiling_opt_1,Correr
+event_collapsing_ceiling_res_1,"¡Boing, boing, boing! Saltas entre las piedras y hasta agarras lo que brillaba."
+event_collapsing_ceiling_opt_2,Saltar entre los bloques (Patas de Saltamontes)
+event_spike_corridor_text,Las placas del suelo tienen marcas de huesos aplastados. Alguien claramente no leyó el aviso.
+event_spike_corridor_opt_1,Pasar con cuidado
+event_golden_sarcophagus_text,"Un sarcófago dorado. Un cartel advierte: NO ABRIR. Otro cartel, más pequeño: en serio."
+event_golden_sarcophagus_res_1,"Adentro, un hueso raro envuelto en seda."
+event_golden_sarcophagus_res_2,Las monedas de oro se vuelven polvo de hueso en tu mano. Igual sirve.
+event_golden_sarcophagus_res_3,Una maldición sale volando y te muerde las costillas. Te avisaron.
+event_golden_sarcophagus_opt_1,Abrirlo igual
+event_clinging_skeleton_text,"Un esqueleto abraza un cofre con fuerza. Ya murió, pero todavía no lo suelta."
+event_clinging_skeleton_res_1,"Tras mucho esfuerzo, el cofre es tuyo. El esqueleto parece aliviado."
+event_clinging_skeleton_opt_1,Soltarlo dedo por dedo
+event_wandering_gravedigger_text,El Sepulturero Ambulante vende huesos usados: —Garantía de 7 días o te devuelvo el cráneo.
+event_wandering_gravedigger_opt_1,Ver la mercancía
+event_bone_pawnshop_text,"Una pequeña casa de empeño huesuda acepta de todo. —Vendo, compro, cambio. Más que nada vendo."
+event_bone_pawnshop_opt_1,Ver la mercancía
+event_bone_pawnshop_opt_2,Vender un hueso
+event_marrow_soup_text,"Una vendedora de sopa de médula revuelve un caldero. —¡Calienta los huesos, cariño!"
+event_marrow_soup_opt_1,Tazón pequeño (20 de polvo)
+event_marrow_soup_opt_2,Tazón gigante (45 de polvo)
+event_hooded_merchant_text,"Un mercader encapuchado abre el abrigo. Adentro, solo huesos raros. —No preguntes de dónde salieron."
+event_hooded_merchant_opt_1,Ver la mercancía
+event_bone_banker_text,Un esqueleto banquero ofrece intereses: entrega tu polvo ahora y recibe más... tal vez.
+event_bone_banker_res_1,¡La inversión rinde! El banquero lo devuelve con intereses y un guiño.
+event_bone_banker_res_2,"—El mercado de huesos se desplomó —dice, guardándose tu polvo."
+event_bone_banker_opt_1,Invertir 30 de polvo
+event_caged_skeleton_text,"Un esqueleto atrapado en una jaula pide ayuda. Liberarlo cuesta polvo de hueso, pero luchará a tu lado."
+event_caged_skeleton_res_1,"La jaula se abre. —¡Gracias, jefe! Yo me encargo de pegarles."
+event_caged_skeleton_opt_1,Pagar 30 de polvo para liberarlo
+event_caged_skeleton_res_2,"¡Clac! Las cadenas caen gratis. El esqueleto abraza tu pinza, emocionado."
+event_caged_skeleton_opt_2,Cortar las cadenas (Pinza de Cangrejo)
+event_lost_squire_text,Un escudero esqueleto perdió a su caballero. —¿Puedo seguirte? ¡Yo cargo las cosas!
+event_lost_squire_res_1,"No carga nada, pero golpea con el escudo con mucho entusiasmo."
+event_lost_squire_opt_1,Aceptar
+event_lost_squire_opt_2,Rechazar
+event_ghost_hound_text,Un perro fantasma mueve su cola transparente. Parece que perdió a su dueño hace unos trescientos años.
+event_ghost_hound_res_1,El perro aúlla de alegría y empieza a morder los talones de tus enemigos.
+event_ghost_hound_opt_1,Adoptarlo
+event_exchange_altar_text,"El altar acepta uno de tus huesos y devuelve uno de otra familia, sin decir cuál."
+event_exchange_altar_opt_1,Ofrecer un hueso
+event_blood_altar_text,Un altar pide sangre. No tienes sangre. Acepta vida de todos modos.
+event_blood_altar_res_1,El altar bebe y devuelve fuerza. Tus golpes se vuelven más pesados.
+event_blood_altar_opt_1,Ofrecer vida
+event_moon_altar_text,Un altar bañado por la luna convierte el polvo de hueso en huesos más fuertes.
+event_moon_altar_opt_1,Ofrecer 50 de polvo
+event_blue_campfire_text,Una fogata de velas azules: cura el 30% de la vida o mejora un hueso un nivel.
+event_blue_campfire_opt_1,Descansar (curar 30%)
+event_blue_campfire_opt_2,Mejorar un hueso
+event_quiet_ossuary_text,"Un osario silencioso, lleno de nichos cómodos. Buen lugar para una siesta."
+event_quiet_ossuary_opt_1,Dormir una siesta (curar 40%)
+event_quiet_ossuary_res_1,Meditas sobre la naturaleza de los huesos. Conclusión: son geniales.
+event_quiet_ossuary_opt_2,Meditar
+event_candle_shrine_text,Un santuario de velas que nunca se apagan. La cera gotea en forma de huesos.
+event_candle_shrine_opt_1,Rezar
+event_candle_shrine_res_1,La vela susurra un 'gracias' y se vuelve polvo de hueso en tu mano.
+event_candle_shrine_opt_2,Llevarte una vela
+event_mirror_lake_text,Tu reflejo en el lago tiene un hueso de más. Te tiende la mano.
+event_mirror_lake_res_1,"El agua te hiela hasta la médula. Al sacar la mano, sostiene un hueso que antes no estaba."
+event_mirror_lake_opt_1,Estrechar la mano del reflejo
+event_mirror_lake_res_2,El reflejo se encoge de hombros y vuelve a ser solo tú.
+event_mirror_lake_opt_2,Retroceder despacio
+event_fortune_skull_text,Una calavera adivina baraja cartas de hueso. —Una carta. Solo una.
+event_fortune_skull_res_1,La Torre de Huesos: tu cuerpo se fortalece.
+event_fortune_skull_res_2,La Rueda del Polvo: ¡riqueza a la vista!
+event_fortune_skull_res_3,El Esqueleto Sabio: aprendes algo nuevo.
+event_fortune_skull_opt_1,Sacar una carta
+event_bone_comet_text,Un cometa de huesos cruza el techo de la cripta. ¡Pide un deseo!
+event_bone_comet_opt_1,Pedir fuerza
+event_bone_comet_opt_2,Pedir vida
+event_bone_comet_opt_3,Pedir riqueza
+result_power_up,¡Más fuerte!
+trap_avoided,¡Tus ágiles piernas saltan la trampa justo a tiempo!
+trap_hit,"¡Trampa! Algo cruje, se desploma y te golpea de lleno."
+ally_joined,¡%s se unió al grupo!
+choose_bone_sell,¿Qué hueso vender?
+choose_bone_altar,¿Qué hueso ofrecer?
+choose_bone_upgrade,¿Qué hueso mejorar?
+bone_upgraded,¡%s +%d!
+merchant_title,Mercancía
+merchant_dust,Tu polvo de hueso: %s
+btn_leave_shop,Irse
+ally_caged_skeleton_name,Esqueleto Liberado
+ally_lost_squire_name,Escudero Perdido
+ally_ghost_hound_name,Perro Fantasma
+event_type_merchant,Mercader
+event_type_ally,Aliado
+event_type_altar,Altar de intercambio
+event_type_rest,Descanso
+event_type_rare,Raro

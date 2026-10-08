@@ -101,12 +101,19 @@ func _check_actions(eid: String, actions: Array) -> void:
 			"bone":
 				if a.has("id"):
 					check(GameData.bones.has(a.id), "osso %s em %s" % [a.id, eid])
+			"ally":
+				check(GameData.monsters.has(a.get("id", "")) and GameData.monsters[a.id].kind == "ally", "aliado %s em %s" % [a.get("id", ""), eid])
+			"dust", "dust_mult", "pay", "lose_current_pct", "heal_pct", "max_hp_pct", "stat", "trap", "skip", "merchant", "sell_bone", "altar", "upgrade_bone", "xp":
+				pass
+
 			"chance":
 				_check_actions(eid, a.get("then", []))
 				_check_actions(eid, a.get("else", []))
 			"roll":
 				for row in a.get("table", []):
 					_check_actions(eid, row.get("actions", []))
+			_:
+				check(false, "ação desconhecida %s em %s" % [a.get("do", ""), eid])
 
 
 func test_03_body_and_forms() -> void:
@@ -293,3 +300,31 @@ func _breath_damage(eq: Dictionary) -> float:
 			if ev.t == "attack" and ev.kind == "fire_breath":
 				return float(ev.dmg)
 	return 0.0
+
+
+func test_09_events() -> void:
+	check(GameData.events.size() == 60, "60 eventos (%d)" % GameData.events.size())
+	var body := 0
+	var types := {}
+	for id in GameData.events:
+		var ev: Dictionary = GameData.events[id]
+		types[ev.type] = int(types.get(ev.type, 0)) + 1
+		var is_body := false
+		for o in ev.options:
+			var req: Dictionary = o.get("requires", {})
+			if req.has("bone") or req.has("tag") or req.has("any_bone") or req.has("family"):
+				is_body = true
+				if req.has("bone"):
+					check(GameData.bones.has(req.bone), "requisito de osso válido em " + id)
+		if is_body:
+			body += 1
+		if ev.has("prop"):
+			check(ResourceLoader.exists("res://art/props/%s.png" % ev.prop), "arte do cenário %s" % ev.prop)
+	check(body == 15, "15 eventos ligados ao corpo (%d)" % body)
+	for t in ["combat", "choice", "chest", "merchant", "ally", "altar", "rest", "rare"]:
+		check(int(types.get(t, 0)) > 0, "há eventos do tipo " + t)
+	# toda partida automática termina sem travar
+	for seed in 12:
+		var ar := AutoRunner.new({"seed": 500 + seed})
+		var st := ar.play()
+		check(st.floor_n >= 1 and st.floor_n <= 31, "partida automática termina (semente %d, andar %d)" % [seed, st.floor_n])

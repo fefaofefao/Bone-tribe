@@ -1,0 +1,5 @@
+[
+	{"id": "companion_ossudo", "name": "companion_ossudo_name", "role": "companion_role_collector", "desc": "companion_ossudo_desc", "unlock": "start", "extra_bone_chance": 0.15, "per_level": 0.02, "max_level": 10, "cost_base": 120, "cost_growth": 1.5, "icon": "companion_ossudo"},
+	{"id": "companion_lumi", "name": "companion_lumi_name", "role": "companion_role_healer", "desc": "companion_lumi_desc", "unlock": "event_or_shop", "combat": {"heal_every": 3, "heal_pct": 0.08}, "per_level": 0.1, "max_level": 10, "cost_base": 120, "cost_growth": 1.5, "icon": "companion_lumi"},
+	{"id": "companion_bigorna", "name": "companion_bigorna_name", "role": "companion_role_forge", "desc": "companion_bigorna_desc", "unlock": "login_day_7", "forge_uses": 1, "per_level_uses_every": 5, "max_level": 10, "cost_base": 120, "cost_growth": 1.5, "icon": "companion_bigorna"}
+]

@@ -1159,7 +1159,8 @@ def gen_monsters():
         W, H = m["art"]["size"]
         fn = MONSTER_DRAW.get(m["id"])
         if fn is None:
-            print("sem desenho:", m["id"])
+            if m.get("kind") != "ally":
+                print("sem desenho:", m["id"])
             continue
         mg = int(max(W, H) * 0.3)
         artlib.ORIGIN[0], artlib.ORIGIN[1] = mg, mg
@@ -1314,6 +1315,334 @@ def gen_env():
     fill(cv, cross, (70, 64, 80))
     finish(cv, W4, H4, out("env", "env_tombstone.png"))
     print("env ok")
+
+
+
+# ------------------------------------------------- props de evento e aliados
+
+def prop_gravedigger(cv, W, H):
+    by = H - 16
+    coat = Layer(W, H)
+    coat.poly([(W/2 - 60, by), (W/2 + 60, by), (W/2 + 40, by - 200), (W/2 - 40, by - 200)])
+    paint(cv, coat, base=(70, 60, 80), shadow=(36, 30, 44), light=(120, 110, 130), outline_w=3)
+    shovel = Layer(W, H)
+    shovel.capsule((W/2 + 70, by - 260), (W/2 + 80, by - 20), 5)
+    paint(cv, shovel, base=(120, 90, 60), outline_w=2.4)
+    blade = Layer(W, H)
+    blade.rrect(W/2 + 64, by - 40, W/2 + 98, by + 4, 8)
+    paint(cv, blade, base=(150, 150, 160), outline_w=2.4)
+    draw_skull(cv, W, H, W/2 - 4, by - 236, 40, eye_color=(255, 190, 80))
+    hat = Layer(W, H)
+    hat.rrect(W/2 - 60, by - 284, W/2 + 56, by - 270, 6)
+    hat.rrect(W/2 - 34, by - 340, W/2 + 30, by - 278, 10)
+    paint(cv, hat, base=(50, 44, 56), shadow=(26, 22, 30), outline_w=2.6)
+    lamp = Layer(W, H)
+    lamp.rrect(W/2 - 96, by - 150, W/2 - 66, by - 110, 6)
+    glow(cv, lamp, (255, 180, 70), radius=16, strength=1.4)
+    paint(cv, lamp, base=(255, 210, 120), outline_w=2.2, shade=False)
+    bag = Layer(W, H)
+    bag.ellipse(W/2 - 40, by - 60, 34, 30)
+    paint(cv, bag, base=(150, 110, 70), outline_w=2.4)
+    bn = Layer(W, H)
+    bn.bone((W/2 - 56, by - 92), (W/2 - 20, by - 110), 5)
+    paint(cv, bn, outline_w=2)
+
+
+def prop_tailor(cv, W, H):
+    prop_gravedigger(cv, W, H)
+    tape = Layer(W, H)
+    tape.curve([(W/2 - 40, by_ := H - 216), (W/2, H - 160), (W/2 + 40, H - 216)], 6)
+    fill(cv, tape, (240, 200, 80))
+
+
+def prop_witch(cv, W, H):
+    by = H - 16
+    pot = Layer(W, H)
+    pot.ellipse(W/2 + 40, by - 50, 70, 50)
+    paint(cv, pot, base=(50, 50, 60), shadow=(24, 24, 30), outline_w=3)
+    brew = Layer(W, H)
+    brew.ellipse(W/2 + 40, by - 92, 58, 12)
+    glow(cv, brew, (140, 255, 120), radius=14, strength=1.4)
+    fill(cv, brew, (160, 255, 140))
+    robe = Layer(W, H)
+    robe.poly([(W/2 - 90, by), (W/2 - 10, by), (W/2 - 30, by - 200), (W/2 - 70, by - 200)])
+    paint(cv, robe, base=(80, 40, 100), shadow=(40, 16, 56), outline_w=3)
+    draw_skull(cv, W, H, W/2 - 50, by - 226, 34, eye_color=(160, 255, 120))
+    hat = Layer(W, H)
+    hat.poly([(W/2 - 110, by - 250), (W/2 + 10, by - 250), (W/2 - 40, by - 360)])
+    paint(cv, hat, base=(60, 30, 80), shadow=(30, 12, 44), outline_w=3)
+
+
+def prop_cage(cv, W, H):
+    by = H - 16
+    draw_skull(cv, W, H, W/2, by - 160, 40, eye_color=(255, 190, 80))
+    ribs = rib_mask(W, H, W/2, by - 120, 3, 40, 22, 8)
+    paint(cv, ribs, outline_w=2.4)
+    bars = Layer(W, H)
+    for i in range(7):
+        x = W/2 - 90 + i * 30
+        bars.rrect(x - 5, by - 260, x + 5, by, 3)
+    bars.rrect(W/2 - 100, by - 270, W/2 + 100, by - 250, 6)
+    bars.rrect(W/2 - 100, by - 12, W/2 + 100, by + 4, 6)
+    paint(cv, bars, base=(110, 110, 124), shadow=(60, 60, 72), outline_w=2.6)
+    chain = Layer(W, H)
+    chain.capsule((W/2, by - 270), (W/2, 4), 4)
+    fill(cv, chain, (90, 90, 100))
+
+
+def prop_altar(cv, W, H):
+    by = H - 16
+    m = Layer(W, H)
+    m.rrect(W/2 - 110, by - 90, W/2 + 110, by, 12)
+    m.rrect(W/2 - 80, by - 130, W/2 + 80, by - 86, 10)
+    paint(cv, m, base=(110, 104, 124), shadow=(60, 56, 72), light=(160, 156, 176), outline_w=3)
+    runes(cv, W, H, W/2, by - 46, 14, (190, 120, 255))
+    orb = Layer(W, H)
+    orb.circle(W/2, by - 180, 34)
+    glow(cv, orb, (190, 120, 255), radius=26, strength=1.6)
+    paint(cv, orb, base=(200, 160, 255), shadow=(120, 70, 190), outline_w=2.6)
+    for x in (W/2 - 90, W/2 + 90):
+        draw_skull(cv, W, H, x, by - 150, 20, base=(214, 202, 176))
+
+
+def prop_campfire(cv, W, H):
+    by = H - 16
+    logs = Layer(W, H)
+    logs.bone((W/2 - 80, by - 10), (W/2 + 80, by - 30), 10)
+    logs.bone((W/2 - 80, by - 30), (W/2 + 80, by - 10), 10)
+    paint(cv, logs, outline_w=2.6)
+    fl = Layer(W, H)
+    fl.ellipse(W/2, by - 70, 44, 50)
+    fl.poly([(W/2 - 40, by - 76), (W/2, by - 200), (W/2 + 40, by - 76)])
+    glow(cv, fl, (70, 150, 255), radius=30, strength=1.3)
+    fill(cv, fl, (120, 190, 255), blur=2)
+    core = Layer(W, H)
+    core.ellipse(W/2, by - 66, 20, 28)
+    fill(cv, core, (230, 245, 255), blur=2)
+    for x in (W/2 - 110, W/2 + 110):
+        c = Layer(W, H)
+        c.rrect(x - 12, by - 70, x + 12, by, 5)
+        paint(cv, c, base=(240, 228, 200), outline_w=2)
+        f = Layer(W, H)
+        f.ellipse(x, by - 84, 7, 12)
+        glow(cv, f, (90, 160, 255), radius=8, strength=1.5)
+        fill(cv, f, (170, 215, 255))
+
+
+def prop_chest(cv, W, H):
+    by = H - 16
+    m = Layer(W, H)
+    m.rrect(W/2 - 100, by - 110, W/2 + 100, by, 14)
+    paint(cv, m, base=(130, 82, 48), shadow=(74, 44, 24), light=(180, 124, 80), outline_w=3.2)
+    lid = Layer(W, H)
+    lid.rrect(W/2 - 106, by - 160, W/2 + 106, by - 100, 26)
+    paint(cv, lid, base=(140, 90, 52), shadow=(80, 48, 26), light=(190, 130, 84), outline_w=3.2)
+    band = Layer(W, H)
+    band.rrect(W/2 - 106, by - 108, W/2 + 106, by - 94, 4)
+    band.rrect(W/2 - 18, by - 130, W/2 + 18, by - 70, 6)
+    paint(cv, band, base=(230, 190, 80), shadow=(150, 110, 30), outline_w=2.4)
+    sp = Layer(W, H)
+    sp.poly([(W/2 + 60, by - 200), (W/2 + 66, by - 184), (W/2 + 82, by - 180), (W/2 + 66, by - 176), (W/2 + 60, by - 160), (W/2 + 54, by - 176), (W/2 + 38, by - 180), (W/2 + 54, by - 184)])
+    glow(cv, sp, (255, 230, 150), radius=6, strength=1.5)
+    fill(cv, sp, (255, 250, 220))
+
+
+def prop_coffin(cv, W, H):
+    by = H - 16
+    m = Layer(W, H)
+    m.poly([(W/2 - 60, by), (W/2 + 60, by), (W/2 + 86, by - 230), (W/2 + 40, by - 330), (W/2 - 40, by - 330), (W/2 - 86, by - 230)])
+    paint(cv, m, base=(90, 60, 50), shadow=(46, 28, 22), light=(140, 100, 80), outline_w=3.2)
+    cross = Layer(W, H)
+    cross.rrect(W/2 - 8, by - 290, W/2 + 8, by - 170, 3)
+    cross.rrect(W/2 - 36, by - 260, W/2 + 36, by - 244, 3)
+    paint(cv, cross, base=(230, 190, 80), outline_w=2.2)
+
+
+def prop_gambler(cv, W, H):
+    by = H - 16
+    table = Layer(W, H)
+    table.rrect(W/2 - 110, by - 110, W/2 + 110, by - 90, 6)
+    table.rrect(W/2 - 90, by - 92, W/2 - 74, by, 4)
+    table.rrect(W/2 + 74, by - 92, W/2 + 90, by, 4)
+    paint(cv, table, base=(110, 70, 44), shadow=(60, 36, 20), outline_w=2.6)
+    ribs = rib_mask(W, H, W/2, by - 230, 3, 44, 24, 9)
+    paint(cv, ribs, outline_w=2.4)
+    draw_skull(cv, W, H, W/2, by - 270, 40, eye_color=(255, 210, 80))
+    hat = Layer(W, H)
+    hat.rrect(W/2 - 50, by - 316, W/2 + 46, by - 304, 4)
+    hat.rrect(W/2 - 30, by - 350, W/2 + 26, by - 310, 8)
+    paint(cv, hat, base=(40, 36, 44), outline_w=2.4)
+    for i, x in enumerate((W/2 - 40, W/2 + 30)):
+        d = Layer(W, H)
+        d.rrect(x - 14, by - 140, x + 14, by - 112, 5)
+        paint(cv, d, base=IVORY_LIGHT, outline_w=2)
+        dot = Layer(W, H)
+        dot.circle(x, by - 126, 3)
+        fill(cv, dot, (30, 20, 20))
+
+
+def prop_lake(cv, W, H):
+    by = H - 16
+    water = Layer(W, H)
+    water.ellipse(W/2, by - 30, 150, 34)
+    glow(cv, water, (120, 200, 255), radius=16, strength=0.9)
+    paint(cv, water, base=(40, 80, 120), shadow=(20, 40, 70), light=(120, 190, 240), outline_w=2.6, grain=False)
+    refl = Layer(W, H)
+    refl.ellipse(W/2, by - 30, 30, 14)
+    fill(cv, refl, (220, 240, 255), alpha=150, blur=2)
+    for x in (W/2 - 160, W/2 + 160):
+        st = Layer(W, H)
+        st.ellipse(x, by - 20, 26, 18)
+        paint(cv, st, base=(100, 96, 110), outline_w=2.4)
+
+
+def prop_fountain(cv, W, H):
+    by = H - 16
+    b = Layer(W, H)
+    b.ellipse(W/2, by - 40, 120, 40)
+    b.rrect(W/2 - 20, by - 180, W/2 + 20, by - 40, 8)
+    b.ellipse(W/2, by - 180, 60, 20)
+    paint(cv, b, base=(120, 116, 130), shadow=(64, 60, 74), light=(170, 166, 180), outline_w=3)
+    w = Layer(W, H)
+    w.ellipse(W/2, by - 48, 100, 24)
+    w.ellipse(W/2, by - 186, 46, 12)
+    fill(cv, w, (90, 140, 100))
+    drops = Layer(W, H)
+    for dx in (-36, 0, 36):
+        drops.capsule((W/2 + dx, by - 180), (W/2 + dx * 1.6, by - 60), 3)
+    fill(cv, drops, (140, 200, 150), alpha=180)
+
+
+def prop_abyss(cv, W, H):
+    by = H - 16
+    pit = Layer(W, H)
+    pit.ellipse(W/2, by - 20, 170, 30)
+    fill(cv, pit, (8, 4, 10))
+    bridge = Layer(W, H)
+    for i in range(9):
+        x = W/2 - 160 + i * 40
+        bridge.rrect(x, by - 34 + (i % 3) * 2, x + 30, by - 20, 4)
+    paint(cv, bridge, base=(110, 80, 50), shadow=(60, 40, 24), outline_w=2)
+    rope = Layer(W, H)
+    rope.curve([(W/2 - 170, by - 80), (W/2, by - 40), (W/2 + 170, by - 80)], 3)
+    fill(cv, rope, (160, 130, 80))
+    for x in (W/2 - 170, W/2 + 170):
+        post = Layer(W, H)
+        post.rrect(x - 8, by - 100, x + 8, by - 10, 3)
+        paint(cv, post, base=(100, 70, 40), outline_w=2)
+    sp = Layer(W, H)
+    sp.circle(W/2 + 150, by - 120, 10)
+    glow(cv, sp, (255, 220, 120), radius=12, strength=1.6)
+    fill(cv, sp, (255, 250, 210))
+
+
+def prop_gate(cv, W, H):
+    by = H - 16
+    frame = Layer(W, H)
+    frame.rrect(W/2 - 130, by - 300, W/2 - 100, by, 6)
+    frame.rrect(W/2 + 100, by - 300, W/2 + 130, by, 6)
+    frame.rrect(W/2 - 130, by - 310, W/2 + 130, by - 280, 8)
+    paint(cv, frame, base=(100, 96, 110), shadow=(54, 50, 64), outline_w=3)
+    bars = Layer(W, H)
+    for i in range(6):
+        x = W/2 - 80 + i * 32
+        bars.rrect(x - 5, by - 280, x + 5, by, 3)
+    bars.rrect(W/2 - 100, by - 160, W/2 + 100, by - 148, 4)
+    paint(cv, bars, base=(90, 90, 104), shadow=(50, 50, 60), outline_w=2.4)
+    draw_skull(cv, W, H, W/2, by - 150, 22, base=(220, 190, 90), eye_color=(255, 120, 60))
+
+
+def prop_cat(cv, W, H):
+    by = H - 16
+    tail = Layer(W, H)
+    tail.curve([(W/2 - 50, by - 30), (W/2 - 100, by - 60), (W/2 - 80, by - 140)], 8)
+    paint(cv, tail, outline_w=2.4)
+    feet = quad_skeleton(cv, W, H, W/2 - 50, W/2 + 40, by - 70, 66, 8)
+    ears = Layer(W, H)
+    ears.poly([(W/2 + 40, by - 120), (W/2 + 44, by - 160), (W/2 + 62, by - 128)])
+    ears.poly([(W/2 + 70, by - 124), (W/2 + 84, by - 160), (W/2 + 92, by - 120)])
+    paint(cv, ears, outline_w=2.4)
+    draw_skull(cv, W, H, W/2 + 66, by - 96, 30, snout=0.2, eye_color=(160, 255, 140))
+
+
+PROPS = {
+    "prop_gravedigger": (prop_gravedigger, 280, 380), "prop_tailor": (prop_tailor, 280, 380),
+    "prop_witch": (prop_witch, 300, 380), "prop_cage": (prop_cage, 260, 360),
+    "prop_altar": (prop_altar, 300, 280), "prop_campfire": (prop_campfire, 300, 260),
+    "prop_chest": (prop_chest, 260, 240), "prop_coffin": (prop_coffin, 220, 360),
+    "prop_gambler": (prop_gambler, 260, 380), "prop_lake": (prop_lake, 380, 160),
+    "prop_fountain": (prop_fountain, 280, 260), "prop_abyss": (prop_abyss, 400, 180),
+    "prop_gate": (prop_gate, 300, 340), "prop_cat": (prop_cat, 260, 240),
+}
+
+
+def ally_skeleton(cv, W, H, fc, shield=False):
+    by = H - 16
+    legs = Layer(W, H)
+    legs.bone((W/2 - 14, by - 100), (W/2 - 18, by - 6), 7)
+    legs.bone((W/2 + 14, by - 100), (W/2 + 18, by - 6), 7)
+    paint(cv, legs, outline_w=2.4)
+    paint(cv, rib_mask(W, H, W/2, by - 190, 3, 44, 24, 9), outline_w=2.4)
+    arm = Layer(W, H)
+    arm.bone((W/2 + 30, by - 180), (W/2 + 60, by - 120), 6)
+    paint(cv, arm, outline_w=2.2)
+    sword = Layer(W, H)
+    sword.rrect(W/2 + 56, by - 200, W/2 + 66, by - 110, 3)
+    paint(cv, sword, base=(190, 196, 210), outline_w=2)
+    draw_skull(cv, W, H, W/2 + 4, by - 216, 34, eye_color=(255, 200, 90))
+    if shield:
+        sh = Layer(W, H)
+        sh.poly([(W/2 - 60, by - 180), (W/2 - 10, by - 180), (W/2 - 14, by - 110), (W/2 - 36, by - 90), (W/2 - 58, by - 110)])
+        paint(cv, sh, base=(140, 60, 50), shadow=(80, 30, 24), outline_w=2.6)
+
+
+def ally_hound(cv, W, H, fc):
+    m = Layer(W, H)
+    by = H - 16
+    m.ellipse(W/2 - 10, by - 70, 70, 34)
+    m.capsule((W/2 + 50, by - 80), (W/2 + 70, by - 110), 16)
+    for lx in (W/2 - 60, W/2 - 30, W/2 + 20, W/2 + 46):
+        m.capsule((lx, by - 50), (lx, by - 6), 7)
+    m.tapered([(W/2 - 76, by - 76), (W/2 - 110, by - 110)], 12, 3)
+    glow(cv, m, (140, 200, 255), radius=10, strength=1.0)
+    fill(cv, m, (170, 210, 255), alpha=170)
+    draw_skull(cv, W, H, W/2 + 76, by - 118, 26, snout=0.6, base=(200, 225, 255), eye_color=(120, 200, 255))
+
+
+def ally_insect(cv, W, H, fc):
+    cx, cy = W/2, H/2
+    for side in (-1, 1):
+        w = Layer(W, H)
+        w.ellipse(cx - 6 + side * 6, cy - 26, 18, 30)
+        fill(cv, w, (230, 250, 255), alpha=110)
+    b = Layer(W, H)
+    b.ellipse(cx - 18, cy + 6, 26, 16)
+    paint(cv, b, base=(200, 230, 120), shadow=(110, 140, 50), outline_w=2.4)
+    draw_skull(cv, W, H, cx + 20, cy, 18, eye_color=(160, 255, 120))
+
+
+def gen_props():
+    import artlib
+    from PIL import ImageOps
+    for pid, (fn, W, H) in PROPS.items():
+        cv = new_canvas(W, H)
+        fn(cv, W, H)
+        finish(cv, W, H, out("props", pid + ".png"))
+    for m in data("monsters.json"):
+        if m.get("kind") != "ally":
+            continue
+        W, H = m["art"]["size"]
+        cv = new_canvas(W, H)
+        fc = fam(m.get("family", ""))
+        if m["id"] == "ally_ghost_hound":
+            ally_hound(cv, W, H, fc)
+        elif m["id"] == "ally_bone_insect":
+            ally_insect(cv, W, H, fc)
+        else:
+            ally_skeleton(cv, W, H, fc, shield=m["id"] == "ally_lost_squire")
+        cv = ImageOps.mirror(cv)  # monstros são espelhados de novo ao exibir aliados
+        finish(cv, W, H, out("monsters", m["id"] + ".png"))
+    print("props ok")
 
 
 # ----------------------------------------------------------------- UI e FX
@@ -1613,6 +1942,8 @@ if __name__ == "__main__":
         gen_monsters()
     if what in ("env", "all"):
         gen_env()
+    if what in ("props", "all"):
+        gen_props()
     if what in ("fx", "all"):
         gen_fx()
     if what in ("ui", "all"):

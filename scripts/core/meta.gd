@@ -30,3 +30,24 @@ static func ossuary_stats() -> Dictionary:
 		"def": ossuary_level("def") * float(per.get("def", 1)),
 		"drop_bonus": ossuary_level("drop") * float(per.get("drop", 0.01)),
 	}
+
+
+# ------------------------------------------------------------ Companheiros
+
+static func companion_level(id: String) -> int:
+	return int(Profile.data.companions.get(id, {}).get("level", 1))
+
+
+## Efeito de combate do companheiro (Lumi cura a cada 3 turnos).
+static func companion_combat(id: String) -> Dictionary:
+	var c: Dictionary = GameData.companions.get(id, {})
+	if c.is_empty() or not Profile.data.companions.has(id):
+		return {}
+	var e: Dictionary = c.get("combat", {})
+	if e.is_empty():
+		return {}
+	var out := e.duplicate()
+	var lvl := companion_level(id)
+	if out.has("heal_pct"):
+		out.heal_pct = float(out.heal_pct) * (1.0 + float(c.get("per_level", 0.1)) * (lvl - 1))
+	return out

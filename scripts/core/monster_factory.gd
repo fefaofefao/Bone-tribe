@@ -87,3 +87,66 @@ static func boss_drop(monster_id: String, wins_before: int, rng: RandomNumberGen
 	if rng.randf() >= chance:
 		return ""
 	return String(drops[rng.randi() % drops.size()])
+
+
+## Aliado que luta ao lado do Ossinho (não pode ser alvo dos inimigos).
+static func make_ally(ally_id: String, floor_n: int) -> Fighter:
+	var f := make(ally_id, floor_n)
+	if f == null:
+		return null
+	f.is_ally = true
+	f.max_hp = 1
+	f.hp = 1
+	f.crit = 0.05
+	return f
+
+
+## Estoque do mercador: ossos comuns e raros (nunca de chefe) e, às vezes,
+## um lendário já descoberto na Coleção (ver docs/DECISOES.md).
+static func merchant_stock(count: int, rarities: Array, rng: RandomNumberGenerator) -> Array:
+	var out := []
+	var cfg: Dictionary = GameData.bal("merchant", {})
+	var rare_w := float(cfg.get("rare_weight", 0.3))
+	var tries := 0
+	while out.size() < count and tries < 50:
+		tries += 1
+		var want := "rare" if rng.randf() < rare_w else "common"
+		if rarities.has("legendary") and rng.randf() < float(cfg.get("legendary_chance", 0.15)):
+			want = "legendary"
+		if not rarities.is_empty() and not rarities.has(want):
+			want = rarities[0]
+		var pool := GameData.bones_by({"rarity": want})
+		if want == "legendary":
+			pool = pool.filter(func(x): return Profile.is_bone_discovered(x))
+		else:
+			pool = pool.filter(func(x): return not GameData.bone(x).get("boss_drop", false))
+		if pool.is_empty():
+			continue
+		var bid: String = pool[rng.randi() % pool.size()]
+		var dup := false
+		for o in out:
+			if o.id == bid:
+				dup = true
+		if not dup:
+			out.append({"id": bid, "price": int(cfg.get("prices", {}).get(want, 50))})
+	return out
+
+
+## Altar de troca: um osso de outra família, do mesmo encaixe quando possível.
+static func altar_bone(old_id: String, rng: RandomNumberGenerator) -> String:
+	var old := GameData.bone(old_id)
+	var fam := String(old.get("family", ""))
+	var slot := String(GameData.bone_slots(old_id)[0])
+	var pool := []
+	for id in GameData.catalog_bones():
+		var b := GameData.bone(id)
+		if String(b.family) == fam or b.get("boss_drop", false):
+			continue
+		if GameData.bone_slots(id).has(slot):
+			pool.append(id)
+	if pool.is_empty():
+		for id in GameData.catalog_bones():
+			var b2 := GameData.bone(id)
+			if String(b2.family) != fam and not b2.get("boss_drop", false):
+				pool.append(id)
+	return pool[rng.randi() % pool.size()] if not pool.is_empty() else ""

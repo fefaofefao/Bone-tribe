@@ -91,6 +91,36 @@ func _exec(actions: Array) -> void:
 						break
 			"xp":
 				_levelups(state.add_xp(int(a.get("amount", 10))))
+			"pay":
+				state.add_dust(-int(a.get("dust", 0)))
+			"stat":
+				var st: Dictionary = a.get("stats", {})
+				for k in st:
+					state.bonus_stats[k] = float(state.bonus_stats.get(k, 0.0)) + float(st[k])
+				state.recalc()
+			"trap":
+				if state.rng.randf() >= state.stat("trap_avoid"):
+					state.hp = maxf(1.0, state.hp - roundf(state.max_hp * float(a.get("value", 0.15))))
+			"skip":
+				var target := state.floor_n + int(a.get("n", 3))
+				while state.floor_n < target and not state.is_boss_floor(state.floor_n + 1):
+					state.floor_n += 1
+			"ally":
+				state.allies.append(String(a.get("id", "")))
+			"merchant":
+				for o in MonsterFactory.merchant_stock(int(a.get("stock", 3)), a.get("rarities", []), state.rng):
+					if state.dust >= int(o.price) and state.free_slot_for(String(o.id)) != "":
+						state.add_dust(-int(o.price))
+						offer({"id": o.id, "level": 1})
+						break
+			"upgrade_bone":
+				var slots := state.non_basic_bones()
+				if not slots.is_empty():
+					var inst: Dictionary = state.equipped[slots[state.rng.randi() % slots.size()]]
+					inst["level"] = mini(int(GameData.bal("bone_max_level", 5)), int(inst.get("level", 1)) + 1)
+					state.recalc()
+			"sell_bone", "altar":
+				pass
 
 
 func _combat(ids: Array, is_boss: bool) -> void:
@@ -100,7 +130,13 @@ func _combat(ids: Array, is_boss: bool) -> void:
 		if f:
 			enemies.append(f)
 	var hero := state.make_hero()
-	var c := Combat.new(hero, enemies, {"rng": state.rng, "is_boss": is_boss, "auto_focus": true,
+	var allies := []
+	for aid in state.allies:
+		var af := MonsterFactory.make_ally(String(aid), state.floor_n)
+		if af:
+			allies.append(af)
+	var c := Combat.new(hero, enemies, {"rng": state.rng, "is_boss": is_boss, "auto_focus": true, "allies": allies,
+		"companion": Meta.companion_combat(state.companion_id) if state.companion_id != "" else {},
 		"max_turns": int(GameData.bal("combat/boss_max_turns" if is_boss else "combat/max_turns", 15))})
 	log_combats += 1
 	var res := c.run_to_end()

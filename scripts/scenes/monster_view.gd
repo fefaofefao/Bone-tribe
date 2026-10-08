@@ -53,6 +53,9 @@ func setup(f: Fighter) -> void:
 	_mat.shader = FLASH_SHADER
 	sprite.material = _mat
 	add_child(sprite)
+	if f.is_ally:
+		sprite.flip_h = true
+		sprite.offset.x = -(art_size.x - float(art.pivot[0]))
 
 	_guard = Sprite2D.new()
 	_guard.texture = load("res://art/fx/fx_ring.png")
@@ -65,6 +68,7 @@ func setup(f: Fighter) -> void:
 	hp_bar.position = Vector2(-60, -art_size.y * display_scale - 30 - (40 if flying else 0))
 	hp_bar.size = Vector2(120, 14)
 	hp_bar.boss = f.is_boss
+	hp_bar.visible = not f.is_ally
 	add_child(hp_bar)
 	refresh()
 

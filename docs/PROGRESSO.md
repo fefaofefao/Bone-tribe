@@ -27,8 +27,14 @@
 - Testes: contagem do catálogo, toda forma alcançável, rejeição, escudo do Golem, sopro do Dragão, drops.
 - Modo de depuração `BT_AUTO=1` (escolhas automáticas sem os reforços do modo demonstração).
 
+### Passo 4 — 60 eventos
+- 60 eventos em `data/events.json` com textos nos 3 idiomas (pt_BR, en_US, es_419), 15 deles com opção extra ligada ao corpo.
+- Ações novas: mercador (comprar ossos), vender osso, altar de troca, melhorar osso (+1 nível), aliado, armadilha, voo sobre o abismo, pagar pó, bônus de atributo.
+- 14 cenários de evento e 4 aliados desenhados.
+- Testes: 60 eventos, 15 do corpo, todas as ações e textos válidos, 12 partidas automáticas completas sem travar.
+
 ## Em andamento
-- Passo 4 — 60 eventos.
+- Passo 5 — Caçador de Ossos, companheiros, Ossuário, Coleção, relíquias e Gabinete.
 
 ## Problemas
 - O ambiente de desenvolvimento não acessa `dl.google.com`, então o AAB só é gerado e validado no GitHub Actions.
