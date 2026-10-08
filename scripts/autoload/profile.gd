@@ -57,6 +57,26 @@ func load_profile() -> void:
 	if int(data.first_open_time) == 0:
 		data.first_open_time = Backend.now()
 		save()
+	if OS.get_environment("BT_SAMPLE_PROFILE") == "1":
+		_sample_profile()
+
+
+## Ferramenta de desenvolvimento: perfil de exemplo para capturas de tela.
+func _sample_profile() -> void:
+	data.dust = 2480
+	data.diamonds = 365
+	for id in ["bone_skull_wolf", "bone_claw_bear", "bone_legs_spider", "bone_wings_bat", "bone_tail_scorpion", "bone_tail_rat", "bone_ribs_turtle", "bone_pincer_crab", "bone_stinger_wasp", "bone_legs_grasshopper", "bone_shell_beetle", "bone_blade_mantis", "bone_legs_centaur"]:
+		data.discovered_bones[id] = true
+	for id in ["form_night_manticore", "form_werewolf", "form_swarm_queen"]:
+		data.discovered_forms[id] = true
+	data.ossuary = {"hp": 4, "atk": 5, "def": 2, "drop": 1}
+	data.companions["companion_lumi"] = {"unlocked": true, "level": 3}
+	data.companions["companion_ossudo"] = {"unlocked": true, "level": 2}
+	data.selected_companion = "companion_lumi"
+	data.starting_bone = "bone_skull_wolf"
+	data.relics = {"owned": [{"uid": 1, "id": "relic_moon_amulet", "level": 3}, {"uid": 2, "id": "relic_knuckle_ring", "level": 2}, {"uid": 3, "id": "relic_gravedigger_lantern", "level": 1}], "equipped": {"relic_amulet": 1, "relic_ring": 2, "relic_lantern": 3}, "next_uid": 4}
+	data.cabinet = {"cur_melted_candle": 2, "cur_holed_coin": 1, "cur_gold_tooth": 3, "cur_rusty_shovel": 1, "cur_holed_hat": 1, "cur_loaded_die": 4, "cur_bone_goblet": 1}
+	data.hunter = {"stolen": [{"id": "bone_blade_mantis", "level": 1}, {"id": "bone_wings_bat", "level": 2}]}
 
 
 func _merge(base: Dictionary, incoming: Dictionary) -> void:

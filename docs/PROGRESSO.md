@@ -33,8 +33,16 @@
 - 14 cenários de evento e 4 aliados desenhados.
 - Testes: 60 eventos, 15 do corpo, todas as ações e textos válidos, 12 partidas automáticas completas sem travar.
 
+### Passo 5 — Meta-progressão
+- Hub na tela de título com abas: Início (Jogar, companheiro, osso inicial, aviso do Caçador), Ossuário, Coleção e Loja.
+- Ossuário: 4 melhorias permanentes, 3 companheiros (subir de nível, escolher), 4 espaços de relíquias (melhorar, trocar), Baú de ossos (pó ou anúncio, com as chances visíveis) e a estante do Gabinete de Curiosidades (30 itens, 10 conjuntos, estrelas, silhuetas).
+- Coleção: álbum dos 20 ossos por família com bônus de família completa, escolha do osso inicial, Bestiário de Formas com silhuetas e os ossos roubados pelo Caçador.
+- Na partida: Caçador de Ossos (rouba ao morrer, reaparece como chefe opcional vestindo os ossos roubados), Ossudo traz ossos, Lumi cura, Bigorna forja, curiosidades caem de baús/eventos/chefes, Mapa Rasgado revela o próximo evento.
+- Arte: retratos dos 3 companheiros, ícones das 12 relíquias e dos 30 itens, capuz do Caçador, Baú de ossos.
+- Correção importante: o tema visual não chegava aos controles dentro de CanvasLayer; agora é mesclado no tema padrão do motor.
+
 ## Em andamento
-- Passo 5 — Caçador de Ossos, companheiros, Ossuário, Coleção, relíquias e Gabinete.
+- Passo 6 — calendários de login, diamantes, loja e Kit das primeiras 24 horas.
 
 ## Problemas
 - O ambiente de desenvolvimento não acessa `dl.google.com`, então o AAB só é gerado e validado no GitHub Actions.

@@ -498,3 +498,201 @@ event_type_ally,Ally
 event_type_altar,Trade altar
 event_type_rest,Rest
 event_type_rare,Rare
+tab_home,Home
+tab_ossuary,Ossuary
+tab_collection,Collection
+tab_shop,Shop
+ossuary_upgrades,Upgrades
+ossuary_upgrades_sub,Bone dust becomes permanent strength for your next attempt.
+ossuary_hp,Health
+ossuary_atk,Attack
+ossuary_def,Defense
+ossuary_drop,Bone sense
+ossuary_hp_desc,Max HP: %s
+ossuary_atk_desc,Attack: %s
+ossuary_def_desc,Defense: %s
+ossuary_drop_desc,Bone drop chance: %s
+max_level,Max
+upgraded,Upgraded!
+companions_title,Companions
+companions_sub,Bring one companion per run. They level up with bone dust.
+companion_ossudo_name,"Ossudo, the skeleton dog"
+companion_lumi_name,"Lumi, the ghost candle"
+companion_bigorna_name,"Bigorna, the blacksmith"
+companion_role_collector,Collector
+companion_role_healer,Healer
+companion_role_forge,Forge
+companion_ossudo_desc,15% chance to fetch an extra bone after each combat.
+companion_lumi_desc,Heals 8% of Bonesy's HP every 3 turns.
+companion_bigorna_desc,"Once per run, upgrades a bone from common to rare."
+companion_lock_companion_ossudo,Available from the start.
+companion_lock_companion_lumi,"Find her at a candle shrine in the crypt, or unlock her in the shop."
+companion_lock_companion_bigorna,Reward for day 7 of the welcome bonus.
+btn_take_along,Take along
+companion_selected,Coming with you
+companion_unlocked,%s is now your crypt companion!
+relics_title,Relics
+relics_sub,"Four slots: amulet, ring, cloak and lantern. Upgrade with bone dust."
+relic_amulet,Amulet
+relic_ring,Ring
+relic_cloak,Cloak
+relic_lantern,Lantern
+relic_empty,Empty
+btn_switch,Switch
+bone_chest_title,Bone chest
+bone_chest_opened,Chest opened!
+btn_chest_ad,Ad (%d today)
+odds_title,Odds:
+odds_relic_common,common relic
+odds_relic_rare,rare relic
+odds_relic_legendary,legendary relic
+odds_curiosity,curiosity
+stars_n,%d star(s)
+ad_place_extra_chest,Open extra chest
+cabinet_title,Cabinet of Curiosities
+cabinet_sub,%d of %d objects on the shelf. Duplicates earn stars.
+set_complete,complete
+unknown_item,???
+unknown_form,???
+curiosity_found,Curiosity found: %s! (%d star)
+curiosity_star,Duplicate %s: now %d stars!
+collection_title,Bone Collection
+collection_sub,%d of %d bones found. Tap a bone to start your run with it.
+start_bone_current,Starting bone: %s
+start_bone_none,none
+start_tokens,%d rare bone token(s)
+start_bone_set,Start with this bone
+start_bone_clear,Don't start with this bone
+start_bone_need_token,Rare and legendary bones need a Rare starting bone token (Shop).
+bone_source,Dropped by: %s
+family_bonus_done,+5% permanent
+family_bonus_todo,Complete for +5%
+bestiary_title,Bestiary of Forms
+bestiary_sub,%d of %d forms discovered.
+form_hint_family,4 %s pieces
+form_hint_secret,Secret recipe
+hunter_title,Bone Hunter
+hunter_sub,"If you die, he steals your best bone and wears it."
+hunter_none,He hasn't stolen anything from you. Yet.
+hunter_has,Bones he is wearing:
+boss_bone_hunter_name,Bone Hunter
+event_hunter_text,"A hooded figure blocks the corridor. It's the Bone Hunter, wearing what he stole from you: %s. 'Came to take it back?'"
+hunter_fight,Fight for revenge
+hunter_flee,Avoid the Hunter
+hunter_fled,"You retreat into the shadows. The Hunter chuckles: 'Next time, then.'"
+hunter_defeated,"The Hunter falls and returns your %s, now +%d!"
+hunter_stole,The Bone Hunter took your %s!
+chip_companion,Companion: %s
+chip_start_bone,Starting bone: %s
+chip_hunter,The Hunter has %d of your bones
+bigorna_forge,Forge with Bigorna (%d)
+bigorna_title,Bigorna's Forge
+bigorna_desc,Choose a common bone to become rare.
+bigorna_done,Forged!
+ossudo_fetch,Ossudo fetched a bone!
+shop_title,Shop
+shop_coming,Coming soon.
+relic_vertebra_amulet_name,Vertebra Amulet
+relic_vertebra_amulet_desc,+5% HP
+relic_moon_amulet_name,Moon Amulet
+relic_moon_amulet_desc,"+8% HP, +3% life steal"
+relic_ancestor_amulet_name,Ancestral Amulet
+relic_ancestor_amulet_desc,"+12% HP, regenerates 1% per turn"
+relic_knuckle_ring_name,Knuckle Ring
+relic_knuckle_ring_desc,+5% attack
+relic_ember_ring_name,Ember Ring
+relic_ember_ring_desc,"+8% attack, +10% fire damage"
+relic_king_ring_name,King's Ring
+relic_king_ring_desc,"+12% attack, +4% critical"
+relic_shroud_cloak_name,Shroud Cloak
+relic_shroud_cloak_desc,+4 defense
+relic_bat_cloak_name,Bat Cloak
+relic_bat_cloak_desc,"+6 defense, +4% dodge"
+relic_shadow_cloak_name,Shadow Cloak
+relic_shadow_cloak_desc,"+10 defense, +6% dodge"
+relic_tin_lantern_name,Tin Lantern
+relic_tin_lantern_desc,+5% bone dust
+relic_gravedigger_lantern_name,Gravedigger's Lantern
+relic_gravedigger_lantern_desc,"+8% dust, +3% bone chance, more rare events"
+relic_soul_lantern_name,Soul Lantern
+relic_soul_lantern_desc,"+12% dust, +5% bone chance"
+set_crypt_name,Crypt
+set_crypt_desc,Full set: +5% attack
+set_gravedigger_name,Gravedigger
+set_gravedigger_desc,Full set: one guaranteed chest every 10 floors
+set_witch_name,Witch
+set_witch_desc,Full set: +5% HP
+set_golem_name,Golem
+set_golem_desc,Full set: +5 defense
+set_dragon_name,Dragon
+set_dragon_desc,Full set: +15% fire damage
+set_library_name,Library
+set_library_desc,Full set: +3% critical
+set_merchant_name,Merchant
+set_merchant_desc,Full set: +8% bone dust
+set_party_name,Party
+set_party_desc,Full set: +3% life steal
+set_shadow_name,Shadow
+set_shadow_desc,Full set: +3% dodge
+set_hydra_name,Hydra
+set_hydra_desc,Full set: regenerates 1% per turn
+cur_melted_candle_name,Melted Candle
+cur_melted_candle_desc,+2% HP
+cur_holed_coin_name,Holed Coin
+cur_holed_coin_desc,+3% bone dust
+cur_gold_tooth_name,Gold Tooth
+cur_gold_tooth_desc,+2% critical chance
+cur_rusty_shovel_name,Rusty Shovel
+cur_rusty_shovel_desc,+5% bone drop chance
+cur_old_lantern_name,Old Lantern
+cur_old_lantern_desc,+5% rare event chance
+cur_torn_map_name,Torn Map
+cur_torn_map_desc,Reveals the type of the next event
+cur_holed_hat_name,Holed Hat
+cur_holed_hat_desc,+2% HP
+cur_cracked_cauldron_name,Cracked Cauldron
+cur_cracked_cauldron_desc,+5% healing received
+cur_bald_broom_name,Bald Broom
+cur_bald_broom_desc,+1 speed
+cur_broken_rune_name,Broken Rune
+cur_broken_rune_desc,3% shield at the start of combat
+cur_eternal_moss_name,Eternal Moss
+cur_eternal_moss_desc,Regenerates 0.5% per turn
+cur_bent_gear_name,Bent Gear
+cur_bent_gear_desc,+2 defense
+cur_scorched_scale_name,Scorched Scale
+cur_scorched_scale_desc,+5% fire damage
+cur_eternal_ember_name,Eternal Ember
+cur_eternal_ember_desc,+2% attack
+cur_chipped_claw_name,Chipped Claw
+cur_chipped_claw_desc,+1% critical
+cur_endless_book_name,Endless Book
+cur_endless_book_desc,+5% experience
+cur_crow_quill_name,Crow Quill
+cur_crow_quill_desc,+1% critical
+cur_cracked_glasses_name,Cracked Glasses
+cur_cracked_glasses_desc,+2% bone drop chance
+cur_rigged_scale_name,Rigged Scale
+cur_rigged_scale_desc,+2% bone dust
+cur_ancient_receipt_name,Ancient Receipt
+cur_ancient_receipt_desc,5% merchant discount
+cur_empty_purse_name,Empty Purse
+cur_empty_purse_desc,+2% bone dust
+cur_loaded_die_name,Loaded Die
+cur_loaded_die_desc,+1% critical
+cur_bone_goblet_name,Bone Goblet
+cur_bone_goblet_desc,+1% life steal
+cur_grinning_mask_name,Grinning Mask
+cur_grinning_mask_desc,+1% dodge
+cur_murky_mirror_name,Murky Mirror
+cur_murky_mirror_desc,+1% dodge
+cur_black_candle_name,Black Candle
+cur_black_candle_desc,+2% attack
+cur_silent_bell_name,Silent Bell
+cur_silent_bell_desc,+2% HP
+cur_hydra_tooth_name,Hydra Tooth
+cur_hydra_tooth_desc,+3% attack
+cur_triple_scale_name,Triple Scale
+cur_triple_scale_desc,+3 defense
+cur_serpent_eye_name,Serpent Eye
+cur_serpent_eye_desc,+2% critical

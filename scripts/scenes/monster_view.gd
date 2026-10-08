@@ -45,7 +45,7 @@ func setup(f: Fighter) -> void:
 
 	sprite = Sprite2D.new()
 	var path := GameData.monster_texture_path(f.id)
-	sprite.texture = load(path) if ResourceLoader.exists(path) else null
+	sprite.texture = load(path) if ResourceLoader.exists(path) and f.id != "boss_bone_hunter" else null
 	sprite.centered = false
 	sprite.offset = -Vector2(art.pivot[0], art.pivot[1])
 	sprite.scale = Vector2.ONE * display_scale
@@ -56,6 +56,9 @@ func setup(f: Fighter) -> void:
 	if f.is_ally:
 		sprite.flip_h = true
 		sprite.offset.x = -(art_size.x - float(art.pivot[0]))
+
+	if f.id == "boss_bone_hunter":
+		_build_hunter_body()
 
 	_guard = Sprite2D.new()
 	_guard.texture = load("res://art/fx/fx_ring.png")
@@ -174,3 +177,29 @@ func appear_anim() -> void:
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(sprite, "modulate:a", 1.0, 0.25)
 	tw.tween_property(sprite, "position:y", base_y, 0.35).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+
+
+## O Caçador é desenhado com o mesmo esqueleto do Ossinho, vestindo os ossos
+## roubados, de capuz e com um tom sombrio.
+func _build_hunter_body() -> void:
+	var body: OssinhoView = load("res://scenes/Ossinho.tscn").instantiate()
+	body.scale = Vector2(-0.95, 0.95)
+	sprite.add_child(body)
+	var eq: Dictionary = GameData.skeleton.get("starting_bones", {}).duplicate()
+	var hb := Meta.hunter_body()
+	for s in hb:
+		eq[s] = hb[s]
+	body.set_equipped(eq)
+	body.set_skin_tint(Color(0.78, 0.62, 0.72))
+	var skull: Node2D = body.slot_nodes.get("slot_skull")
+	if skull:
+		var hood := Sprite2D.new()
+		hood.texture = load("res://art/monsters/boss_bone_hunter_hood.png")
+		hood.centered = false
+		var d := GameData.slot_def("slot_skull")
+		hood.offset = -Vector2(d.pivot[0], d.pivot[1])
+		hood.scale = Vector2.ONE * float(GameData.skeleton.get("texture_scale", 0.5))
+		hood.z_index = 12
+		skull.add_child(hood)
+	sprite.scale = Vector2.ONE
+	display_scale = 1.0

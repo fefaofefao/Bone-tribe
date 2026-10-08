@@ -1645,6 +1645,260 @@ def gen_props():
     print("props ok")
 
 
+
+# ------------------------------------------- companheiros, relíquias, gabinete
+
+def comp_ossudo(cv, W, H):
+    by = H - 20
+    tail = Layer(W, H)
+    tail.curve([(60, by - 90), (30, by - 130), (40, by - 170)], 9)
+    paint(cv, tail, outline_w=2.6)
+    quad_skeleton(cv, W, H, 60, 150, by - 80, 76, 10)
+    ears = Layer(W, H)
+    ears.ellipse(150, by - 140, 16, 26)
+    paint(cv, ears, base=(200, 180, 150), outline_w=2.4)
+    draw_skull(cv, W, H, 176, by - 112, 36, snout=0.55, eye_color=(255, 190, 80))
+    bn = Layer(W, H)
+    bn.bone((196, by - 70), (240, by - 80), 6)
+    paint(cv, bn, outline_w=2.2)
+    collar = Layer(W, H)
+    collar.rrect(140, by - 96, 166, by - 84, 4)
+    fill(cv, collar, (200, 60, 60))
+
+
+def comp_lumi(cv, W, H):
+    cx, by = W / 2, H - 20
+    gh = Layer(W, H)
+    gh.ellipse(cx, by - 110, 60, 70)
+    gh.poly([(cx - 60, by - 110), (cx + 60, by - 110), (cx + 50, by - 30), (cx + 25, by - 50), (cx, by - 26), (cx - 25, by - 50), (cx - 50, by - 30)])
+    glow(cv, gh, (110, 180, 255), radius=18, strength=1.0)
+    fill(cv, gh, (180, 220, 255), alpha=200)
+    eyes = Layer(W, H)
+    eyes.ellipse(cx - 18, by - 120, 9, 13)
+    eyes.ellipse(cx + 18, by - 120, 9, 13)
+    fill(cv, eyes, (30, 40, 80))
+    candle = Layer(W, H)
+    candle.rrect(cx - 16, by - 210, cx + 16, by - 168, 6)
+    paint(cv, candle, base=(240, 230, 210), outline_w=2.4)
+    fl = Layer(W, H)
+    fl.ellipse(cx, by - 226, 10, 16)
+    glow(cv, fl, (90, 170, 255), radius=12, strength=1.8)
+    fill(cv, fl, (200, 230, 255))
+
+
+def comp_bigorna(cv, W, H):
+    cx, by = W / 2, H - 20
+    anvil = Layer(W, H)
+    anvil.poly([(cx + 10, by - 60), (cx + 110, by - 60), (cx + 90, by - 40), (cx + 70, by - 40), (cx + 74, by), (cx + 40, by), (cx + 44, by - 40), (cx + 24, by - 40)])
+    paint(cv, anvil, base=(90, 96, 110), shadow=(50, 54, 64), light=(150, 156, 170), outline_w=2.8)
+    apron = Layer(W, H)
+    apron.poly([(cx - 70, by), (cx - 10, by), (cx - 20, by - 140), (cx - 60, by - 140)])
+    paint(cv, apron, base=(120, 80, 50), shadow=(70, 44, 24), outline_w=2.8)
+    paint(cv, rib_mask(W, H, cx - 40, by - 190, 3, 36, 18, 7), outline_w=2.2)
+    arm = Layer(W, H)
+    arm.bone((cx - 20, by - 180), (cx + 20, by - 210), 6)
+    paint(cv, arm, outline_w=2.2)
+    hammer = Layer(W, H)
+    hammer.capsule((cx + 20, by - 210), (cx + 40, by - 250), 4)
+    hammer.rrect(cx + 26, by - 270, cx + 66, by - 244, 5)
+    paint(cv, hammer, base=(140, 140, 150), outline_w=2.2)
+    draw_skull(cv, W, H, cx - 40, by - 214, 34, eye_color=(255, 150, 60))
+    beard = Layer(W, H)
+    beard.poly([(cx - 60, by - 190), (cx - 16, by - 190), (cx - 38, by - 150)])
+    fill(cv, beard, (220, 120, 60))
+    ember(cv, W, H, [(cx + 60, by - 70, 4), (cx + 80, by - 90, 3)], (255, 140, 40))
+
+
+RAR_COL = {"common": (200, 190, 170), "rare": (90, 170, 255), "legendary": (255, 180, 60)}
+
+
+def relic_icon(cv, W, H, slot, rarity):
+    c = RAR_COL[rarity]
+    cx, cy = W / 2, H / 2
+    if slot == "relic_amulet":
+        ch = Layer(W, H)
+        ch.curve([(cx - 30, cy - 34), (cx, cy - 10), (cx + 30, cy - 34)], 4)
+        fill(cv, ch, (180, 170, 150))
+        g = Layer(W, H)
+        g.ellipse(cx, cy + 10, 22, 26)
+        if rarity != "common":
+            glow(cv, g, c, radius=10, strength=1.0)
+        paint(cv, g, base=c, shadow=tuple(int(v * 0.55) for v in c), outline_w=3)
+        b = Layer(W, H)
+        b.bone((cx - 10, cy + 12), (cx + 10, cy + 6), 3)
+        paint(cv, b, outline_w=1.6)
+    elif slot == "relic_ring":
+        ring = Layer(W, H)
+        ring.circle(cx, cy + 8, 28)
+        inner = Layer(W, H)
+        inner.circle(cx, cy + 8, 18)
+        ring.cut(inner)
+        paint(cv, ring, base=(220, 200, 150), shadow=(150, 130, 80), outline_w=2.6)
+        gem = Layer(W, H)
+        gem.poly([(cx - 14, cy - 22), (cx, cy - 36), (cx + 14, cy - 22), (cx, cy - 10)])
+        if rarity != "common":
+            glow(cv, gem, c, radius=8, strength=1.2)
+        paint(cv, gem, base=c, shadow=tuple(int(v * 0.55) for v in c), outline_w=2.4)
+    elif slot == "relic_cloak":
+        m = Layer(W, H)
+        m.poly([(cx - 18, cy - 34), (cx + 18, cy - 34), (cx + 38, cy + 36), (cx, cy + 28), (cx - 38, cy + 36)])
+        col = {"common": (90, 80, 100), "rare": (60, 70, 140), "legendary": (90, 40, 110)}[rarity]
+        paint(cv, m, base=col, shadow=tuple(int(v * 0.5) for v in col), light=tuple(min(255, int(v * 1.6)) for v in col), outline_w=3)
+        clasp = Layer(W, H)
+        clasp.circle(cx, cy - 28, 7)
+        paint(cv, clasp, base=c, outline_w=1.8)
+    else:
+        m = Layer(W, H)
+        m.rrect(cx - 20, cy - 24, cx + 20, cy + 30, 6)
+        m.rrect(cx - 26, cy - 32, cx + 26, cy - 22, 4)
+        handle = Layer(W, H)
+        handle.curve([(cx - 14, cy - 32), (cx, cy - 50), (cx + 14, cy - 32)], 4)
+        fill(cv, handle, (120, 110, 100))
+        paint(cv, m, base=(110, 100, 90), shadow=(60, 54, 46), outline_w=2.6)
+        fl = Layer(W, H)
+        fl.ellipse(cx, cy + 4, 11, 16)
+        glow(cv, fl, c if rarity != "common" else (255, 180, 70), radius=12, strength=1.6)
+        fill(cv, fl, (255, 240, 200))
+
+
+def cur_icon(cv, W, H, item):
+    cx, cy = W / 2, H / 2
+    def P(m, base, out=2.6):
+        paint(cv, m, base=base, shadow=tuple(int(v * 0.55) for v in base), light=tuple(min(255, int(v * 1.4) + 20) for v in base), outline_w=out)
+    m = Layer(W, H)
+    k = item
+    if k in ("cur_melted_candle", "cur_black_candle"):
+        m.rrect(cx - 14, cy - 10, cx + 14, cy + 34, 5); m.ellipse(cx - 18, cy + 34, 10, 5); m.capsule((cx + 12, cy - 6), (cx + 16, cy + 14), 4)
+        P(m, (240, 228, 200) if k == "cur_melted_candle" else (50, 40, 60))
+        f = Layer(W, H); f.ellipse(cx, cy - 22, 7, 12); glow(cv, f, (255, 170, 60) if k == "cur_melted_candle" else (170, 90, 255), 8, 1.6); fill(cv, f, (255, 240, 200))
+    elif k in ("cur_holed_coin",):
+        m.circle(cx, cy, 30); h = Layer(W, H); h.circle(cx, cy, 8); m.cut(h); P(m, (230, 190, 70))
+    elif k in ("cur_gold_tooth", "cur_hydra_tooth"):
+        m.poly([(cx - 20, cy - 26), (cx + 20, cy - 26), (cx + 14, cy + 10), (cx + 4, cy + 34), (cx, cy + 12), (cx - 4, cy + 34), (cx - 14, cy + 10)])
+        P(m, (250, 200, 70) if k == "cur_gold_tooth" else (220, 120, 100))
+    elif k == "cur_rusty_shovel":
+        m.capsule((cx + 26, cy - 34), (cx - 6, cy + 6), 5); m.poly([(cx - 4, cy), (cx - 30, cy + 20), (cx - 22, cy + 38), (cx + 6, cy + 18)]); P(m, (170, 110, 70))
+    elif k == "cur_old_lantern":
+        relic_icon(cv, W, H, "relic_lantern", "common"); return
+    elif k == "cur_torn_map":
+        m.poly([(cx - 30, cy - 26), (cx + 26, cy - 30), (cx + 30, cy + 24), (cx + 8, cy + 30), (cx + 2, cy + 18), (cx - 28, cy + 28)]); P(m, (220, 200, 150))
+        x = Layer(W, H); x.line([(cx - 8, cy - 8), (cx + 8, cy + 8)], 4); x.line([(cx + 8, cy - 8), (cx - 8, cy + 8)], 4); fill(cv, x, (200, 40, 40))
+    elif k == "cur_holed_hat":
+        m.poly([(cx - 34, cy + 22), (cx + 34, cy + 22), (cx + 6, cy - 36)]); m.ellipse(cx, cy + 22, 38, 8); P(m, (70, 40, 90))
+        h = Layer(W, H); h.circle(cx + 4, cy - 2, 5); fill(cv, h, (20, 10, 20))
+    elif k == "cur_cracked_cauldron":
+        m.ellipse(cx, cy + 8, 32, 26); P(m, (60, 60, 70)); b = Layer(W, H); b.ellipse(cx, cy - 14, 26, 6); glow(cv, b, (140, 255, 120), 8, 1.2); fill(cv, b, (170, 255, 150))
+    elif k == "cur_bald_broom":
+        m.capsule((cx + 26, cy - 36), (cx - 10, cy + 10), 4); P(m, (150, 110, 70)); b = Layer(W, H); b.poly([(cx - 12, cy + 4), (cx - 30, cy + 36), (cx - 14, cy + 38), (cx - 2, cy + 14)]); P(b, (210, 180, 100))
+    elif k == "cur_broken_rune":
+        m.poly([(cx - 26, cy - 30), (cx + 22, cy - 26), (cx + 4, cy + 4), (cx + 26, cy + 30), (cx - 24, cy + 30)]); P(m, (120, 120, 134)); runes(cv, W, H, cx - 4, cy, 9, (90, 160, 255))
+    elif k == "cur_eternal_moss":
+        m.ellipse(cx, cy + 14, 30, 16); m.circle(cx - 12, cy, 14); m.circle(cx + 12, cy + 2, 12); P(m, (80, 140, 70))
+    elif k == "cur_bent_gear":
+        for i in range(8):
+            a = i * math.pi / 4; m.circle(cx + math.cos(a) * 26, cy + math.sin(a) * 26, 7)
+        m.circle(cx, cy, 24); h = Layer(W, H); h.circle(cx, cy, 9); m.cut(h); P(m, (150, 150, 160))
+    elif k in ("cur_scorched_scale", "cur_triple_scale"):
+        n = 3 if k == "cur_triple_scale" else 1
+        for i in range(n):
+            m.poly([(cx - 22 + i * 10, cy - 20 + i * 8), (cx + 22 + i * 10, cy - 20 + i * 8), (cx + i * 10, cy + 26 + i * 8)])
+        P(m, (180, 60, 40) if n == 1 else (60, 150, 90))
+    elif k == "cur_eternal_ember":
+        m.circle(cx, cy, 20); glow(cv, m, (255, 120, 40), 14, 1.6); P(m, (255, 150, 60))
+    elif k == "cur_chipped_claw":
+        m.tapered([(cx - 20, cy - 30), (cx + 10, cy - 10), (cx + 16, cy + 30)], 22, 3); P(m, (230, 220, 200))
+    elif k == "cur_endless_book":
+        m.rrect(cx - 30, cy - 24, cx + 30, cy + 28, 5); P(m, (110, 50, 50)); pg = Layer(W, H); pg.rrect(cx - 24, cy - 20, cx + 24, cy + 22, 3); fill(cv, pg, (240, 230, 210)); l = Layer(W, H); l.line([(cx, cy - 20), (cx, cy + 22)], 3); fill(cv, l, (110, 50, 50))
+    elif k == "cur_crow_quill":
+        m.tapered([(cx + 24, cy - 34), (cx + 4, cy - 4), (cx - 22, cy + 34)], 16, 2); P(m, (40, 40, 60))
+    elif k == "cur_cracked_glasses":
+        for x in (cx - 16, cx + 16):
+            r = Layer(W, H); r.circle(x, cy, 14); h = Layer(W, H); h.circle(x, cy, 10); r.cut(h); P(r, (200, 170, 80), 2)
+        g = Layer(W, H); g.line([(cx + 10, cy - 8), (cx + 18, cy + 6)], 2); fill(cv, g, (255, 255, 255))
+    elif k == "cur_rigged_scale":
+        m.capsule((cx, cy - 30), (cx, cy + 30), 4); m.capsule((cx - 30, cy - 18), (cx + 30, cy - 26), 3); m.ellipse(cx - 30, cy, 14, 6); m.ellipse(cx + 30, cy - 8, 14, 6); P(m, (220, 180, 80), 2.2)
+    elif k == "cur_ancient_receipt":
+        m.poly([(cx - 22, cy - 34), (cx + 22, cy - 34), (cx + 22, cy + 30), (cx + 14, cy + 36), (cx + 6, cy + 30), (cx - 2, cy + 36), (cx - 10, cy + 30), (cx - 22, cy + 36)]); P(m, (230, 220, 190))
+        l = Layer(W, H)
+        for i in range(4):
+            l.line([(cx - 14, cy - 22 + i * 12), (cx + 14, cy - 22 + i * 12)], 2)
+        fill(cv, l, (120, 100, 80))
+    elif k == "cur_empty_purse":
+        m.ellipse(cx, cy + 10, 28, 24); m.poly([(cx - 14, cy - 12), (cx + 14, cy - 12), (cx + 6, cy - 26), (cx - 6, cy - 26)]); P(m, (150, 110, 70))
+    elif k == "cur_loaded_die":
+        m.rrect(cx - 26, cy - 26, cx + 26, cy + 26, 8); P(m, (240, 236, 220)); d = Layer(W, H)
+        for (dx, dy) in ((-12, -12), (12, 12), (0, 0), (12, -12), (-12, 12)):
+            d.circle(cx + dx, cy + dy, 4)
+        fill(cv, d, (40, 20, 20))
+    elif k == "cur_bone_goblet":
+        m.poly([(cx - 24, cy - 30), (cx + 24, cy - 30), (cx + 8, cy + 4), (cx - 8, cy + 4)]); m.capsule((cx, cy + 4), (cx, cy + 26), 4); m.ellipse(cx, cy + 30, 18, 6); P(m, (230, 220, 190))
+    elif k == "cur_grinning_mask":
+        m.ellipse(cx, cy, 30, 34); P(m, (240, 230, 210)); f = Layer(W, H); f.ellipse(cx - 11, cy - 8, 6, 8); f.ellipse(cx + 11, cy - 8, 6, 8); f.curve([(cx - 16, cy + 10), (cx, cy + 22), (cx + 16, cy + 10)], 4); fill(cv, f, (40, 20, 20))
+    elif k == "cur_murky_mirror":
+        m.ellipse(cx, cy - 4, 24, 30); m.capsule((cx, cy + 24), (cx, cy + 38), 5); P(m, (150, 120, 70)); g = Layer(W, H); g.ellipse(cx, cy - 4, 18, 24); fill(cv, g, (90, 80, 130))
+    elif k == "cur_silent_bell":
+        m.poly([(cx - 26, cy + 22), (cx + 26, cy + 22), (cx + 18, cy - 10), (cx, cy - 30), (cx - 18, cy - 10)]); P(m, (200, 170, 80)); c = Layer(W, H); c.circle(cx, cy + 28, 6); fill(cv, c, (120, 100, 60))
+    elif k == "cur_serpent_eye":
+        m.ellipse(cx, cy, 32, 20); P(m, (230, 210, 120)); p2 = Layer(W, H); p2.ellipse(cx, cy, 6, 18); fill(cv, p2, (20, 20, 20))
+    else:
+        m.circle(cx, cy, 24); P(m, (200, 200, 200))
+
+
+def hunter_hood():
+    s = slot_info("slot_skull")
+    W, H = s["canvas"]
+    cv = new_canvas(W, H)
+    px, py = s["pivot"]
+    cx, cy = px, py - 82
+    hood = Layer(W, H)
+    hood.ellipse(cx - 6, cy - 6, 92, 88)
+    hood.poly([(cx - 96, cy), (cx - 70, cy + 110), (cx - 20, cy + 80)])
+    face = Layer(W, H)
+    face.ellipse(cx + 14, cy + 12, 70, 66)
+    hood.cut(face)
+    paint(cv, hood, base=(60, 30, 40), shadow=(30, 12, 20), light=(120, 60, 70), outline_w=3)
+    finish(cv, W, H, out("monsters", "boss_bone_hunter_hood.png"))
+
+
+def gen_meta_art():
+    from PIL import ImageOps
+    for cid, fn in (("companion_ossudo", comp_ossudo), ("companion_lumi", comp_lumi), ("companion_bigorna", comp_bigorna)):
+        W, H = 260, 280
+        cv = new_canvas(W, H)
+        fn(cv, W, H)
+        finish(cv, W, H, out("ui", cid + ".png"))
+    for r in data("relics.json"):
+        W = H = 96
+        cv = new_canvas(W, H)
+        relic_icon(cv, W, H, r["slot"], r["rarity"])
+        finish(cv, W, H, out("ui", r["id"] + ".png"))
+    cab = data("curiosities.json")
+    for it in cab["items"]:
+        W = H = 96
+        cv = new_canvas(W, H)
+        cur_icon(cv, W, H, it["id"])
+        finish(cv, W, H, out("ui", it["id"] + ".png"))
+    for slot in ("relic_amulet", "relic_ring", "relic_cloak", "relic_lantern"):
+        W = H = 96
+        cv = new_canvas(W, H)
+        relic_icon(cv, W, H, slot, "common")
+        finish(cv, W, H, out("ui", "ui_" + slot + ".png"))
+    hunter_hood()
+    # baú de ossos
+    W = H = 160
+    cv = new_canvas(W, H)
+    prop_chest(cv, W, H) if False else None
+    m = Layer(W, H)
+    m.rrect(20, 70, 140, 140, 12)
+    paint(cv, m, base=(110, 80, 120), shadow=(60, 40, 70), light=(170, 130, 180), outline_w=3)
+    lid = Layer(W, H)
+    lid.rrect(14, 40, 146, 80, 20)
+    paint(cv, lid, base=(120, 90, 130), shadow=(66, 46, 76), outline_w=3)
+    draw_skull(cv, W, H, 80, 86, 18, eye_color=(255, 190, 80))
+    finish(cv, W, H, out("ui", "ui_bone_chest.png"))
+    print("meta art ok")
+
+
 # ----------------------------------------------------------------- UI e FX
 
 def radial(size, inner=(255, 255, 255, 255), power=2.0, path=None):
@@ -1944,6 +2198,8 @@ if __name__ == "__main__":
         gen_env()
     if what in ("props", "all"):
         gen_props()
+    if what in ("meta", "all"):
+        gen_meta_art()
     if what in ("fx", "all"):
         gen_fx()
     if what in ("ui", "all"):

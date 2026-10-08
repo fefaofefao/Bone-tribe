@@ -178,7 +178,7 @@
 	},
 	"hunter": {
 		"_doc": "Caçador de Ossos: rouba o melhor osso quando o Ossinho morre e reaparece como chefe opcional.",
-		"appear_chance": 0.35,
+		"appear_chance": 0.6,
 		"floors": [
 			4,
 			27

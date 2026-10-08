@@ -27,6 +27,10 @@ var flags: Dictionary = {}
 var dead := false
 var victory := false
 var pending_skip := 0
+var hunter_met := false
+var bigorna_left := 0
+var next_event: Dictionary = {}
+var segment_chest: Dictionary = {}
 
 
 func _init(opts: Dictionary = {}) -> void:
@@ -38,6 +42,9 @@ func _init(opts: Dictionary = {}) -> void:
 	prototype = bool(opts.get("prototype", GameData.bal("run/prototype_mode", false))) or demo
 	total_floors = int(GameData.bal("run/prototype_floors", 10)) if prototype else int(GameData.bal("run/floors", 30))
 	companion_id = String(opts.get("companion", ""))
+	if not demo and companion_id != "" and not Meta.companion_unlocked(companion_id):
+		companion_id = ""
+	bigorna_left = Meta.bigorna_uses(companion_id)
 	var start: Dictionary = GameData.skeleton.get("starting_bones", {})
 	for slot in start:
 		equipped[slot] = {"id": start[slot], "level": 1}
@@ -104,7 +111,7 @@ func stat(key: String) -> float:
 
 func heal_pct(p: float) -> float:
 	var before := hp
-	hp = clampf(hp + max_hp * p, 0.0, max_hp)
+	hp = clampf(hp + max_hp * p * (1.0 + stat("heal_bonus")), 0.0, max_hp)
 	return hp - before
 
 
@@ -122,7 +129,7 @@ static func xp_needed(lvl: int) -> int:
 
 ## Soma experiência e devolve quantos níveis subiram.
 func add_xp(amount: int) -> int:
-	xp += amount
+	xp += int(roundf(amount * (1.0 + stat("xp_bonus"))))
 	var ups := 0
 	while xp >= xp_needed(level):
 		xp -= xp_needed(level)
@@ -224,6 +231,10 @@ func segment_index() -> int:
 
 
 func pick_event_type() -> String:
+	# Conjunto Coveiro completo: um baú garantido a cada bloco de 10 andares.
+	var seg := segment_index()
+	if stat("chest_per_floor") > 0.0 and not segment_chest.has(seg) and floor_n % 10 == 9:
+		return "chest"
 	var weights: Dictionary = GameData.bal("prototype_event_weights" if prototype else "event_weights", {})
 	var w := weights.duplicate()
 	if w.has("rare"):
@@ -269,15 +280,40 @@ func pick_event() -> Dictionary:
 			for ev in pool:
 				r -= float(ev.get("weight", 1))
 				if r <= 0.0:
-					seen_events[ev.id] = true
-					return ev
-			seen_events[pool[-1].id] = true
-			return pool[-1]
+					return _picked(ev)
+			return _picked(pool[-1])
 		type = "combat"
 		# Se acabaram os eventos de combate, libera repetições.
 		if attempt == 1:
 			seen_events.clear()
 	return {}
+
+
+func _picked(ev: Dictionary) -> Dictionary:
+	seen_events[ev.id] = true
+	if String(ev.get("type", "")) == "chest":
+		segment_chest[segment_index()] = true
+	return ev
+
+
+## Próximo evento (já sorteado quando o Mapa Rasgado revela o tipo).
+func take_event() -> Dictionary:
+	if not next_event.is_empty():
+		var ev := next_event
+		next_event = {}
+		return ev
+	return pick_event()
+
+
+## Encontro com o Caçador de Ossos: no máximo um por partida.
+func should_meet_hunter() -> bool:
+	if hunter_met or demo or prototype or Meta.hunter_stolen().is_empty():
+		return false
+	var fl: Array = GameData.bal("hunter/floors", [4, 27])
+	if floor_n < int(fl[0]) or floor_n > int(fl[1]) or is_boss_floor():
+		return false
+	# chance por andar calibrada para ~60% de encontros por partida
+	return rng.randf() < float(GameData.bal("hunter/appear_chance", 0.6)) / 15.0
 
 
 ## Requisitos de opções ligadas ao corpo e a recursos.

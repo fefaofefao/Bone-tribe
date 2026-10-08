@@ -123,3 +123,30 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - **Armadilhas** tiram uma porcentagem da vida máxima; as Patas de Gafanhoto evitam 15%.
 - Cada evento pode ter um **cenário** (`prop`) desenhado no lugar do inimigo: Coveiro, bruxa,
   jaula, altar, fogueira azul, baú, caixão, apostador, lago, fonte, abismo, portão e gato.
+
+## Meta-progressão (Passo 5)
+
+- **Hub com abas** (Início, Ossuário, Coleção, Loja) na própria tela de título.
+- **Ossuário**: vida (+5%/nível), ataque (+5%/nível), defesa (+1/nível) e "faro de ossos"
+  (+1% de chance de osso cair/nível); custo 50 × 1,25^k (GDD), até o nível 30.
+- **Coleção**: completar uma família dá +5% permanente em vida, ataque e defesa. Um osso
+  descoberto pode começar a partida encaixado: comuns são livres; raros e lendários gastam uma
+  ficha "Osso inicial raro" (loja, Passo 6).
+- **Bestiário de Formas**: formas de família mostram a dica ("4 peças de Fera"); as secretas
+  aparecem como silhueta e "???" até serem descobertas.
+- **Relíquias**: 12 relíquias (3 por espaço: comum, rara, lendária), nível até 10
+  (+15% do bônus por nível, custo 80 × 1,4^(nível−1)). Fontes: Baú de ossos do Ossuário
+  (300 de pó ou anúncio, 3 por dia), loja e calendário. As chances do baú aparecem antes de abrir.
+  A relíquia rara do Kit é a **Lanterna do Coveiro**.
+- **Gabinete de Curiosidades**: 30 itens em 10 conjuntos; os 6 itens e 2 bônus de conjunto do
+  GDD foram mantidos; os outros 24 seguem o mesmo padrão. Itens repetidos sobem de 1 a 5
+  estrelas (+50% do bônus por estrela). O Mapa Rasgado mostra o ícone do próximo evento na
+  barra superior. O conjunto Coveiro garante um baú a cada bloco de 10 andares.
+- **Companheiros**: Ossudo (disponível desde o início), Lumi (encontrada no Santuário de Velas
+  ao levar uma vela, ou comprada na loja) e Bigorna (dia 7 do calendário de boas-vindas).
+  Sobem até o nível 10 com pó de osso. A Bigorna aparece como um botão nos eventos enquanto
+  tiver forjas (1 por partida, +1 a cada 5 níveis).
+- **Caçador de Ossos**: ao morrer, ele rouba o osso de maior raridade (e nível) e o guarda (até 7).
+  Nas partidas seguintes há ~60% de chance de ele aparecer uma vez (andares 4–27) como chefe
+  opcional, desenhado com o mesmo esqueleto do Ossinho vestindo os ossos roubados e um capuz.
+  Vencer devolve o osso mais recente com +1 nível e dá pó de osso.

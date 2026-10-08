@@ -74,7 +74,8 @@ func test_02_data_integrity() -> void:
 		check(tr_all(String(m.get("name", ""))), "nome do monstro " + id)
 		for d in m.get("drops", []):
 			check(GameData.bones.has(d), "monstro %s solta %s" % [id, d])
-		check(ResourceLoader.exists(GameData.monster_texture_path(id)), "arte do monstro " + id)
+		if id != "boss_bone_hunter":
+			check(ResourceLoader.exists(GameData.monster_texture_path(id)), "arte do monstro " + id)
 	for id in GameData.levelups:
 		check(tr_all(GameData.levelups[id].name) and tr_all(GameData.levelups[id].desc), "textos do bônus " + id)
 	for id in GameData.forms:
@@ -103,6 +104,8 @@ func _check_actions(eid: String, actions: Array) -> void:
 					check(GameData.bones.has(a.id), "osso %s em %s" % [a.id, eid])
 			"ally":
 				check(GameData.monsters.has(a.get("id", "")) and GameData.monsters[a.id].kind == "ally", "aliado %s em %s" % [a.get("id", ""), eid])
+			"companion":
+				check(GameData.companions.has(a.get("id", "")), "companheiro %s em %s" % [a.get("id", ""), eid])
 			"dust", "dust_mult", "pay", "lose_current_pct", "heal_pct", "max_hp_pct", "stat", "trap", "skip", "merchant", "sell_bone", "altar", "upgrade_bone", "xp":
 				pass
 
@@ -328,3 +331,55 @@ func test_09_events() -> void:
 		var ar := AutoRunner.new({"seed": 500 + seed})
 		var st := ar.play()
 		check(st.floor_n >= 1 and st.floor_n <= 31, "partida automática termina (semente %d, andar %d)" % [seed, st.floor_n])
+
+
+func test_10_meta_progression() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	Profile.data = Profile.defaults()
+	Profile.data.dust = 100000
+	# Ossuário
+	var c0 := Meta.ossuary_cost("atk")
+	check(c0 == 50, "custo da 1ª melhoria = 50 (GDD)")
+	check(Meta.ossuary_upgrade("atk") and Meta.ossuary_level("atk") == 1, "melhoria do Ossuário")
+	check(Meta.ossuary_cost("atk") == int(roundf(50 * 1.25)), "custo cresce 1,25x")
+	# Coleção: família completa dá +5%
+	for id in Meta.family_bones("family_shadow"):
+		Profile.discover_bone(id)
+	check(Meta.family_complete("family_shadow"), "família Sombra completa")
+	check(absf(float(Meta.collection_stats().get("atk_pct", 0)) - 0.05) < 0.001, "bônus de 5% por família completa")
+	# Relíquias
+	var r := Meta.add_relic("relic_knuckle_ring")
+	check(not Meta.relic_equipped("relic_ring").is_empty(), "relíquia equipada no espaço vazio")
+	check(Meta.relic_upgrade(int(r.uid)) and int(Meta.relic_by_uid(int(r.uid)).level) == 2, "relíquia sobe de nível")
+	check(float(Meta.relic_stats().get("atk_pct", 0)) > 0.05, "nível aumenta o bônus da relíquia")
+	# Gabinete
+	check(Meta.add_curiosity("cur_melted_candle") == 1 and Meta.add_curiosity("cur_melted_candle") == 2, "repetidos ganham estrela")
+	Meta.add_curiosity("cur_holed_coin")
+	Meta.add_curiosity("cur_gold_tooth")
+	check(Meta.set_complete("set_crypt"), "conjunto Cripta completo")
+	check(float(Meta.cabinet_stats().get("atk_pct", 0)) >= 0.05, "bônus do conjunto Cripta (+5% ataque)")
+	for i in 10:
+		Meta.add_curiosity("cur_gold_tooth")
+	check(Meta.curiosity_stars("cur_gold_tooth") == 5, "no máximo 5 estrelas")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 9
+	var res := Meta.open_bone_chest(rng)
+	check(res.type in ["relic", "curiosity"], "baú de ossos entrega relíquia ou curiosidade")
+	# Companheiros
+	check(not Meta.companion_unlocked("companion_lumi") and Meta.unlock_companion("companion_lumi"), "Lumi desbloqueada")
+	check(float(Meta.companion_combat("companion_lumi").get("heal_pct", 0)) >= 0.08, "Lumi cura 8% a cada 3 turnos")
+	check(absf(Meta.ossudo_chance("companion_ossudo") - 0.15) < 0.001, "Ossudo: 15% de osso extra")
+	check(Meta.bigorna_uses("companion_bigorna") == 0, "Bigorna bloqueada no começo")
+	# Caçador de Ossos
+	var eq := _eq([["slot_skull", "bone_skull_wolf"], ["slot_arm_left", "bone_blade_mantis"]])
+	var stolen := Meta.hunter_steal(eq)
+	check(stolen.id == "bone_blade_mantis", "Caçador rouba o melhor osso (raro)")
+	var hunter := MonsterFactory.make_hunter(10)
+	check(hunter != null and hunter.has_effect("multi_attack"), "Caçador usa o osso roubado")
+	var back := Meta.hunter_return()
+	check(back.id == "bone_blade_mantis" and int(back.level) == 2, "vencer devolve o osso com um nível a mais")
+	# Partida usa os bônus permanentes
+	var st := RunState.new({"seed": 1})
+	check(st.max_hp > 100.0 or float(st.compute().stats.get("atk_pct", 0)) > 0.0, "bônus permanentes entram na partida")
+	Profile.data = backup
+	Profile.save()

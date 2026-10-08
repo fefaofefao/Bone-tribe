@@ -128,7 +128,10 @@ static func merchant_stock(count: int, rarities: Array, rng: RandomNumberGenerat
 			if o.id == bid:
 				dup = true
 		if not dup:
-			out.append({"id": bid, "price": int(cfg.get("prices", {}).get(want, 50))})
+			var disc := 0.0
+			for k in ["merchant_discount"]:
+				disc += float(Meta.cabinet_stats().get(k, 0.0))
+			out.append({"id": bid, "price": int(roundf(int(cfg.get("prices", {}).get(want, 50)) * (1.0 - disc)))})
 	return out
 
 
@@ -150,3 +153,31 @@ static func altar_bone(old_id: String, rng: RandomNumberGenerator) -> String:
 			if String(b2.family) != fam and not b2.get("boss_drop", false):
 				pool.append(id)
 	return pool[rng.randi() % pool.size()] if not pool.is_empty() else ""
+
+
+## O Caçador de Ossos: um esqueleto rival vestindo os ossos que roubou.
+static func make_hunter(floor_n: int) -> Fighter:
+	var f := make("boss_bone_hunter", floor_n)
+	if f == null:
+		return null
+	var c := Body.compute(Meta.hunter_body())
+	var st: Dictionary = c.stats
+	f.is_boss = true
+	f.max_hp = roundf(enemy_hp(floor_n) * float(GameData.bal("hunter/hp_mult", 3.5)) * (1.0 + float(st.get("hp_pct", 0.0))) + float(st.get("hp", 0.0)))
+	f.hp = f.max_hp
+	f.atk = (enemy_atk(floor_n) * float(GameData.bal("hunter/atk_mult", 1.25)) + float(st.get("atk", 0.0))) * (1.0 + float(st.get("atk_pct", 0.0)))
+	f.def = float(st.get("def", 0.0))
+	f.crit = clampf(0.05 + float(st.get("crit", 0.0)), 0.0, 0.6)
+	f.dodge = clampf(float(st.get("dodge", 0.0)), 0.0, 0.4)
+	f.lifesteal = float(st.get("lifesteal", 0.0))
+	f.reflect = float(st.get("reflect", 0.0))
+	f.regen = float(st.get("regen", 0.0))
+	f.poison_bonus = float(st.get("poison_bonus", 0.0))
+	f.effects = []
+	for e in c.effects:
+		var t := String(e.get("type", ""))
+		if t in ["on_hit_status", "crit_status"]:
+			f.effects.append(e)
+		elif t == "multi_hit":
+			f.effects.append({"type": "multi_attack", "hits": int(e.get("hits", 2)), "mult": float(e.get("mult", 0.6))})
+	return f

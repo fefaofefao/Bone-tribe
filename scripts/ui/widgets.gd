@@ -68,3 +68,15 @@ static func pop_in(c: Control, delay := 0.0) -> void:
 		tw.tween_interval(delay)
 	tw.tween_property(c, "modulate:a", 1.0, 0.18)
 	tw.parallel().tween_property(c, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## Fileira de estrelas desenhadas (sem depender de glifos da fonte).
+static func stars(n: int, total: int, size: float = 20.0) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_theme_constant_override("separation", 2)
+	for i in total:
+		var t := icon("res://art/fx/fx_spark.png", size)
+		t.modulate = Style.C_CANDLE if i < n else Color(1, 1, 1, 0.18)
+		h.add_child(t)
+	return h

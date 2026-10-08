@@ -28,6 +28,7 @@ var autoplay := false
 var _demo_plan: Array = []
 var _banner: Label
 var _turn_label: Label
+var _next_icon: TextureRect
 
 # HUD
 var hp_bar: Control
@@ -43,7 +44,10 @@ func _ready() -> void:
 	var p := Router.params
 	demo = bool(p.get("demo", false))
 	autoplay = demo or OS.get_environment("BT_AUTO") == "1"
-	state = RunState.new({"demo": demo, "companion": String(Profile.data.get("selected_companion", "")), "start_bone": String(p.get("start_bone", ""))})
+	var start_bone := "" if demo else Meta.take_start_bone()
+	state = RunState.new({"demo": demo, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
+	if start_bone != "":
+		Profile.discover_bone(start_bone)
 	speed = 2.0 if Profile.setting("fast_combat") else 1.0
 	if demo:
 		speed = 1.6
@@ -66,10 +70,42 @@ func _build_world() -> void:
 	hero_view.position = HERO_POS
 	world.add_child(hero_view)
 	hero_view.set_equipped(state.equipped)
+	_build_companion_view()
 	fx = FxLayer.new()
 	world.add_child(fx)
 	cam = ShakeCamera.new()
 	world.add_child(cam)
+
+
+var companion_view: Sprite2D
+
+
+func _build_companion_view() -> void:
+	if state.companion_id == "":
+		return
+	var path := "res://art/ui/%s.png" % state.companion_id
+	if not ResourceLoader.exists(path):
+		return
+	companion_view = Sprite2D.new()
+	companion_view.texture = load(path)
+	companion_view.centered = false
+	companion_view.offset = Vector2(-130, -270)
+	companion_view.scale = Vector2.ONE * 0.42
+	companion_view.position = Vector2(70, 772) if state.companion_id != "companion_lumi" else Vector2(92, 640)
+	world.add_child(companion_view)
+	var tw := companion_view.create_tween().set_loops()
+	var dy := 10.0 if state.companion_id == "companion_lumi" else 3.0
+	tw.tween_property(companion_view, "position:y", companion_view.position.y - dy, 0.9).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(companion_view, "position:y", companion_view.position.y, 0.9).set_trans(Tween.TRANS_SINE)
+
+
+func _companion_pop(text: String) -> void:
+	var pos := companion_view.global_position + Vector2(0, -120) if companion_view else hero_view.body_center_global()
+	fx.float_text(pos, text, Style.C_HEAL, 24)
+	if companion_view:
+		var tw := create_tween()
+		tw.tween_property(companion_view, "scale", Vector2.ONE * 0.5, 0.1)
+		tw.tween_property(companion_view, "scale", Vector2.ONE * 0.42, 0.2).set_trans(Tween.TRANS_BACK)
 
 
 func _build_ui() -> void:
@@ -118,6 +154,9 @@ func _build_ui() -> void:
 	row2.add_child(floor_label)
 	floor_dots = Style.hbox(4)
 	row2.add_child(floor_dots)
+	_next_icon = Widgets.icon("res://art/ui/ui_event_combat.png", 26)
+	_next_icon.visible = false
+	row2.add_child(_next_icon)
 
 	if demo:
 		var dl := Style.bold(tr("demo_mode"), 18, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER)
@@ -223,13 +262,67 @@ func _run_loop() -> void:
 		var boss := state.boss_for_floor(state.floor_n)
 		if boss != "":
 			await _boss_floor(boss)
+		elif state.should_meet_hunter():
+			await _hunter_floor()
 		else:
-			var ev := _demo_event() if demo else state.pick_event()
+			var ev := _demo_event() if demo else state.take_event()
 			if ev.is_empty():
 				continue
 			await _play_event(ev)
+			if not state.dead:
+				await _curiosity_roll(String(ev.get("type", "")))
+		_reveal_next()
 	state.victory = not state.dead
 	await _end_run()
+
+
+## Mapa Rasgado (Gabinete): revela o tipo do próximo evento.
+func _reveal_next() -> void:
+	if demo or state.stat("reveal_next") <= 0.0 or state.dead:
+		_next_icon.visible = false
+		return
+	var n := state.floor_n + 1
+	if n > state.total_floors or state.is_boss_floor(n):
+		_next_icon.visible = false
+		return
+	var saved := state.floor_n
+	state.floor_n = n
+	state.next_event = state.pick_event()
+	state.floor_n = saved
+	_next_icon.texture = load("res://art/ui/ui_event_%s.png" % String(state.next_event.get("type", "combat")))
+	_next_icon.visible = true
+
+
+## Itens do Gabinete de Curiosidades caem de baús, eventos raros, mercadores...
+func _curiosity_roll(event_type: String) -> void:
+	if demo:
+		return
+	var chance := float(GameData.bal("curiosity_drop/" + event_type, 0.0))
+	if chance <= 0.0 or state.rng.randf() >= chance:
+		return
+	var cid := Meta.random_curiosity(event_type, state.rng)
+	if cid != "":
+		await _gain_curiosity(cid)
+
+
+func _gain_curiosity(cid: String) -> void:
+	var stars := Meta.add_curiosity(cid)
+	state.flags["curiosities"] = int(state.flags.get("curiosities", 0)) + 1
+	var icon := Sprite2D.new()
+	icon.texture = load("res://art/ui/%s.png" % cid)
+	icon.position = Vector2(540, 560)
+	icon.scale = Vector2.ONE * 0.2
+	icon.z_index = 45
+	world.add_child(icon)
+	var tw := create_tween()
+	tw.tween_property(icon, "scale", Vector2.ONE * 1.3, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	fx.spark_burst(icon.position, Style.C_CANDLE, 16, 320)
+	Haptics.medium()
+	var key := "curiosity_found" if stars <= 1 else "curiosity_star"
+	await _show_result(tr(key) % [tr(String(GameData.curiosities[cid].name)), stars])
+	var tw2 := create_tween()
+	tw2.tween_property(icon, "modulate:a", 0.0, 0.25)
+	tw2.tween_callback(icon.queue_free)
 
 
 func _hydra_unlocked() -> bool:
@@ -354,6 +447,7 @@ func _play_event(ev: Dictionary) -> void:
 		var req2: Dictionary = o.get("requires", {})
 		var body_opt := req2.has("bone") or req2.has("tag") or req2.has("any_bone") or req2.has("family")
 		var b := Style.button(tr(String(o.label)), "CandleButton" if body_opt else "", 78)
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		if not req2.is_empty() and not state.requirement_met(req2):
 			b.disabled = true
 		if body_opt:
@@ -366,6 +460,14 @@ func _play_event(ev: Dictionary) -> void:
 		panel_box.add_child(b)
 		Widgets.pop_in(b, 0.12 + i * 0.06)
 		buttons.append(b)
+	if state.bigorna_left > 0 and not _common_bones().is_empty():
+		var forge := Style.button(tr("bigorna_forge") % state.bigorna_left, "DarkButton", 64)
+		forge.icon = load("res://art/ui/companion_bigorna.png")
+		forge.expand_icon = true
+		forge.add_theme_constant_override("icon_max_width", 48)
+		forge.pressed.connect(func(): option_chosen.emit(-2))
+		panel_box.add_child(forge)
+		buttons.append(forge)
 	var choice := -1
 	if autoplay:
 		await _wait(1.2)
@@ -376,6 +478,10 @@ func _play_event(ev: Dictionary) -> void:
 				choice = i
 	else:
 		choice = await option_chosen
+	if choice == -2:
+		await _bigorna_forge()
+		await _play_event(ev)
+		return
 	for b in buttons:
 		b.disabled = true
 	Backend.log_event("event_choice", {"event": ev.id, "option": options[choice].get("label", "")})
@@ -541,6 +647,13 @@ func _do(a: Dictionary) -> void:
 				var nb := MonsterFactory.altar_bone(String(old.id), state.rng)
 				if nb != "":
 					await _offer_bone({"id": nb, "level": int(old.get("level", 1))}, Vector2(540, 600))
+		"companion":
+			var cid := String(a.get("id", ""))
+			if not demo and Meta.unlock_companion(cid):
+				Haptics.heavy()
+				fx.spark_burst(hero_view.body_center_global() + Vector2(-80, -60), Color(0.5, 0.8, 1.0), 24, 380)
+				_show_banner(tr(String(GameData.companions[cid].name)), Color(0.6, 0.85, 1.0), 1.2)
+				await _show_result(tr("companion_unlocked") % tr(String(GameData.companions[cid].name)))
 		"upgrade_bone":
 			var slot3 := await _choose_bone_dialog("choose_bone_upgrade", false)
 			if slot3 != "":
@@ -558,6 +671,54 @@ func _do(a: Dictionary) -> void:
 				await _check_forms()
 		_:
 			push_warning("ação desconhecida: " + str(a))
+
+
+func _common_bones() -> Array:
+	return state.non_basic_bones().filter(func(sl): return Body.instance_rarity(state.equipped[sl]) == "common")
+
+
+## Bigorna, o ferreiro: uma vez por partida sobe um osso de comum para raro.
+func _bigorna_forge() -> void:
+	var commons := _common_bones()
+	if commons.is_empty():
+		return
+	var parts := _dialog_frame("bigorna_title")
+	var bg: Control = parts[0]
+	var v: VBoxContainer = parts[1]
+	v.add_child(Style.label(tr("bigorna_desc"), 22, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	var picked := [""]
+	for sl in commons:
+		var inst: Dictionary = state.equipped[sl]
+		var btn := Style.button(tr(String(GameData.bone(String(inst.id)).name)), "DarkButton", 74)
+		btn.icon = load(GameData.bone_texture_path(String(inst.id)))
+		btn.expand_icon = true
+		btn.add_theme_constant_override("icon_max_width", 56)
+		var slot_id: String = sl
+		btn.pressed.connect(func():
+			picked[0] = slot_id
+			dialog_closed.emit(slot_id))
+		v.add_child(btn)
+	var cancel := Style.button(tr("btn_back"), "", 70)
+	cancel.pressed.connect(func(): dialog_closed.emit(""))
+	v.add_child(cancel)
+	await dialog_closed
+	_close_dialog(bg)
+	if picked[0] == "":
+		return
+	var slot: String = picked[0]
+	var inst2: Dictionary = state.equipped[slot]
+	inst2["rarity"] = "rare"
+	state.bigorna_left -= 1
+	state.recalc()
+	hero_view.set_slot(slot, inst2)
+	hero_view.pop_slot(slot)
+	fx.spark_burst(hero_view.slot_global_position(slot), Color(1, 0.6, 0.2), 26, 460)
+	fx.embers(hero_view.slot_global_position(slot), Color(1, 0.5, 0.2), 14, 30)
+	cam.shake(0.5)
+	Haptics.heavy()
+	_companion_pop(tr("bigorna_done"))
+	_refresh_hud()
+	await _wait(0.8)
 
 
 ## Voo sobre o abismo: o Ossinho levanta voo e a câmera acompanha.
@@ -736,7 +897,7 @@ func _relayout_enemies() -> void:
 func _combat(ids: Array, is_boss := false) -> void:
 	var enemies := []
 	for id in ids:
-		var f := MonsterFactory.make(String(id), state.floor_n)
+		var f := MonsterFactory.make_hunter(state.floor_n) if String(id) == "boss_bone_hunter" else MonsterFactory.make(String(id), state.floor_n)
 		if f != null:
 			enemies.append(f)
 	if enemies.is_empty():
@@ -798,7 +959,7 @@ func _combat(ids: Array, is_boss := false) -> void:
 
 
 var ally_views: Dictionary = {}
-const ALLY_SPOTS := [Vector2(105, 768), Vector2(62, 712), Vector2(150, 700), Vector2(40, 780)]
+const ALLY_SPOTS := [Vector2(118, 700), Vector2(40, 730), Vector2(150, 640), Vector2(30, 660)]
 
 
 func _spawn_ally_views() -> void:
@@ -1072,6 +1233,17 @@ func _combat_rewards(killed: Array, is_boss: bool) -> void:
 		await _offer_bone({"id": d.id, "level": 1}, d.from)
 		if state.dead:
 			return
+	# Ossudo, o cão esqueleto: chance de trazer um osso extra
+	if not demo and not killed.is_empty() and state.rng.randf() < Meta.ossudo_chance(state.companion_id):
+		var pool := []
+		for f in killed:
+			pool.append_array(GameData.monster(f.id).get("drops", []))
+		pool = pool.filter(func(x): return not GameData.bone(x).get("boss_drop", false))
+		if pool.is_empty():
+			pool = GameData.bones_by({"rarity": "common"}).filter(func(x): return not GameData.bone(x).get("boss_drop", false))
+		_companion_pop(tr("ossudo_fetch"))
+		await _wait(0.5)
+		await _offer_bone({"id": pool[state.rng.randi() % pool.size()], "level": 1}, companion_view.global_position + Vector2(0, -60) if companion_view else hero_view.body_center_global())
 	await _rejection_check()
 
 
@@ -1458,6 +1630,10 @@ func _boss_floor(boss_id: String) -> void:
 		Profile.add_diamonds(dia, "boss_" + boss_id)
 		fx.float_text(hero_view.body_center_global() + Vector2(0, -230), tr("reward_diamonds") % dia, Style.C_DIAMOND, 30)
 		await _wait(0.6)
+	if first and not demo:
+		var cid := Meta.random_curiosity(boss_id, state.rng)
+		if cid != "":
+			await _gain_curiosity(cid)
 	# Hidra: só aparece para quem vence o Dragão Ancião na forma Wyrm Ósseo.
 	if boss_id == "boss_ancient_dragon" and Body.active_forms(state.equipped).has(String(GameData.bal("run/secret_requires_form", "form_bone_wyrm"))):
 		state.flags["hydra_unlocked"] = true
@@ -1469,6 +1645,55 @@ func _boss_floor(boss_id: String) -> void:
 		await _show_result(tr("event_hydra_unlock_text"))
 
 
+# ================================================================ caçador
+
+func _hunter_floor() -> void:
+	state.hunter_met = true
+	_clear_panel()
+	_panel_header("boss", "hunter_title")
+	var stolen := Meta.hunter_stolen()
+	var names := []
+	for inst in stolen:
+		names.append(tr(String(GameData.bone(String(inst.id)).name)))
+	_panel_text(tr("event_hunter_text") % ", ".join(names))
+	stage.dim(0.35, 0.4)
+	var hunter := MonsterFactory.make_hunter(state.floor_n)
+	var preview: MonsterView = MonsterView.new()
+	preview.position = Vector2(560, ENEMY_BASE_Y)
+	world.add_child(preview)
+	world.move_child(preview, hero_view.get_index())
+	preview.setup(hunter)
+	preview.appear_anim()
+	_show_banner(tr("boss_bone_hunter_name"), Color("c0405a"), 1.2)
+	cam.shake(0.4)
+	Haptics.heavy()
+	var fight := Style.button(tr("hunter_fight"), "CandleButton", 78)
+	fight.pressed.connect(func(): option_chosen.emit(0))
+	panel_box.add_child(fight)
+	var flee := Style.button(tr("hunter_flee"), "DarkButton", 72)
+	flee.pressed.connect(func(): option_chosen.emit(1))
+	panel_box.add_child(flee)
+	var choice := 0
+	if autoplay:
+		await _wait(1.0)
+	else:
+		choice = await option_chosen
+	preview.queue_free()
+	stage.dim(0.0, 0.3)
+	if choice == 1:
+		await _show_result(tr("hunter_fled"))
+		return
+	Backend.log_event("hunter_fight", {"floor": state.floor_n})
+	await _combat(["boss_bone_hunter"], true)
+	if state.dead:
+		return
+	var back := Meta.hunter_return()
+	_gain_dust(state.rng.randi_range(int(GameData.bal("hunter/dust_reward", [40, 70])[0]), int(GameData.bal("hunter/dust_reward", [40, 70])[1])), Vector2(560, 620))
+	if not back.is_empty():
+		await _show_result(tr("hunter_defeated") % [tr(String(GameData.bone(String(back.id)).name)), int(back.level) - 1])
+		await _offer_bone(back, Vector2(560, 620))
+
+
 # ================================================================ fim
 
 func _end_run() -> void:
@@ -1478,6 +1703,9 @@ func _end_run() -> void:
 		Profile.data.runs_played = int(Profile.data.runs_played) + 1
 		Profile.data.best_index = maxi(int(Profile.data.best_index), state.floor_n)
 		Profile.save()
+	var stolen := {}
+	if state.dead and not demo:
+		stolen = Meta.hunter_steal(state.equipped)
 	Backend.log_event("run_end", {"floor": state.floor_n, "dead": state.dead, "dust": rewards.total})
 	await _wait(0.6)
 	var parts := _dialog_frame("victory_title" if state.victory else "run_end_title", Style.C_CANDLE if state.victory else Style.C_BONE)
@@ -1486,6 +1714,14 @@ func _end_run() -> void:
 	v.add_child(Style.bold(Body.creature_name(state.equipped), 32, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER))
 	v.add_child(Style.label(tr("run_end_floor") % state.floor_n, 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
 	v.add_child(Style.label(tr("run_end_bosses") % state.bosses_beaten.size(), 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	if not stolen.is_empty():
+		var hrow := Style.hbox(10)
+		hrow.alignment = BoxContainer.ALIGNMENT_CENTER
+		hrow.add_child(Widgets.icon(GameData.bone_texture_path(String(stolen.id)), 56))
+		var hl := Style.label(tr("hunter_stole") % tr(String(GameData.bone(String(stolen.id)).name)), 22, Color("e07a8a"))
+		hl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hrow.add_child(hl)
+		v.add_child(hrow)
 	var dust_l := Style.bold(tr("run_end_dust") % Style.num(int(rewards.total)), 30, Style.C_DUST, HORIZONTAL_ALIGNMENT_CENTER)
 	v.add_child(dust_l)
 	var total := [int(rewards.total)]

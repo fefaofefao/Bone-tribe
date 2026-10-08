@@ -498,3 +498,201 @@ event_type_ally,Aliado
 event_type_altar,Altar de intercambio
 event_type_rest,Descanso
 event_type_rare,Raro
+tab_home,Inicio
+tab_ossuary,Osario
+tab_collection,Colección
+tab_shop,Tienda
+ossuary_upgrades,Mejoras
+ossuary_upgrades_sub,El polvo de hueso se vuelve fuerza permanente para el próximo intento.
+ossuary_hp,Vida
+ossuary_atk,Ataque
+ossuary_def,Defensa
+ossuary_drop,Olfato de huesos
+ossuary_hp_desc,Vida máxima: %s
+ossuary_atk_desc,Ataque: %s
+ossuary_def_desc,Defensa: %s
+ossuary_drop_desc,Probabilidad de que caiga un hueso: %s
+max_level,Máximo
+upgraded,¡Mejorado!
+companions_title,Compañeros
+companions_sub,Lleva un compañero por partida. Suben de nivel con polvo de hueso.
+companion_ossudo_name,"Ossudo, el perro esqueleto"
+companion_lumi_name,"Lumi, la vela fantasma"
+companion_bigorna_name,"Bigorna, el herrero"
+companion_role_collector,Recolector
+companion_role_healer,Curación
+companion_role_forge,Forja
+companion_ossudo_desc,15% de probabilidad de traer un hueso extra después de cada combate.
+companion_lumi_desc,Cura el 8% de la vida de Huesito cada 3 turnos.
+companion_bigorna_desc,"Una vez por partida, sube un hueso de común a raro."
+companion_lock_companion_ossudo,Disponible desde el inicio.
+companion_lock_companion_lumi,"Encuéntrala en un santuario de velas en la cripta, o libérala en la tienda."
+companion_lock_companion_bigorna,Recompensa del 7.º día del bono de bienvenida.
+btn_take_along,Llevar
+companion_selected,Te acompaña
+companion_unlocked,¡%s ahora es tu compañera de cripta!
+relics_title,Reliquias
+relics_sub,"Cuatro espacios: amuleto, anillo, capa y linterna. Mejóralas con polvo de hueso."
+relic_amulet,Amuleto
+relic_ring,Anillo
+relic_cloak,Capa
+relic_lantern,Linterna
+relic_empty,Vacío
+btn_switch,Cambiar
+bone_chest_title,Cofre de huesos
+bone_chest_opened,¡Cofre abierto!
+btn_chest_ad,Anuncio (%d hoy)
+odds_title,Probabilidades:
+odds_relic_common,reliquia común
+odds_relic_rare,reliquia rara
+odds_relic_legendary,reliquia legendaria
+odds_curiosity,curiosidad
+stars_n,%d estrella(s)
+ad_place_extra_chest,Abrir cofre extra
+cabinet_title,Gabinete de Curiosidades
+cabinet_sub,%d de %d objetos en el estante. Los repetidos ganan estrellas.
+set_complete,completo
+unknown_item,???
+unknown_form,???
+curiosity_found,¡Curiosidad encontrada: %s! (%d estrella)
+curiosity_star,¡%s repetido: ahora con %d estrellas!
+collection_title,Colección de huesos
+collection_sub,%d de %d huesos encontrados. Toca un hueso para empezar la partida con él.
+start_bone_current,Hueso inicial: %s
+start_bone_none,ninguno
+start_tokens,%d ficha(s) de hueso raro
+start_bone_set,Empezar con este hueso
+start_bone_clear,No empezar con este hueso
+start_bone_need_token,Los huesos raros y legendarios requieren una ficha de Hueso inicial raro (Tienda).
+bone_source,Lo suelta: %s
+family_bonus_done,+5% permanente
+family_bonus_todo,Completa para +5%
+bestiary_title,Bestiario de Formas
+bestiary_sub,%d de %d formas descubiertas.
+form_hint_family,4 piezas de %s
+form_hint_secret,Receta secreta
+hunter_title,Cazador de Huesos
+hunter_sub,"Si mueres, roba tu mejor hueso y lo usa."
+hunter_none,Todavía no te ha robado nada. Todavía.
+hunter_has,Huesos que está usando:
+boss_bone_hunter_name,Cazador de Huesos
+event_hunter_text,"Una figura encapuchada bloquea el pasillo. Es el Cazador de Huesos, vistiendo lo que te robó: %s. —¿Viniste a recuperarlo?"
+hunter_fight,Luchar por venganza
+hunter_flee,Evitar al Cazador
+hunter_fled,Retrocedes a las sombras. El Cazador ríe bajito: —Será la próxima.
+hunter_defeated,"¡El Cazador cae y te devuelve tu %s, ahora +%d!"
+hunter_stole,¡El Cazador de Huesos se llevó tu %s!
+chip_companion,Compañero: %s
+chip_start_bone,Hueso inicial: %s
+chip_hunter,El Cazador tiene %d hueso(s) tuyo(s)
+bigorna_forge,Forjar con Bigorna (%d)
+bigorna_title,Forja de Bigorna
+bigorna_desc,Elige un hueso común para volverlo raro.
+bigorna_done,¡Forjado!
+ossudo_fetch,¡Ossudo trajo un hueso!
+shop_title,Tienda
+shop_coming,Próximamente.
+relic_vertebra_amulet_name,Amuleto de Vértebra
+relic_vertebra_amulet_desc,+5% de vida
+relic_moon_amulet_name,Amuleto de la Luna
+relic_moon_amulet_desc,"+8% de vida, +3% de robo de vida"
+relic_ancestor_amulet_name,Amuleto Ancestral
+relic_ancestor_amulet_desc,"+12% de vida, regenera 1% por turno"
+relic_knuckle_ring_name,Anillo de Falange
+relic_knuckle_ring_desc,+5% de ataque
+relic_ember_ring_name,Anillo de Brasa
+relic_ember_ring_desc,"+8% de ataque, +10% de daño de fuego"
+relic_king_ring_name,Anillo del Rey
+relic_king_ring_desc,"+12% de ataque, +4% de crítico"
+relic_shroud_cloak_name,Capa de Mortaja
+relic_shroud_cloak_desc,+4 de defensa
+relic_bat_cloak_name,Capa de Murciélago
+relic_bat_cloak_desc,"+6 de defensa, +4% de esquiva"
+relic_shadow_cloak_name,Capa de las Sombras
+relic_shadow_cloak_desc,"+10 de defensa, +6% de esquiva"
+relic_tin_lantern_name,Linterna de Lata
+relic_tin_lantern_desc,+5% de polvo de hueso
+relic_gravedigger_lantern_name,Linterna del Sepulturero
+relic_gravedigger_lantern_desc,"+8% de polvo, +3% de probabilidad de hueso, más eventos raros"
+relic_soul_lantern_name,Linterna de las Almas
+relic_soul_lantern_desc,"+12% de polvo, +5% de probabilidad de hueso"
+set_crypt_name,Cripta
+set_crypt_desc,Conjunto completo: +5% de ataque
+set_gravedigger_name,Sepulturero
+set_gravedigger_desc,Conjunto completo: un cofre garantizado cada 10 pisos
+set_witch_name,Bruja
+set_witch_desc,Conjunto completo: +5% de vida
+set_golem_name,Gólem
+set_golem_desc,Conjunto completo: +5 de defensa
+set_dragon_name,Dragón
+set_dragon_desc,Conjunto completo: +15% de daño de fuego
+set_library_name,Biblioteca
+set_library_desc,Conjunto completo: +3% de crítico
+set_merchant_name,Mercader
+set_merchant_desc,Conjunto completo: +8% de polvo de hueso
+set_party_name,Fiesta
+set_party_desc,Conjunto completo: +3% de robo de vida
+set_shadow_name,Sombra
+set_shadow_desc,Conjunto completo: +3% de esquiva
+set_hydra_name,Hidra
+set_hydra_desc,Conjunto completo: regenera 1% por turno
+cur_melted_candle_name,Vela Derretida
+cur_melted_candle_desc,+2% de vida
+cur_holed_coin_name,Moneda Agujereada
+cur_holed_coin_desc,+3% de polvo de hueso
+cur_gold_tooth_name,Diente de Oro
+cur_gold_tooth_desc,+2% de probabilidad de crítico
+cur_rusty_shovel_name,Pala Oxidada
+cur_rusty_shovel_desc,+5% de probabilidad de que caiga un hueso
+cur_old_lantern_name,Linterna Vieja
+cur_old_lantern_desc,+5% de probabilidad de evento raro
+cur_torn_map_name,Mapa Rasgado
+cur_torn_map_desc,Revela el tipo del próximo evento
+cur_holed_hat_name,Sombrero Agujereado
+cur_holed_hat_desc,+2% de vida
+cur_cracked_cauldron_name,Caldero Rajado
+cur_cracked_cauldron_desc,+5% de curación recibida
+cur_bald_broom_name,Escoba Calva
+cur_bald_broom_desc,+1 de velocidad
+cur_broken_rune_name,Runa Partida
+cur_broken_rune_desc,Escudo del 3% al inicio del combate
+cur_eternal_moss_name,Musgo Eterno
+cur_eternal_moss_desc,"Regenera 0,5% por turno"
+cur_bent_gear_name,Engranaje Torcido
+cur_bent_gear_desc,+2 de defensa
+cur_scorched_scale_name,Escama Chamuscada
+cur_scorched_scale_desc,+5% de daño de fuego
+cur_eternal_ember_name,Brasa Eterna
+cur_eternal_ember_desc,+2% de ataque
+cur_chipped_claw_name,Garra Astillada
+cur_chipped_claw_desc,+1% de crítico
+cur_endless_book_name,Libro Sin Fin
+cur_endless_book_desc,+5% de experiencia
+cur_crow_quill_name,Pluma de Cuervo
+cur_crow_quill_desc,+1% de crítico
+cur_cracked_glasses_name,Gafas Rajadas
+cur_cracked_glasses_desc,+2% de probabilidad de que caiga un hueso
+cur_rigged_scale_name,Balanza Trucada
+cur_rigged_scale_desc,+2% de polvo de hueso
+cur_ancient_receipt_name,Recibo Antiguo
+cur_ancient_receipt_desc,5% de descuento con los mercaderes
+cur_empty_purse_name,Bolsa Vacía
+cur_empty_purse_desc,+2% de polvo de hueso
+cur_loaded_die_name,Dado Cargado
+cur_loaded_die_desc,+1% de crítico
+cur_bone_goblet_name,Copa de Huesos
+cur_bone_goblet_desc,+1% de robo de vida
+cur_grinning_mask_name,Máscara Sonriente
+cur_grinning_mask_desc,+1% de esquiva
+cur_murky_mirror_name,Espejo Turbio
+cur_murky_mirror_desc,+1% de esquiva
+cur_black_candle_name,Vela Negra
+cur_black_candle_desc,+2% de ataque
+cur_silent_bell_name,Campana Muda
+cur_silent_bell_desc,+2% de vida
+cur_hydra_tooth_name,Diente de Hidra
+cur_hydra_tooth_desc,+3% de ataque
+cur_triple_scale_name,Escama Triple
+cur_triple_scale_desc,+3 de defensa
+cur_serpent_eye_name,Ojo de Serpiente
+cur_serpent_eye_desc,+2% de crítico

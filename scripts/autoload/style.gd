@@ -44,6 +44,11 @@ func _ready() -> void:
 	font_title = load("res://art/fonts/PirataOne-Regular.ttf")
 	theme = _build_theme()
 	get_tree().root.theme = theme
+	# Controles dentro de CanvasLayer não herdam o tema da janela; por isso o
+	# tema também é mesclado no tema padrão do motor (vale para tudo).
+	ThemeDB.get_default_theme().merge_with(theme)
+	ThemeDB.fallback_font = font_body
+	ThemeDB.fallback_font_size = 26
 
 
 func _box(fill: Color, edge: Color, radius: int = 18, border: int = 3, pad: int = 16) -> StyleBoxFlat:
@@ -165,6 +170,12 @@ func label(text: String, size: int = 26, color: Color = C_TEXT, align: int = HOR
 	return l
 
 
+## Rótulo de uma linha (para usar dentro de linhas horizontais).
+func nowrap(l: Label) -> Label:
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	return l
+
+
 func title(text: String, size: int = 56, color: Color = C_BONE) -> Label:
 	var l := label(text, size, color, HORIZONTAL_ALIGNMENT_CENTER)
 	l.add_theme_font_override("font", font_title)
@@ -186,7 +197,6 @@ func button(text: String, variation: String = "", min_h: int = 84) -> Button:
 	b.custom_minimum_size = Vector2(0, min_h)
 	if variation != "":
 		b.theme_type_variation = variation
-	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	juice(b)
 	return b
 
