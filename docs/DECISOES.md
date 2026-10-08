@@ -211,4 +211,4 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - **Quedas:** um monstro comum sorteia **uma** das partes que tem e testa a chance pela raridade dela (no máximo um osso por monstro). Assim, mais variações não aumentam a quantidade de ossos por partida.
 - **Equilíbrio:** os atributos dos ossos novos foram calibrados na simulação (`tests/BalanceSim.tscn`, 40 jogadores x 6 partidas). Na 1ª versão o jogo ficou mais difícil (os ossos novos diluíam os antigos); com +50% nos atributos a curva voltou à de antes: Rei Rato 95%, Golem 85%, Dragão 32% dos jogadores vencem até a 6ª partida.
 - Novas habilidades periódicas: Garra flamejante (fogo), Enxurrada de ratos e Chuva de flechas (atingem todos), Pancada de cauda.
-- Arte placeholder em `tools/art_extra_head.py`, `tools/art_extra_limbs.py` e `tools/art_extra_back.py`, chamada por `tools/gen_art.py bones`.
+- Arte (placeholder no estilo do jogo, tamanho e pivô finais) em `tools/art_extra_head.py`, `tools/art_extra_limbs.py` e `tools/art_extra_back.py`, chamada por `tools/gen_art.py bones`.

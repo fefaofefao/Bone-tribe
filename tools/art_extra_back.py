@@ -147,12 +147,12 @@ def insect_wing(cv, W, H, root, ang, length, width, col, vein, dim=1.0, alpha=17
 def draw_wings_wasp(bone_id, family):
     cv, W, H, px, py = back_canvas()
     fc = fam(family)
-    col, vein = (238, 250, 170), (96, 120, 40)
+    col, vein = (244, 255, 176), (110, 140, 40)
     # par de trás (mais escuro e menor), depois o par da frente
-    insect_wing(cv, W, H, (px + 6, py - 10), -72, 120, 26, col, vein, dim=0.8, alpha=140)
-    insect_wing(cv, W, H, (px + 4, py - 4), -45, 82, 20, col, vein, dim=0.8, alpha=140)
-    insect_wing(cv, W, H, (px - 4, py - 6), -112, 150, 32, col, vein, alpha=160)
-    insect_wing(cv, W, H, (px - 4, py), -148, 104, 23, col, vein, alpha=160)
+    insect_wing(cv, W, H, (px + 6, py - 10), -72, 120, 26, col, vein, dim=0.84, alpha=205)
+    insect_wing(cv, W, H, (px + 4, py - 4), -45, 82, 20, col, vein, dim=0.84, alpha=205)
+    insect_wing(cv, W, H, (px - 4, py - 6), -112, 150, 32, col, vein, alpha=220)
+    insect_wing(cv, W, H, (px - 4, py), -148, 104, 23, col, vein, alpha=220)
     root_knob(cv, W, H, px, py, 14)
     accent_dots(cv, W, H, [(px - 4, py - 6)], fc["aura"], 5, glow_r=4)
     finish(cv, W, H, out("bones", bone_id + ".png"))
@@ -262,7 +262,7 @@ def draw_shell_crab(bone_id, family):
 def draw_spikes_lizard(bone_id, family):
     cv, W, H, px, py = back_canvas()
     fc = fam(family)
-    spine = bezier([(px + 30, py + 8), (px - 40, py - 30), (px - 130, py - 20), (px - 190, py + 30)], 6)
+    spine = bezier([(px + 30, py + 8), (px - 40, py - 30), (px - 125, py - 20), (px - 176, py + 30)], 6)
     heights = [64, 116, 148, 140, 104, 64, 32]
     tips = []
     for (x, y), hgt in zip(spine, heights):
@@ -302,9 +302,9 @@ def draw_quiver_centaur(bone_id, family):
         st = (top[0] - uy * (k - 1.5) * 13, top[1] + ux * (k - 1.5) * 13)
         en = (st[0] + aux * ln, st[1] + auy * ln)
         arrows.bone((st[0] - aux * 30, st[1] - auy * 30), en, 4, knob=1.5)
-        fl.poly(leaf_pts((en[0] - aux * 38, en[1] - auy * 38), ang + da, 34, 11, power=0.6))
-    pc(cv, fl, (250, 150, 50), ow=2.2, grain=False)
+        fl.poly(leaf_pts((en[0] - aux * 40, en[1] - auy * 40), ang + da, 32, 8, power=0.6))
     paint(cv, arrows, outline_w=2.4)
+    pc(cv, fl, (250, 150, 50), ow=2.2, grain=False)
     # tubo da aljava
     q = Layer(W, H)
     mid = ((base[0] + top[0]) / 2, (base[1] + top[1]) / 2)
@@ -327,10 +327,10 @@ def draw_quiver_centaur(bone_id, family):
     fill(cv, stitch, (230, 200, 150))
     # alça cruzando para o corpo
     strap = Layer(W, H)
-    strap.curve([(px - 40, py - 40), (px + 20, py + 0), (px + 80, py + 70)], 14)
-    pc(cv, strap, (110, 66, 36), ow=2.6)
+    strap.curve([(px - 30, py + 34), (px - 4, py + 6), (px + 30, py - 30)], 12)
+    pc(cv, strap, (110, 66, 36), ow=2.4)
     buckle = Layer(W, H)
-    buckle.rrect(px + 8, py - 14, px + 30, py + 8, 4)
+    buckle.rrect(px - 10, py - 4, px + 10, py + 16, 4)
     paint(cv, buckle, base=(240, 200, 90), shadow=(160, 110, 30), outline_w=2.2, grain=False)
     accent_dots(cv, W, H, [(mid[0] - uy * 4, mid[1] + ux * 4)], fc["aura"], 6, glow_r=5)
     finish(cv, W, H, out("bones", bone_id + ".png"))
@@ -409,20 +409,20 @@ def draw_tail_wolf(bone_id, family):
     for i, (x, y) in enumerate(path):
         fl.circle(x, y, rad(i))
     # tufos pontudos de pelo na borda, curvados para a ponta
-    for i in range(3, n, 2):
+    for i in range(3, n - 1, 2):
         x, y = path[i]
         ux, uy, nx, ny = nrm[i]
         for sgn in (-1, 1):
             rr = rad(i)
-            b0 = (x + nx * sgn * rr * 0.5, y + ny * sgn * rr * 0.5)
-            e = (x + nx * sgn * (rr + 10) + ux * 14 + r.uniform(-3, 3), y + ny * sgn * (rr + 10) + uy * 14 + r.uniform(-3, 3))
-            fl.tapered([b0, ((b0[0] + e[0]) / 2 + ux * 4, (b0[1] + e[1]) / 2 + uy * 4), e], rr * 0.9, 1.5)
+            b0 = (x + nx * sgn * rr * 0.3 - ux * 6, y + ny * sgn * rr * 0.3 - uy * 6)
+            e = (x + nx * sgn * (rr + 8) + ux * 22 + r.uniform(-3, 3), y + ny * sgn * (rr + 8) + uy * 22 + r.uniform(-3, 3))
+            fl.tapered([b0, ((b0[0] + e[0]) / 2 + ux * 6, (b0[1] + e[1]) / 2 + uy * 6), e], rr * 1.1, 2)
     ex, ey = path[-1]
     ux, uy, _, _ = nrm[-1]
-    fl.tapered([(ex - ux * 10, ey - uy * 10), (ex + ux * 26, ey + uy * 26)], 22, 2)
+    fl.tapered([(ex - ux * 20, ey - uy * 20), (ex + ux * 14, ey + uy * 14)], 30, 3)
     paint(cv, fl, base=(140, 128, 118), shadow=(78, 68, 64), light=(200, 190, 180), outline_w=3)
     tip = Layer(W, H)
-    tip.circle(ex + ux * 6, ey + uy * 6, 26)
+    tip.circle(ex - ux * 2, ey - uy * 2, 30)
     fill(cv, inter(tip, fl), (238, 230, 214))
     belly = Layer(W, H)
     belly.line(bezier([(px - 40, py + 18), (px - 110, py + 40), (px - 166, py + 10), (px - 166, py - 40)], 16), 12)
@@ -441,17 +441,17 @@ def draw_tail_centaur(bone_id, family):
     hx, hy = px - 44, py - 4
     hair = Layer(W, H)
     # massa de crina: sobe um pouco e cai ondulando para baixo/atrás
-    hair.tapered([(hx, hy), (hx - 80, hy - 50), (hx - 130, hy + 10), (hx - 150, hy + 80)], 44, 10)
+    hair.tapered([(hx, hy), (hx - 76, hy - 50), (hx - 120, hy + 10), (hx - 132, hy + 76)], 44, 10)
     r = rng(11)
     for k in range(7):
         off = k * 9 - 27
-        end = (hx - 150 + off * 0.9 + r.uniform(-6, 6), hy + 78 + abs(off) * 0.3 + r.uniform(-4, 6))
-        hair.tapered([(hx - 6, hy + off * 0.3), (hx - 80, hy - 46 + off * 0.8), (hx - 128 + off * 0.5, hy + 10 + off * 0.5), end], 12, 2)
+        end = (hx - 132 + off * 0.8 + r.uniform(-6, 6), hy + 78 + abs(off) * 0.3 + r.uniform(-4, 6))
+        hair.tapered([(hx - 6, hy + off * 0.3), (hx - 80, hy - 46 + off * 0.8), (hx - 118 + off * 0.5, hy + 10 + off * 0.5), end], 12, 2)
     paint(cv, hair, base=(120, 76, 40), shadow=(64, 36, 16), light=(186, 130, 80), outline_w=3)
     lines = Layer(W, H)
     for k in range(5):
         off = k * 10 - 20
-        lines.curve([(hx - 14, hy + off * 0.3), (hx - 80, hy - 42 + off * 0.8), (hx - 124 + off * 0.5, hy + 12 + off * 0.5), (hx - 142 + off * 0.8, hy + 70)], 2.2)
+        lines.curve([(hx - 14, hy + off * 0.3), (hx - 80, hy - 42 + off * 0.8), (hx - 116 + off * 0.5, hy + 12 + off * 0.5), (hx - 128 + off * 0.8, hy + 68)], 2.2)
     fill(cv, inter(lines, hair), (196, 146, 96), alpha=210)
     lines2 = Layer(W, H)
     for k in range(4):
@@ -504,7 +504,7 @@ def draw_tail_bat(bone_id, family):
 def draw_tail_skeleton_rat(bone_id, family):
     cv, W, H, px, py = tail_canvas()
     fc = fam(family)
-    base = bezier([(px, py), (px - 60, py + 40), (px - 150, py + 30), (px - 228, py - 30)], 26)
+    base = bezier([(px, py), (px - 60, py + 40), (px - 140, py + 30), (px - 196, py - 30)], 26)
     nrm = path_normals(base)
     path = []
     for i, (x, y) in enumerate(base):
@@ -622,7 +622,7 @@ def draw_tail_golem(bone_id, family):
 def draw_tail_dragon(bone_id, family):
     cv, W, H, px, py = tail_canvas()
     fc = fam(family)
-    ctrl = [(px + 6, py), (px - 80, py + 76), (px - 170, py + 56), (px - 170, py - 30)]
+    ctrl = [(px + 6, py), (px - 80, py + 76), (px - 165, py + 56), (px - 152, py - 34)]
     path = bezier(ctrl, 22)
     nrm = path_normals(path)
     n = len(path)
@@ -664,7 +664,7 @@ def draw_tail_dragon(bone_id, family):
     fill(cv, joints, (150, 120, 90), alpha=200)
     gold = [path[i] for i in (3, 9, 15)]
     accent_dots(cv, W, H, gold, (250, 200, 80), 3.5)
-    ember(cv, W, H, [(ex + ux * 50, ey + uy * 50 - 4, 3.5), (px - 120, py - 4, 3), (px - 60, py + 20, 2.5), (px - 200, py + 40, 3)], fc["aura"])
+    ember(cv, W, H, [(ex + ux * 50, ey + uy * 50 - 4, 3.5), (px - 120, py - 4, 3), (px - 60, py + 20, 2.5), (px - 184, py + 44, 3)], fc["aura"])
     finish(cv, W, H, out("bones", bone_id + ".png"))
 
 
