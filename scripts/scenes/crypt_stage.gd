@@ -159,6 +159,34 @@ func _add_ambient() -> void:
 	pm.turbulence_noise_scale = 3.0
 	dust.process_material = pm
 	add_child(dust)
+	# brasas subindo pelo ar
+	var emb := GPUParticles2D.new()
+	emb.amount = 18
+	emb.lifetime = 7.0
+	emb.preprocess = 7.0
+	emb.position = Vector2(360, 900)
+	emb.texture = load("res://art/fx/fx_ember.png")
+	emb.z_index = -15
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	emb.material = add
+	var em := ParticleProcessMaterial.new()
+	em.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	em.emission_box_extents = Vector3(380, 40, 1)
+	em.direction = Vector3(0.2, -1, 0)
+	em.spread = 25.0
+	em.initial_velocity_min = 25.0
+	em.initial_velocity_max = 60.0
+	em.gravity = Vector3(0, -4, 0)
+	em.scale_min = 0.25
+	em.scale_max = 0.6
+	em.color = Color(1, 0.55, 0.2, 0.9)
+	em.color_ramp = rt
+	em.turbulence_enabled = true
+	em.turbulence_noise_strength = 3.0
+	em.turbulence_noise_scale = 2.0
+	emb.process_material = em
+	add_child(emb)
 	# névoa rasteira
 	var fog := GPUParticles2D.new()
 	fog.amount = 10

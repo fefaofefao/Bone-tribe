@@ -75,6 +75,22 @@ func _process(delta: float) -> void:
 
 # -------------------------------------------------------------- efeitos
 
+## Luz 2D dinâmica que acende e apaga (golpes fortes, fogo, encaixes, formas).
+func light_flash(pos: Vector2, color: Color, energy := 1.2, size := 2.5, time := 0.35) -> void:
+	if low_quality():
+		return
+	var l := PointLight2D.new()
+	l.texture = preload("res://art/fx/fx_light.png")
+	l.global_position = pos
+	l.color = color
+	l.energy = energy
+	l.texture_scale = size
+	add_child(l)
+	var tw := l.create_tween()
+	tw.tween_property(l, "energy", 0.0, time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.tween_callback(l.queue_free)
+
+
 func damage_number(pos: Vector2, text: String, color: Color, crit := false, size_px := 34) -> void:
 	var l := Label.new()
 	l.text = text
@@ -122,6 +138,8 @@ func spark_burst(pos: Vector2, color: Color, count := 10, speed := 380.0) -> voi
 		_spawn("spark", pos, Vector2(cos(a), sin(a)) * randf_range(speed * 0.4, speed), randf_range(0.25, 0.5),
 			{"color": color, "add": true, "scale": randf_range(0.4, 0.9), "end_scale": 0.05, "drag": 4.0})
 	_spawn("soft", pos, Vector2.ZERO, 0.22, {"color": Color(color, 0.9), "add": true, "scale": 1.0, "end_scale": 3.0})
+	if count >= 12:
+		light_flash(pos, color, 0.6 + count * 0.03, 1.4 + count * 0.04, 0.3)
 
 
 func dust_puff(pos: Vector2, color := Color(0.8, 0.75, 0.7, 0.5), count := 5) -> void:
@@ -134,6 +152,7 @@ func dust_puff(pos: Vector2, color := Color(0.8, 0.75, 0.7, 0.5), count := 5) ->
 
 func shockwave(pos: Vector2, color: Color, size := 2.5, time := 0.45) -> void:
 	_spawn("ring", pos, Vector2.ZERO, time, {"color": color, "add": true, "scale": 0.2, "end_scale": size, "rot": 0.0})
+	light_flash(pos, color, 0.9, size * 0.9, time)
 
 
 func slash(pos: Vector2, color: Color, flip := false) -> void:
@@ -173,6 +192,7 @@ func beam(a: Vector2, b: Vector2, color: Color, width := 18.0, time := 0.25) -> 
 	tw.parallel().tween_property(l, "modulate:a", 0.0, time)
 	tw.tween_callback(l.queue_free)
 	spark_burst(b, color, 8)
+	light_flash(b, color, 1.0, 2.0, 0.3)
 
 
 ## Sopro de fogo em leque.
@@ -183,3 +203,5 @@ func fire_breath(from: Vector2, to: Vector2, color := Color(1, 0.45, 0.15)) -> v
 		_spawn("soft", from, dir * randf_range(500, 800), randf_range(0.35, 0.6),
 			{"color": Color(color.r, color.g * randf_range(0.6, 1.3), color.b, 0.9), "add": true, "scale": randf_range(0.5, 0.9), "end_scale": 2.2, "drag": 2.5})
 	embers(to, color, 10, 50)
+	light_flash(from.lerp(to, 0.5), color, 1.6, 4.0, 0.6)
+	light_flash(to, color, 1.2, 2.5, 0.8)

@@ -791,3 +791,5 @@ iap_remove_ads_name,Remove ads
 iap_remove_ads_desc,No more ads between runs and +10% bone dust forever. Rewarded ads stay optional.
 iap_supporter_name,Supporter pack
 iap_supporter_desc,Exclusive Founder Bonesy skin and your name in the credits.
+rejection_chip,"Rejection: +25% damage, unstable"
+xp_gain,+%d XP

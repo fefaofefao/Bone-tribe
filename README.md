@@ -63,6 +63,12 @@ preenche todos os encaixes e forma a Manticora Noturna (bom para gravar vídeos)
    (`data/skeleton.json`). A arte final substitui esse PNG sem mexer em código.
 5. Rode os testes: eles conferem traduções, encaixes, monstros e arte de todos os ossos.
 
+## Serviços simulados
+
+Anúncios (`Ads`), compras (`Billing`) e Firebase (`Backend`: horário do servidor e analytics)
+têm interface e lógica prontas com provedores simulados em `scripts/services/`. Para o
+lançamento, escreva provedores reais com os mesmos métodos. Nenhum SDK ou credencial está no projeto.
+
 ## Ferramentas
 
 | Comando | O que faz |
@@ -72,6 +78,10 @@ preenche todos os encaixes e forma a Manticora Noturna (bom para gravar vídeos)
 | `python3 tools/gen_art.py all` | Regera todos os placeholders de arte |
 | `python3 tools/preview_body.py saida.png slot_skull=bone_skull_wolf ...` | Prévia do Ossinho montado |
 | `python3 tools/i18n.py check` | Valida os três arquivos de tradução |
+
+Variáveis de depuração (só desenvolvimento): `BT_START=run` abre a partida, `BT_DEMO=1` modo
+demonstração, `BT_AUTO=1` escolhas automáticas, `BT_TAB=ossuary|collection|shop` abre uma aba,
+`BT_SAMPLE_PROFILE=1` perfil de exemplo, `BT_SHOT=arquivo.png` captura a tela.
 
 ## Estrutura
 

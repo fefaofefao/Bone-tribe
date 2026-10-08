@@ -49,8 +49,26 @@
 - Intersticiais limitados entre partidas e oferta de remover anúncios após o 10º.
 - Correção: diálogos criados por código agora usam âncoras e margens completas (ficavam desalinhados).
 
-## Em andamento
-- Passo 7 — acabamento visual.
+### Passo 7 — Acabamento visual
+- Luz 2D dinâmica: velas tremulando, aura da família/forma iluminando o cenário, e flashes de luz em críticos, faíscas fortes, ondas de choque, raios, sopros de fogo e encaixes.
+- Partículas: pó de osso, faíscas, poeira a cada passo, brasas subindo no ar, névoa rasteira, lascas de osso quando inimigos se desmontam, brasas no voo do osso até o corpo.
+- Câmera: tremor proporcional ao golpe, aproximação no encaixe e na transformação, câmera lenta na transformação e na derrota de chefes, pausa curta (hit-stop) nos críticos.
+- Vibração em toques, golpes, encaixes, formas e chefes (desligável nas opções).
+- Interface: vinheta cinematográfica, pulso vermelho com vida baixa, resumo do corpo no combate (atributos, sinergias, forma, rejeição), nomes de inimigos agrupados (×2), botões com animação ao toque, transições suaves.
+- Qualidade reduzida (opções) desliga a luz dinâmica e as partículas extras para aparelhos fracos.
+
+## Concluído
+Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
+
+## Próximos passos sugeridos
+- Substituir os placeholders pela arte final (mesmo nome, tamanho e ponto de encaixe).
+- Trocar os provedores simulados por AdMob, Google Play Billing e Firebase reais.
+- Plugin Android de compartilhamento e gravação do vídeo de 8 s do Cartão da Criatura.
+- Revisão humana dos textos dos 60 eventos nos 3 idiomas (o GDD pede revisão antes de entrar no jogo).
+- Teste de equilíbrio com 5 pessoas reais (meta do GDD).
 
 ## Problemas
-- O ambiente de desenvolvimento não acessa `dl.google.com`, então o AAB só é gerado e validado no GitHub Actions.
+- O ambiente de desenvolvimento não acessa `dl.google.com`, então o AAB só é gerado e validado no GitHub Actions (todos os builds passaram).
+- O vídeo de 8 segundos do Cartão da Criatura não foi feito: exige um codificador nativo (plugin Android); o cartão exporta a imagem 1080x1920.
+- O compartilhamento nativo também exige plugin; a imagem é salva em `user://cards/`.
+- Áudio não foi pedido nos passos e não foi incluído.

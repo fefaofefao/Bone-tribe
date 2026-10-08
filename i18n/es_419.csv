@@ -791,3 +791,5 @@ iap_remove_ads_name,Quitar anuncios
 iap_remove_ads_desc,Se acaban los anuncios entre partidas y +10% de polvo de hueso para siempre. Los anuncios con recompensa siguen siendo opcionales.
 iap_supporter_name,Paquete de apoyo
 iap_supporter_desc,Skin exclusiva Huesito Fundador y tu nombre en los créditos.
+rejection_chip,"Rechazo: +25% de daño, inestable"
+xp_gain,+%d XP

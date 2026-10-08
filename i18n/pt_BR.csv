@@ -791,3 +791,5 @@ iap_remove_ads_name,Remover anúncios
 iap_remove_ads_desc,Fim dos anúncios entre partidas e +10% de pó de osso para sempre. Os anúncios com recompensa continuam opcionais.
 iap_supporter_name,Pacote apoiador
 iap_supporter_desc,Skin exclusiva Ossinho Fundador e seu nome nos créditos.
+rejection_chip,"Rejeição: +25% de dano, instável"
+xp_gain,+%d XP

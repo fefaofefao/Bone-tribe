@@ -110,7 +110,51 @@ func _companion_pop(text: String) -> void:
 		tw.tween_property(companion_view, "scale", Vector2.ONE * 0.42, 0.2).set_trans(Tween.TRANS_BACK)
 
 
+var _vignette: TextureRect
+var _danger: TextureRect
+
+
+## Vinheta cinematográfica e pulso vermelho quando a vida está baixa.
+func _build_vignette() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 5
+	add_child(layer)
+	for i in 2:
+		var g := Gradient.new()
+		g.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
+		var edge := Color(0.02, 0.0, 0.03, 0.85) if i == 0 else Color(0.75, 0.05, 0.08, 0.9)
+		g.colors = PackedColorArray([Color(edge, 0.0), Color(edge, 0.0), edge])
+		var t := GradientTexture2D.new()
+		t.gradient = g
+		t.fill = GradientTexture2D.FILL_RADIAL
+		t.fill_from = Vector2(0.5, 0.45)
+		t.fill_to = Vector2(1.05, 1.05)
+		t.width = 256
+		t.height = 456
+		var r := TextureRect.new()
+		r.texture = t
+		r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		r.stretch_mode = TextureRect.STRETCH_SCALE
+		r.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		layer.add_child(r)
+		if i == 0:
+			_vignette = r
+		else:
+			_danger = r
+			r.modulate.a = 0.0
+
+
+func _process(_delta: float) -> void:
+	if _danger == null or state == null:
+		return
+	var low := state.max_hp > 0.0 and state.hp / state.max_hp < 0.3 and not state.dead
+	var target := (0.45 + 0.35 * sin(Time.get_ticks_msec() / 220.0)) if low else 0.0
+	_danger.modulate.a = lerpf(_danger.modulate.a, target, 0.15)
+
+
 func _build_ui() -> void:
+	_build_vignette()
 	ui = CanvasLayer.new()
 	ui.layer = 10
 	add_child(ui)
@@ -994,15 +1038,58 @@ func _refresh_hud_from(hero: Fighter) -> void:
 
 func _combat_panel(enemies: Array) -> void:
 	_clear_panel()
-	var names := []
+	var counts := {}
+	var order := []
 	for e in enemies:
-		names.append(tr(e.name_key))
+		var n := tr(e.name_key)
+		if not counts.has(n):
+			order.append(n)
+		counts[n] = int(counts.get(n, 0)) + 1
+	var names := []
+	for n in order:
+		names.append(n if int(counts[n]) == 1 else "%s ×%d" % [n, int(counts[n])])
 	_panel_header("boss" if enemies[0].is_boss else "combat", "event_type_boss" if enemies[0].is_boss else "event_type_combat")
 	panel_box.add_child(Style.bold(", ".join(names), 26, Style.C_TEXT))
 	if enemies.size() > 1 or enemies[0].is_boss:
 		panel_box.add_child(Style.label(tr("combat_tap_focus"), 21, Style.C_MUTED))
 	_turn_label = Style.bold("", 22, Style.C_MUTED)
 	panel_box.add_child(_turn_label)
+	_build_summary()
+
+
+## Resumo do corpo no painel de combate: atributos, sinergias e forma ativa.
+func _build_summary() -> void:
+	var hero := state.make_hero()
+	var row := Style.hbox(14)
+	for item in [["ui_icon_attack", str(int(roundf(hero.atk)))], ["ui_icon_shield", str(int(roundf(hero.def)))],
+			["ui_levelup_empty_eye", "%d%%" % int(roundf(hero.crit * 100))], ["ui_levelup_quick_knees", "%d%%" % int(roundf(hero.dodge * 100))]]:
+		var h := Style.hbox(4)
+		h.add_child(Widgets.icon("res://art/ui/%s.png" % item[0], 34))
+		h.add_child(Style.nowrap(Style.bold(item[1], 22, Style.C_BONE)))
+		row.add_child(h)
+	panel_box.add_child(row)
+	var chips := HFlowContainer.new()
+	chips.add_theme_constant_override("h_separation", 8)
+	chips.add_theme_constant_override("v_separation", 6)
+	var c := state.compute()
+	for fid in c.forms:
+		chips.add_child(_summary_chip(tr(String(GameData.forms[fid].name)), Color(String(GameData.forms[fid].get("aura", "#ffffff")))))
+	for fam in c.families:
+		var n := int(c.families[fam])
+		if n >= 2:
+			chips.add_child(_summary_chip("%s ×%d" % [tr(String(GameData.families[fam].name)), n], GameData.family_color(fam)))
+	if c.rejection:
+		chips.add_child(_summary_chip(tr("rejection_chip"), Style.C_DANGER))
+	if chips.get_child_count() > 0:
+		panel_box.add_child(chips)
+
+
+func _summary_chip(text: String, color: Color) -> Control:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", Style.flat_box(Color(color, 0.16), Color(color, 0.7), 14, 2, 6))
+	var l := Style.nowrap(Style.bold(text, 19, color))
+	p.add_child(l)
+	return p
 
 
 func _view_of(f: Fighter) -> Node2D:
@@ -1082,6 +1169,15 @@ func _animate(evs: Array, killed: Array) -> void:
 						v4.die_anim(fx)
 					cam.shake(0.35 if not f2.is_boss else 0.9)
 					Haptics.medium()
+					if f2.is_boss:
+						Haptics.heavy()
+						fx.shockwave(_last_positions.get(f2, Vector2(540, 600)), Style.C_CANDLE, 5.0, 0.9)
+						fx.spark_burst(_last_positions.get(f2, Vector2(540, 600)), Style.C_CANDLE, 30, 700)
+						stage.dim(0.5, 0.1)
+						Engine.time_scale = 0.25
+						await get_tree().create_timer(0.9, true, false, true).timeout
+						Engine.time_scale = 1.0
+						stage.dim(0.0, 0.5)
 					if f2 == combat.focus:
 						combat.focus = null
 					await _wait(0.35)
@@ -1155,6 +1251,7 @@ func _anim_attack(ev: Dictionary) -> void:
 	cam.shake(0.18 if not crit else 0.45)
 	if crit:
 		Haptics.medium()
+		fx.light_flash(hit_pos, Color(1, 0.8, 0.4), 1.4, 2.2, 0.25)
 		_hitstop(0.06)
 	elif dst.is_hero:
 		Haptics.light()
@@ -1282,7 +1379,7 @@ func _gain_xp(amount: int) -> void:
 	if amount <= 0:
 		return
 	var ups := state.add_xp(amount)
-	fx.float_text(hero_view.body_center_global() + Vector2(0, -200), "+%d XP" % amount, Style.C_XP, 24)
+	fx.float_text(hero_view.body_center_global() + Vector2(0, -200), tr("xp_gain") % amount, Style.C_XP, 24)
 	_refresh_hud()
 	for i in ups:
 		await _levelup_dialog()
