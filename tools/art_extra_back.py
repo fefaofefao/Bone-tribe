@@ -395,65 +395,77 @@ def draw_lid_mimic(bone_id, family):
 
 def draw_tail_wolf(bone_id, family):
     cv, W, H, px, py = tail_canvas()
-    path = bezier([(px - 10, py), (px - 90, py + 50), (px - 180, py + 10), (px - 160, py - 100)], 18)
+    fc = fam(family)
+    path = bezier([(px - 10, py), (px - 90, py + 40), (px - 170, py + 10), (px - 150, py - 86)], 18)
+    n = len(path)
+
+    def rad(i):
+        t = i / (n - 1)
+        return 9 + 29 * math.sin(math.pi * min(1.0, t * 0.85 + 0.12)) ** 0.7
+
+    nrm = path_normals(path)
+    r = rng(7)
     fl = Layer(W, H)
     for i, (x, y) in enumerate(path):
-        t = i / (len(path) - 1)
-        fl.circle(x, y, 10 + 30 * math.sin(math.pi * min(1, t * 0.95 + 0.1)) ** 0.8)
-    r = rng(7)
-    tufts = Layer(W, H)
-    nrm = path_normals(path)
-    for i in range(2, len(path)):
+        fl.circle(x, y, rad(i))
+    # tufos pontudos de pelo na borda, curvados para a ponta
+    for i in range(3, n, 2):
         x, y = path[i]
-        t = i / (len(path) - 1)
-        rad = 10 + 30 * math.sin(math.pi * min(1, t * 0.95 + 0.1)) ** 0.8
-        for s in (-1, 1):
-            _, _, nx, ny = nrm[i]
-            bx, by = x + nx * s * rad * 0.7, y + ny * s * rad * 0.7
-            ex, ey = x + nx * s * (rad + 12) + r.uniform(-6, 6), y + ny * s * (rad + 12) + r.uniform(-6, 6)
-            tufts.tapered([(bx, by), (ex, ey)], 14, 1)
-    fl.add(tufts)
-    paint(cv, fl, base=(140, 128, 118), shadow=(80, 70, 66), light=(200, 190, 180), outline_w=3)
+        ux, uy, nx, ny = nrm[i]
+        for sgn in (-1, 1):
+            rr = rad(i)
+            b0 = (x + nx * sgn * rr * 0.5, y + ny * sgn * rr * 0.5)
+            e = (x + nx * sgn * (rr + 10) + ux * 14 + r.uniform(-3, 3), y + ny * sgn * (rr + 10) + uy * 14 + r.uniform(-3, 3))
+            fl.tapered([b0, ((b0[0] + e[0]) / 2 + ux * 4, (b0[1] + e[1]) / 2 + uy * 4), e], rr * 0.9, 1.5)
+    ex, ey = path[-1]
+    ux, uy, _, _ = nrm[-1]
+    fl.tapered([(ex - ux * 10, ey - uy * 10), (ex + ux * 26, ey + uy * 26)], 22, 2)
+    paint(cv, fl, base=(140, 128, 118), shadow=(78, 68, 64), light=(200, 190, 180), outline_w=3)
     tip = Layer(W, H)
-    for x, y in path[-4:]:
-        tip.circle(x, y, 18)
-    tip = inter(tip, fl)
-    fill(cv, tip, (236, 226, 210))
-    stripe = Layer(W, H)
-    st = bezier([(px - 40, py + 14), (px - 120, py + 40), (px - 172, py - 10), (px - 166, py - 70)], 16)
-    stripe.line(st, 10)
-    fill(cv, inter(stripe, fl), (100, 76, 56), alpha=170, blur=2)
+    tip.circle(ex + ux * 6, ey + uy * 6, 26)
+    fill(cv, inter(tip, fl), (238, 230, 214))
+    belly = Layer(W, H)
+    belly.line(bezier([(px - 40, py + 18), (px - 110, py + 40), (px - 166, py + 10), (px - 166, py - 40)], 16), 12)
+    fill(cv, inter(belly, fl), (100, 76, 56), alpha=150, blur=3)
     vert = Layer(W, H)
-    for x, y in path[:4]:
-        vert.ellipse(x, y, 12, 10)
+    for i, (x, y) in enumerate(path[:4]):
+        vert.ellipse(x, y, 12 - i, 10 - i)
     paint(cv, vert, outline_w=2.6)
+    accent_dots(cv, W, H, [path[0]], fc["aura"], 3.5, glow_r=4)
     finish(cv, W, H, out("bones", bone_id + ".png"))
 
 
 def draw_tail_centaur(bone_id, family):
     cv, W, H, px, py = tail_canvas()
     fc = fam(family)
-    r = rng(11)
+    hx, hy = px - 44, py - 4
     hair = Layer(W, H)
-    hx, hy = px - 46, py - 6
-    for k in range(9):
-        dy = k * 9 - 20
-        end = (hx - 140 + r.uniform(-20, 20) + k * 6, hy + 80 + dy * 0.6 + r.uniform(-6, 6))
-        hair.tapered([(hx, hy + k * 2), (hx - 70, hy - 30 + dy * 0.4), (hx - 110, hy + 10 + dy), end], 18, 3)
-    paint(cv, hair, base=(120, 76, 40), shadow=(66, 38, 18), light=(180, 126, 76), outline_w=3)
+    # massa de crina: sobe um pouco e cai ondulando para baixo/atrás
+    hair.tapered([(hx, hy), (hx - 80, hy - 50), (hx - 130, hy + 10), (hx - 150, hy + 80)], 44, 10)
+    r = rng(11)
+    for k in range(7):
+        off = k * 9 - 27
+        end = (hx - 150 + off * 0.9 + r.uniform(-6, 6), hy + 78 + abs(off) * 0.3 + r.uniform(-4, 6))
+        hair.tapered([(hx - 6, hy + off * 0.3), (hx - 80, hy - 46 + off * 0.8), (hx - 128 + off * 0.5, hy + 10 + off * 0.5), end], 12, 2)
+    paint(cv, hair, base=(120, 76, 40), shadow=(64, 36, 16), light=(186, 130, 80), outline_w=3)
     lines = Layer(W, H)
-    for k in range(6):
-        dy = k * 12 - 24
-        lines.curve([(hx - 10, hy + k * 2), (hx - 70, hy - 26 + dy * 0.4), (hx - 104, hy + 8 + dy), (hx - 126 + k * 8, hy + 70 + dy * 0.5)], 2)
-    fill(cv, inter(lines, hair), (196, 146, 96), alpha=200)
+    for k in range(5):
+        off = k * 10 - 20
+        lines.curve([(hx - 14, hy + off * 0.3), (hx - 80, hy - 42 + off * 0.8), (hx - 124 + off * 0.5, hy + 12 + off * 0.5), (hx - 142 + off * 0.8, hy + 70)], 2.2)
+    fill(cv, inter(lines, hair), (196, 146, 96), alpha=210)
+    lines2 = Layer(W, H)
+    for k in range(4):
+        off = k * 12 - 16
+        lines2.curve([(hx - 30, hy - 6 + off * 0.3), (hx - 90, hy - 30 + off), (hx - 120 + off * 0.5, hy + 30 + off * 0.5)], 2)
+    fill(cv, inter(lines2, hair), (70, 42, 20), alpha=180)
     base = Layer(W, H)
-    for i, (x, y) in enumerate([(px - 4, py), (px - 22, py - 2), (px - 38, py - 5)]):
+    for i, (x, y) in enumerate([(px - 4, py), (px - 22, py - 2), (px - 38, py - 4)]):
         base.ellipse(x, y, 12 - i, 11 - i)
     paint(cv, base, outline_w=2.8)
     wrap = Layer(W, H)
-    wrap.rrect(hx - 8, hy - 16, hx + 6, hy + 18, 4)
+    wrap.rrect(hx - 8, hy - 20, hx + 6, hy + 20, 4)
     pc(cv, wrap, (250, 150, 50), ow=2.2, grain=False)
-    accent_dots(cv, W, H, [(hx - 1, hy + 1)], fc["aura"], 3.5, glow_r=4)
+    accent_dots(cv, W, H, [(hx - 1, hy)], fc["aura"], 3.5, glow_r=4)
     finish(cv, W, H, out("bones", bone_id + ".png"))
 
 
