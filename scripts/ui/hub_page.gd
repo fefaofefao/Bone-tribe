@@ -35,9 +35,9 @@ func _ready() -> void:
 	margin.add_child(body)
 	rebuild()
 	Profile.changed.connect(_on_profile_changed)
-	if OS.get_environment("BT_SCROLL") != "":
+	if Dev.env("BT_SCROLL") != "":
 		await get_tree().create_timer(0.3).timeout
-		scroll.scroll_vertical = int(OS.get_environment("BT_SCROLL"))
+		scroll.scroll_vertical = int(Dev.env("BT_SCROLL"))
 
 
 func _on_profile_changed() -> void:

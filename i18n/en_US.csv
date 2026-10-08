@@ -793,3 +793,37 @@ iap_supporter_name,Supporter pack
 iap_supporter_desc,Exclusive Founder Bonesy skin and your name in the credits.
 rejection_chip,"Rejection: +25% damage, unstable"
 xp_gain,+%d XP
+menu_privacy,Privacy policy
+menu_credits,Credits
+credits_author,Created by %s
+credits_engine,Made with Godot Engine (MIT license).
+credits_fonts,Fonts Fredoka and Pirata One (SIL Open Font License 1.1).
+credits_supporters,Supporters
+credits_thanks,Thank you for supporting Bone Tribe!
+credits_version,Version %s
+next_in,(in %d)
+ability_summon,Summons help
+ability_breath,Fire breath
+ability_multi,Attacks %d times
+ability_guard,Shield: %d hits in one turn
+ability_bleed,Causes bleeding
+ability_poison,Poisons
+ability_stack_poison,Stacking poison
+ability_stun,Can stun
+ability_regen,Regenerates
+ability_lifesteal,Steals life
+ability_def,Defense %d
+ability_companion_heal,Lumi's heal
+ability_shield,Shield: %d
+guard_up,Shield
+guard_down,Shield broken
+log_attack,%s hits %s: %d
+log_crit,%s crits %s: %d!
+log_dodge,%s dodged!
+log_blocked,%s blocked!
+log_status,%s takes %d from %s
+log_heal,%s recovers %d
+log_summon,%s called for help!
+log_special,%s uses %s!
+log_death,%s fell apart!
+log_stunned,%s is stunned

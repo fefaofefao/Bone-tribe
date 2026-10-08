@@ -57,6 +57,13 @@
 - Interface: vinheta cinematográfica, pulso vermelho com vida baixa, resumo do corpo no combate (atributos, sinergias, forma, rejeição), nomes de inimigos agrupados (×2), botões com animação ao toque, transições suaves.
 - Qualidade reduzida (opções) desliga a luz dinâmica e as partículas extras para aparelhos fracos.
 
+### Preparação para publicação
+- Painel de combate refeito (`scripts/ui/combat_panel.gd`): cartões de inimigo com retrato, vida, estados e contagem da próxima habilidade; atributos, formas e sinergias do Ossinho; registro dos últimos golpes; altura que se ajusta ao conteúdo.
+- Workflow gera APK e AAB com versão automática; tag `v*` publica um Release com os dois.
+- Ganchos de teste só em build de depuração; créditos e política de privacidade no menu.
+- `store/`: textos da ficha (3 idiomas), ícone 512, gráfico de destaque, 24 capturas 1080x1920 (8 por idioma); rascunho de `docs/privacy.html`.
+- Checklist completo em `docs/PUBLICACAO.md`.
+
 ## Concluído
 Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
 
@@ -64,6 +71,7 @@ Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo
 - Substituir os placeholders pela arte final (mesmo nome, tamanho e ponto de encaixe).
 - Trocar os provedores simulados por AdMob, Google Play Billing e Firebase reais.
 - Plugin Android de compartilhamento e gravação do vídeo de 8 s do Cartão da Criatura.
+- Seguir o checklist de `docs/PUBLICACAO.md`.
 - Revisão humana dos textos dos 60 eventos nos 3 idiomas (o GDD pede revisão antes de entrar no jogo).
 - Teste de equilíbrio com 5 pessoas reais (meta do GDD).
 

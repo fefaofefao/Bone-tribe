@@ -793,3 +793,37 @@ iap_supporter_name,Pacote apoiador
 iap_supporter_desc,Skin exclusiva Ossinho Fundador e seu nome nos créditos.
 rejection_chip,"Rejeição: +25% de dano, instável"
 xp_gain,+%d XP
+menu_privacy,Política de privacidade
+menu_credits,Créditos
+credits_author,Criado por %s
+credits_engine,Feito com Godot Engine (licença MIT).
+credits_fonts,Fontes Fredoka e Pirata One (SIL Open Font License 1.1).
+credits_supporters,Apoiadores
+credits_thanks,Obrigado por apoiar o Bone Tribe!
+credits_version,Versão %s
+next_in,(em %d)
+ability_summon,Invoca reforços
+ability_breath,Sopro de fogo
+ability_multi,Ataca %d vezes
+ability_guard,Escudo: %d golpes num turno
+ability_bleed,Causa sangramento
+ability_poison,Envenena
+ability_stack_poison,Veneno acumulativo
+ability_stun,Pode atordoar
+ability_regen,Regenera
+ability_lifesteal,Rouba vida
+ability_def,Defesa %d
+ability_companion_heal,Cura da Lumi
+ability_shield,Escudo: %d
+guard_up,Escudo
+guard_down,Escudo quebrado
+log_attack,%s acerta %s: %d
+log_crit,%s acerta %s em cheio: %d!
+log_dodge,%s esquivou!
+log_blocked,%s bloqueou!
+log_status,%s sofre %d de %s
+log_heal,%s recupera %d
+log_summon,%s chamou reforços!
+log_special,%s usa %s!
+log_death,%s se desmontou!
+log_stunned,%s está atordoado

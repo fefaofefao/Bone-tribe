@@ -1,0 +1,7 @@
+{
+	"_doc": "Dados de publicação. privacy_url e support_email precisam ser preenchidos antes de enviar para a Google Play (ver docs/PUBLICACAO.md).",
+	"privacy_url": "",
+	"support_email": "",
+	"author": "Fernando Martins Sampaio",
+	"supporters": []
+}

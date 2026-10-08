@@ -67,15 +67,15 @@ func _ready() -> void:
 	Profile.currency_changed.connect(_refresh_currency)
 	_refresh_currency()
 	Backend.log_event("hub_open", {"runs": Profile.data.runs_played})
-	if OS.get_environment("BT_TAB") != "":
-		_open_tab.call_deferred(OS.get_environment("BT_TAB"))
+	if Dev.env("BT_TAB") != "":
+		_open_tab.call_deferred(Dev.env("BT_TAB"))
 	_after_open()
 
 
 ## Ao abrir o hub: intersticial entre partidas, oferta de remover anúncios,
 ## Kit das primeiras 24 horas, recompensa diária do Cartão do Coveiro e calendário.
 func _after_open() -> void:
-	if OS.get_environment("BT_TAB") != "" or OS.get_environment("BT_SHOT") != "" and OS.get_environment("BT_POPUPS") == "":
+	if Dev.env("BT_TAB") != "" or Dev.env("BT_SHOT") != "" and Dev.env("BT_POPUPS") == "":
 		return
 	await get_tree().create_timer(0.5).timeout
 	var rng := RandomNumberGenerator.new()
@@ -423,9 +423,46 @@ func _language_menu() -> void:
 func _settings_menu() -> void:
 	var vib: bool = Profile.setting("vibration")
 	var q: String = Profile.setting("quality")
-	_menu("menu_settings", [
+	var items := [
 		[tr("menu_vibration") + ": " + tr("on" if vib else "off"), func(): Profile.set_setting("vibration", not vib)],
 		[tr("menu_quality") + ": " + tr("quality_" + q), func():
 			Profile.set_setting("quality", "low" if q == "high" else "high")
 			Router.go("title", {})],
-	])
+	]
+	# a política só aparece quando o endereço estiver preenchido em data/app.json
+	if String(GameData.app.get("privacy_url", "")) != "":
+		items.append([tr("menu_privacy"), _open_privacy])
+	items.append([tr("menu_credits"), _credits])
+	_menu("menu_settings", items)
+
+
+func _open_privacy() -> void:
+	var url := String(GameData.app.get("privacy_url", ""))
+	if url != "":
+		OS.shell_open(url)
+
+
+## Créditos: autor, licenças (fontes SIL OFL, Godot MIT) e apoiadores.
+func _credits() -> void:
+	var bg := Widgets.dim_overlay(_ui)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.add_child(center)
+	var p := Style.panel()
+	p.custom_minimum_size = Vector2(600, 0)
+	center.add_child(p)
+	var v := Style.vbox(12)
+	p.add_child(v)
+	v.add_child(Style.title(tr("menu_credits"), 48))
+	v.add_child(Style.label(tr("credits_author") % String(GameData.app.get("author", "")), 24, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(Style.label(tr("credits_engine"), 20, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(Style.label(tr("credits_fonts"), 20, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	var sup: Array = GameData.app.get("supporters", [])
+	if bool(Profile.data.get("supporter", false)) or not sup.is_empty():
+		v.add_child(Style.bold(tr("credits_supporters"), 24, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER))
+		v.add_child(Style.label(", ".join(sup) if not sup.is_empty() else tr("credits_thanks"), 20, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(Style.label(tr("credits_version") % String(ProjectSettings.get_setting("application/config/version", "")), 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	var close := Style.button(tr("btn_back"), "", 70)
+	close.pressed.connect(bg.queue_free)
+	v.add_child(close)
+	Widgets.pop_in(p)

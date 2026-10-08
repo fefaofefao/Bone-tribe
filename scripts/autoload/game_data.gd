@@ -20,6 +20,7 @@ var curiosity_sets: Dictionary = {}
 var shop: Dictionary = {}
 var login: Dictionary = {}
 var skins: Dictionary = {}
+var app: Dictionary = {}
 
 var bone_order: Array = []
 var monster_order: Array = []
@@ -54,6 +55,7 @@ func reload() -> void:
 	shop = _read("shop.json", {})
 	login = _read("login.json", {})
 	skins = _index(_read("skins.json", []), [])
+	app = _read("app.json", {})
 	for e in load_errors:
 		push_error(e)
 

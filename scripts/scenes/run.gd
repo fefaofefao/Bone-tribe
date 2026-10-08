@@ -43,7 +43,7 @@ var speed_btn: Button
 func _ready() -> void:
 	var p := Router.params
 	demo = bool(p.get("demo", false))
-	autoplay = demo or OS.get_environment("BT_AUTO") == "1"
+	autoplay = demo or Dev.env("BT_AUTO") == "1"
 	var start_bone := "" if demo else Meta.take_start_bone()
 	state = RunState.new({"demo": demo, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
 	if start_bone != "":
@@ -114,6 +114,16 @@ var _vignette: TextureRect
 var _danger: TextureRect
 
 
+## O painel inferior cresce e encolhe conforme o conteúdo (sem sobras vazias).
+func _fit_panel() -> void:
+	if panel == null or panel_box == null:
+		return
+	var want := clampf(panel_box.get_combined_minimum_size().y + 48.0, PANEL_MIN_H, PANEL_MAX_H)
+	var cur := -panel.offset_top - 14.0
+	if absf(cur - want) > 0.5:
+		panel.offset_top = -(lerpf(cur, want, 0.25) + 14.0)
+
+
 ## Vinheta cinematográfica e pulso vermelho quando a vida está baixa.
 func _build_vignette() -> void:
 	var layer := CanvasLayer.new()
@@ -145,7 +155,12 @@ func _build_vignette() -> void:
 			r.modulate.a = 0.0
 
 
+const PANEL_MIN_H := 250.0
+const PANEL_MAX_H := 560.0
+
+
 func _process(_delta: float) -> void:
+	_fit_panel()
 	if _danger == null or state == null:
 		return
 	var low := state.max_hp > 0.0 and state.hp / state.max_hp < 0.3 and not state.dead
@@ -204,7 +219,7 @@ func _build_ui() -> void:
 	_next_icon.visible = false
 	row2.add_child(_next_icon)
 
-	if demo:
+	if demo and Dev.env("BT_STORE") != "1":
 		var dl := Style.bold(tr("demo_mode"), 18, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER)
 		dl.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 		dl.offset_top = 124
@@ -214,7 +229,7 @@ func _build_ui() -> void:
 	# --- painel inferior de eventos
 	panel = Style.panel(Color(Style.C_PANEL, 0.95), Style.C_EDGE, 26)
 	panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	panel.offset_top = -470
+	panel.offset_top = -(PANEL_MIN_H + 14.0)
 	panel.offset_left = 14
 	panel.offset_right = -14
 	panel.offset_bottom = -14
@@ -969,6 +984,8 @@ func _combat(ids: Array, is_boss := false) -> void:
 		while not combat.finished():
 			var evs := combat.step()
 			await _animate(evs, killed)
+			if combat_panel and is_instance_valid(combat_panel):
+				combat_panel.refresh()
 			_refresh_hud_from(hero)
 		if combat.result == "lose":
 			state.absorb_hero(hero)
@@ -1036,25 +1053,39 @@ func _refresh_hud_from(hero: Fighter) -> void:
 	_refresh_hud()
 
 
+var combat_panel: CombatPanel
+
+
 func _combat_panel(enemies: Array) -> void:
 	_clear_panel()
-	var counts := {}
-	var order := []
-	for e in enemies:
-		var n := tr(e.name_key)
-		if not counts.has(n):
-			order.append(n)
-		counts[n] = int(counts.get(n, 0)) + 1
-	var names := []
-	for n in order:
-		names.append(n if int(counts[n]) == 1 else "%s ×%d" % [n, int(counts[n])])
-	_panel_header("boss" if enemies[0].is_boss else "combat", "event_type_boss" if enemies[0].is_boss else "event_type_combat")
-	panel_box.add_child(Style.bold(", ".join(names), 26, Style.C_TEXT))
+	combat_panel = CombatPanel.new()
+	combat_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel_box.add_child(combat_panel)
+	combat_panel.setup(combat, state, enemies[0].is_boss)
+	combat_panel.focus_requested.connect(_set_focus)
 	if enemies.size() > 1 or enemies[0].is_boss:
-		panel_box.add_child(Style.label(tr("combat_tap_focus"), 21, Style.C_MUTED))
-	_turn_label = Style.bold("", 22, Style.C_MUTED)
-	panel_box.add_child(_turn_label)
-	_build_summary()
+		combat_panel.log_line(tr("combat_tap_focus"), Style.C_MUTED)
+
+
+func _set_focus(f: Fighter) -> void:
+	if combat == null or not f.alive():
+		return
+	combat.focus = f
+	for g in enemy_views:
+		if is_instance_valid(enemy_views[g]):
+			enemy_views[g].set_focused(g == f)
+	if combat_panel:
+		combat_panel.refresh()
+	Haptics.light()
+
+
+func _who(f: Fighter) -> String:
+	return tr("hero_name") if f.is_hero else tr(f.name_key)
+
+
+func _cp_log(text: String, color: Color = Style.C_TEXT) -> void:
+	if combat_panel and is_instance_valid(combat_panel):
+		combat_panel.log_line(text, color)
 
 
 ## Resumo do corpo no painel de combate: atributos, sinergias e forma ativa.
@@ -1116,6 +1147,7 @@ func _pos_of(f: Fighter) -> Vector2:
 
 func _animate(evs: Array, killed: Array) -> void:
 	for ev in evs:
+		_log_event(ev)
 		match String(ev.t):
 			"attack":
 				await _anim_attack(ev)
@@ -1203,6 +1235,36 @@ func _animate(evs: Array, killed: Array) -> void:
 					_turn_label.text = tr("combat_turn") % int(ev.n)
 			"flee", "end":
 				pass
+
+
+## Uma linha no registro do painel de combate para cada acontecimento.
+func _log_event(ev: Dictionary) -> void:
+	match String(ev.t):
+		"attack":
+			var src: Fighter = ev.src
+			var dst: Fighter = ev.dst
+			if ev.dodged:
+				_cp_log(tr("log_dodge") % _who(dst), Color(0.75, 0.85, 1.0))
+			elif ev.blocked:
+				_cp_log(tr("log_blocked") % _who(dst), Color(0.6, 0.8, 1.0))
+			elif ev.crit:
+				_cp_log(tr("log_crit") % [_who(src), _who(dst), int(ev.dmg)], Color("ffd23f"))
+			else:
+				_cp_log(tr("log_attack") % [_who(src), _who(dst), int(ev.dmg)], Color("ff8a7a") if dst.is_hero else Style.C_TEXT)
+		"status":
+			_cp_log(tr("log_status") % [_who(ev.dst), int(ev.dmg), tr("status_" + String(ev.status))], Color("d8343f") if ev.status == "bleed" else Color("8fe04a"))
+		"heal":
+			_cp_log(tr("log_heal") % [_who(ev.dst), int(ev.amount)], Style.C_HEAL)
+		"summon":
+			_cp_log(tr("log_summon") % _who(ev.src), Color("c58cff"))
+		"special":
+			_cp_log(tr("log_special") % [_who(ev.src), tr("special_" + String(ev.name)).trim_suffix("!")], Style.C_CANDLE)
+		"death":
+			_cp_log(tr("log_death") % _who(ev.dst), Style.C_BONE)
+		"stunned":
+			_cp_log(tr("log_stunned") % _who(ev.dst), Color("ffd84a"))
+	if combat_panel and is_instance_valid(combat_panel) and String(ev.t) in ["attack", "status", "summon", "death", "guard", "turn", "apply_status", "heal"]:
+		combat_panel.refresh()
 
 
 func _anim_attack(ev: Dictionary) -> void:
@@ -1301,11 +1363,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	for f in enemy_views:
 		var v: Node2D = enemy_views[f]
 		if is_instance_valid(v) and not v.dead and v.hit_rect().has_point(wp):
-			combat.focus = f
-			for g in enemy_views:
-				if is_instance_valid(enemy_views[g]):
-					enemy_views[g].set_focused(g == f)
-			Haptics.light()
+			_set_focus(f)
 			return
 
 

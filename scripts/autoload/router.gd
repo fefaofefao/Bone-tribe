@@ -24,20 +24,20 @@ func _ready() -> void:
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_layer.add_child(_fade)
 	_debug_capture()
-	var start := OS.get_environment("BT_START")
+	var start := Dev.env("BT_START")
 	if start != "":
 		await get_tree().process_frame
-		go(start, {"demo": OS.get_environment("BT_DEMO") == "1"})
+		go(start, {"demo": Dev.env("BT_DEMO") == "1"})
 
 
 ## Ferramenta de desenvolvimento: BT_SHOT=<arquivo.png> [BT_SHOT_DELAY=s]
 ## captura a tela depois do atraso e fecha o jogo. BT_SHOTS=n tira n capturas.
 func _debug_capture() -> void:
-	var path := OS.get_environment("BT_SHOT")
+	var path := Dev.env("BT_SHOT")
 	if path == "":
 		return
-	var delay := float(OS.get_environment("BT_SHOT_DELAY")) if OS.get_environment("BT_SHOT_DELAY") != "" else 2.0
-	var shots := maxi(1, int(OS.get_environment("BT_SHOTS")))
+	var delay := float(Dev.env("BT_SHOT_DELAY")) if Dev.env("BT_SHOT_DELAY") != "" else 2.0
+	var shots := maxi(1, int(Dev.env("BT_SHOTS")))
 	for i in shots:
 		await get_tree().create_timer(delay, true, false, true).timeout
 		var img := get_viewport().get_texture().get_image()

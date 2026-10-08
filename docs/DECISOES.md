@@ -184,3 +184,12 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
   Dourado, Neon, Pirata e Cristal estão à venda por diamantes (300–600) ou dinheiro;
   Recém-Desperto vem do dia 7, Lua de Âmbar do Kit e Fundador do Pacote apoiador
   (oferecido depois de vencer o Dragão Ancião, fim do capítulo 1).
+
+## Preparação para publicação
+- **APKs só pelo GitHub Actions**, a pedido do dono do projeto (regra registrada em `CLAUDE.md`).
+- `version/code` = número da execução do workflow + 100, para nunca repetir na Play Console; `version/name` vem de `config/version` ou da tag `vX.Y.Z`.
+- Ganchos `BT_*` passam por `Dev.env()`, que devolve vazio fora de build de depuração: nenhum atalho de teste chega ao jogador.
+- O item "Privacidade" só aparece no menu quando `data/app.json` tiver `privacy_url`, para não exibir um botão que não faz nada.
+- `store/` tem `.gdignore` e está no filtro de exportação: as imagens da loja não entram no APK.
+- Painel de combate: largura total para os cartões de inimigo, altura que acompanha o conteúdo (250 a 560 px) e registro com as 4 últimas ações, em resposta ao retorno de que o painel antigo tinha muito espaço vazio.
+- A permissão `INTERNET` continua desligada enquanto os serviços forem simulados; liga junto com os SDKs reais.

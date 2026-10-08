@@ -30,12 +30,9 @@ cadastre os secrets `ANDROID_RELEASE_KEYSTORE_BASE64` (keystore em base64),
 **APK de teste**: o mesmo workflow também gera `BoneTribe.apk` (artefato `BoneTribe-apk`),
 instalável direto no celular (ative "instalar apps de fontes desconhecidas").
 
-**Localmente**: instale os templates de exportação 4.7.2, configure o Android SDK e o
-JDK 17 em *Editor > Editor Settings > Export > Android*, depois:
-
-```bash
-godot --headless --path . --install-android-build-template --export-release "Android" build/BoneTribe.aab
-```
+**Versões**: crie a tag `vX.Y.Z` e o workflow anexa APK e AAB ao Release da tag.
+Os APKs são sempre gerados pelo GitHub Actions, não localmente. O passo a passo da
+publicação na Google Play está em [docs/PUBLICACAO.md](docs/PUBLICACAO.md).
 
 ## Modo demonstração
 

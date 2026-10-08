@@ -57,7 +57,7 @@ func load_profile() -> void:
 	if int(data.first_open_time) == 0:
 		data.first_open_time = Backend.now()
 		save()
-	if OS.get_environment("BT_SAMPLE_PROFILE") == "1":
+	if Dev.env("BT_SAMPLE_PROFILE") == "1":
 		_sample_profile()
 
 

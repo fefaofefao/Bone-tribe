@@ -793,3 +793,37 @@ iap_supporter_name,Paquete de apoyo
 iap_supporter_desc,Skin exclusiva Huesito Fundador y tu nombre en los créditos.
 rejection_chip,"Rechazo: +25% de daño, inestable"
 xp_gain,+%d XP
+menu_privacy,Política de privacidad
+menu_credits,Créditos
+credits_author,Creado por %s
+credits_engine,Hecho con Godot Engine (licencia MIT).
+credits_fonts,Fuentes Fredoka y Pirata One (SIL Open Font License 1.1).
+credits_supporters,Patrocinadores
+credits_thanks,¡Gracias por apoyar Bone Tribe!
+credits_version,Versión %s
+next_in,(en %d)
+ability_summon,Invoca refuerzos
+ability_breath,Aliento de fuego
+ability_multi,Ataca %d veces
+ability_guard,Escudo: %d golpes en un turno
+ability_bleed,Causa sangrado
+ability_poison,Envenena
+ability_stack_poison,Veneno acumulativo
+ability_stun,Puede aturdir
+ability_regen,Regenera
+ability_lifesteal,Roba vida
+ability_def,Defensa %d
+ability_companion_heal,Curación de Lumi
+ability_shield,Escudo: %d
+guard_up,Escudo
+guard_down,Escudo roto
+log_attack,%s golpea a %s: %d
+log_crit,¡%s le da de lleno a %s: %d!
+log_dodge,¡%s esquivó!
+log_blocked,¡%s bloqueó!
+log_status,%s sufre %d por %s
+log_heal,%s recupera %d
+log_summon,¡%s llamó refuerzos!
+log_special,¡%s usa %s!
+log_death,¡%s se desarmó!
+log_stunned,%s está aturdido
