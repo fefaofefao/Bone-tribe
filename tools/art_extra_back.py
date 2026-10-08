@@ -362,15 +362,15 @@ def draw_lid_mimic(bone_id, family):
         trim.add(inter(band, lid))
     paint(cv, trim, base=(240, 196, 70), shadow=(160, 110, 30), light=(255, 240, 160), outline_w=2.4, grain=False)
     # dentes na borda
+    tongue = Layer(W, H)
+    tongue.ellipse(cx + 40, cy + 50, 24, 12)
+    pc(cv, tongue, (200, 70, 90), ow=2, grain=False)
     teeth = Layer(W, H)
     for i in range(10):
         x = cx - rw + 18 + i * ((2 * rw - 36) / 9)
         hgt = 22 if i % 3 == 1 else 16
         teeth.poly([(x - 10, cy + 40), (x, cy + 40 + hgt), (x + 10, cy + 40)])
     paint(cv, teeth, base=IVORY_LIGHT, outline_w=2.4, grain=False)
-    tongue = Layer(W, H)
-    tongue.ellipse(cx + 40, cy + 44, 26, 10)
-    pc(cv, tongue, (200, 70, 90), ow=2, grain=False)
     rivets = Layer(W, H)
     for x in (cx - rw + 12, cx - 92, cx + 92, cx + rw - 12, cx - 46, cx + 46):
         rivets.circle(x, cy + 34, 3)
