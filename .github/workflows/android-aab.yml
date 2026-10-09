@@ -138,8 +138,13 @@ jobs:
         run: |
           # 1ª passada instala os binários do AdMob e pode reiniciar o editor;
           # a 2ª garante que todos os recursos foram importados
-          godot --headless --import --path . || true
-          godot --headless --import --path . || true
+          # o Godot às vezes cai (segfault) no meio da importação; repete até 4 vezes
+          for i in 1 2 3 4; do
+            godot --headless --import --path . || echo "::warning::importação $i terminou com erro"
+            N=$(ls .godot/imported 2>/dev/null | wc -l)
+            echo "passada $i: $N recursos importados"
+            if [ "$i" -ge 2 ] && [ "$N" -gt 300 ]; then break; fi
+          done
           N=$(ls .godot/imported | wc -l)
           echo "recursos importados: $N"
           test "$N" -gt 300
