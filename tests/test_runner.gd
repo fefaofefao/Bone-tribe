@@ -561,3 +561,39 @@ func test_13_touch_scroll() -> void:
 	await get_tree().process_frame
 	check(presses[0] == 1, "toque curto depois de rolar aperta o botão (%d)" % presses[0])
 	layer.queue_free()
+
+
+class FakeFirebase:
+	extends RefCounted
+	var events: Array = []
+	var remote := {"balance_dust_mult": "1.5", "shop_flags": "{\"sale\": true}"}
+	func initialize(_debug: bool) -> void: pass
+	func logEvent(n: String, p: Dictionary) -> void: events.append([n, p])
+	func isRemoteConfigReady() -> bool: return true
+	func getRemoteString(k: String) -> String: return String(remote.get(k, ""))
+	func setCollectionEnabled(_e: bool) -> void: pass
+
+
+func test_14_firebase_provider() -> void:
+	var fake := FakeFirebase.new()
+	var prov: RefCounted = load("res://scripts/services/firebase_backend_provider.gd").new(fake)
+	prov.log_event("run_start", {"demo": false, "runs": 1})
+	var names := fake.events.map(func(e): return e[0])
+	check(names.has("run_start") and names.has("level_start") and names.has("tutorial_complete"), "run_start vira level_start + tutorial_complete: %s" % [names])
+	fake.events.clear()
+	prov.log_event("run_end", {"floor": 10, "dead": false, "dust": 300})
+	var le: Array = fake.events.filter(func(e): return e[0] == "level_end")
+	check(not le.is_empty() and int(le[0][1].success) == 1 and int(le[0][1].floor) == 10, "run_end vira level_end com sucesso e andar")
+	fake.events.clear()
+	prov.log_event("currency_diamonds", {"amount": -50, "source": "shop_item_dust_1000"})
+	check(fake.events.any(func(e): return e[0] == "spend_virtual_currency" and int(e[1].value) == 50), "gasto de diamantes vira spend_virtual_currency")
+	prov.log_event("currency_dust", {"amount": 120, "source": "run"})
+	check(fake.events.any(func(e): return e[0] == "earn_virtual_currency" and e[1].virtual_currency_name == "bone_dust"), "ganho de pó vira earn_virtual_currency")
+	check(is_equal_approx(float(prov.remote_config("balance_dust_mult", 1.0)), 1.5), "Remote Config converte número")
+	check(prov.remote_config("shop_flags", {}).get("sale", false) == true, "Remote Config converte JSON")
+	check(int(prov.remote_config("nao_existe", 7)) == 7, "Remote Config usa o padrão quando a chave não existe")
+	# parâmetros inválidos para o Firebase viram texto
+	fake.events.clear()
+	prov.log_event("custom", {"lista": [1, 2], "um_nome_de_parametro_muito_comprido_mesmo_demais": 1})
+	var p: Dictionary = fake.events[0][1]
+	check(typeof(p.get("lista")) == TYPE_STRING and p.keys().all(func(k): return String(k).length() <= 40), "parâmetros limpos para o Firebase")

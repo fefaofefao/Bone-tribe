@@ -42,6 +42,17 @@ Sempre pelo GitHub Actions (workflow **Android AAB e APK**):
 - [ ] No AdMob, em *Privacidade e mensagens*, criar a mensagem de consentimento GDPR (o jogo já mostra o formulário quando o país exige) e publicar o `app-ads.txt` no site de desenvolvedor informado na Play Console.
 - [ ] Não clicar nos próprios anúncios reais. Para testar no seu celular, use o APK com IDs de teste ou cadastre o aparelho como dispositivo de teste no AdMob.
 
+### Firebase (Analytics + Remote Config)
+O código já está pronto e desligado; ele liga sozinho quando o secret existir.
+- [ ] Em https://console.firebase.google.com: **Adicionar projeto** (pode usar o mesmo projeto do Google Analytics; ative o Google Analytics quando perguntar).
+- [ ] No projeto: **Adicionar app → Android**, pacote `com.bonetribe.game`, apelido "Bone Tribe".
+- [ ] Ainda no cadastro do app, informe o **SHA-1** da chave de upload: `keytool -list -v -keystore bonetribe-upload.keystore -alias bonetribe` (e, depois de publicar, também o SHA-1 da "chave de assinatura do app" que aparece na Play Console em *Integridade do app*).
+- [ ] Baixe o `google-services.json` e cole **o conteúdo inteiro** num secret do GitHub chamado `FIREBASE_GOOGLE_SERVICES_JSON` (*Settings → Secrets and variables → Actions → Secrets*). Não coloque o arquivo no repositório.
+- [ ] Rode o workflow de novo. No log, o passo "Firebase" mostra o nome do projeto; sem o secret aparece um aviso.
+- [ ] Vincule o Firebase ao **AdMob** (AdMob → Configurações do app → Vincular ao Firebase) e à **Play Console** (Firebase → Configurações do projeto → Integrações → Google Play). Assim a receita de anúncios e compras aparece no Firebase sem código extra.
+- [ ] Teste com o celular no **DebugView**: `adb shell setprop debug.firebase.analytics.app com.bonetribe.game` e abra o jogo; os eventos aparecem em segundos (sem isso, demoram algumas horas para aparecer nos relatórios).
+- [ ] Atualize a seção *Segurança dos dados* da Play Console: o app passa a coletar "Atividade no app", "Identificadores do dispositivo" e "Diagnóstico" (finalidade: análise), criptografados em trânsito.
+
 ### Produtos no app (Play Console → Monetizar → Produtos → Produtos no app)
 Cadastrar **todos como produtos únicos (in-app), nenhum como assinatura**, com os mesmos IDs de `data/shop.json` e ativá-los:
 - Consumíveis (podem ser comprados de novo; o jogo consome): `iap_diamonds_handful`, `iap_diamonds_sack`, `iap_diamonds_chest`, `iap_diamonds_vault` e `iap_gravedigger_card` (Cartão do Coveiro = passe de 30 dias, comprado de novo quando acaba).
@@ -83,7 +94,7 @@ Cadastrar **todos como produtos únicos (in-app), nenhum como assinatura**, com 
 
 ### Quando você me passar os dados
 - [ ] Preencher `privacy_url` e `support_email` em `data/app.json`.
-- [ ] Firebase Analytics (precisa do `google-services.json`; hoje os eventos ficam num registro local).
+- [x] Firebase Analytics + Remote Config prontos no código (plugin `addons/bonetribe_firebase`, provedor `scripts/services/firebase_backend_provider.gd`); ligam quando o secret `FIREBASE_GOOGLE_SERVICES_JSON` existir.
 - [ ] Vídeo de 8 s do Cartão da Criatura (exige codificador nativo).
 - [ ] Validação de compras num servidor próprio (hoje a confirmação é a da Google Play no aparelho).
 - [ ] Integrar a arte final quando chegar e regenerar as capturas (`tools/store_shots.sh`).

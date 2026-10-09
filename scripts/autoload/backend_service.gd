@@ -1,7 +1,8 @@
 extends Node
-## Fachada do backend (Firebase no lançamento).
-## Fornece horário do servidor (logins, ofertas do dia, Kit 24h) e analytics.
-## Hoje usa MockBackendProvider; o provedor real deve implementar os mesmos métodos.
+## Fachada do backend: horário do servidor (logins, ofertas do dia, Kit 24h),
+## analytics e Remote Config. No Android com o plugin BoneTribeFirebase usa o
+## Firebase (Analytics + Remote Config); sem ele, o provedor local (horário de
+## rede + registro local).
 
 signal server_time_synced(unix_time: int)
 
@@ -14,7 +15,10 @@ var _http: HTTPRequest
 
 
 func _ready() -> void:
-	provider = load("res://scripts/services/mock_backend_provider.gd").new()
+	if OS.get_name() == "Android" and Engine.has_singleton("BoneTribeFirebase"):
+		provider = load("res://scripts/services/firebase_backend_provider.gd").new(Engine.get_singleton("BoneTribeFirebase"))
+	else:
+		provider = load("res://scripts/services/mock_backend_provider.gd").new()
 	provider.sync_time()
 	server_time_synced.emit(now())
 	if not OS.is_debug_build() or OS.get_name() == "Android":

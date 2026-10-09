@@ -1,0 +1,20 @@
+{
+  "_doc": "Configuração FALSA do Firebase, usada só pelo workflow para checar se a integração compila. A real vem do secret FIREBASE_GOOGLE_SERVICES_JSON.",
+  "project_info": {
+    "project_number": "123456789012",
+    "project_id": "bonetribe-exemplo",
+    "storage_bucket": "bonetribe-exemplo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123456789012:android:0123456789abcdef012345",
+        "android_client_info": {"package_name": "com.bonetribe.game"}
+      },
+      "oauth_client": [],
+      "api_key": [{"current_key": "AIzaSyA-EXEMPLO-NAO-REAL-00000000000000"}],
+      "services": {"appinvite_service": {"other_platform_oauth_client": []}}
+    }
+  ],
+  "configuration_version": "1"
+}

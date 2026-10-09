@@ -5,5 +5,6 @@
 - Só nomes e IDs do GDD. Todo texto visível em `i18n/*.csv` (pt_BR, en_US, es_419) via `tools/i18n.py`; depois de mudar CSV, rode `godot --headless --import`.
 - Dados do jogo em `data/*.json`, nada de conteúdo no código.
 - Anúncios (plugin Poing AdMob em `addons/admob`) e compras (plugin oficial em `addons/GodotGooglePlayBilling`) são reais no Android e simulados no computador/testes (`scripts/services/`). Os binários Android dos plugins são baixados pelo workflow, não ficam no repositório. IDs do AdMob vêm das variáveis `ADMOB_*` do GitHub (`tools/admob_ids.py`); nunca commitar credenciais.
+- Firebase (Analytics + Remote Config) pelo plugin próprio `addons/bonetribe_firebase`: só liga quando o secret `FIREBASE_GOOGLE_SERVICES_JSON` existe no GitHub. Eventos sempre por `Backend.log_event`; nunca commitar `google-services.json`.
 - Ganchos de teste (`BT_*`) passam por `Dev.env()` e só funcionam em build de depuração.
 - Antes de cada commit: `godot --headless --path . tests/TestRunner.tscn` (0 falhas).

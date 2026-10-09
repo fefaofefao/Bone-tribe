@@ -123,6 +123,17 @@ jobs:
           ADMOB_INTERSTITIAL_ID: ${{ vars.ADMOB_INTERSTITIAL_ID }}
         run: python3 tools/admob_ids.py
 
+      - name: Firebase (google-services.json do secret; sem ele o build sai sem Firebase)
+        env:
+          FIREBASE_GOOGLE_SERVICES_JSON: ${{ secrets.FIREBASE_GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$FIREBASE_GOOGLE_SERVICES_JSON" ]; then
+            printf '%s' "$FIREBASE_GOOGLE_SERVICES_JSON" > addons/bonetribe_firebase/google-services.json
+            python3 -c "import json,sys; d=json.load(open('addons/bonetribe_firebase/google-services.json')); pk=[c['client_info']['android_client_info']['package_name'] for c in d['client']]; assert 'com.bonetribe.game' in pk, pk; print('Firebase: projeto', d['project_info']['project_id'])"
+          else
+            echo "::warning::Sem o secret FIREBASE_GOOGLE_SERVICES_JSON: o build sai sem Firebase (eventos ficam só no aparelho)."
+          fi
+
       - name: Importar recursos (baixa também os binários Android do AdMob)
         run: |
           # 1ª passada instala os binários do AdMob e pode reiniciar o editor;
@@ -160,6 +171,27 @@ jobs:
           unzip -l build/BoneTribe.apk | grep -E "AndroidManifest|resources.arsc|classes.dex|\.so$" | head -20 || true
           "$BT/zipalign" -c -P 16 4 build/BoneTribe.apk && echo "zipalign OK" || echo "::warning::APK não alinhado"
           "$BT/apksigner" verify --verbose --print-certs build/BoneTribe.apk
+
+      # Sem o secret, compila uma vez com uma configuração de exemplo só para
+      # garantir que a integração do Firebase continua compilando.
+      - name: Checar integração Firebase (configuração de exemplo, não publicada)
+        env:
+          FIREBASE_GOOGLE_SERVICES_JSON: ${{ secrets.FIREBASE_GOOGLE_SERVICES_JSON }}
+        run: |
+          set -e
+          if [ -n "$FIREBASE_GOOGLE_SERVICES_JSON" ]; then
+            echo "Firebase real já está no build principal."
+          else
+            cp tools/firebase_config_exemplo.json addons/bonetribe_firebase/google-services.json
+            godot --headless --path . --export-release "Android APK" /tmp/firebase_check.apk
+            rm addons/bonetribe_firebase/google-services.json
+            test -s /tmp/firebase_check.apk
+          fi
+          APK=build/BoneTribe.apk
+          [ -n "$FIREBASE_GOOGLE_SERVICES_JSON" ] || APK=/tmp/firebase_check.apk
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$BT/aapt2" dump xmltree --file AndroidManifest.xml "$APK" | grep -q "com.bonetribe.firebase.BoneTribeFirebase"
+          echo "Plugin BoneTribeFirebase registrado no manifesto."
 
       - name: Publicar AAB
         uses: actions/upload-artifact@v4
