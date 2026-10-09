@@ -1042,3 +1042,25 @@ loadout_none,None
 loadout_choose,Choose
 home_best_floor,Your record: floor %d
 home_first_run,The Forgotten Crypt awaits you
+hud_tower_floor,Tower %d · Floor %d/%d
+run_end_tower_floor,Tower %d · floor reached: %d
+card_tower_floor,Tower %d · Floor %d
+tower_label,Tower %d · %s
+tower_locked_hint,Locked: defeat the Ancient Dragon of Tower %d
+tower_cleared_sub,Tower cleared · replay it for bone dust
+tower_best_sub,Your record here: floor %d
+tower_new_sub,No one from the tribe has climbed here yet
+tower_difficulty_hint,"Stronger monsters, more bone dust"
+tower_cleared,Tower %d cleared!
+tower_unlocked,Tower %d unlocked
+tower_clear_diamonds,+%d diamonds
+tower_1_name,Forgotten Crypt
+tower_2_name,Damp Catacombs
+tower_3_name,Deep Ossuary
+tower_4_name,Ash Furnace
+tower_5_name,Tombstone Garden
+tower_6_name,Frozen Abyss
+tower_7_name,Crimson Cathedral
+tower_8_name,Bone Marsh
+tower_9_name,Bell of the Dead
+tower_10_name,Dragon's Throne

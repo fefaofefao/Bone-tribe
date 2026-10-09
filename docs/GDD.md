@@ -377,9 +377,12 @@ Os números abaixo são valores iniciais para o protótipo, não finais. A meta 
 \text{Ataque do inimigo} &= 5 \times 1{,}10^{\,n} \\
 \text{Chefe} &= 8 \times \text{vida e } 1{,}5 \times \text{ataque do inimigo do andar} \\
 \text{XP para o nível } L &= 20 \times L^{1{,}5} \\
-\text{Custo da melhoria no Ossuário} &= 50 \times 1{,}25^{\,k}
+\text{Custo da melhoria no Ossuário} &= 20 \times (k+1)^{1{,}3}\quad(\text{até } k = 120) \\
+\text{Torre } t &: \text{vida } \times (1 + 0{,}35\,(t-1)),\ \text{ataque } \times (1 + 0{,}22\,(t-1)),\ \text{pó } \times (1 + 0{,}5\,(t-1))
 \end{aligned}
 ```
+
+**Torres:** os 30 andares da Cripta formam a Torre 1. O jogo vai até a Torre 10, cada uma com os mesmos 30 andares e chefes, mas monstros mais fortes e mais pó de osso (valores em `data/towers.json`). Vencer o Dragão Ancião da torre N libera a N+1 e paga diamantes na 1ª vez; torres já liberadas podem ser jogadas de novo a qualquer momento. Valores atuais no código: `data/balance.json`.
 
 **Chances e recompensas**
 

@@ -24,6 +24,7 @@ func defaults() -> Dictionary:
 		"diamonds": 0,
 		"runs_played": 0,
 		"best_index": 0,
+		"towers": {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}},
 		"first_open_time": 0,
 		"ossuary": {"hp": 0, "atk": 0, "def": 0, "drop": 0},
 		"discovered_bones": {},
@@ -55,6 +56,11 @@ func load_profile() -> void:
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
 		if typeof(parsed) == TYPE_DICTIONARY:
 			_merge(data, parsed)
+	# perfis de antes das torres: quem já venceu o Dragão começa com a Torre 2 liberada
+	if int(data.towers.unlocked) <= 1 and data.bosses_defeated.has("boss_ancient_dragon") and not data.towers.cleared.has("1"):
+		data.towers.unlocked = 2
+		data.towers.cleared["1"] = true
+		data.towers.best["1"] = int(data.best_index)
 	if int(data.first_open_time) == 0:
 		data.first_open_time = Backend.now()
 		save()
@@ -71,6 +77,7 @@ func _sample_profile() -> void:
 	for id in ["form_night_manticore", "form_werewolf", "form_swarm_queen"]:
 		data.discovered_forms[id] = true
 	data.ossuary = {"hp": 4, "atk": 5, "def": 2, "drop": 1}
+	data.towers = {"unlocked": 3, "selected": 3, "cleared": {"1": true, "2": true}, "best": {"1": 30, "2": 30, "3": 17}}
 	data.companions["companion_lumi"] = {"unlocked": true, "level": 3}
 	data.companions["companion_ossudo"] = {"unlocked": true, "level": 2}
 	data.selected_companion = "companion_lumi"

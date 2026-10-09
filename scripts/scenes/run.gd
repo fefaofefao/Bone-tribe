@@ -45,7 +45,8 @@ func _ready() -> void:
 	demo = bool(p.get("demo", false))
 	autoplay = demo or Dev.env("BT_AUTO") == "1"
 	var start_bone := "" if demo else Meta.take_start_bone()
-	state = RunState.new({"demo": demo, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
+	var tower := 1 if demo else int(p.get("tower", Meta.tower_selected()))
+	state = RunState.new({"demo": demo, "tower": tower, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
 	if start_bone != "":
 		Profile.discover_bone(start_bone)
 	speed = 2.0 if Profile.setting("fast_combat") else 1.0
@@ -55,7 +56,7 @@ func _ready() -> void:
 	_build_world()
 	_build_ui()
 	_refresh_hud()
-	Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played})
+	Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower})
 	_run_loop()
 
 
@@ -65,6 +66,7 @@ func _build_world() -> void:
 	world = Node2D.new()
 	add_child(world)
 	stage = CryptStage.new()
+	stage.tint = Color(String(GameData.tower(state.tower).get("tint", "#948aa3")))
 	world.add_child(stage)
 	hero_view = preload("res://scenes/Ossinho.tscn").instantiate()
 	hero_view.position = HERO_POS
@@ -295,7 +297,7 @@ func _refresh_hud() -> void:
 	xp_bar.set_value(state.xp, RunState.xp_needed(state.level))
 	level_label.text = tr("hud_level") % state.level
 	dust_label.text = Style.num(state.dust)
-	floor_label.text = tr("hud_floor") % [maxi(1, state.floor_n), state.total_floors]
+	floor_label.text = tr("hud_tower_floor") % [state.tower, maxi(1, state.floor_n), state.total_floors]
 	for c in floor_dots.get_children():
 		c.queue_free()
 	var seg_start := int((maxi(1, state.floor_n) - 1) / 10) * 10
@@ -412,7 +414,7 @@ func _intro() -> void:
 	cam.zoom = Vector2.ONE * 1.25
 	cam.position = HERO_POS + Vector2(60, -160)
 	await cam.reset(0.9).finished
-	_show_banner(tr("floor_forgotten_crypt"), Style.C_BONE, 1.6)
+	_show_banner(tr("floor_forgotten_crypt") if state.tower == 1 else tr("tower_label") % [state.tower, tr(String(GameData.tower(state.tower).get("name", "")))], Style.C_BONE, 1.6)
 	await get_tree().create_timer(0.6).timeout
 
 
@@ -1918,16 +1920,17 @@ func _end_run() -> void:
 		Profile.data.runs_played = int(Profile.data.runs_played) + 1
 		Profile.data.best_index = maxi(int(Profile.data.best_index), state.floor_n)
 		Profile.save()
+	var tower_rew := {} if demo else Meta.tower_finish(state.tower, state.floor_n, state.bosses_beaten.has("boss_ancient_dragon"))
 	var stolen := {}
 	if state.dead and not demo:
 		stolen = Meta.hunter_steal(state.equipped)
-	Backend.log_event("run_end", {"floor": state.floor_n, "dead": state.dead, "dust": rewards.total})
+	Backend.log_event("run_end", {"floor": state.floor_n, "dead": state.dead, "dust": rewards.total, "tower": state.tower})
 	await _wait(0.6)
 	var parts := _dialog_frame("victory_title" if state.victory else "run_end_title", Style.C_CANDLE if state.victory else Style.C_BONE)
 	var bg: Control = parts[0]
 	var v: VBoxContainer = parts[1]
 	v.add_child(Style.bold(Body.creature_name(state.equipped), 32, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER))
-	v.add_child(Style.label(tr("run_end_floor") % state.floor_n, 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(Style.label(tr("run_end_tower_floor") % [state.tower, state.floor_n], 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
 	v.add_child(Style.label(tr("run_end_bosses") % state.bosses_beaten.size(), 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
 	if not stolen.is_empty():
 		var hrow := Style.hbox(10)
@@ -1937,6 +1940,13 @@ func _end_run() -> void:
 		hl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hrow.add_child(hl)
 		v.add_child(hrow)
+	if not tower_rew.is_empty():
+		var tw_txt := tr("tower_cleared") % state.tower
+		if int(tower_rew.unlocked) > 0:
+			tw_txt += "\n" + tr("tower_unlocked") % int(tower_rew.unlocked)
+		v.add_child(Style.bold(tw_txt, 26, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER))
+		if int(tower_rew.diamonds) > 0:
+			v.add_child(Style.bold(tr("tower_clear_diamonds") % int(tower_rew.diamonds), 24, Style.C_DIAMOND, HORIZONTAL_ALIGNMENT_CENTER))
 	var dust_l := Style.bold(tr("run_end_dust") % Style.num(int(rewards.total)), 30, Style.C_DUST, HORIZONTAL_ALIGNMENT_CENTER)
 	v.add_child(dust_l)
 	var total := [int(rewards.total)]
@@ -1959,7 +1969,7 @@ func _end_run() -> void:
 	else:
 		await dialog_closed
 	_close_dialog(bg)
-	Router.go("card", {"equipped": state.equipped.duplicate(true), "floor": state.floor_n, "victory": state.victory, "demo": demo})
+	Router.go("card", {"equipped": state.equipped.duplicate(true), "floor": state.floor_n, "tower": state.tower, "victory": state.victory, "demo": demo})
 
 
 # ================================================================ demonstração

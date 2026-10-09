@@ -24,13 +24,13 @@ func log_event(event_name: String, params: Dictionary) -> void:
 func _ga4(event_name: String, p: Dictionary) -> Array:
 	match event_name:
 		"run_start":
-			var out := [["level_start", {"level_name": "forgotten_crypt"}]]
+			var out := [["level_start", {"level_name": "tower_%d" % int(p.get("tower", 1))}]]
 			# início da 2ª partida = terminou a primeira (o "tutorial")
 			if int(p.get("runs", 0)) == 1 and not bool(p.get("demo", false)):
 				out.append(["tutorial_complete", {}])
 			return out
 		"run_end":
-			return [["level_end", {"level_name": "forgotten_crypt", "success": int(not bool(p.get("dead", true))), "floor": int(p.get("floor", 0))}]]
+			return [["level_end", {"level_name": "tower_%d" % int(p.get("tower", 1)), "success": int(not bool(p.get("dead", true))), "floor": int(p.get("floor", 0))}]]
 		"currency_dust", "currency_diamonds":
 			var amount := int(p.get("amount", 0))
 			var currency := "bone_dust" if event_name == "currency_dust" else "diamonds"

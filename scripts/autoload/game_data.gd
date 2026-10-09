@@ -23,6 +23,7 @@ var skins: Dictionary = {}
 var app: Dictionary = {}
 var admob: Dictionary = {}
 var accessories: Dictionary = {}
+var towers: Array = []
 
 var bone_order: Array = []
 var monster_order: Array = []
@@ -60,6 +61,7 @@ func reload() -> void:
 	app = _read("app.json", {})
 	admob = _read("admob.json", {})
 	accessories = _index(_read("accessories.json", []), [])
+	towers = _read("towers.json", {}).get("towers", [])
 	for e in load_errors:
 		push_error(e)
 
@@ -162,3 +164,10 @@ func monster_texture_path(monster_id: String) -> String:
 func catalog_bones() -> Array:
 	## Os 20 ossos do catálogo (sem os básicos).
 	return bones_by({})
+
+
+## Dados da torre (1 a N); fora do intervalo devolve a torre mais próxima.
+func tower(n: int) -> Dictionary:
+	if towers.is_empty():
+		return {}
+	return towers[clampi(n, 1, towers.size()) - 1]

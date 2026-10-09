@@ -32,6 +32,12 @@ var _dia_label: Label
 var _companion: Sprite2D
 var _chips: VBoxContainer
 var _play_hint: Label
+var _play_btn: Button
+var _tower_view := 1
+var _tower_name: Label
+var _tower_sub: Label
+var _tower_prev: Button
+var _tower_next: Button
 var _cal_btn: Button
 var _cal_dot: Panel
 
@@ -211,10 +217,12 @@ func _build_home() -> void:
 	_home.add_child(bottom)
 	_chips = Style.vbox(10)
 	bottom.add_child(_chips)
+	bottom.add_child(_tower_picker())
 	var play := Style.button(tr("btn_play"), "CandleButton", 112)
 	play.add_theme_font_size_override("font_size", 44)
-	play.pressed.connect(func(): Router.go("run", {}))
+	play.pressed.connect(func(): Router.go("run", {"tower": _tower_view}))
 	bottom.add_child(play)
+	_play_btn = play
 	_play_hint = Style.label("", 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	bottom.add_child(_play_hint)
 	_refresh_chips()
@@ -275,10 +283,68 @@ func _refresh_chips() -> void:
 	var stolen := Meta.hunter_stolen()
 	if not stolen.is_empty():
 		_chips.add_child(_chip(GameData.bone_texture_path(String(stolen[-1].id)), tr("chip_hunter") % stolen.size(), Color("e07a8a")))
+	_refresh_tower()
+	_refresh_cal_dot()
+
+
+## Seletor de torre acima do Jogar: setas passam pelas torres liberadas e
+## mostram a próxima, trancada, com o que falta para abri-la.
+func _tower_picker() -> Control:
+	_tower_view = Meta.tower_selected()
+	var row := Style.hbox(8)
+	_tower_prev = _tower_arrow("‹", -1)
+	row.add_child(_tower_prev)
+	var mid := PanelContainer.new()
+	mid.add_theme_stylebox_override("panel", Style.flat_box(Color(Style.C_PANEL, 0.92), Style.C_EDGE, 18, 2, 8))
+	mid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var v := Style.vbox(0)
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	mid.add_child(v)
+	_tower_name = Style.bold("", 26, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER)
+	_tower_name.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_tower_name.clip_text = true
+	v.add_child(_tower_name)
+	_tower_sub = Style.label("", 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	v.add_child(_tower_sub)
+	row.add_child(mid)
+	_tower_next = _tower_arrow("›", 1)
+	row.add_child(_tower_next)
+	return row
+
+
+func _tower_arrow(txt: String, dir: int) -> Button:
+	var b := Style.button(txt, "DarkButton", 76)
+	b.custom_minimum_size.x = 76
+	b.pressed.connect(func():
+		_tower_view = clampi(_tower_view + dir, 1, mini(Meta.tower_unlocked() + 1, Meta.tower_count()))
+		if _tower_view <= Meta.tower_unlocked():
+			Meta.tower_select(_tower_view)
+		Haptics.light()
+		_refresh_tower())
+	return b
+
+
+func _refresh_tower() -> void:
+	if _tower_name == null:
+		return
+	var n := _tower_view
+	var locked := n > Meta.tower_unlocked()
+	var top := mini(Meta.tower_unlocked() + 1, Meta.tower_count())
+	_tower_prev.disabled = n <= 1
+	_tower_next.disabled = n >= top
+	_tower_name.text = tr("tower_label") % [n, tr(String(GameData.tower(n).get("name", "")))]
+	_tower_name.add_theme_color_override("font_color", Style.C_MUTED if locked else Style.C_BONE)
+	if locked:
+		_tower_sub.text = tr("tower_locked_hint") % (n - 1)
+	elif Meta.tower_cleared(n):
+		_tower_sub.text = tr("tower_cleared_sub")
+	else:
+		_tower_sub.text = tr("tower_best_sub") % Meta.tower_best(n) if Meta.tower_best(n) > 0 else tr("tower_new_sub")
+	if _play_btn:
+		_play_btn.disabled = locked
 	if _play_hint:
 		var best := int(Profile.data.get("best_index", 0))
-		_play_hint.text = tr("home_best_floor") % best if best > 0 else tr("home_first_run")
-	_refresh_cal_dot()
+		_play_hint.text = tr("tower_difficulty_hint") if n > 1 and not locked else (tr("home_best_floor") % best if best > 0 else tr("home_first_run"))
 
 
 ## Cartão do equipamento (companheiro / osso inicial): toca e abre a aba certa.

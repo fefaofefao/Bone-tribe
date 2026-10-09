@@ -228,3 +228,12 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - Receita de compras e anúncios não é enviada pelo jogo: vem do vínculo do Firebase com a Play Console e o AdMob (evita contar em dobro).
 - Crashlytics ficou de fora nesta versão: exige o plugin do Gradle com ID de build; sem ele o app fecha ao abrir. Entra numa próxima atualização.
 - `Backend.remote_config(chave, padrão)` lê o Remote Config com o tipo do valor padrão (número, texto, verdadeiro/falso ou JSON).
+
+## 10 torres (dificuldade constante até o fim)
+- **Por quê:** com 30 andares, quem joga 2 a 3 dias vence o Dragão e o jogo fica fácil. Agora os 30 andares são a **Torre 1** e o jogo vai até a **Torre 10**.
+- **Como funciona:** cada torre repete os 30 andares, chefes e eventos, com inimigos mais fortes (vida x1,35 / ataque x1,22 na Torre 2 ... vida x4,15 / ataque x2,98 na Torre 10; vale para monstros, chefes, Caçador e aliados) e mais pó de osso (x1,5 ... x5,5). Vencer o Dragão Ancião da torre libera a próxima, já a deixa selecionada e paga diamantes na 1ª vez (30, 45, ... 165). Qualquer torre liberada pode ser jogada de novo (o seletor da tela inicial passa por elas e mostra a próxima trancada e o que falta). Perfis antigos que já venceram o Dragão começam com a Torre 2 liberada.
+- **Ossuário:** o custo antigo (50 x 1,25^k, máximo 30) explodia e travava a evolução. Novo: 20 x (k+1)^1,3, até o nível 120 por atributo, para sempre haver melhoria possível rumo à próxima torre. Os ganhos por nível não mudaram.
+- **Calibração** (`tests/BalanceSim.tscn -- mode=towers`, 16 jogadores simulados que só usam o Ossuário, sem relíquias, companheiros nem Gabinete): 1ª vitória na Torre 1 por volta da partida 8; Torre 2 ~18; 3 ~31; 4 ~46; 5 ~66; 6 ~85; 7 ~108; 8 ~133; 9 ~160; 10 ~180. Em todas as torres 87% a 97% das partidas terminam em derrota, então o jogador sempre tem um desafio e um motivo para melhorar. Jogadores reais, com relíquias e companheiros, avançam mais rápido que a simulação.
+- **Tela:** seletor "‹ Torre N · Nome ›" acima do Jogar (com o recorde da torre), "Torre N · Andar X/30" no topo da partida, nome da torre na entrada, cor do ambiente própria de cada torre, aviso de torre vencida/liberada no fim da partida e torre no Cartão da Criatura.
+- **Analytics:** `run_start`/`run_end` levam `tower`; no GA4 `level_name` vira `tower_N`; novo evento `tower_clear`.
+

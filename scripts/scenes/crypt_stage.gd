@@ -17,6 +17,8 @@ var lights: Array = []
 var _t := 0.0
 var _flames: Array = []
 var low := false
+## Cor do ambiente (cada torre tem a sua); transparente = cor padrão.
+var tint := Color(0, 0, 0, 0)
 
 
 func _ready() -> void:
@@ -42,7 +44,7 @@ func _ready() -> void:
 	add_child(ext2)
 
 	modulate_node = CanvasModulate.new()
-	modulate_node.color = Color(0.58, 0.53, 0.64) if not low else Color(0.92, 0.9, 0.96)
+	modulate_node.color = (tint if tint.a > 0.0 else Color(0.58, 0.53, 0.64)) if not low else Color(0.92, 0.9, 0.96)
 	add_child(modulate_node)
 
 	for prop in [["env_tombstone", Vector2(40, 770), 0.6], ["env_bone_pile", Vector2(600, 790), 0.55], ["env_tombstone", Vector2(700, 780), 0.5]]:

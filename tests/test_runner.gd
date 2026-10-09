@@ -347,9 +347,10 @@ func test_10_meta_progression() -> void:
 	Profile.data.dust = 100000
 	# Ossuário
 	var c0 := Meta.ossuary_cost("atk")
-	check(c0 == 50, "custo da 1ª melhoria = 50 (GDD)")
+	check(c0 == int(GameData.bal("ossuary/cost_base", 0)), "custo da 1ª melhoria = custo base")
 	check(Meta.ossuary_upgrade("atk") and Meta.ossuary_level("atk") == 1, "melhoria do Ossuário")
-	check(Meta.ossuary_cost("atk") == int(roundf(50 * 1.25)), "custo cresce 1,25x")
+	check(Meta.ossuary_cost("atk") == int(roundf(c0 * pow(2.0, float(GameData.bal("ossuary/cost_exp", 1.0))))), "custo cresce em potência do nível")
+	check(Meta.ossuary_max() >= 100, "Ossuário com níveis para as 10 torres")
 	# Coleção: família completa dá +5%
 	for id in Meta.family_bones("family_shadow"):
 		Profile.discover_bone(id)
@@ -597,3 +598,59 @@ func test_14_firebase_provider() -> void:
 	prov.log_event("custom", {"lista": [1, 2], "um_nome_de_parametro_muito_comprido_mesmo_demais": 1})
 	var p: Dictionary = fake.events[0][1]
 	check(typeof(p.get("lista")) == TYPE_STRING and p.keys().all(func(k): return String(k).length() <= 40), "parâmetros limpos para o Firebase")
+
+
+func test_15_towers() -> void:
+	check(GameData.towers.size() == 10, "10 torres")
+	var prev := {}
+	for i in GameData.towers.size():
+		var t: Dictionary = GameData.towers[i]
+		check(tr_all(String(t.name)), "nome da torre traduzido: " + String(t.name))
+		if not prev.is_empty():
+			for k in ["hp_mult", "atk_mult", "dust_mult"]:
+				check(float(t[k]) > float(prev[k]), "torre %d mais difícil/rica que a anterior (%s)" % [i + 1, k])
+		prev = t
+	for k in ["hud_tower_floor", "tower_locked_hint", "tower_cleared", "tower_unlocked", "card_tower_floor", "run_end_tower_floor"]:
+		check(tr_all(k), "texto das torres: " + k)
+	# inimigos e pó escalam com a torre
+	var t1 := RunState.new({"seed": 1, "tower": 1})
+	var hp1 := MonsterFactory.make("boss_ancient_dragon", 30).max_hp
+	var t5 := RunState.new({"seed": 1, "tower": 5})
+	var hp5 := MonsterFactory.make("boss_ancient_dragon", 30).max_hp
+	check(t5.tower == 5 and hp5 > hp1 * 1.5, "Dragão da torre 5 bem mais forte (%d x %d)" % [hp5, hp1])
+	t1.floor_n = 20
+	t5.floor_n = 20
+	check(int(t5.end_rewards().total) > int(t1.end_rewards().total), "torre 5 paga mais pó")
+	var demo := RunState.new({"seed": 1, "tower": 7, "demo": true})
+	check(demo.tower == 1, "demonstração sempre na torre 1")
+	MonsterFactory.tower = 1
+	# progressão: vencer o Dragão libera a próxima uma vez só
+	var backup: Dictionary = Profile.data.duplicate(true)
+	Profile.data.towers = {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}}
+	check(Meta.tower_unlocked() == 1 and Meta.tower_selected() == 1, "começa só com a torre 1")
+	Meta.tower_select(3)
+	check(Meta.tower_selected() == 1, "não escolhe torre trancada")
+	var r0 := Meta.tower_finish(1, 18, false)
+	check(r0.is_empty() and Meta.tower_best(1) == 18 and Meta.tower_unlocked() == 1, "derrota guarda recorde e não libera")
+	var dia0 := int(Profile.data.diamonds)
+	var r1 := Meta.tower_finish(1, 30, true)
+	check(int(r1.get("unlocked", 0)) == 2 and Meta.tower_unlocked() == 2 and Meta.tower_selected() == 2, "vencer a torre 1 libera e seleciona a 2")
+	check(int(Profile.data.diamonds) == dia0 + int(GameData.tower(1).first_clear.diamonds), "diamantes da 1ª vitória na torre")
+	check(Meta.tower_finish(1, 30, true).is_empty() and int(Profile.data.diamonds) == dia0 + int(GameData.tower(1).first_clear.diamonds), "repetir torre vencida não paga de novo")
+	Meta.tower_select(1)
+	check(Meta.tower_selected() == 1, "pode voltar a jogar torres já vencidas")
+	# perfis antigos que já venceram o Dragão ganham a torre 2
+	Profile.data.towers = {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}}
+	Profile.data.bosses_defeated["boss_ancient_dragon"] = 1
+	var saved := Profile.data.duplicate(true)
+	Profile.data = saved
+	Profile.save()
+	Profile.load_profile()
+	check(Meta.tower_unlocked() == 2 and Meta.tower_cleared(1), "perfil antigo com o Dragão vencido libera a torre 2")
+	Profile.data = backup
+	Profile.save()
+	# partida automática na torre alta termina e usa a torre certa
+	var st := AutoRunner.new({"seed": 3, "tower": 10}).play()
+	check(st.tower == 10 and st.floor_n >= 1, "partida automática na torre 10")
+	MonsterFactory.tower = 1
+

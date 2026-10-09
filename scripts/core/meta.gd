@@ -33,8 +33,11 @@ static func ossuary_level(stat: String) -> int:
 	return int(Profile.data.ossuary.get(stat, 0))
 
 
+## Custo do próximo nível: base x (nível + 1) ^ expoente. Cresce sem explodir,
+## para sempre haver uma melhoria possível rumo à próxima torre.
 static func ossuary_cost(stat: String) -> int:
-	return cost(float(GameData.bal("ossuary/cost_base", 50)), float(GameData.bal("ossuary/cost_growth", 1.25)), ossuary_level(stat))
+	var lv := ossuary_level(stat)
+	return int(roundf(float(GameData.bal("ossuary/cost_base", 50)) * pow(lv + 1.0, float(GameData.bal("ossuary/cost_exp", 1.6)))))
 
 
 static func ossuary_max() -> int:
@@ -416,3 +419,53 @@ static func hunter_return() -> Dictionary:
 	Profile.data.hunter.stolen = stolen
 	Profile.save()
 	return {"id": inst.id, "level": mini(int(GameData.bal("bone_max_level", 5)), int(inst.get("level", 1)) + 1)}
+
+
+# ---------------------------------------------------------------- torres
+
+static func tower_count() -> int:
+	return maxi(1, GameData.towers.size())
+
+
+## Torre mais alta liberada (vencer o Dragão da torre N libera a N+1).
+static func tower_unlocked() -> int:
+	return clampi(int(Profile.data.towers.get("unlocked", 1)), 1, tower_count())
+
+
+static func tower_selected() -> int:
+	return clampi(int(Profile.data.towers.get("selected", 1)), 1, tower_unlocked())
+
+
+static func tower_select(n: int) -> void:
+	Profile.data.towers.selected = clampi(n, 1, tower_unlocked())
+	Profile.save()
+
+
+static func tower_cleared(n: int) -> bool:
+	return Profile.data.towers.cleared.has(str(n))
+
+
+static func tower_best(n: int) -> int:
+	return int(Profile.data.towers.best.get(str(n), 0))
+
+
+## Fim de partida na torre n. Na 1ª vitória sobre o Dragão Ancião dela paga os
+## diamantes da torre e libera a próxima. Devolve {"diamonds", "unlocked"} ou {}.
+static func tower_finish(n: int, floor_n: int, beat_dragon: bool) -> Dictionary:
+	var t: Dictionary = Profile.data.towers
+	t.best[str(n)] = maxi(tower_best(n), floor_n)
+	if not beat_dragon or tower_cleared(n):
+		Profile.save()
+		return {}
+	t.cleared[str(n)] = true
+	var next := mini(n + 1, tower_count())
+	var opened := next > tower_unlocked()
+	t.unlocked = maxi(tower_unlocked(), next)
+	if opened:
+		t.selected = next
+	var dia := int(GameData.tower(n).get("first_clear", {}).get("diamonds", 0))
+	if dia > 0:
+		Profile.add_diamonds(dia, "tower_clear")
+	Profile.save()
+	Backend.log_event("tower_clear", {"tower": n})
+	return {"diamonds": dia, "unlocked": next if opened else 0}

@@ -1042,3 +1042,25 @@ loadout_none,Ninguno
 loadout_choose,Elegir
 home_best_floor,Tu récord: piso %d
 home_first_run,La Cripta Olvidada te espera
+hud_tower_floor,Torre %d · Piso %d/%d
+run_end_tower_floor,Torre %d · piso alcanzado: %d
+card_tower_floor,Torre %d · Piso %d
+tower_label,Torre %d · %s
+tower_locked_hint,Bloqueada: vence al Dragón Ancestral de la Torre %d
+tower_cleared_sub,Torre vencida · vuelve a jugarla por polvo de hueso
+tower_best_sub,Tu récord aquí: piso %d
+tower_new_sub,Nadie de la tribu ha subido hasta aquí
+tower_difficulty_hint,"Monstruos más fuertes, más polvo de hueso"
+tower_cleared,¡Torre %d vencida!
+tower_unlocked,Torre %d desbloqueada
+tower_clear_diamonds,+%d diamantes
+tower_1_name,Cripta Olvidada
+tower_2_name,Catacumbas Húmedas
+tower_3_name,Osario Profundo
+tower_4_name,Horno de Cenizas
+tower_5_name,Jardín de Lápidas
+tower_6_name,Abismo Helado
+tower_7_name,Catedral Carmesí
+tower_8_name,Pantano de Huesos
+tower_9_name,Campana de los Muertos
+tower_10_name,Trono del Dragón

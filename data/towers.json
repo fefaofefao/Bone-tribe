@@ -1,0 +1,115 @@
+{
+	"_doc": "Torres: cada uma tem os 30 andares da Cripta com inimigos mais fortes (vida e ataque multiplicados) e mais pó de osso. Vencer o Dragão Ancião da torre libera a próxima. Calibrado por tests/BalanceSim.tscn (modo torres).",
+	"towers": [
+		{
+			"id": "tower_1",
+			"name": "tower_1_name",
+			"hp_mult": 1.0,
+			"atk_mult": 1.0,
+			"dust_mult": 1.0,
+			"first_clear": {
+				"diamonds": 30
+			},
+			"tint": "#948aa3"
+		},
+		{
+			"id": "tower_2",
+			"name": "tower_2_name",
+			"hp_mult": 1.35,
+			"atk_mult": 1.22,
+			"dust_mult": 1.5,
+			"first_clear": {
+				"diamonds": 45
+			},
+			"tint": "#7f97a8"
+		},
+		{
+			"id": "tower_3",
+			"name": "tower_3_name",
+			"hp_mult": 1.7,
+			"atk_mult": 1.44,
+			"dust_mult": 2.0,
+			"first_clear": {
+				"diamonds": 60
+			},
+			"tint": "#8a9a86"
+		},
+		{
+			"id": "tower_4",
+			"name": "tower_4_name",
+			"hp_mult": 2.05,
+			"atk_mult": 1.66,
+			"dust_mult": 2.5,
+			"first_clear": {
+				"diamonds": 75
+			},
+			"tint": "#ab8a78"
+		},
+		{
+			"id": "tower_5",
+			"name": "tower_5_name",
+			"hp_mult": 2.4,
+			"atk_mult": 1.88,
+			"dust_mult": 3.0,
+			"first_clear": {
+				"diamonds": 90
+			},
+			"tint": "#8f9a8a"
+		},
+		{
+			"id": "tower_6",
+			"name": "tower_6_name",
+			"hp_mult": 2.75,
+			"atk_mult": 2.1,
+			"dust_mult": 3.5,
+			"first_clear": {
+				"diamonds": 105
+			},
+			"tint": "#8aa2c0"
+		},
+		{
+			"id": "tower_7",
+			"name": "tower_7_name",
+			"hp_mult": 3.1,
+			"atk_mult": 2.32,
+			"dust_mult": 4.0,
+			"first_clear": {
+				"diamonds": 120
+			},
+			"tint": "#b07c84"
+		},
+		{
+			"id": "tower_8",
+			"name": "tower_8_name",
+			"hp_mult": 3.45,
+			"atk_mult": 2.54,
+			"dust_mult": 4.5,
+			"first_clear": {
+				"diamonds": 135
+			},
+			"tint": "#7f9a84"
+		},
+		{
+			"id": "tower_9",
+			"name": "tower_9_name",
+			"hp_mult": 3.8,
+			"atk_mult": 2.76,
+			"dust_mult": 5.0,
+			"first_clear": {
+				"diamonds": 150
+			},
+			"tint": "#a59a7c"
+		},
+		{
+			"id": "tower_10",
+			"name": "tower_10_name",
+			"hp_mult": 4.15,
+			"atk_mult": 2.98,
+			"dust_mult": 5.5,
+			"first_clear": {
+				"diamonds": 165
+			},
+			"tint": "#a07ca8"
+		}
+	]
+}

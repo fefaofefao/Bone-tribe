@@ -1042,3 +1042,25 @@ loadout_none,Nenhum
 loadout_choose,Escolher
 home_best_floor,Seu recorde: andar %d
 home_first_run,A Cripta Esquecida espera por você
+hud_tower_floor,Torre %d · Andar %d/%d
+run_end_tower_floor,Torre %d · andar alcançado: %d
+card_tower_floor,Torre %d · Andar %d
+tower_label,Torre %d · %s
+tower_locked_hint,Trancada: vença o Dragão Ancião da Torre %d
+tower_cleared_sub,Torre vencida · jogue de novo por pó de osso
+tower_best_sub,Seu recorde aqui: andar %d
+tower_new_sub,Ninguém da tribo subiu até aqui ainda
+tower_difficulty_hint,"Monstros mais fortes, mais pó de osso"
+tower_cleared,Torre %d vencida!
+tower_unlocked,Torre %d liberada
+tower_clear_diamonds,+%d diamantes
+tower_1_name,Cripta Esquecida
+tower_2_name,Catacumbas Úmidas
+tower_3_name,Ossário Profundo
+tower_4_name,Fornalha de Cinzas
+tower_5_name,Jardim de Lápides
+tower_6_name,Abismo Gelado
+tower_7_name,Catedral Rubra
+tower_8_name,Pântano dos Ossos
+tower_9_name,Sino dos Mortos
+tower_10_name,Trono do Dragão

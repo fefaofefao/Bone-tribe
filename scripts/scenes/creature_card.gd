@@ -175,7 +175,7 @@ func _build_card(p: Dictionary) -> void:
 	box.add_child(name_l)
 	if not forms.is_empty():
 		box.add_child(Style.bold(tr("card_forms") % tr(String(GameData.forms[forms[0]].name)), 46, aura, HORIZONTAL_ALIGNMENT_CENTER))
-	var sub := tr("card_floor") % int(p.get("floor", 1))
+	var sub := tr("card_tower_floor") % [int(p.get("tower", 1)), int(p.get("floor", 1))]
 	if p.get("victory", false):
 		sub += "  ·  " + tr("card_victory")
 	box.add_child(Style.label(sub, 40, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))

@@ -64,6 +64,12 @@
 - `store/`: textos da ficha (3 idiomas), ícone 512, gráfico de destaque, 24 capturas 1080x1920 (8 por idioma); rascunho de `docs/privacy.html`.
 - Checklist completo em `docs/PUBLICACAO.md`.
 
+### 10 torres
+- Os 30 andares viraram a Torre 1; o jogo vai até a Torre 10, cada uma mais difícil e com mais pó (`data/towers.json`). Vencer o Dragão libera a próxima (com diamantes na 1ª vez); torres vencidas podem ser jogadas de novo.
+- Ossuário com custo que não explode e até 120 níveis por atributo.
+- Seletor de torre na tela inicial, torre no topo da partida, no fim da partida e no Cartão; cor própria de cada torre.
+- Simulação de progressão (`tests/BalanceSim.tscn -- mode=towers`) e testes automáticos das torres.
+
 ## Concluído
 Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
 

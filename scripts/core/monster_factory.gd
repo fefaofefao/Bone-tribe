@@ -4,12 +4,19 @@ extends RefCounted
 ## aplicando as fórmulas de equilíbrio do GDD (n = andar).
 
 
+## Torre em jogo (o RunState define ao começar a partida). Multiplica a vida
+## e o ataque de todos os lutadores criados: monstros, chefes, Caçador e aliados.
+static var tower := 1
+
+
 static func enemy_hp(floor_n: int) -> float:
-	return float(GameData.bal("enemy/hp_base", 30)) * pow(float(GameData.bal("enemy/hp_growth", 1.12)), floor_n)
+	return float(GameData.bal("enemy/hp_base", 30)) * pow(float(GameData.bal("enemy/hp_growth", 1.12)), floor_n) \
+		* float(GameData.tower(tower).get("hp_mult", 1.0))
 
 
 static func enemy_atk(floor_n: int) -> float:
-	return float(GameData.bal("enemy/atk_base", 5)) * pow(float(GameData.bal("enemy/atk_growth", 1.10)), floor_n)
+	return float(GameData.bal("enemy/atk_base", 5)) * pow(float(GameData.bal("enemy/atk_growth", 1.10)), floor_n) \
+		* float(GameData.tower(tower).get("atk_mult", 1.0))
 
 
 static func make(monster_id: String, floor_n: int) -> Fighter:

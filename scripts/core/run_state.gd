@@ -31,6 +31,7 @@ var hunter_met := false
 var bigorna_left := 0
 var next_event: Dictionary = {}
 var segment_chest: Dictionary = {}
+var tower := 1
 
 
 func _init(opts: Dictionary = {}) -> void:
@@ -39,6 +40,8 @@ func _init(opts: Dictionary = {}) -> void:
 	else:
 		rng.randomize()
 	demo = bool(opts.get("demo", false))
+	tower = 1 if demo else clampi(int(opts.get("tower", 1)), 1, maxi(1, GameData.towers.size()))
+	MonsterFactory.tower = tower
 	prototype = bool(opts.get("prototype", GameData.bal("run/prototype_mode", false))) or demo
 	total_floors = int(GameData.bal("run/prototype_floors", 10)) if prototype else int(GameData.bal("run/floors", 30))
 	companion_id = String(opts.get("companion", ""))
@@ -358,5 +361,7 @@ func end_rewards() -> Dictionary:
 	var per_boss := int(GameData.bal("dust/per_boss", 50))
 	var base := floor_n * per_floor + bosses_beaten.size() * per_boss + dust
 	var bonus := stat("dust_bonus")
-	var total := int(roundf(base * (1.0 + bonus)))
-	return {"floors": floor_n * per_floor, "bosses": bosses_beaten.size() * per_boss, "collected": dust, "bonus_pct": bonus, "total": total}
+	var tower_mult := float(GameData.tower(tower).get("dust_mult", 1.0))
+	var total := int(roundf(base * (1.0 + bonus) * tower_mult))
+	return {"floors": floor_n * per_floor, "bosses": bosses_beaten.size() * per_boss, "collected": dust, "bonus_pct": bonus,
+		"tower_mult": tower_mult, "total": total}
