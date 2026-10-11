@@ -18,20 +18,61 @@ APP_RE = re.compile(r"^ca-app-pub-\d+~\d+$")
 UNIT_RE = re.compile(r"^ca-app-pub-\d+/\d+$")
 
 
+def normalize(value):
+    value = value.replace("\ufeff", "").replace("\\/", "/")
+    for ch in ("\u200b", "\u200c", "\u200d", "\u2060", "\u00a0"):
+        value = value.replace(ch, "")
+    return value.strip().strip('"').strip("'").strip()
+
+
+def shape(value):
+    """Descreve o ID sem revelar os dígitos (o log do Actions mascara o valor inteiro)."""
+    sep = "?"
+    match = re.search(r"\d([^\d])\d", value)
+    if match:
+        char = match.group(1)
+        sep = {"~": "tilde", "/": "slash", "\\": "backslash", "-": "hyphen"}.get(
+            char, "U+%04X" % ord(char)
+        )
+    flags = []
+    if "~" in value:
+        flags.append("tilde")
+    if "/" in value:
+        flags.append("slash")
+    if "\\" in value:
+        flags.append("backslash")
+    if any(c in value for c in "\"'"):
+        flags.append("quote")
+    if any(c.isspace() for c in value):
+        flags.append("space")
+    if any(ord(c) > 127 for c in value):
+        flags.append("nonascii")
+    return "len=%d sep=%s flags=%s" % (len(value), sep, ",".join(flags) or "none")
+
+
 def main():
-    app = os.environ.get("ADMOB_APP_ID", "").strip()
-    rewarded = os.environ.get("ADMOB_REWARDED_ID", "").strip()
-    inter = os.environ.get("ADMOB_INTERSTITIAL_ID", "").strip()
+    app = normalize(os.environ.get("ADMOB_APP_ID", ""))
+    rewarded = normalize(os.environ.get("ADMOB_REWARDED_ID", ""))
+    inter = normalize(os.environ.get("ADMOB_INTERSTITIAL_ID", ""))
     if not (app or rewarded or inter):
         print("::warning::AdMob sem IDs reais (variáveis ADMOB_*); o build usa os IDs de TESTE.")
         return 0
     errors = []
     if not APP_RE.match(app):
-        errors.append("ADMOB_APP_ID deve ter o formato ca-app-pub-XXXXXXXX~YYYYYYYY")
+        errors.append(
+            "ADMOB_APP_ID deve ter o formato ca-app-pub-XXXXXXXX~YYYYYYYY (%s)"
+            % shape(app)
+        )
     if not UNIT_RE.match(rewarded):
-        errors.append("ADMOB_REWARDED_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY")
+        errors.append(
+            "ADMOB_REWARDED_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s)"
+            % shape(rewarded)
+        )
     if not UNIT_RE.match(inter):
-        errors.append("ADMOB_INTERSTITIAL_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY")
+        errors.append(
+            "ADMOB_INTERSTITIAL_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s)"
+            % shape(inter)
+        )
     if errors:
         for e in errors:
             print("::error::" + e)
