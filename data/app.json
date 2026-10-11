@@ -1,6 +1,6 @@
 {
 	"_doc": "Dados de publicação. privacy_url e support_email precisam ser preenchidos antes de enviar para a Google Play (ver docs/PUBLICACAO.md). store_url vai no texto do compartilhamento.",
-	"privacy_url": "",
+	"privacy_url": "https://github.com/fefaofefao/Bone-tribe/blob/ccr-50ea6095-c6t7ep/docs/PRIVACIDADE.md",
 	"support_email": "",
 	"author": "Fernando Martins Sampaio",
 	"supporters": [],

@@ -28,8 +28,8 @@ Sempre pelo GitHub Actions (workflow **Android AAB e APK**):
 - [ ] Ativar a *Assinatura de apps do Google Play* ao enviar o primeiro AAB.
 
 ### Privacidade e contato
-- [ ] Revisar o rascunho `docs/privacy.html` (trocar `CONTATO_EMAIL`/`CONTACT_EMAIL` e `DATA`/`DATE`/`FECHA`).
-- [ ] Hospedar a página num endereço público. Opção simples: GitHub Pages servindo a pasta `docs/` (repositório público, ou plano pago para repositório privado), ficando em `https://fefaofefao.github.io/bone-tribe/privacy.html`.
+- [x] Política finalizada (data preenchida; contato pelas issues do GitHub). Versão publicada: `docs/PRIVACIDADE.md`, em https://github.com/fefaofefao/Bone-tribe/blob/ccr-50ea6095-c6t7ep/docs/PRIVACIDADE.md (mesmo texto de `docs/privacy.html`).
+- [x] Endereço público: o link do GitHub acima (já em `privacy_url`). Opcional: Opção simples: GitHub Pages servindo a pasta `docs/` (repositório público, ou plano pago para repositório privado), ficando em `https://fefaofefao.github.io/bone-tribe/privacy.html`.
 - [ ] Me passar o endereço e o e-mail de suporte para eu preencher `privacy_url` e `support_email` em `data/app.json` (o item "Privacidade" aparece no menu de Configurações assim que o endereço existir).
 
 ### AdMob (IDs reais)
