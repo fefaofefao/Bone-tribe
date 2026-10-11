@@ -66,36 +66,47 @@ def as_unit(value, app):
 
 def main():
     app = normalize(os.environ.get("ADMOB_APP_ID", ""))
-    rewarded = as_unit(normalize(os.environ.get("ADMOB_REWARDED_ID", "")), app)
-    inter = as_unit(normalize(os.environ.get("ADMOB_INTERSTITIAL_ID", "")), app)
-    if not (app or rewarded or inter):
+    raw_rewarded = normalize(os.environ.get("ADMOB_REWARDED_ID", ""))
+    raw_inter = normalize(os.environ.get("ADMOB_INTERSTITIAL_ID", ""))
+    rewarded = as_unit(raw_rewarded, app)
+    inter = as_unit(raw_inter, app)
+    if not (app or raw_rewarded or raw_inter):
         print("::warning::AdMob sem IDs reais (variáveis ADMOB_*); o build usa os IDs de TESTE.")
         return 0
-    errors = []
-    if not APP_RE.match(app):
-        errors.append(
-            "ADMOB_APP_ID deve ter o formato ca-app-pub-XXXXXXXX~YYYYYYYY (%s)"
+    if app and not APP_RE.match(app):
+        print(
+            "::error::ADMOB_APP_ID deve ter o formato ca-app-pub-XXXXXXXX~YYYYYYYY (%s)"
             % shape(app)
         )
-    if not UNIT_RE.match(rewarded):
-        same = "igual ao app" if rewarded == app else "diferente do app"
-        errors.append(
-            "ADMOB_REWARDED_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s, %s)"
-            % (shape(rewarded), same)
-        )
-    if not UNIT_RE.match(inter):
-        same = "igual ao app" if inter == app else "diferente do app"
-        errors.append(
-            "ADMOB_INTERSTITIAL_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s, %s)"
-            % (shape(inter), same)
-        )
-    if errors:
-        for e in errors:
-            print("::error::" + e)
         return 1
 
     with open(DATA, encoding="utf-8") as f:
         data = json.load(f)
+
+    # Secret repetido do app, ou sem barra, não é um bloco. Mantém o ID de teste
+    # desse bloco para o AAB sair; o aviso fica no log da execução.
+    test_units = []
+    if not UNIT_RE.match(rewarded):
+        test_units.append("ADMOB_REWARDED_ID")
+        rewarded = data["rewarded"]
+    if not UNIT_RE.match(inter):
+        test_units.append("ADMOB_INTERSTITIAL_ID")
+        inter = data["interstitial"]
+    if test_units:
+        print(
+            "::warning::%s não é um bloco (formato ca-app-pub-XXX/YYY). "
+            "O valor atual repete o ID do app ou não tem barra, então esse AAB "
+            "usa o bloco de TESTE do Google. Troque o secret e rode de novo para anúncio real."
+            % " e ".join(test_units)
+        )
+    if not app:
+        data["rewarded"] = rewarded
+        data["interstitial"] = inter
+        with open(DATA, "w", encoding="utf-8") as f:
+            f.write(json.dumps(data, ensure_ascii=False, indent="\t") + "\n")
+        print("AdMob: sem ID de app real; blocos atualizados a partir dos secrets.")
+        return 0
+
     data["app_id"] = app
     data["rewarded"] = rewarded
     data["interstitial"] = inter
@@ -113,7 +124,10 @@ def main():
         text = text.rstrip("\n") + "\n\n[admob]\n\n" + line + "\n"
     with open(PROJECT, "w", encoding="utf-8") as f:
         f.write(text)
-    print("AdMob: IDs reais aplicados (app %s)" % app)
+    if test_units:
+        print("AdMob: ID do app aplicado; blocos de teste (%s)" % ", ".join(test_units))
+    else:
+        print("AdMob: IDs reais aplicados")
     return 0
 
 
