@@ -6,7 +6,7 @@
 ## Política de Privacidade
 Última atualização: 11 de outubro de 2026
 
-Esta política explica quais dados o jogo Bone Tribe (com.bonetribe.game), desenvolvido por Fernando Martins Sampaio, coleta e como eles são usados.
+Esta política explica quais dados o jogo Bone Tribe (com.fsamplabs.bone_tribe), desenvolvido por Fernando Martins Sampaio, coleta e como eles são usados.
 
 ### Dados guardados no aparelho
 O progresso do jogo (ossos, coleção, diamantes, configurações) fica salvo no seu aparelho. Não pedimos nome, e-mail nem cadastro.
@@ -33,7 +33,7 @@ Você pode apagar os dados do jogo desinstalando o aplicativo ou limpando os dad
 ## Privacy Policy
 Last updated: October 11, 2026
 
-This policy explains what data the game Bone Tribe (com.bonetribe.game), developed by Fernando Martins Sampaio, collects and how it is used.
+This policy explains what data the game Bone Tribe (com.fsamplabs.bone_tribe), developed by Fernando Martins Sampaio, collects and how it is used.
 
 ### Data stored on your device
 Game progress (bones, collection, diamonds, settings) is saved on your device. We do not ask for your name, email or an account.
@@ -60,7 +60,7 @@ You can delete game data by uninstalling the app or clearing its data in Android
 ## Política de Privacidad
 Última actualización: 11 de octubre de 2026
 
-Esta política explica qué datos recopila el juego Bone Tribe (com.bonetribe.game), desarrollado por Fernando Martins Sampaio, y cómo se usan.
+Esta política explica qué datos recopila el juego Bone Tribe (com.fsamplabs.bone_tribe), desarrollado por Fernando Martins Sampaio, y cómo se usan.
 
 ### Datos guardados en el dispositivo
 El progreso del juego (huesos, colección, diamantes, ajustes) se guarda en tu dispositivo. No pedimos nombre, correo ni registro.

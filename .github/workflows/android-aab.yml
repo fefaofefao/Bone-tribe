@@ -118,9 +118,9 @@ jobs:
 
       - name: IDs do AdMob (variáveis do repositório; sem elas ficam os IDs de teste)
         env:
-          ADMOB_APP_ID: ${{ vars.ADMOB_APP_ID }}
-          ADMOB_REWARDED_ID: ${{ vars.ADMOB_REWARDED_ID }}
-          ADMOB_INTERSTITIAL_ID: ${{ vars.ADMOB_INTERSTITIAL_ID }}
+          ADMOB_APP_ID: ${{ vars.ADMOB_APP_ID || secrets.ADMOB_APP_ID }}
+          ADMOB_REWARDED_ID: ${{ vars.ADMOB_REWARDED_ID || secrets.ADMOB_REWARDED_ID }}
+          ADMOB_INTERSTITIAL_ID: ${{ vars.ADMOB_INTERSTITIAL_ID || secrets.ADMOB_INTERSTITIAL_ID }}
         run: python3 tools/admob_ids.py
 
       - name: Firebase (google-services.json do secret; sem ele o build sai sem Firebase)
@@ -129,7 +129,7 @@ jobs:
         run: |
           if [ -n "$FIREBASE_GOOGLE_SERVICES_JSON" ]; then
             printf '%s' "$FIREBASE_GOOGLE_SERVICES_JSON" > addons/bonetribe_firebase/google-services.json
-            python3 -c "import json,sys; d=json.load(open('addons/bonetribe_firebase/google-services.json')); pk=[c['client_info']['android_client_info']['package_name'] for c in d['client']]; assert 'com.bonetribe.game' in pk, pk; print('Firebase: projeto', d['project_info']['project_id'])"
+            python3 -c "import json,sys; d=json.load(open('addons/bonetribe_firebase/google-services.json')); pk=[c['client_info']['android_client_info']['package_name'] for c in d['client']]; assert 'com.fsamplabs.bone_tribe' in pk, pk; print('Firebase: projeto', d['project_info']['project_id'])"
           else
             echo "::warning::Sem o secret FIREBASE_GOOGLE_SERVICES_JSON: o build sai sem Firebase (eventos ficam só no aparelho)."
           fi

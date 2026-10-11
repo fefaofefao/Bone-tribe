@@ -1,6 +1,6 @@
 # Publicação na Google Play
 
-Checklist para levar o Bone Tribe (com.bonetribe.game) do repositório até a loja. Dividido entre o que só o dono da conta pode fazer e o que o Claude Code faz no código.
+Checklist para levar o Bone Tribe (com.fsamplabs.bone_tribe) do repositório até a loja. Dividido entre o que só o dono da conta pode fazer e o que o Claude Code faz no código.
 
 ## Como gerar o APK e o AAB
 
@@ -16,7 +16,7 @@ Sempre pelo GitHub Actions (workflow **Android AAB e APK**):
 ### Contas e cadastros
 - [ ] Criar a conta de desenvolvedor na Google Play Console (taxa única de US$ 25) e verificar identidade.
 - [ ] Conferir se "Bone Tribe" está livre: busca na Google Play, domínio, INPI e USPTO (GDD, seção Visão geral).
-- [ ] Criar o app na Play Console com o pacote **com.bonetribe.game** (não muda depois).
+- [ ] Criar o app na Play Console com o pacote **com.fsamplabs.bone_tribe** (não muda depois).
 
 ### Assinatura
 - [ ] Gerar a chave de upload uma única vez e guardar em local seguro (perdeu = não atualiza o app):
@@ -33,7 +33,7 @@ Sempre pelo GitHub Actions (workflow **Android AAB e APK**):
 - [ ] Me passar o endereço e o e-mail de suporte para eu preencher `privacy_url` e `support_email` em `data/app.json` (o item "Privacidade" aparece no menu de Configurações assim que o endereço existir).
 
 ### AdMob (IDs reais)
-- [ ] No AdMob: criar o app Android (pacote com.bonetribe.game) e 2 blocos: **Premiado** (recompensado) e **Intersticial**.
+- [ ] No AdMob: criar o app Android (pacote com.fsamplabs.bone_tribe) e 2 blocos: **Premiado** (recompensado) e **Intersticial**.
 - [ ] No GitHub: *Settings → Secrets and variables → Actions → aba Variables → New repository variable*, criar:
   - `ADMOB_APP_ID` = ID do app (formato `ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY`, com **til**)
   - `ADMOB_REWARDED_ID` = bloco premiado (`ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY`, com **barra**)
@@ -45,12 +45,12 @@ Sempre pelo GitHub Actions (workflow **Android AAB e APK**):
 ### Firebase (Analytics + Remote Config)
 O código já está pronto e desligado; ele liga sozinho quando o secret existir.
 - [ ] Em https://console.firebase.google.com: **Adicionar projeto** (pode usar o mesmo projeto do Google Analytics; ative o Google Analytics quando perguntar).
-- [ ] No projeto: **Adicionar app → Android**, pacote `com.bonetribe.game`, apelido "Bone Tribe".
+- [ ] No projeto: **Adicionar app → Android**, pacote `com.fsamplabs.bone_tribe`, apelido "Bone Tribe".
 - [ ] Ainda no cadastro do app, informe o **SHA-1** da chave de upload: `keytool -list -v -keystore bonetribe-upload.keystore -alias bonetribe` (e, depois de publicar, também o SHA-1 da "chave de assinatura do app" que aparece na Play Console em *Integridade do app*).
 - [ ] Baixe o `google-services.json` e cole **o conteúdo inteiro** num secret do GitHub chamado `FIREBASE_GOOGLE_SERVICES_JSON` (*Settings → Secrets and variables → Actions → Secrets*). Não coloque o arquivo no repositório.
 - [ ] Rode o workflow de novo. No log, o passo "Firebase" mostra o nome do projeto; sem o secret aparece um aviso.
 - [ ] Vincule o Firebase ao **AdMob** (AdMob → Configurações do app → Vincular ao Firebase) e à **Play Console** (Firebase → Configurações do projeto → Integrações → Google Play). Assim a receita de anúncios e compras aparece no Firebase sem código extra.
-- [ ] Teste com o celular no **DebugView**: `adb shell setprop debug.firebase.analytics.app com.bonetribe.game` e abra o jogo; os eventos aparecem em segundos (sem isso, demoram algumas horas para aparecer nos relatórios).
+- [ ] Teste com o celular no **DebugView**: `adb shell setprop debug.firebase.analytics.app com.fsamplabs.bone_tribe` e abra o jogo; os eventos aparecem em segundos (sem isso, demoram algumas horas para aparecer nos relatórios).
 - [ ] Atualize a seção *Segurança dos dados* da Play Console: o app passa a coletar "Atividade no app", "Identificadores do dispositivo" e "Diagnóstico" (finalidade: análise), criptografados em trânsito.
 
 ### Produtos no app (Play Console → Monetizar → Produtos → Produtos no app)
