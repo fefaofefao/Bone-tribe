@@ -50,10 +50,24 @@ def shape(value):
     return "len=%d sep=%s flags=%s" % (len(value), sep, ",".join(flags) or "none")
 
 
+def as_unit(value, app):
+    """Aceita o bloco com barra ou, se for outro ID, com o til no lugar da barra.
+
+    O secret às vezes é gravado no formato do app (ca-app-pub-XXX~YYY). Isso só vira
+    bloco quando o valor é diferente do ID do app — copiar o app nos dois blocos
+    não inventa um anúncio.
+    """
+    if UNIT_RE.match(value):
+        return value
+    if APP_RE.match(value) and value != app:
+        return value.replace("~", "/", 1)
+    return value
+
+
 def main():
     app = normalize(os.environ.get("ADMOB_APP_ID", ""))
-    rewarded = normalize(os.environ.get("ADMOB_REWARDED_ID", ""))
-    inter = normalize(os.environ.get("ADMOB_INTERSTITIAL_ID", ""))
+    rewarded = as_unit(normalize(os.environ.get("ADMOB_REWARDED_ID", "")), app)
+    inter = as_unit(normalize(os.environ.get("ADMOB_INTERSTITIAL_ID", "")), app)
     if not (app or rewarded or inter):
         print("::warning::AdMob sem IDs reais (variáveis ADMOB_*); o build usa os IDs de TESTE.")
         return 0
@@ -64,14 +78,16 @@ def main():
             % shape(app)
         )
     if not UNIT_RE.match(rewarded):
+        same = "igual ao app" if rewarded == app else "diferente do app"
         errors.append(
-            "ADMOB_REWARDED_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s)"
-            % shape(rewarded)
+            "ADMOB_REWARDED_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s, %s)"
+            % (shape(rewarded), same)
         )
     if not UNIT_RE.match(inter):
+        same = "igual ao app" if inter == app else "diferente do app"
         errors.append(
-            "ADMOB_INTERSTITIAL_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s)"
-            % shape(inter)
+            "ADMOB_INTERSTITIAL_ID deve ter o formato ca-app-pub-XXXXXXXX/YYYYYYYY (%s, %s)"
+            % (shape(inter), same)
         )
     if errors:
         for e in errors:
