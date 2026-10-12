@@ -63,7 +63,7 @@ Cadastrar **todos como produtos únicos (in-app), nenhum como assinatura**, com 
 
 ### Ficha da loja e políticas
 - [ ] Colar os textos de `store/listing/` (pt-BR, en-US, es-419) na ficha da loja.
-- [ ] Enviar ícone `store/icon_512.png`, gráfico de destaque `store/feature_graphic.png` e as capturas de `store/screenshots/` (no mínimo 2 por idioma; as de `es_ES_*` servem para es-419).
+- [ ] Enviar ícone `store/icon_512.png`, gráfico de destaque `store/feature_graphic.png` e as capturas de `store/screenshots/` (no mínimo 2 por idioma; as de `es_ES_*` servem para es-419). Para a ficha, prefira as versões promocionais com cenário e título de `store/promo/pt_BR/`, `en_US/` e `es_419/` (geradas por `node tools/make_store_promo.mjs`).
 - [ ] Questionário de classificação de conteúdo (violência cartunesca leve, compras no app, anúncios).
 - [ ] Seção *Segurança dos dados*: declarar ID de publicidade, interações com anúncios e diagnóstico (AdMob), compras (Play Billing), sem dados pessoais diretos, criptografia em trânsito, pedido de exclusão por e-mail.
 - [ ] Público-alvo: 13+ (evita as regras do programa Famílias). Declarar que o app contém anúncios.
