@@ -26,7 +26,7 @@ func play() -> RunState:
 			_combat([boss], true)
 			if not state.dead:
 				state.bosses_beaten.append(boss)
-				if boss == "boss_ancient_dragon" and Body.active_forms(state.equipped).has("form_bone_wyrm"):
+				if boss == state.final_boss() and Body.active_forms(state.equipped).has("form_bone_wyrm"):
 					state.flags["hydra_unlocked"] = true
 					state.total_floors = int(GameData.bal("run/secret_floor", 31))
 			continue
@@ -70,7 +70,7 @@ func _exec(actions: Array) -> void:
 			"bone":
 				var bid := String(a.get("id", ""))
 				if bid == "":
-					var pool: Array = GameData.bones_by(a.get("pool", {}))
+					var pool: Array = GameData.bones_by(a.get("pool", {}).merged({"tower": state.tower}))
 					pool = pool.filter(func(x): return not GameData.bone(x).get("boss_drop", false))
 					if pool.is_empty():
 						continue
@@ -185,6 +185,15 @@ func offer(inst: Dictionary) -> void:
 	var free := state.free_slot_for(bid)
 	if free != "":
 		state.equip(free, inst)
+		return
+	var same := state.same_bone_slot(inst)
+	if same != "":
+		var cur0: Dictionary = state.equipped[same]
+		if Body.instance_power(inst) > Body.instance_power(cur0):
+			state.add_dust(state.crush_value(cur0))
+			state.equip(same, inst)
+		else:
+			state.add_dust(state.crush_value(inst))
 		return
 	var new_rank := int(RANK.get(Body.instance_rarity(inst), 1))
 	for s in state.slots_for(bid):

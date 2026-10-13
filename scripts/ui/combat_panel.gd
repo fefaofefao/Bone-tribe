@@ -227,7 +227,8 @@ func refresh() -> void:
 	_ensure_cards()
 	for f in _cards:
 		var c: Dictionary = _cards[f]
-		c.bar.set_value(f.hp, f.max_hp, "%d / %d" % [int(ceil(maxf(f.hp, 0))), int(f.max_hp)])
+		var shown: float = f.display_hp()
+		c.bar.set_value(shown, f.max_hp, "%d / %d" % [int(ceil(maxf(shown, 0))), int(f.max_hp)])
 		var st: HBoxContainer = c.status
 		for ch in st.get_children():
 			ch.queue_free()

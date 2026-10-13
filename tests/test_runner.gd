@@ -196,11 +196,11 @@ func _eq(pairs: Array) -> Dictionary:
 
 func test_06_catalog_counts() -> void:
 	var cat := GameData.catalog_bones()
-	check(cat.size() == 67, "67 ossos no catálogo (%d)" % cat.size())
+	check(cat.size() == 102, "102 ossos no catálogo (%d)" % cat.size())
 	var r := {"common": 0, "rare": 0, "legendary": 0}
 	for id in cat:
 		r[GameData.bones[id].rarity] += 1
-	check(r.common == 48 and r.rare == 15 and r.legendary == 4, "48 comuns, 15 raros, 4 lendários: %s" % [r])
+	check(r.common == 71 and r.rare == 21 and r.legendary == 10, "71 comuns, 21 raros, 10 lendários: %s" % [r])
 	# mais de 10 variações para cada parte do corpo
 	for slot in ["slot_skull", "slot_ribs", "slot_arm_left", "slot_legs", "slot_back", "slot_tail"]:
 		var n := GameData.bones_by({"slot": slot}).size()
@@ -221,8 +221,8 @@ func test_06_catalog_counts() -> void:
 			commons += 1
 		elif k == "boss":
 			bosses.append(id)
-	check(commons == 14, "14 monstros comuns/raros (%d)" % commons)
-	check(bosses.size() == 4 and bosses.has("boss_hydra"), "3 chefes + Hidra")
+	check(commons == 30, "30 monstros comuns/raros (%d)" % commons)
+	check(bosses.size() == 10 and bosses.has("boss_hydra"), "9 chefes + Hidra")
 	var family_forms := 0
 	var secrets := 0
 	for id in GameData.forms:
@@ -601,7 +601,7 @@ func test_14_firebase_provider() -> void:
 
 
 func test_15_towers() -> void:
-	check(GameData.towers.size() == 10, "10 torres")
+	check(GameData.towers.size() == 20, "20 torres")
 	var prev := {}
 	for i in GameData.towers.size():
 		var t: Dictionary = GameData.towers[i]
@@ -654,3 +654,124 @@ func test_15_towers() -> void:
 	check(st.tower == 10 and st.floor_n >= 1, "partida automática na torre 10")
 	MonsterFactory.tower = 1
 
+
+
+func test_16_update_1_1() -> void:
+	# --- vida mostrada golpe a golpe = vida real no fim da rodada
+	MonsterFactory.tower = 1
+	var st := RunState.new({"seed": 7})
+	var hero := st.make_hero()
+	var en := [MonsterFactory.make("monster_corpse_bear", 8), MonsterFactory.make("monster_bone_wasp", 8)]
+	var cb := Combat.new(hero, en, {"rng": st.rng})
+	var ok_snap := true
+	var steps := 0
+	while not cb.finished() and steps < 40:
+		steps += 1
+		var evs := cb.step()
+		var shown := {}
+		for ev in evs:
+			if not ev.has("hps"):
+				ok_snap = false
+				continue
+			for f in ev.hps:
+				shown[f] = ev.hps[f]
+		for f in shown:
+			if absf(float(shown[f]) - f.hp) > 0.001:
+				ok_snap = false
+	check(ok_snap and steps > 0, "vida mostrada acompanha cada golpe e termina igual à real")
+	hero.shown_hp = 12.0
+	check(is_equal_approx(hero.display_hp(), 12.0) and is_equal_approx(hero.display_ratio(), 12.0 / hero.max_hp), "barra usa a vida mostrada durante a animação")
+	hero.shown_hp = -1.0
+	check(is_equal_approx(hero.display_hp(), hero.hp), "fora da animação mostra a vida real")
+
+	# --- osso igual: tritura; mesmo osso mais forte: troca direto
+	var rs := RunState.new({"seed": 3})
+	rs.equip("slot_skull", {"id": "bone_skull_wolf", "level": 2})
+	var ar := AutoRunner.new({"seed": 3})
+	ar.state = rs
+	var dust0 := rs.dust
+	ar.offer({"id": "bone_skull_wolf", "level": 1})
+	check(int(rs.equipped.slot_skull.level) == 2 and rs.dust > dust0, "mesmo osso de nível menor é triturado")
+	ar.offer({"id": "bone_skull_wolf", "level": 3})
+	check(int(rs.equipped.slot_skull.level) == 3, "mesmo osso de nível maior troca direto")
+	check(rs.same_bone_slot({"id": "bone_skull_bear"}) == "", "osso diferente não conta como igual")
+	var gain := Body.level_gain_text({"id": "bone_claw_bear", "level": 1}, {"id": "bone_claw_bear", "level": 2})
+	check(gain.contains("→") and gain.contains("25"), "ganho do +1 mostra antes → depois e +25%%: " + gain)
+	check(Body.stats_compare_text({}, Body.instance_stats({"id": "bone_ribs_bear", "level": 3})).contains("57"), "atributos do osso +2 aplicam +50%%")
+
+	# --- regiões das torres: monstros, chefes e ossos
+	check(GameData.bone_min_tower("bone_skull_hyena") == 1 and GameData.bone_min_tower("bone_skull_salamander") == 4 and GameData.bone_min_tower("bone_crown_matriarch") == 4 and GameData.bone_min_tower("bone_wings_obsidian") == 7, "torre mínima de cada osso")
+	for t in [1, 3, 4, 7, 12, 20]:
+		MonsterFactory.tower = t
+		var rng := RandomNumberGenerator.new()
+		rng.seed = t
+		var bad := false
+		var seen := {}
+		for i in 400:
+			var mid := MonsterFactory.random_for_floor(rng.randi_range(1, 30), rng)
+			seen[mid] = true
+			if GameData.monster_min_tower(mid) > t:
+				bad = true
+		check(not bad, "torre %d só sorteia monstros liberados" % t)
+		if t >= 7:
+			check(seen.has("monster_royal_hornet") and seen.has("monster_tomb_ghoul"), "torre %d tem monstros novos" % t)
+		for b in GameData.bones_by({"tower": t}):
+			if GameData.bone_min_tower(b) > t:
+				bad = true
+		check(not bad, "torre %d só sorteia ossos liberados" % t)
+	MonsterFactory.tower = 1
+	for n in range(1, GameData.towers.size() + 1):
+		var rt := RunState.new({"seed": 1, "tower": n})
+		var fb := rt.final_boss()
+		check(GameData.monster(fb).get("kind", "") == "boss" and tr_all("event_" + fb + "_text") and tr_all(String(GameData.monster(fb).name)), "torre %d tem chefe final com textos (%s)" % [n, fb])
+		for fl in ["10", "20", "30"]:
+			check(ResourceLoader.exists(GameData.monster_texture_path(rt.boss_for_floor(int(fl)))), "arte do chefe da torre %d andar %s" % [n, fl])
+	MonsterFactory.tower = 1
+	var r5 := RunState.new({"seed": 1, "tower": 5})
+	check(r5.boss_for_floor(30) == "boss_magma_wyrm" and r5.boss_for_floor(10) == "boss_ghoul_matriarch", "torre 5 tem os chefes da 2ª região")
+	r5.bosses_beaten = ["boss_magma_wyrm"]
+	check(r5.beat_final_boss(), "vencer o chefe do andar 30 vence a torre")
+	MonsterFactory.tower = 1
+	check(tr_all("tower_tag") and tr_all("stats_title") and tr_all("same_bone_crush"), "textos novos traduzidos")
+
+	# --- save antigo (versão 1) carrega sem perder nada
+	var backup: Dictionary = Profile.data.duplicate(true)
+	var old_beast := []
+	for id in GameData.bones_by({"family": "family_beast"}):
+		if int(GameData.bone(id).get("wave", 1)) < 2:
+			old_beast.append(id)
+	var disc := {}
+	for id in old_beast:
+		disc[id] = true
+	var v1 := {"version": 1, "dust": 1234, "diamonds": 56, "runs_played": 40, "best_index": 30,
+		"ossuary": {"hp": 12, "atk": 15, "def": 3, "drop": 2}, "discovered_bones": disc,
+		"discovered_forms": {"form_werewolf": true}, "bosses_defeated": {"boss_ancient_dragon": 3, "boss_rat_king": 9},
+		"towers": {"unlocked": 4, "selected": 3, "cleared": {"1": true, "2": true, "3": true}, "best": {"1": 30, "2": 30, "3": 30, "4": 12}},
+		"skins": {"owned": ["skin_x"], "equipped": "skin_x"}, "relics": {"owned": [{"uid": 1, "id": "relic_moon_amulet", "level": 3}], "equipped": {"relic_amulet": 1}, "next_uid": 2},
+		"shop": {"purchases": {"iap_remove_ads": 1}}, "ads": {"removed": true}, "supporter": true}
+	Profile.load_from(v1)
+	var d: Dictionary = Profile.data
+	check(int(d.version) == Profile.SAVE_VERSION, "save migrado para a versão atual")
+	check(int(d.dust) == 1234 and int(d.diamonds) == 56 and int(d.runs_played) == 40, "moedas e partidas preservadas")
+	check(int(d.ossuary.atk) == 15 and int(d.ossuary.hp) == 12, "Ossuário preservado")
+	check(d.discovered_bones.size() == old_beast.size() and d.discovered_forms.has("form_werewolf"), "coleção preservada")
+	check(Meta.tower_unlocked() == 4 and Meta.tower_selected() == 3 and Meta.tower_best(4) == 12 and int(d.towers.wins.get("1", 0)) == 1, "torres e recordes preservados")
+	check(d.skins.owned.has("skin_x") and int(d.relics.owned[0].level) == 3 and bool(d.ads.removed) and bool(d.supporter), "skins, relíquias e compras preservadas")
+	check(Meta.family_complete("family_beast"), "família completa no save antigo continua completa com os ossos novos")
+	check(not Meta.family_complete("family_dragon"), "família incompleta continua incompleta")
+	var stats_before := float(Profile.stat("dust_total"))
+	Profile.add_dust(10, "teste")
+	check(int(Profile.stat("dust_total")) == int(stats_before) + 10, "estatística de pó ganho conta")
+	# o save atual recarrega igual
+	var snap: Dictionary = Profile.data.duplicate(true)
+	Profile.load_from(JSON.parse_string(JSON.stringify(snap)))
+	check(int(Profile.data.dust) == int(snap.dust) and Profile.data.families_done.has("family_beast") and Profile.data.towers.best.size() == snap.towers.best.size(), "save atual recarrega sem mudanças")
+	check(StatsPopup.time_text(3725.0) != "", "tempo de jogo formatado")
+	var holder := Control.new()
+	add_child(holder)
+	StatsPopup.open(holder)
+	await get_tree().process_frame
+	check(holder.get_child_count() == 1, "tela de Estatísticas abre")
+	holder.queue_free()
+	Profile.data = backup
+	Profile.save()

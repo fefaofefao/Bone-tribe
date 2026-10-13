@@ -189,3 +189,52 @@ static func _part(equipped: Dictionary, slot: String, field: String) -> String:
 	if b.is_empty() or String(b.get("rarity", "")) == "basic":
 		return TranslationServer.translate("name_empty_adj" if field == "adjective" else "name_empty_part")
 	return TranslationServer.translate(String(b.get(field, "")))
+
+
+const PCT_STATS := ["crit", "dodge", "lifesteal", "reflect", "regen", "dust_bonus", "shield_start", "atk_pct",
+	"hp_pct", "def_pct", "poison_bonus", "fire_bonus", "trap_avoid", "drop_bonus", "rare_event_bonus", "crit_mult"]
+
+
+## Atributos do osso já com nível e raridade aplicados.
+static func instance_stats(inst: Dictionary) -> Dictionary:
+	var out := {}
+	_add_stats(out, GameData.bone(String(inst.get("id", ""))).get("stats", {}), instance_power(inst))
+	return out
+
+
+static func stat_value_text(key: String, v: float) -> String:
+	if PCT_STATS.has(key):
+		return "%d%%" % int(roundf(v * 100.0))
+	return str(snappedf(v, 0.1)).trim_suffix(".0")
+
+
+## "Ataque 5 → 6 · Vida 15 → 19" (ou só os valores, sem "antes").
+static func stats_compare_text(before: Dictionary, after: Dictionary) -> String:
+	var parts := []
+	for k in STAT_KEYS:
+		if not after.has(k) and not before.has(k):
+			continue
+		var name := String(TranslationServer.translate("stat_" + k))
+		var a := float(after.get(k, 0.0))
+		if before.is_empty():
+			parts.append("%s %s" % [name, stat_value_text(k, a)])
+		else:
+			parts.append("%s %s → %s" % [name, stat_value_text(k, float(before.get(k, 0.0))), stat_value_text(k, a)])
+	return " · ".join(parts)
+
+
+## Texto do ganho ao subir um osso de nível: atributos antes → depois e peças.
+static func level_gain_text(before_inst: Dictionary, after_inst: Dictionary) -> String:
+	var b := GameData.bone(String(after_inst.get("id", "")))
+	var lines := []
+	var cmp := stats_compare_text(instance_stats(before_inst), instance_stats(after_inst))
+	if cmp != "":
+		lines.append(cmp)
+	var pct := int(roundf((instance_power(after_inst) - 1.0) * 100.0))
+	lines.append(TranslationServer.translate("bone_gain_power") % pct)
+	var fam := String(b.get("family", ""))
+	if fam != "":
+		var pieces := int(family_counts({"s": after_inst}).get(fam, 0))
+		lines.append(TranslationServer.translate("bone_gain_pieces") % [pieces, TranslationServer.translate(String(GameData.families[fam].get("name", fam)))])
+	return "\n".join(lines)
+

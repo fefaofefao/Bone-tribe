@@ -43,6 +43,11 @@ static func bone_card(inst: Dictionary, header: String = "", compact := false) -
 	var tl := Style.label(tags, 18, fc if fam != "" else Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	v.add_child(tl)
 	v.add_child(Style.label(TranslationServer.translate(String(b.get("desc", ""))), 19 if compact else 21, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	var power := Body.instance_power(inst)
+	if power > 1.0:
+		var now := Body.stats_compare_text({}, Body.instance_stats(inst))
+		var gain := TranslationServer.translate("bone_gain_power") % int(roundf((power - 1.0) * 100.0))
+		v.add_child(Style.label(gain + ("\n" + now if now != "" else ""), 18 if compact else 20, Style.C_HEAL, HORIZONTAL_ALIGNMENT_CENTER))
 	return p
 
 

@@ -11,6 +11,10 @@ var family: String = ""
 
 var max_hp := 100.0
 var hp := 100.0
+## Vida mostrada na tela durante a animação (< 0 = mostra a vida real). O
+## combate calcula a rodada inteira de uma vez; a tela e o painel acompanham
+## golpe a golpe por este valor, para nunca ficarem diferentes.
+var shown_hp := -1.0
 var atk := 10.0
 var def := 0.0
 var crit := 0.05
@@ -44,6 +48,14 @@ func alive() -> bool:
 
 func hp_ratio() -> float:
 	return clampf(hp / max_hp, 0.0, 1.0) if max_hp > 0 else 0.0
+
+
+func display_hp() -> float:
+	return hp if shown_hp < 0.0 else shown_hp
+
+
+func display_ratio() -> float:
+	return clampf(display_hp() / max_hp, 0.0, 1.0) if max_hp > 0 else 0.0
 
 
 func has_effect(type: String) -> bool:

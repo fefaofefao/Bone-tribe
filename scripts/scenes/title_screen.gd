@@ -581,6 +581,7 @@ func _settings_menu() -> void:
 		items.append([tr("menu_privacy"), _open_privacy])
 	if Ads.privacy_options_required():
 		items.append([tr("menu_ad_privacy"), Ads.show_privacy_options])
+	items.append([tr("stats_title"), func(): StatsPopup.open(_ui)])
 	items.append([tr("menu_credits"), _credits])
 	_menu("menu_settings", items)
 

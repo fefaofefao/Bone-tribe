@@ -12,7 +12,7 @@ Cada partida dura poucos minutos e termina com uma criatura única. Asas de morc
 
 🦴 CORPO MONTÁVEL
 • 7 encaixes: crânio, costelas, dois braços, pernas, costas e cauda
-• 67 ossos de 6 famílias de monstros: mais de 10 opções para cada parte do corpo
+• 102 ossos de 6 famílias de monstros: mais de 10 opções para cada parte do corpo
 • Junte peças da mesma família para despertar formas como a Manticora Noturna
 • Descubra 3 formas secretas… e cuidado com a rejeição!
 
@@ -23,10 +23,12 @@ Cada partida dura poucos minutos e termina com uma criatura única. Asas de morc
 
 ⚔️ COMBATE AUTOMÁTICO, JOGÁVEL COM UMA MÃO
 • Toque, escolha e assista ao Ossinho lutar
-• 14 monstros, 3 chefes e um segredo no fundo da cripta
+• 30 monstros, 9 chefes e um segredo no fundo da cripta
+• 20 torres, cada uma mais difícil, com ossos exclusivos das torres mais altas
 
 🏛️ PROGRESSÃO
 • Ossuário com melhorias permanentes
+• Estatísticas de partidas, chefes e torres
 • Coleção de ossos, companheiros e relíquias
 • Gabinete de Curiosidades com 30 itens para colecionar
 • Calendários de login de 7 e 28 dias

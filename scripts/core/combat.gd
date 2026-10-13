@@ -452,6 +452,13 @@ func _check_end() -> bool:
 
 
 func _emit(ev: Dictionary) -> void:
+	# vida de todos neste instante, para a animação mostrar golpe a golpe
+	var hps := {hero: hero.hp}
+	for f in enemies:
+		hps[f] = f.hp
+	for f in allies:
+		hps[f] = f.hp
+	ev["hps"] = hps
 	_log.append(ev)
 
 

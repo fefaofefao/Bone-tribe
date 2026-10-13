@@ -124,7 +124,7 @@ func _towers(players: int, runs: int) -> void:
 			bank += int(st.end_rewards().total)
 			tries[t - 1] += 1
 			floors[t - 1] += st.floor_n
-			if st.bosses_beaten.has("boss_ancient_dragon"):
+			if st.beat_final_boss():
 				if unlocked == t and t <= n_towers:
 					first[t - 1].append(r + 1)
 					unlocked = mini(n_towers + 1, t + 1)

@@ -70,6 +70,12 @@
 - Seletor de torre na tela inicial, torre no topo da partida, no fim da partida e no Cartão; cor própria de cada torre.
 - Simulação de progressão (`tests/BalanceSim.tscn -- mode=towers`) e testes automáticos das torres.
 
+### Versão 1.1.0
+- 20 torres com 3 regiões de chefes; 16 monstros, 6 chefes e 35 ossos novos (arte em `tools/art_wave2_monsters.py` e `tools/art_wave2_bones.py`); etiqueta #Torre N na Coleção.
+- Osso igual tritura direto (ou troca, se mais forte); ganho do +1 visível; correção da vida fora de sincronia.
+- Tela de Estatísticas; save com versão e migração; famílias completas preservadas.
+- Fichas da loja atualizadas e notas da versão nos 3 idiomas em `store/novidades_1.1.0.md`.
+
 ## Concluído
 Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
 

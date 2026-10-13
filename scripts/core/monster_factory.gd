@@ -61,8 +61,15 @@ static func random_for_floor(floor_n: int, rng: RandomNumberGenerator) -> String
 		var fl: Array = m.get("floors", [1, 99])
 		if floor_n < int(fl[0]) or floor_n > int(fl[1]):
 			continue
+		var tw: Array = m.get("towers", [1, 99])
+		if tower < int(tw[0]) or tower > int(tw[1]):
+			continue
 		pool.append(id)
-		weights.append(0.35 if kind == "rare" else 1.0)
+		# monstros da região da torre aparecem um pouco mais, para serem vistos
+		var w := 0.35 if kind == "rare" else 1.0
+		if int(tw[0]) > 1:
+			w *= 1.5
+		weights.append(w)
 	if pool.is_empty():
 		return ""
 	var total := 0.0
@@ -135,7 +142,7 @@ static func merchant_stock(count: int, rarities: Array, rng: RandomNumberGenerat
 			want = "legendary"
 		if not rarities.is_empty() and not rarities.has(want):
 			want = rarities[0]
-		var pool := GameData.bones_by({"rarity": want})
+		var pool := GameData.bones_by({"rarity": want, "tower": tower})
 		if want == "legendary":
 			pool = pool.filter(func(x): return Profile.is_bone_discovered(x))
 		else:
@@ -161,14 +168,14 @@ static func altar_bone(old_id: String, rng: RandomNumberGenerator) -> String:
 	var fam := String(old.get("family", ""))
 	var slot := String(GameData.bone_slots(old_id)[0])
 	var pool := []
-	for id in GameData.catalog_bones():
+	for id in GameData.bones_by({"tower": tower}):
 		var b := GameData.bone(id)
 		if String(b.family) == fam or b.get("boss_drop", false):
 			continue
 		if GameData.bone_slots(id).has(slot):
 			pool.append(id)
 	if pool.is_empty():
-		for id in GameData.catalog_bones():
+		for id in GameData.bones_by({"tower": tower}):
 			var b2 := GameData.bone(id)
 			if String(b2.family) != fam and not b2.get("boss_drop", false):
 				pool.append(id)

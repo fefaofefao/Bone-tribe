@@ -71,10 +71,14 @@ static func family_bones(fam: String) -> Array:
 	return GameData.bones_by({"family": fam})
 
 
+## Completa uma vez, completa para sempre (ossos novos na família não tiram o bônus).
 static func family_complete(fam: String) -> bool:
+	if Profile.data.families_done.has(fam):
+		return true
 	for id in family_bones(fam):
 		if not Profile.is_bone_discovered(id):
 			return false
+	Profile.data.families_done[fam] = true
 	return true
 
 
@@ -454,6 +458,10 @@ static func tower_best(n: int) -> int:
 static func tower_finish(n: int, floor_n: int, beat_dragon: bool) -> Dictionary:
 	var t: Dictionary = Profile.data.towers
 	t.best[str(n)] = maxi(tower_best(n), floor_n)
+	if beat_dragon:
+		if not t.has("wins"):
+			t["wins"] = {}
+		t.wins[str(n)] = int(t.wins.get(str(n), 0)) + 1
 	if not beat_dragon or tower_cleared(n):
 		Profile.save()
 		return {}

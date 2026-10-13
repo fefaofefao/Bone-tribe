@@ -146,6 +146,9 @@ func bones_by(filter: Dictionary) -> Array:
 			elif k == "rarities":
 				if not (v as Array).has(b.get("rarity", "")):
 					ok = false
+			elif k == "tower":
+				if bone_min_tower(id) > int(v):
+					ok = false
 			elif b.get(k) != v:
 				ok = false
 		if ok:
@@ -171,3 +174,21 @@ func tower(n: int) -> Dictionary:
 	if towers.is_empty():
 		return {}
 	return towers[clampi(n, 1, towers.size()) - 1]
+
+
+## Primeira torre em que o monstro aparece (chefes: a 1ª torre que os tem).
+func monster_min_tower(monster_id: String) -> int:
+	var m := monster(monster_id)
+	if String(m.get("kind", "")) == "boss":
+		for i in towers.size():
+			if (towers[i].get("bosses", {}) as Dictionary).values().has(monster_id):
+				return i + 1
+		return 1
+	return int((m.get("towers", [1, 99]) as Array)[0])
+
+
+## Torre a partir da qual o osso pode cair (ossos sem monstro: torre 1).
+func bone_min_tower(bone_id: String) -> int:
+	var mid := String(bone(bone_id).get("monster", ""))
+	return monster_min_tower(mid) if mid != "" and monsters.has(mid) else 1
+

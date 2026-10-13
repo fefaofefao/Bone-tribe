@@ -634,7 +634,7 @@ func _do(a: Dictionary) -> void:
 		"bone":
 			var bid := String(a.get("id", ""))
 			if bid == "":
-				var pool: Array = GameData.bones_by(a.get("pool", {}))
+				var pool: Array = GameData.bones_by(_pool_filter(a.get("pool", {})))
 				pool = pool.filter(func(x): return not GameData.bone(x).get("boss_drop", false))
 				if pool.is_empty():
 					return
@@ -737,6 +737,7 @@ func _do(a: Dictionary) -> void:
 			var slot3 := await _choose_bone_dialog("choose_bone_upgrade", false)
 			if slot3 != "":
 				var inst3: Dictionary = state.equipped[slot3]
+				var before3 := inst3.duplicate()
 				var max_lvl := int(GameData.bal("bone_max_level", 5))
 				inst3["level"] = mini(max_lvl, int(inst3.get("level", 1)) + 1)
 				state.recalc()
@@ -747,6 +748,7 @@ func _do(a: Dictionary) -> void:
 				Haptics.medium()
 				_refresh_hud()
 				await _wait(0.7)
+				await _show_result(tr("bone_upgraded") % [tr(String(GameData.bone(String(inst3.id)).name)), int(inst3.level) - 1] + "\n" + Body.level_gain_text(before3, inst3))
 				await _check_forms()
 		_:
 			push_warning("ação desconhecida: " + str(a))
@@ -786,6 +788,7 @@ func _bigorna_forge() -> void:
 		return
 	var slot: String = picked[0]
 	var inst2: Dictionary = state.equipped[slot]
+	var before2 := inst2.duplicate()
 	inst2["rarity"] = "rare"
 	state.bigorna_left -= 1
 	state.recalc()
@@ -798,6 +801,7 @@ func _bigorna_forge() -> void:
 	_companion_pop(tr("bigorna_done"))
 	_refresh_hud()
 	await _wait(0.8)
+	await _show_result(tr("bigorna_gain") % tr(String(GameData.bone(String(inst2.id)).name)) + "\n" + Body.stats_compare_text(Body.instance_stats(before2), Body.instance_stats(inst2)))
 
 
 ## Voo sobre o abismo: o Ossinho levanta voo e a câmera acompanha.
@@ -1002,6 +1006,7 @@ func _combat(ids: Array, is_boss := false) -> void:
 		while not combat.finished():
 			var evs := combat.step()
 			await _animate(evs, killed)
+			_clear_shown_hps()
 			if combat_panel and is_instance_valid(combat_panel):
 				combat_panel.refresh()
 			_refresh_hud_from(hero)
@@ -1168,6 +1173,7 @@ func _pos_of(f: Fighter) -> Vector2:
 
 func _animate(evs: Array, killed: Array) -> void:
 	for ev in evs:
+		_show_hps(ev)
 		_log_event(ev)
 		match String(ev.t):
 			"attack":
@@ -1216,6 +1222,8 @@ func _animate(evs: Array, killed: Array) -> void:
 					await _wait(1.0)
 				else:
 					killed.append(f2)
+					if not demo and not f2.is_ally:
+						Profile.stat_add("kills")
 					var v4 := _view_of(f2)
 					if v4:
 						_last_positions[f2] = v4.center_global()
@@ -1418,7 +1426,7 @@ func _combat_rewards(killed: Array, is_boss: bool) -> void:
 			pool.append_array(GameData.monster(f.id).get("drops", []))
 		pool = pool.filter(func(x): return not GameData.bone(x).get("boss_drop", false))
 		if pool.is_empty():
-			pool = GameData.bones_by({"rarity": "common"}).filter(func(x): return not GameData.bone(x).get("boss_drop", false))
+			pool = GameData.bones_by({"rarity": "common", "tower": state.tower}).filter(func(x): return not GameData.bone(x).get("boss_drop", false))
 		_companion_pop(tr("ossudo_fetch"))
 		await _wait(0.5)
 		await _offer_bone({"id": pool[state.rng.randi() % pool.size()], "level": 1}, companion_view.global_position + Vector2(0, -60) if companion_view else hero_view.body_center_global())
@@ -1499,6 +1507,20 @@ func _offer_bone(inst: Dictionary, from: Vector2) -> void:
 	if free != "":
 		await _attach(free, inst, from)
 		return
+	var same := state.same_bone_slot(inst)
+	if same != "":
+		var cur: Dictionary = state.equipped[same]
+		var nm := tr(String(GameData.bone(bid).name))
+		if Body.instance_power(inst) > Body.instance_power(cur):
+			# mesmo osso, mais forte: troca direto e tritura o antigo
+			_show_banner(tr("same_bone_better") % [nm, int(inst.get("level", 1)) - 1], Style.C_CANDLE, 1.3)
+			fx.float_text(hero_view.slot_global_position(same) + Vector2(0, -90), Body.stats_compare_text(Body.instance_stats(cur), Body.instance_stats(inst)), Style.C_HEAL, 22)
+			await _swap(same, inst, from)
+		else:
+			_show_banner(tr("same_bone_crush") % nm, Style.C_DUST, 1.3)
+			await _wait(0.35)
+			await _crush(inst, from)
+		return
 	if autoplay:
 		var rank := {"basic": 0, "common": 1, "rare": 2, "legendary": 3}
 		for s2 in state.slots_for(bid):
@@ -1528,6 +1550,8 @@ func _swap(slot: String, inst: Dictionary, from: Vector2) -> void:
 
 
 func _crush(inst: Dictionary, from: Vector2) -> void:
+	if not demo:
+		Profile.stat_add("bones_crushed")
 	var v := state.crush_value(inst)
 	state.add_dust(v)
 	fx.bone_burst(from, 10)
@@ -1852,7 +1876,7 @@ func _boss_floor(boss_id: String) -> void:
 		if cid != "":
 			await _gain_curiosity(cid)
 	# Hidra: só aparece para quem vence o Dragão Ancião na forma Wyrm Ósseo.
-	if boss_id == "boss_ancient_dragon" and Body.active_forms(state.equipped).has(String(GameData.bal("run/secret_requires_form", "form_bone_wyrm"))):
+	if boss_id == state.final_boss() and Body.active_forms(state.equipped).has(String(GameData.bal("run/secret_requires_form", "form_bone_wyrm"))):
 		state.flags["hydra_unlocked"] = true
 		state.total_floors = int(GameData.bal("run/secret_floor", 31))
 		_refresh_hud()
@@ -1918,9 +1942,12 @@ func _end_run() -> void:
 	if not demo:
 		Profile.add_dust(int(rewards.total), "run_end")
 		Profile.data.runs_played = int(Profile.data.runs_played) + 1
+		Profile.stat_add("floors", state.floor_n)
+		if state.dead:
+			Profile.stat_add("deaths")
 		Profile.data.best_index = maxi(int(Profile.data.best_index), state.floor_n)
 		Profile.save()
-	var tower_rew := {} if demo else Meta.tower_finish(state.tower, state.floor_n, state.bosses_beaten.has("boss_ancient_dragon"))
+	var tower_rew := {} if demo else Meta.tower_finish(state.tower, state.floor_n, state.beat_final_boss())
 	var stolen := {}
 	if state.dead and not demo:
 		stolen = Meta.hunter_steal(state.equipped)
@@ -2001,3 +2028,30 @@ func _demo_slot_for(bid: String) -> String:
 		if String(target[slot]) == bid and not (state.equipped.has(slot) and String(state.equipped[slot].id) == bid):
 			return slot
 	return "crush"
+
+
+## Sorteio de ossos dos eventos: só ossos que já caem na torre em jogo.
+func _pool_filter(f: Dictionary) -> Dictionary:
+	var out := f.duplicate()
+	out["tower"] = state.tower
+	return out
+
+
+## Vida mostrada = vida no instante do acontecimento (tela, painel e HUD juntos).
+func _show_hps(ev: Dictionary) -> void:
+	var hps: Dictionary = ev.get("hps", {})
+	for f in hps:
+		if is_instance_valid(f):
+			f.shown_hp = float(hps[f])
+			if f.is_hero:
+				state.hp = clampf(f.shown_hp, 0.0, state.max_hp)
+				_refresh_hud()
+
+
+## Fim da rodada: volta a mostrar a vida real de todos.
+func _clear_shown_hps() -> void:
+	if combat == null:
+		return
+	for f in [combat.hero] + combat.enemies + combat.allies:
+		f.shown_hp = -1.0
+

@@ -382,7 +382,7 @@ Os números abaixo são valores iniciais para o protótipo, não finais. A meta 
 \end{aligned}
 ```
 
-**Torres:** os 30 andares da Cripta formam a Torre 1. O jogo vai até a Torre 10, cada uma com os mesmos 30 andares e chefes, mas monstros mais fortes e mais pó de osso (valores em `data/towers.json`). Vencer o Dragão Ancião da torre N libera a N+1 e paga diamantes na 1ª vez; torres já liberadas podem ser jogadas de novo a qualquer momento. Valores atuais no código: `data/balance.json`.
+**Torres:** os 30 andares da Cripta formam a Torre 1. O jogo vai até a Torre 20 (desde a versão 1.1; antes, 10), cada uma com 30 andares, monstros mais fortes e mais pó de osso; novas regiões trazem monstros, chefes e ossos próprios (valores em `data/towers.json`). Vencer o chefe do andar 30 da torre N libera a N+1 (cada região de torres tem seus chefes, ver docs/DECISOES.md) e paga diamantes na 1ª vez; torres já liberadas podem ser jogadas de novo a qualquer momento. Valores atuais no código: `data/balance.json`.
 
 **Chances e recompensas**
 

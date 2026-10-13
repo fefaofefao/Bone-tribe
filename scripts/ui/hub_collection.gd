@@ -17,6 +17,9 @@ func _album() -> void:
 	if tokens > 0:
 		info += "  ·  " + tr("start_tokens") % tokens
 	box.add_child(Style.label(info, 21, Style.C_CANDLE))
+	var sb := Style.button(tr("stats_title"), "DarkButton", 64)
+	sb.pressed.connect(func(): StatsPopup.open(self))
+	box.add_child(sb)
 	for fam in GameData.families:
 		var fd: Dictionary = GameData.families[fam]
 		var complete := Meta.family_complete(fam)
@@ -69,6 +72,13 @@ func _bone_cell(id: String, is_start: bool) -> Control:
 	var nm := Style.label(tr(String(b.name)) if found else tr("unknown_item"), 17, Style.rarity_color(String(b.rarity)) if found else Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	nm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(nm)
+	# ossos que só caem em torres mais altas: etiqueta "#Torre N" para dar vontade de chegar lá
+	var mt := GameData.bone_min_tower(id)
+	if mt > 1:
+		var tag := Style.bold(tr("tower_tag") % mt, 16, Style.C_CANDLE if mt > Meta.tower_unlocked() else Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		v.add_child(tag)
+		btn.custom_minimum_size.y = 190
 	if found:
 		btn.pressed.connect(func(): _bone_detail(id))
 	else:
@@ -88,7 +98,10 @@ func _bone_detail(id: String) -> void:
 	v.add_child(bc)
 	var src := String(GameData.bone(id).get("monster", ""))
 	if src != "":
-		v.add_child(Style.label(tr("bone_source") % tr(String(GameData.monster(src).name)), 20, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+		var src_txt := tr("bone_source") % tr(String(GameData.monster(src).name))
+		if GameData.bone_min_tower(id) > 1:
+			src_txt += "  ·  " + tr("tower_tag") % GameData.bone_min_tower(id)
+		v.add_child(Style.label(src_txt, 20, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 	var start := String(Profile.data.get("starting_bone", ""))
 	if start == id:
 		var clear := Style.button(tr("start_bone_clear"), "DarkButton", 70)

@@ -221,7 +221,7 @@ func is_boss_floor(n: int = -1) -> bool:
 func boss_for_floor(n: int) -> String:
 	if prototype:
 		return "boss_rat_king" if n == total_floors else ""
-	var bf: Dictionary = GameData.bal("run/boss_floors", {})
+	var bf: Dictionary = GameData.tower(tower).get("bosses", GameData.bal("run/boss_floors", {}))
 	if bf.has(str(n)):
 		return String(bf[str(n)])
 	if n == int(GameData.bal("run/secret_floor", 31)):
@@ -365,3 +365,21 @@ func end_rewards() -> Dictionary:
 	var total := int(roundf(base * (1.0 + bonus) * tower_mult))
 	return {"floors": floor_n * per_floor, "bosses": bosses_beaten.size() * per_boss, "collected": dust, "bonus_pct": bonus,
 		"tower_mult": tower_mult, "total": total}
+
+
+## Chefe do último andar normal da torre: vencê-lo libera a próxima torre.
+func final_boss() -> String:
+	return boss_for_floor(int(GameData.bal("run/floors", 30)))
+
+
+func beat_final_boss() -> bool:
+	return bosses_beaten.has(final_boss())
+
+
+## Encaixe que já tem este mesmo osso (para triturar ou trocar direto), ou "".
+func same_bone_slot(inst: Dictionary) -> String:
+	for s in slots_for(String(inst.get("id", ""))):
+		if String(equipped.get(s, {}).get("id", "")) == String(inst.get("id", "")):
+			return s
+	return ""
+

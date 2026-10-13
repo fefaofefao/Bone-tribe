@@ -1046,7 +1046,7 @@ hud_tower_floor,Torre %d · Piso %d/%d
 run_end_tower_floor,Torre %d · piso alcanzado: %d
 card_tower_floor,Torre %d · Piso %d
 tower_label,Torre %d · %s
-tower_locked_hint,Bloqueada: vence al Dragón Ancestral de la Torre %d
+tower_locked_hint,Bloqueada: vence al jefe del piso 30 de la Torre %d
 tower_cleared_sub,Torre vencida · vuelve a jugarla por polvo de hueso
 tower_best_sub,Tu récord aquí: piso %d
 tower_new_sub,Nadie de la tribu ha subido hasta aquí
@@ -1064,3 +1064,228 @@ tower_7_name,Catedral Carmesí
 tower_8_name,Pantano de Huesos
 tower_9_name,Campana de los Muertos
 tower_10_name,Trono del Dragón
+bone_skull_hyena_name,Cráneo de Hiena
+bone_skull_hyena_desc,+3 de ataque y 10% de crítico.
+bone_skull_hyena_part,Hiena
+bone_skull_hyena_adj,Risueño
+bone_tail_eel_name,Cola de Anguila
+bone_tail_eel_desc,"+3 de velocidad, 8% de esquiva. Los golpes pueden aturdir (10%)."
+bone_tail_eel_part,Anguila
+bone_tail_eel_adj,Eléctrico
+bone_wings_moth_name,Alas de Polilla
+bone_wings_moth_desc,10% de esquiva y robo de vida del 6%.
+bone_wings_moth_part,Polilla
+bone_wings_moth_adj,Crepuscular
+bone_legs_clockwork_name,Patas de Engranaje
+bone_legs_clockwork_desc,+15 de defensa y +3 de velocidad.
+bone_legs_clockwork_part,Engranaje
+bone_legs_clockwork_adj,Mecánico
+bone_ribs_clockwork_name,Costillas de Engranaje
+bone_ribs_clockwork_desc,+20 de vida. Empieza el combate con un escudo del 8%.
+bone_ribs_clockwork_part,Engranaje
+bone_ribs_clockwork_adj,Blindado
+bone_skull_salamander_name,Cráneo de Salamandra
+bone_skull_salamander_desc,+5 de ataque y +20% de daño de fuego.
+bone_skull_salamander_part,Salamandra
+bone_skull_salamander_adj,Ardiente
+bone_tail_salamander_name,Cola de Salamandra
+bone_tail_salamander_desc,"+18 de vida. Cada 3 turnos, latigazo de fuego."
+bone_tail_salamander_part,Salamandra
+bone_tail_salamander_adj,Humeante
+bone_ribs_ghoul_name,Costillas de Necrófago
+bone_ribs_ghoul_desc,+30 de vida y robo de vida del 8%.
+bone_ribs_ghoul_part,Necrófago
+bone_ribs_ghoul_adj,Hambriento
+bone_claw_ghoul_name,Garra de Necrófago
+bone_claw_ghoul_desc,+5 de ataque y robo de vida del 8%.
+bone_claw_ghoul_part,Necrófago
+bone_claw_ghoul_adj,Voraz
+bone_skull_mammoth_name,Cráneo de Mamut
+bone_skull_mammoth_desc,+30 de vida y +15 de defensa. Intimida a los enemigos.
+bone_skull_mammoth_part,Mamut
+bone_skull_mammoth_adj,Glacial
+bone_tusk_mammoth_name,Colmillo de Mamut
+bone_tusk_mammoth_desc,+7 de ataque. Los golpes pueden aturdir (25%).
+bone_tusk_mammoth_part,Mamut
+bone_tusk_mammoth_adj,Colosal
+bone_skull_angler_name,Cráneo de Rape
+bone_skull_angler_desc,10% de crítico y +10% de probabilidad de hueso.
+bone_skull_angler_part,Rape
+bone_skull_angler_adj,Abisal
+bone_fin_angler_name,Aleta de Rape
+bone_fin_angler_desc,"+3 de velocidad, 10% de esquiva, +8 de defensa."
+bone_fin_angler_part,Rape
+bone_fin_angler_adj,Luminoso
+bone_wings_gargoyle_name,Alas de Gárgola
+bone_wings_gargoyle_desc,+20 de defensa y devuelve el 10% del daño.
+bone_wings_gargoyle_part,Gárgola
+bone_wings_gargoyle_adj,Pétreo
+bone_ribs_gargoyle_name,Costillas de Gárgola
+bone_ribs_gargoyle_desc,+20 de vida. Empieza el combate con un escudo del 12%.
+bone_ribs_gargoyle_part,Gárgola
+bone_ribs_gargoyle_adj,Esculpido
+bone_legs_locust_name,Patas de Langosta
+bone_legs_locust_desc,"+5 de velocidad, 8% de esquiva y evita trampas (10%)."
+bone_legs_locust_part,Langosta
+bone_legs_locust_adj,Saltarín
+bone_mandible_locust_name,Mandíbula de Langosta
+bone_mandible_locust_desc,"+4 de ataque, 5% de crítico. Los golpes pueden envenenar (50%)."
+bone_mandible_locust_part,Langosta
+bone_mandible_locust_adj,Pestilente
+bone_skull_croc_name,Cráneo de Cocodrilo
+bone_skull_croc_desc,+6 de ataque y +20 de vida.
+bone_skull_croc_part,Cocodrilo
+bone_skull_croc_adj,Pantanoso
+bone_tail_croc_name,Cola de Cocodrilo
+bone_tail_croc_desc,"+25 de vida, +10 de defensa. Cada 4 turnos, coletazo."
+bone_tail_croc_part,Cocodrilo
+bone_tail_croc_adj,Escamoso
+bone_skull_wraith_name,Cráneo de Espectro
+bone_skull_wraith_desc,12% de crítico y robo de vida del 6%.
+bone_skull_wraith_part,Espectro
+bone_skull_wraith_adj,Sombrío
+bone_shroud_wraith_name,Mortaja de Espectro
+bone_shroud_wraith_desc,15% de esquiva y robo de vida del 6%.
+bone_shroud_wraith_part,Espectro
+bone_shroud_wraith_adj,Fantasmal
+bone_wings_wyvern_name,Alas de Guiverno
+bone_wings_wyvern_desc,"+4 de velocidad, +25% de daño de fuego, +15 de vida."
+bone_wings_wyvern_part,Guiverno
+bone_wings_wyvern_adj,Alado
+bone_claw_wyvern_name,Garra de Guiverno
+bone_claw_wyvern_desc,"+7 de ataque. Cada 3 turnos, garra llameante fuerte."
+bone_claw_wyvern_part,Guiverno
+bone_claw_wyvern_adj,Incandescente
+bone_skull_minotaur_name,Cráneo de Minotauro
+bone_skull_minotaur_desc,+8 de ataque y +20 de vida. Intimida a los enemigos.
+bone_skull_minotaur_part,Minotauro
+bone_skull_minotaur_adj,Furioso
+bone_legs_minotaur_name,Patas de Minotauro
+bone_legs_minotaur_desc,"+30 de vida, +4 de ataque, +2 de velocidad."
+bone_legs_minotaur_part,Minotauro
+bone_legs_minotaur_adj,Taurino
+bone_fist_sentinel_name,Puño de Centinela
+bone_fist_sentinel_desc,+6 de ataque y +10 de defensa.
+bone_fist_sentinel_part,Centinela
+bone_fist_sentinel_adj,Obsidiano
+bone_legs_sentinel_name,Patas de Centinela
+bone_legs_sentinel_desc,+25 de defensa y +20 de vida.
+bone_legs_sentinel_part,Centinela
+bone_legs_sentinel_adj,Inquebrantable
+bone_stinger_hornet_name,Aguijón de Avispón
+bone_stinger_hornet_desc,+5 de ataque. Los golpes envenenan.
+bone_stinger_hornet_part,Avispón
+bone_stinger_hornet_adj,Real
+bone_wings_hornet_name,Alas de Avispón
+bone_wings_hornet_desc,+5 de velocidad y 14% de esquiva.
+bone_wings_hornet_part,Avispón
+bone_wings_hornet_adj,Zumbador
+bone_crown_matriarch_name,Corona de la Matriarca
+bone_crown_matriarch_desc,"+25 de vida, robo de vida del 12% y regenera 2% por turno."
+bone_crown_matriarch_part,Matriarca
+bone_crown_matriarch_adj,Soberano
+bone_ribs_titan_name,Costillas del Titán
+bone_ribs_titan_desc,"+50 de vida, +20 de defensa y escudo inicial del 15%."
+bone_ribs_titan_part,Titán
+bone_ribs_titan_adj,Congelado
+bone_tail_magma_name,Cola de Magma
+bone_tail_magma_desc,"+8 de ataque, +35% de daño de fuego, +20 de vida."
+bone_tail_magma_part,Magma
+bone_tail_magma_adj,Volcánico
+bone_shell_behemoth_name,Caparazón del Behemot
+bone_shell_behemoth_desc,"+30 de defensa, devuelve el 20% del daño, +20 de vida."
+bone_shell_behemoth_part,Behemot
+bone_shell_behemoth_adj,Colosal
+bone_skull_lich_name,Cráneo del Liche
+bone_skull_lich_desc,"12% de crítico, robo de vida del 10%. Cada 3 turnos, rayo sombrío."
+bone_skull_lich_part,Liche
+bone_skull_lich_adj,Siniestro
+bone_wings_obsidian_name,Alas de Obsidiana
+bone_wings_obsidian_desc,"+4 de velocidad, +30 de vida, +10 de defensa. Cada 4 turnos, acción extra."
+bone_wings_obsidian_part,Obsidiana
+bone_wings_obsidian_adj,Imperial
+monster_grave_hyena_name,Hiena de la Fosa
+monster_cave_eel_name,Anguila de las Cavernas
+monster_dusk_moth_name,Polilla del Crepúsculo
+monster_clockwork_spider_name,Araña de Engranaje
+monster_magma_salamander_name,Salamandra de Magma
+monster_tomb_ghoul_name,Necrófago de la Tumba
+monster_frost_mammoth_name,Mamut de Hielo
+monster_lantern_angler_name,Rape Linterna
+monster_gargoyle_name,Gárgola Huesuda
+monster_plague_locust_name,Langosta de la Plaga
+monster_swamp_crocodile_name,Cocodrilo del Pantano
+monster_bell_wraith_name,Espectro de la Campana
+monster_young_wyvern_name,Guiverno Joven
+monster_bone_minotaur_name,Minotauro de Hueso
+monster_obsidian_sentinel_name,Centinela de Obsidiana
+monster_royal_hornet_name,Avispón Real
+boss_ghoul_matriarch_name,Matriarca Necrófaga
+boss_frost_titan_name,Titán de Hielo
+boss_magma_wyrm_name,Sierpe de Magma
+boss_swamp_behemoth_name,Behemot del Pantano
+boss_bell_lich_name,Liche de la Campana
+boss_obsidian_dragon_name,Dragón de Obsidiana
+tower_11_name,Ruinas Olvidadas
+tower_12_name,Mina de los Ecos
+tower_13_name,Bosque Petrificado
+tower_14_name,Lago Negro
+tower_15_name,Ciudadela de Cenizas
+tower_16_name,Laberinto de Vértebras
+tower_17_name,Pico de la Tormenta
+tower_18_name,Valle de las Fauces
+tower_19_name,Corazón de la Cripta
+tower_20_name,Cumbre Eterna
+event_boss_ghoul_matriarch_text,Un llanto ronco resuena entre las lápidas. La Matriarca Necrófaga alza su corona de huesos y llama a sus crías a cenar.
+event_boss_frost_titan_text,"El suelo se congela bajo tus pies. Un Titán de Hielo se desprende de la pared, crujiendo como un lago en invierno."
+event_boss_magma_wyrm_text,"La roca se derrite y burbujea. La Sierpe de Magma sube del fondo del horno, hambrienta de huesos nuevos."
+event_boss_swamp_behemoth_text,"El barro del pantano se levanta entero. Era el caparazón del Behemot, despertado por el ruido de tus huesos."
+event_boss_bell_lich_text,"La campana suena sola. Con cada campanada, el Liche de la Campana se acerca más, con llamas moradas en los ojos."
+event_boss_obsidian_dragon_text,"En lo alto del trono, escamas negras brillan como vidrio. El Dragón de Obsidiana abre las alas y el aire se vuelve brasa."
+bone_gain_power,Poder del hueso: +%d%% (atributos y efectos)
+bone_gain_pieces,Cuenta como %d piezas de la familia %s
+bigorna_gain,¡%s se volvió raro!
+same_bone_crush,Mismo hueso: %s. Triturando…
+same_bone_better,¡%s +%d es mejor: cambiando!
+stat_hp,Vida
+stat_atk,Ataque
+stat_def,Defensa
+stat_crit,Crítico
+stat_dodge,Esquiva
+stat_speed,Velocidad
+stat_lifesteal,Robo de vida
+stat_reflect,Reflejo
+stat_regen,Regeneración
+stat_dust_bonus,Polvo extra
+stat_shield_start,Escudo inicial
+stat_atk_pct,Ataque
+stat_hp_pct,Vida
+stat_def_pct,Defensa
+stat_poison_bonus,Veneno
+stat_fire_bonus,Fuego
+stat_trap_avoid,Evitar trampas
+stat_drop_bonus,Prob. de hueso
+stat_rare_event_bonus,Eventos raros
+stat_crit_mult,Daño crítico
+tower_tag,#Torre %d
+stats_title,Estadísticas
+stats_general,General
+stats_runs,Partidas jugadas
+stats_kills,Monstruos derrotados
+stats_floors,Pisos subidos
+stats_deaths,Derrotas
+stats_dust,Polvo de hueso ganado
+stats_crushed,Huesos triturados
+stats_time,Tiempo de juego
+stats_time_fmt,%dh %02dmin
+stats_towers,Torres
+stats_towers_cleared,Torres vencidas
+stats_tower_best,récord: piso %d
+stats_tower_wins,%d victorias
+stats_bosses,Jefes derrotados
+stats_bosses_total,Total de jefes
+stats_collection,Colección
+stats_bones,Huesos descubiertos
+stats_forms,Formas descubiertas
+stats_families,Familias completas
+stats_since_note,* contados desde la versión 1.1

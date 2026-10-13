@@ -1046,7 +1046,7 @@ hud_tower_floor,Tower %d · Floor %d/%d
 run_end_tower_floor,Tower %d · floor reached: %d
 card_tower_floor,Tower %d · Floor %d
 tower_label,Tower %d · %s
-tower_locked_hint,Locked: defeat the Ancient Dragon of Tower %d
+tower_locked_hint,Locked: defeat the floor 30 boss of Tower %d
 tower_cleared_sub,Tower cleared · replay it for bone dust
 tower_best_sub,Your record here: floor %d
 tower_new_sub,No one from the tribe has climbed here yet
@@ -1064,3 +1064,228 @@ tower_7_name,Crimson Cathedral
 tower_8_name,Bone Marsh
 tower_9_name,Bell of the Dead
 tower_10_name,Dragon's Throne
+bone_skull_hyena_name,Hyena Skull
+bone_skull_hyena_desc,+3 attack and 10% crit.
+bone_skull_hyena_part,Hyena
+bone_skull_hyena_adj,Cackling
+bone_tail_eel_name,Eel Tail
+bone_tail_eel_desc,"+3 speed, 8% dodge. Hits may stun (10%)."
+bone_tail_eel_part,Eel
+bone_tail_eel_adj,Electric
+bone_wings_moth_name,Moth Wings
+bone_wings_moth_desc,10% dodge and 6% life steal.
+bone_wings_moth_part,Moth
+bone_wings_moth_adj,Dusky
+bone_legs_clockwork_name,Clockwork Legs
+bone_legs_clockwork_desc,+15 defense and +3 speed.
+bone_legs_clockwork_part,Clockwork
+bone_legs_clockwork_adj,Mechanical
+bone_ribs_clockwork_name,Clockwork Ribs
+bone_ribs_clockwork_desc,+20 health. Starts combat with an 8% shield.
+bone_ribs_clockwork_part,Clockwork
+bone_ribs_clockwork_adj,Plated
+bone_skull_salamander_name,Salamander Skull
+bone_skull_salamander_desc,+5 attack and +20% fire damage.
+bone_skull_salamander_part,Salamander
+bone_skull_salamander_adj,Blazing
+bone_tail_salamander_name,Salamander Tail
+bone_tail_salamander_desc,"+18 health. Every 3 turns, a fire lash."
+bone_tail_salamander_part,Salamander
+bone_tail_salamander_adj,Smoldering
+bone_ribs_ghoul_name,Ghoul Ribs
+bone_ribs_ghoul_desc,+30 health and 8% life steal.
+bone_ribs_ghoul_part,Ghoul
+bone_ribs_ghoul_adj,Ravenous
+bone_claw_ghoul_name,Ghoul Claw
+bone_claw_ghoul_desc,+5 attack and 8% life steal.
+bone_claw_ghoul_part,Ghoul
+bone_claw_ghoul_adj,Voracious
+bone_skull_mammoth_name,Mammoth Skull
+bone_skull_mammoth_desc,+30 health and +15 defense. Intimidates enemies.
+bone_skull_mammoth_part,Mammoth
+bone_skull_mammoth_adj,Glacial
+bone_tusk_mammoth_name,Mammoth Tusk
+bone_tusk_mammoth_desc,+7 attack. Hits may stun (25%).
+bone_tusk_mammoth_part,Mammoth
+bone_tusk_mammoth_adj,Colossal
+bone_skull_angler_name,Angler Skull
+bone_skull_angler_desc,10% crit and +10% bone drop chance.
+bone_skull_angler_part,Angler
+bone_skull_angler_adj,Abyssal
+bone_fin_angler_name,Angler Fin
+bone_fin_angler_desc,"+3 speed, 10% dodge, +8 defense."
+bone_fin_angler_part,Angler
+bone_fin_angler_adj,Glowing
+bone_wings_gargoyle_name,Gargoyle Wings
+bone_wings_gargoyle_desc,+20 defense and reflects 10% of damage.
+bone_wings_gargoyle_part,Gargoyle
+bone_wings_gargoyle_adj,Stony
+bone_ribs_gargoyle_name,Gargoyle Ribs
+bone_ribs_gargoyle_desc,+20 health. Starts combat with a 12% shield.
+bone_ribs_gargoyle_part,Gargoyle
+bone_ribs_gargoyle_adj,Carved
+bone_legs_locust_name,Locust Legs
+bone_legs_locust_desc,"+5 speed, 8% dodge and dodges traps (10%)."
+bone_legs_locust_part,Locust
+bone_legs_locust_adj,Leaping
+bone_mandible_locust_name,Locust Mandible
+bone_mandible_locust_desc,"+4 attack, 5% crit. Hits may poison (50%)."
+bone_mandible_locust_part,Locust
+bone_mandible_locust_adj,Pestilent
+bone_skull_croc_name,Crocodile Skull
+bone_skull_croc_desc,+6 attack and +20 health.
+bone_skull_croc_part,Crocodile
+bone_skull_croc_adj,Swampy
+bone_tail_croc_name,Crocodile Tail
+bone_tail_croc_desc,"+25 health, +10 defense. Every 4 turns, a tail slam."
+bone_tail_croc_part,Crocodile
+bone_tail_croc_adj,Scaly
+bone_skull_wraith_name,Wraith Skull
+bone_skull_wraith_desc,12% crit and 6% life steal.
+bone_skull_wraith_part,Wraith
+bone_skull_wraith_adj,Gloomy
+bone_shroud_wraith_name,Wraith Shroud
+bone_shroud_wraith_desc,15% dodge and 6% life steal.
+bone_shroud_wraith_part,Wraith
+bone_shroud_wraith_adj,Ghostly
+bone_wings_wyvern_name,Wyvern Wings
+bone_wings_wyvern_desc,"+4 speed, +25% fire damage, +15 health."
+bone_wings_wyvern_part,Wyvern
+bone_wings_wyvern_adj,Winged
+bone_claw_wyvern_name,Wyvern Claw
+bone_claw_wyvern_desc,"+7 attack. Every 3 turns, a strong flame claw."
+bone_claw_wyvern_part,Wyvern
+bone_claw_wyvern_adj,Searing
+bone_skull_minotaur_name,Minotaur Skull
+bone_skull_minotaur_desc,+8 attack and +20 health. Intimidates enemies.
+bone_skull_minotaur_part,Minotaur
+bone_skull_minotaur_adj,Raging
+bone_legs_minotaur_name,Minotaur Legs
+bone_legs_minotaur_desc,"+30 health, +4 attack, +2 speed."
+bone_legs_minotaur_part,Minotaur
+bone_legs_minotaur_adj,Bullish
+bone_fist_sentinel_name,Sentinel Fist
+bone_fist_sentinel_desc,+6 attack and +10 defense.
+bone_fist_sentinel_part,Sentinel
+bone_fist_sentinel_adj,Obsidian
+bone_legs_sentinel_name,Sentinel Legs
+bone_legs_sentinel_desc,+25 defense and +20 health.
+bone_legs_sentinel_part,Sentinel
+bone_legs_sentinel_adj,Unshakable
+bone_stinger_hornet_name,Hornet Stinger
+bone_stinger_hornet_desc,+5 attack. Hits poison.
+bone_stinger_hornet_part,Hornet
+bone_stinger_hornet_adj,Royal
+bone_wings_hornet_name,Hornet Wings
+bone_wings_hornet_desc,+5 speed and 14% dodge.
+bone_wings_hornet_part,Hornet
+bone_wings_hornet_adj,Buzzing
+bone_crown_matriarch_name,Matriarch's Crown
+bone_crown_matriarch_desc,"+25 health, 12% life steal and regenerates 2% per turn."
+bone_crown_matriarch_part,Matriarch
+bone_crown_matriarch_adj,Sovereign
+bone_ribs_titan_name,Titan Ribs
+bone_ribs_titan_desc,"+50 health, +20 defense and a 15% starting shield."
+bone_ribs_titan_part,Titan
+bone_ribs_titan_adj,Frozen
+bone_tail_magma_name,Magma Tail
+bone_tail_magma_desc,"+8 attack, +35% fire damage, +20 health."
+bone_tail_magma_part,Magma
+bone_tail_magma_adj,Volcanic
+bone_shell_behemoth_name,Behemoth Shell
+bone_shell_behemoth_desc,"+30 defense, reflects 20% of damage, +20 health."
+bone_shell_behemoth_part,Behemoth
+bone_shell_behemoth_adj,Colossal
+bone_skull_lich_name,Bell Lich Skull
+bone_skull_lich_desc,"12% crit, 10% life steal. Every 3 turns, a shadow beam."
+bone_skull_lich_part,Lich
+bone_skull_lich_adj,Ominous
+bone_wings_obsidian_name,Obsidian Wings
+bone_wings_obsidian_desc,"+4 speed, +30 health, +10 defense. Every 4 turns, an extra action."
+bone_wings_obsidian_part,Obsidian
+bone_wings_obsidian_adj,Imperial
+monster_grave_hyena_name,Grave Hyena
+monster_cave_eel_name,Cave Eel
+monster_dusk_moth_name,Dusk Moth
+monster_clockwork_spider_name,Clockwork Spider
+monster_magma_salamander_name,Magma Salamander
+monster_tomb_ghoul_name,Tomb Ghoul
+monster_frost_mammoth_name,Frost Mammoth
+monster_lantern_angler_name,Lantern Angler
+monster_gargoyle_name,Bony Gargoyle
+monster_plague_locust_name,Plague Locust
+monster_swamp_crocodile_name,Swamp Crocodile
+monster_bell_wraith_name,Bell Wraith
+monster_young_wyvern_name,Young Wyvern
+monster_bone_minotaur_name,Bone Minotaur
+monster_obsidian_sentinel_name,Obsidian Sentinel
+monster_royal_hornet_name,Royal Hornet
+boss_ghoul_matriarch_name,Ghoul Matriarch
+boss_frost_titan_name,Frost Titan
+boss_magma_wyrm_name,Magma Wyrm
+boss_swamp_behemoth_name,Swamp Behemoth
+boss_bell_lich_name,Bell Lich
+boss_obsidian_dragon_name,Obsidian Dragon
+tower_11_name,Forgotten Ruins
+tower_12_name,Echo Mine
+tower_13_name,Petrified Forest
+tower_14_name,Black Lake
+tower_15_name,Ash Citadel
+tower_16_name,Vertebrae Maze
+tower_17_name,Storm Peak
+tower_18_name,Valley of Jaws
+tower_19_name,Crypt Heart
+tower_20_name,Eternal Summit
+event_boss_ghoul_matriarch_text,A hoarse wail echoes among the tombstones. The Ghoul Matriarch raises her bone crown and calls her brood to dinner.
+event_boss_frost_titan_text,"The floor freezes under your feet. A Frost Titan breaks away from the wall, cracking like a winter lake."
+event_boss_magma_wyrm_text,"The rock melts and bubbles. The Magma Wyrm rises from the bottom of the furnace, hungry for new bones."
+event_boss_swamp_behemoth_text,"The swamp mud rises all at once. It was the Behemoth's shell, woken by the rattle of your bones."
+event_boss_bell_lich_text,"The bell rings by itself. With every toll, the Bell Lich draws closer, purple flames in its eyes."
+event_boss_obsidian_dragon_text,"At the top of the throne, black scales gleam like glass. The Obsidian Dragon spreads its wings and the air turns to embers."
+bone_gain_power,Bone power: +%d%% (stats and effects)
+bone_gain_pieces,Counts as %d pieces of the %s family
+bigorna_gain,%s became rare!
+same_bone_crush,Same bone: %s. Crushing…
+same_bone_better,%s +%d is better: swapping!
+stat_hp,Health
+stat_atk,Attack
+stat_def,Defense
+stat_crit,Crit
+stat_dodge,Dodge
+stat_speed,Speed
+stat_lifesteal,Life steal
+stat_reflect,Reflect
+stat_regen,Regeneration
+stat_dust_bonus,Extra dust
+stat_shield_start,Starting shield
+stat_atk_pct,Attack
+stat_hp_pct,Health
+stat_def_pct,Defense
+stat_poison_bonus,Poison
+stat_fire_bonus,Fire
+stat_trap_avoid,Trap avoidance
+stat_drop_bonus,Bone drop
+stat_rare_event_bonus,Rare events
+stat_crit_mult,Crit damage
+tower_tag,#Tower %d
+stats_title,Statistics
+stats_general,General
+stats_runs,Runs played
+stats_kills,Monsters defeated
+stats_floors,Floors climbed
+stats_deaths,Defeats
+stats_dust,Bone dust earned
+stats_crushed,Bones crushed
+stats_time,Play time
+stats_time_fmt,%dh %02dmin
+stats_towers,Towers
+stats_towers_cleared,Towers cleared
+stats_tower_best,record: floor %d
+stats_tower_wins,%d wins
+stats_bosses,Bosses defeated
+stats_bosses_total,Total bosses
+stats_collection,Collection
+stats_bones,Bones discovered
+stats_forms,Forms discovered
+stats_families,Families completed
+stats_since_note,* counted since version 1.1

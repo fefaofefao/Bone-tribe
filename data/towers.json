@@ -1,115 +1,25 @@
 {
-	"_doc": "Torres: cada uma tem os 30 andares da Cripta com inimigos mais fortes (vida e ataque multiplicados) e mais pó de osso. Vencer o Dragão Ancião da torre libera a próxima. Calibrado por tests/BalanceSim.tscn (modo torres).",
+	"_doc": "Torres: cada uma tem 30 andares com inimigos mais fortes (vida e ataque multiplicados) e mais pó de osso. bosses = chefe de cada andar; vencer o chefe do andar 30 libera a próxima torre. Monstros com 'towers' só aparecem a partir daquela torre. Calibrado por tests/BalanceSim.tscn (modo torres).",
 	"towers": [
-		{
-			"id": "tower_1",
-			"name": "tower_1_name",
-			"hp_mult": 1.0,
-			"atk_mult": 1.0,
-			"dust_mult": 1.0,
-			"first_clear": {
-				"diamonds": 30
-			},
-			"tint": "#948aa3"
-		},
-		{
-			"id": "tower_2",
-			"name": "tower_2_name",
-			"hp_mult": 1.35,
-			"atk_mult": 1.22,
-			"dust_mult": 1.5,
-			"first_clear": {
-				"diamonds": 45
-			},
-			"tint": "#7f97a8"
-		},
-		{
-			"id": "tower_3",
-			"name": "tower_3_name",
-			"hp_mult": 1.7,
-			"atk_mult": 1.44,
-			"dust_mult": 2.0,
-			"first_clear": {
-				"diamonds": 60
-			},
-			"tint": "#8a9a86"
-		},
-		{
-			"id": "tower_4",
-			"name": "tower_4_name",
-			"hp_mult": 2.05,
-			"atk_mult": 1.66,
-			"dust_mult": 2.5,
-			"first_clear": {
-				"diamonds": 75
-			},
-			"tint": "#ab8a78"
-		},
-		{
-			"id": "tower_5",
-			"name": "tower_5_name",
-			"hp_mult": 2.4,
-			"atk_mult": 1.88,
-			"dust_mult": 3.0,
-			"first_clear": {
-				"diamonds": 90
-			},
-			"tint": "#8f9a8a"
-		},
-		{
-			"id": "tower_6",
-			"name": "tower_6_name",
-			"hp_mult": 2.75,
-			"atk_mult": 2.1,
-			"dust_mult": 3.5,
-			"first_clear": {
-				"diamonds": 105
-			},
-			"tint": "#8aa2c0"
-		},
-		{
-			"id": "tower_7",
-			"name": "tower_7_name",
-			"hp_mult": 3.1,
-			"atk_mult": 2.32,
-			"dust_mult": 4.0,
-			"first_clear": {
-				"diamonds": 120
-			},
-			"tint": "#b07c84"
-		},
-		{
-			"id": "tower_8",
-			"name": "tower_8_name",
-			"hp_mult": 3.45,
-			"atk_mult": 2.54,
-			"dust_mult": 4.5,
-			"first_clear": {
-				"diamonds": 135
-			},
-			"tint": "#7f9a84"
-		},
-		{
-			"id": "tower_9",
-			"name": "tower_9_name",
-			"hp_mult": 3.8,
-			"atk_mult": 2.76,
-			"dust_mult": 5.0,
-			"first_clear": {
-				"diamonds": 150
-			},
-			"tint": "#a59a7c"
-		},
-		{
-			"id": "tower_10",
-			"name": "tower_10_name",
-			"hp_mult": 4.15,
-			"atk_mult": 2.98,
-			"dust_mult": 5.5,
-			"first_clear": {
-				"diamonds": 165
-			},
-			"tint": "#a07ca8"
-		}
+		{"id": "tower_1", "name": "tower_1_name", "hp_mult": 1.0, "atk_mult": 1.0, "dust_mult": 1.0, "first_clear": {"diamonds": 30}, "tint": "#948aa3", "bosses": {"10": "boss_rat_king", "20": "boss_forgotten_golem", "30": "boss_ancient_dragon"}},
+		{"id": "tower_2", "name": "tower_2_name", "hp_mult": 1.35, "atk_mult": 1.22, "dust_mult": 1.5, "first_clear": {"diamonds": 45}, "tint": "#7f97a8", "bosses": {"10": "boss_rat_king", "20": "boss_forgotten_golem", "30": "boss_ancient_dragon"}},
+		{"id": "tower_3", "name": "tower_3_name", "hp_mult": 1.7, "atk_mult": 1.44, "dust_mult": 2.0, "first_clear": {"diamonds": 60}, "tint": "#8a9a86", "bosses": {"10": "boss_rat_king", "20": "boss_forgotten_golem", "30": "boss_ancient_dragon"}},
+		{"id": "tower_4", "name": "tower_4_name", "hp_mult": 2.05, "atk_mult": 1.66, "dust_mult": 2.5, "first_clear": {"diamonds": 75}, "tint": "#ab8a78", "bosses": {"10": "boss_ghoul_matriarch", "20": "boss_frost_titan", "30": "boss_magma_wyrm"}},
+		{"id": "tower_5", "name": "tower_5_name", "hp_mult": 2.4, "atk_mult": 1.88, "dust_mult": 3.0, "first_clear": {"diamonds": 90}, "tint": "#8f9a8a", "bosses": {"10": "boss_ghoul_matriarch", "20": "boss_frost_titan", "30": "boss_magma_wyrm"}},
+		{"id": "tower_6", "name": "tower_6_name", "hp_mult": 2.75, "atk_mult": 2.1, "dust_mult": 3.5, "first_clear": {"diamonds": 105}, "tint": "#8aa2c0", "bosses": {"10": "boss_ghoul_matriarch", "20": "boss_frost_titan", "30": "boss_magma_wyrm"}},
+		{"id": "tower_7", "name": "tower_7_name", "hp_mult": 3.1, "atk_mult": 2.32, "dust_mult": 4.0, "first_clear": {"diamonds": 120}, "tint": "#b07c84", "bosses": {"10": "boss_swamp_behemoth", "20": "boss_bell_lich", "30": "boss_obsidian_dragon"}},
+		{"id": "tower_8", "name": "tower_8_name", "hp_mult": 3.45, "atk_mult": 2.54, "dust_mult": 4.5, "first_clear": {"diamonds": 135}, "tint": "#7f9a84", "bosses": {"10": "boss_swamp_behemoth", "20": "boss_bell_lich", "30": "boss_obsidian_dragon"}},
+		{"id": "tower_9", "name": "tower_9_name", "hp_mult": 3.8, "atk_mult": 2.76, "dust_mult": 5.0, "first_clear": {"diamonds": 150}, "tint": "#a59a7c", "bosses": {"10": "boss_swamp_behemoth", "20": "boss_bell_lich", "30": "boss_obsidian_dragon"}},
+		{"id": "tower_10", "name": "tower_10_name", "hp_mult": 4.15, "atk_mult": 2.98, "dust_mult": 5.5, "first_clear": {"diamonds": 165}, "tint": "#a07ca8", "bosses": {"10": "boss_swamp_behemoth", "20": "boss_bell_lich", "30": "boss_obsidian_dragon"}},
+		{"id": "tower_11", "name": "tower_11_name", "hp_mult": 4.5, "atk_mult": 3.2, "dust_mult": 6.0, "first_clear": {"diamonds": 180}, "tint": "#9a8aa0", "bosses": {"10": "boss_rat_king", "20": "boss_forgotten_golem", "30": "boss_ancient_dragon"}},
+		{"id": "tower_12", "name": "tower_12_name", "hp_mult": 4.85, "atk_mult": 3.42, "dust_mult": 6.5, "first_clear": {"diamonds": 195}, "tint": "#8494a0", "bosses": {"10": "boss_ghoul_matriarch", "20": "boss_frost_titan", "30": "boss_magma_wyrm"}},
+		{"id": "tower_13", "name": "tower_13_name", "hp_mult": 5.2, "atk_mult": 3.64, "dust_mult": 7.0, "first_clear": {"diamonds": 210}, "tint": "#8c9a90", "bosses": {"10": "boss_swamp_behemoth", "20": "boss_bell_lich", "30": "boss_obsidian_dragon"}},
+		{"id": "tower_14", "name": "tower_14_name", "hp_mult": 5.55, "atk_mult": 3.86, "dust_mult": 7.5, "first_clear": {"diamonds": 225}, "tint": "#7f8aa8", "bosses": {"10": "boss_rat_king", "20": "boss_forgotten_golem", "30": "boss_ancient_dragon"}},
+		{"id": "tower_15", "name": "tower_15_name", "hp_mult": 5.9, "atk_mult": 4.08, "dust_mult": 8.0, "first_clear": {"diamonds": 240}, "tint": "#a89080", "bosses": {"10": "boss_ghoul_matriarch", "20": "boss_frost_titan", "30": "boss_magma_wyrm"}},
+		{"id": "tower_16", "name": "tower_16_name", "hp_mult": 6.25, "atk_mult": 4.3, "dust_mult": 8.5, "first_clear": {"diamonds": 255}, "tint": "#9a8698", "bosses": {"10": "boss_swamp_behemoth", "20": "boss_bell_lich", "30": "boss_obsidian_dragon"}},
+		{"id": "tower_17", "name": "tower_17_name", "hp_mult": 6.6, "atk_mult": 4.52, "dust_mult": 9.0, "first_clear": {"diamonds": 270}, "tint": "#8aa0b4", "bosses": {"10": "boss_rat_king", "20": "boss_forgotten_golem", "30": "boss_ancient_dragon"}},
+		{"id": "tower_18", "name": "tower_18_name", "hp_mult": 6.95, "atk_mult": 4.74, "dust_mult": 9.5, "first_clear": {"diamonds": 285}, "tint": "#a0947c", "bosses": {"10": "boss_ghoul_matriarch", "20": "boss_frost_titan", "30": "boss_magma_wyrm"}},
+		{"id": "tower_19", "name": "tower_19_name", "hp_mult": 7.3, "atk_mult": 4.96, "dust_mult": 10.0, "first_clear": {"diamonds": 300}, "tint": "#b08890", "bosses": {"10": "boss_swamp_behemoth", "20": "boss_bell_lich", "30": "boss_obsidian_dragon"}},
+		{"id": "tower_20", "name": "tower_20_name", "hp_mult": 7.65, "atk_mult": 5.18, "dust_mult": 10.5, "first_clear": {"diamonds": 315}, "tint": "#a8a0c0", "bosses": {"10": "boss_rat_king", "20": "boss_forgotten_golem", "30": "boss_ancient_dragon"}}
 	]
 }

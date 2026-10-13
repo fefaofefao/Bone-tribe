@@ -6,7 +6,9 @@ signal changed
 signal currency_changed
 
 const SAVE_PATH := "user://profile.json"
-const SAVE_VERSION := 1
+## Versão do formato do save. Ao mudar, acrescente um passo em _migrate():
+## atualizações nunca apagam nem zeram progresso de quem já joga.
+const SAVE_VERSION := 2
 
 var data: Dictionary = {}
 
@@ -24,7 +26,9 @@ func defaults() -> Dictionary:
 		"diamonds": 0,
 		"runs_played": 0,
 		"best_index": 0,
-		"towers": {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}},
+		"towers": {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}, "wins": {}},
+		"families_done": {},
+		"stats": {"kills": 0, "dust_total": 0, "bones_crushed": 0, "play_time": 0, "deaths": 0, "floors": 0},
 		"first_open_time": 0,
 		"ossuary": {"hp": 0, "atk": 0, "def": 0, "drop": 0},
 		"discovered_bones": {},
@@ -51,21 +55,49 @@ func defaults() -> Dictionary:
 
 
 func load_profile() -> void:
-	data = defaults()
+	var parsed: Variant = null
 	if FileAccess.file_exists(SAVE_PATH):
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
-		if typeof(parsed) == TYPE_DICTIONARY:
-			_merge(data, parsed)
-	# perfis de antes das torres: quem já venceu o Dragão começa com a Torre 2 liberada
-	if int(data.towers.unlocked) <= 1 and data.bosses_defeated.has("boss_ancient_dragon") and not data.towers.cleared.has("1"):
-		data.towers.unlocked = 2
-		data.towers.cleared["1"] = true
-		data.towers.best["1"] = int(data.best_index)
+		parsed = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
+	load_from(parsed if typeof(parsed) == TYPE_DICTIONARY else {})
 	if int(data.first_open_time) == 0:
 		data.first_open_time = Backend.now()
 		save()
 	if Dev.env("BT_SAMPLE_PROFILE") == "1":
 		_sample_profile()
+
+
+## Monta o perfil a partir de um save (de qualquer versão): campos novos entram
+## com o valor padrão e _migrate() converte o que mudou de formato.
+func load_from(saved: Dictionary) -> void:
+	data = defaults()
+	var from_version := int(saved.get("version", 1)) if not saved.is_empty() else SAVE_VERSION
+	_merge(data, saved)
+	_migrate(from_version)
+	data.version = SAVE_VERSION
+
+
+func _migrate(from_version: int) -> void:
+	# perfis de antes das torres: quem já venceu o Dragão começa com a Torre 2 liberada
+	if int(data.towers.unlocked) <= 1 and data.bosses_defeated.has("boss_ancient_dragon") and not data.towers.cleared.has("1"):
+		data.towers.unlocked = 2
+		data.towers.cleared["1"] = true
+		data.towers.best["1"] = int(data.best_index)
+	if from_version < 2:
+		# v2 acrescentou ossos às famílias: quem já tinha completado uma família
+		# com os ossos antigos mantém o bônus para sempre
+		for fam in GameData.families:
+			var done := true
+			var any := false
+			for id in GameData.bones_by({"family": fam}):
+				if int(GameData.bone(id).get("wave", 1)) >= 2:
+					continue
+				any = true
+				if not data.discovered_bones.has(id):
+					done = false
+			if any and done:
+				data.families_done[fam] = true
+		for k in data.towers.cleared:
+			data.towers.wins[k] = maxi(1, int(data.towers.wins.get(k, 0)))
 
 
 ## Ferramenta de desenvolvimento: perfil de exemplo para capturas de tela.
@@ -171,6 +203,8 @@ func diamonds() -> int:
 
 func add_dust(amount: int, source: String = "") -> void:
 	data.dust = max(0, int(data.dust) + amount)
+	if amount > 0:
+		stat_add("dust_total", amount)
 	Backend.log_event("currency_dust", {"amount": amount, "source": source})
 	save()
 	currency_changed.emit()
@@ -230,3 +264,17 @@ func boss_wins(boss_id: String) -> int:
 func register_boss_win(boss_id: String) -> void:
 	data.bosses_defeated[boss_id] = boss_wins(boss_id) + 1
 	save()
+
+
+## Estatísticas da tela "Estatísticas" (salvas junto com o próximo save).
+func stat_add(key: String, n: float = 1) -> void:
+	data.stats[key] = data.stats.get(key, 0) + n
+
+
+func stat(key: String) -> float:
+	return float(data.stats.get(key, 0))
+
+
+func _process(delta: float) -> void:
+	data.stats.play_time = float(data.stats.get("play_time", 0)) + delta
+

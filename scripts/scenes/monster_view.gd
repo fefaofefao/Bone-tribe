@@ -93,7 +93,7 @@ func hit_rect() -> Rect2:
 func refresh() -> void:
 	if fighter == null:
 		return
-	hp_bar.ratio = fighter.hp_ratio()
+	hp_bar.ratio = fighter.display_ratio()
 	hp_bar.queue_redraw()
 	var st := []
 	if fighter.statuses.has("bleed"):

@@ -534,10 +534,16 @@ def draw_generic_bone(bone_id, slot, family):
     finish(cv, W, H, out("bones", bone_id + ".png"))
 
 
+def _only():
+    """BT_ONLY=id1,id2 gera só esses IDs (ossos ou monstros)."""
+    v = os.environ.get("BT_ONLY", "")
+    return set(x for x in v.split(",") if x)
+
+
 def _extra_drawers():
     """Ossos da expansão (mais de 10 por parte), desenhados em módulos separados."""
     draw = {}
-    for mod in ("art_extra_head", "art_extra_limbs", "art_extra_back"):
+    for mod in ("art_extra_head", "art_extra_limbs", "art_extra_back", "art_wave2_bones"):
         try:
             draw.update(__import__(mod).DRAW)
         except ImportError:
@@ -548,7 +554,10 @@ def _extra_drawers():
 def gen_bones():
     draw_base_parts()
     extra = _extra_drawers()
+    only = _only()
     for b in data("bones.json"):
+        if only and b["id"] not in only:
+            continue
         slot = b.get("slot") or b["slots"][0]
         if b["id"] in extra:
             extra[b["id"]](b["id"], b.get("family", ""))
@@ -1170,9 +1179,17 @@ def fit_bottom(cv, W, H, margin_px=6):
 def gen_monsters():
     import artlib
     from PIL import ImageOps
+    draw = dict(MONSTER_DRAW)
+    try:
+        draw.update(__import__("art_wave2_monsters").DRAW)
+    except ImportError:
+        pass
+    only = _only()
     for m in data("monsters.json"):
+        if only and m["id"] not in only:
+            continue
         W, H = m["art"]["size"]
-        fn = MONSTER_DRAW.get(m["id"])
+        fn = draw.get(m["id"])
         if fn is None:
             if m.get("kind") != "ally":
                 print("sem desenho:", m["id"])
