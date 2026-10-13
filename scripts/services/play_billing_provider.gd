@@ -78,7 +78,11 @@ func purchase(product_id: String) -> bool:
 		return false
 	var state := {"done": false, "ok": false}
 	_waiting[product_id] = state
-	var r: Dictionary = client.purchase(product_id)
+	var option_id := ""
+	var offers: Variant = details[product_id].get("one_time_purchase_offer_details_list")
+	if offers is Array and not (offers as Array).is_empty():
+		option_id = String(offers[0].get("purchase_option_id", ""))
+	var r: Dictionary = client.purchase(product_id, option_id)
 	if int(r.get("response_code", -1)) != BillingClient.BillingResponseCode.OK:
 		_waiting.erase(product_id)
 		Widgets.toast(tr("iap_unavailable"))

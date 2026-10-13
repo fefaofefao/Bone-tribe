@@ -33,7 +33,7 @@ A marca Bone Tribe é a mesma nos três idiomas; só as palavras-chave do títul
 | Português (pt-BR) | Bone Tribe: RPG de Esqueleto | 28 | Ossinho |
 | Espanhol (es-419) | Bone Tribe: RPG de Esqueleto | 28 | Huesito |
 
-O ID do pacote é com.bonetribe.game. Ele não pode ser mudado depois da publicação. Antes do lançamento, confirme que o nome está livre na Google Play, no domínio e nos registros de marca do INPI e do USPTO.
+O ID do pacote é com.fsamplabs.bone_tribe. Ele não pode ser mudado depois da publicação. Antes do lançamento, confirme que o nome está livre na Google Play, no domínio e nos registros de marca do INPI e do USPTO.
 
 ## Direção de arte
 
@@ -446,7 +446,7 @@ Você vai criar o PROTÓTIPO do jogo mobile Bone Tribe (Android, tela em retrato
 PROJETO
 - Motor: Godot 4 (versão estável mais recente) com GDScript.
 - Nome do projeto Godot: BoneTribe.
-- ID do pacote Android: com.bonetribe.game
+- ID do pacote Android: com.fsamplabs.bone_tribe
 - O repositório já está criado e conectado a este projeto. Trabalhe nele e configure o build do AAB via GitHub Actions.
 
 ESTRUTURA DE PASTAS E ARQUIVOS

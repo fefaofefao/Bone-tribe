@@ -9,7 +9,7 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:123456789012:android:0123456789abcdef012345",
-        "android_client_info": {"package_name": "com.bonetribe.game"}
+        "android_client_info": {"package_name": "com.fsamplabs.bone_tribe"}
       },
       "oauth_client": [],
       "api_key": [{"current_key": "AIzaSyA-EXEMPLO-NAO-REAL-00000000000000"}],

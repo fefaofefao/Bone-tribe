@@ -4,7 +4,7 @@ Roguelite de eventos para Android em que o **Ossinho** (Bonesy / Huesito) monta 
 próprio corpo com os ossos dos monstros que derrota. Documento de design: [docs/GDD.md](docs/GDD.md).
 
 - Motor: Godot 4.7.2 (GDScript), projeto `BoneTribe`
-- Pacote Android: `com.bonetribe.game`
+- Pacote Android: `com.fsamplabs.bone_tribe`
 - Idiomas: pt_BR, en_US, es_419 (`res://i18n/`)
 
 ## Rodar
