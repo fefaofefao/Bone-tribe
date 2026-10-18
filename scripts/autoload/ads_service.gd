@@ -39,7 +39,9 @@ func limit(placement: String) -> int:
 ## deve ser entregue.
 func show_rewarded(placement: String) -> bool:
 	Backend.log_event("ad_rewarded_start", {"placement": placement})
+	Audio.set_ad_mute(true)
 	var granted: bool = await provider.show_rewarded(placement)
+	Audio.set_ad_mute(false)
 	Backend.log_event("ad_rewarded_end", {"placement": placement, "granted": granted})
 	rewarded_finished.emit(placement, granted)
 	return granted
@@ -56,7 +58,9 @@ func maybe_show_interstitial() -> bool:
 		return false
 	if Backend.now() - int(ads.last_interstitial) < int(cfg.get("min_interval_s", 180)):
 		return false
+	Audio.set_ad_mute(true)
 	var shown: bool = await provider.show_interstitial()
+	Audio.set_ad_mute(false)
 	if not shown:
 		return false
 	ads.interstitials_seen = int(ads.interstitials_seen) + 1

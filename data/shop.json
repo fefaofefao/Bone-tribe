@@ -303,6 +303,10 @@
 		"interstitial": {
 			"min_runs": 3,
 			"min_interval_s": 180
+		},
+		"offline_double": {
+			"limit": 3,
+			"per": "day"
 		}
 	},
 	"kit24": {

@@ -1289,3 +1289,51 @@ stats_bones,Bones discovered
 stats_forms,Forms discovered
 stats_families,Families completed
 stats_since_note,* counted since version 1.1
+menu_sound,Sound effects
+menu_music,Music
+missions_title,Missions
+missions_short,Missions
+missions_daily,Daily · reset in %s
+missions_weekly,Weekly · reset in %s
+missions_days,%d days
+missions_claim,Claim
+missions_claimed,Done
+mission_done_toast,Mission complete: %s
+diamonds_short,diamonds
+mission_d_kills,Defeat %d monsters
+mission_d_kills_big,Defeat %d monsters
+mission_d_runs,Play %d runs
+mission_d_bosses,Defeat %d boss
+mission_d_floors,Climb %d floors
+mission_d_crush,Crush %d bones
+mission_d_attach,Attach %d bones
+mission_d_levelups,Level up %d times
+mission_d_forms,Awaken %d form
+mission_w_kills,Defeat %d monsters
+mission_w_bosses,Defeat %d bosses
+mission_w_runs,Play %d runs
+mission_w_floors,Climb %d floors
+mission_w_forms,Awaken %d forms
+mission_w_crush,Crush %d bones
+offline_title,Welcome back!
+offline_text,"While you were away, Ossudo gathered bone dust for you."
+offline_collect,Collect
+offline_double,Collect %s (ad)
+menu_notifications,Notifications
+notif_daily_title,Your daily reward is here
+notif_daily_body,New missions and daily offers are waiting in the crypt.
+notif_offline_title,Ossudo filled the dust bag
+notif_offline_body,Come collect the bone dust before he spills it all.
+notif_hunter_title,The Hunter has your bone
+notif_hunter_body,He's wearing your %s. Beat him to get it back one level higher.
+tip_choices,Every floor brings an event. Tap an option to decide: Bonesy does the rest.
+tip_combat,Combat is automatic. Watch your health and the bones monsters drop!
+tip_focus,Tap an enemy so Bonesy attacks it first.
+tip_attach,New bone attached! Each bone changes Bonesy's body and stats.
+tip_family,2 pieces of the same family give a bonus. Gather 4 to awaken a form!
+tip_swap,Slot taken: swap for the new bone or crush it for bone dust.
+tip_levelup,Level up! Pick a bonus that lasts until the end of this run.
+tip_boss,Boss! The first win always drops a legendary bone.
+tip_form,Form awakened! Forms grant special powers while the pieces stay on your body.
+tip_ossuary,You have bone dust! Spend it in the Ossuary to get stronger in every run.
+tip_towers,New tower unlocked! Use the arrows above Play to pick a tower.

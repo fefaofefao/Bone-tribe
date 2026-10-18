@@ -1289,3 +1289,51 @@ stats_bones,Ossos descobertos
 stats_forms,Formas descobertas
 stats_families,Famílias completas
 stats_since_note,* contados a partir da versão 1.1
+menu_sound,Efeitos sonoros
+menu_music,Música
+missions_title,Missões
+missions_short,Missões
+missions_daily,Diárias · trocam em %s
+missions_weekly,Semanais · trocam em %s
+missions_days,%d dias
+missions_claim,Resgatar
+missions_claimed,Feita
+mission_done_toast,Missão concluída: %s
+diamonds_short,diamantes
+mission_d_kills,Derrote %d monstros
+mission_d_kills_big,Derrote %d monstros
+mission_d_runs,Jogue %d partidas
+mission_d_bosses,Vença %d chefe
+mission_d_floors,Suba %d andares
+mission_d_crush,Triture %d ossos
+mission_d_attach,Encaixe %d ossos
+mission_d_levelups,Suba de nível %d vezes
+mission_d_forms,Desperte %d forma
+mission_w_kills,Derrote %d monstros
+mission_w_bosses,Vença %d chefes
+mission_w_runs,Jogue %d partidas
+mission_w_floors,Suba %d andares
+mission_w_forms,Desperte %d formas
+mission_w_crush,Triture %d ossos
+offline_title,Bem-vindo de volta!
+offline_text,"Enquanto você estava fora, o Ossudo juntou pó de osso para você."
+offline_collect,Coletar
+offline_double,Coletar %s (anúncio)
+menu_notifications,Notificações
+notif_daily_title,Seu prêmio diário chegou
+notif_daily_body,Missões novas e ofertas do dia esperam por você na cripta.
+notif_offline_title,O Ossudo encheu o saco de pó
+notif_offline_body,Venha buscar o pó de osso antes que ele espalhe tudo.
+notif_hunter_title,O Caçador está com seu osso
+notif_hunter_body,Ele está usando seu %s. Vença-o para recuperar com um nível a mais.
+tip_choices,Cada andar traz um acontecimento. Toque numa opção para decidir: o Ossinho faz o resto.
+tip_combat,O combate é automático. Fique de olho na vida e nos ossos que os monstros soltam!
+tip_focus,Toque num inimigo para o Ossinho atacar ele primeiro.
+tip_attach,Osso novo encaixado! Cada osso muda o corpo e os atributos do Ossinho.
+tip_family,2 peças da mesma família ativam um bônus. Junte 4 para despertar uma forma!
+tip_swap,Encaixe ocupado: troque pelo osso novo ou triture para ganhar pó de osso.
+tip_levelup,Subiu de nível! Escolha um bônus que vale até o fim desta partida.
+tip_boss,Chefe! Na primeira vitória ele sempre solta um osso lendário.
+tip_form,Forma despertada! Formas dão poderes especiais enquanto as peças estiverem no corpo.
+tip_ossuary,Você tem pó de osso! Gaste no Ossuário para ficar mais forte em todas as partidas.
+tip_towers,Torre nova liberada! Use as setas acima do Jogar para escolher a torre.

@@ -13,6 +13,7 @@ var _toast: Label
 
 
 func _ready() -> void:
+	Audio.music("hub")
 	var p := Router.params
 	equipped = p.get("equipped", GameData.skeleton.get("starting_bones", {}).duplicate())
 	var bg := ColorRect.new()

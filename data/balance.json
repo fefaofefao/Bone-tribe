@@ -222,5 +222,11 @@
 		"merchant": 0.06,
 		"rest": 0.08,
 		"altar": 0.1
+	},
+	"offline": {
+		"_doc": "Pó que o Ossudo junta com o jogo fechado: dust_per_hour x pó da torre mais alta liberada, até max_hours; só conta ausências de pelo menos min_minutes.",
+		"dust_per_hour": 50,
+		"max_hours": 8,
+		"min_minutes": 10
 	}
 }

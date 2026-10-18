@@ -238,6 +238,7 @@ func juice(c: Control) -> void:
 		var b := c as BaseButton
 		b.button_down.connect(func():
 			Haptics.light()
+			Audio.play("ui_tap")
 			var tw := b.create_tween()
 			tw.tween_property(b, "scale", Vector2(0.94, 0.94), 0.06))
 		b.button_up.connect(func():

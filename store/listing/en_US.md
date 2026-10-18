@@ -32,6 +32,8 @@ Each run takes a few minutes and ends with a one-of-a-kind creature. Bat wings, 
 • Bone collection, companions and relics
 • Cabinet of Curiosities with 30 items to collect
 • 7-day and 28-day login calendars
+• Daily and weekly missions
+• Soundtrack and sound effects
 
 📸 SHARE YOUR CREATURE
 At the end of every run, the game creates a Creature Card ready to post. Can you build something worse?

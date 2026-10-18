@@ -185,6 +185,12 @@ jobs:
           unzip -l build/BoneTribe.apk | grep -E "AndroidManifest|resources.arsc|classes.dex|\.so$" | head -20 || true
           "$BT/zipalign" -c -P 16 4 build/BoneTribe.apk && echo "zipalign OK" || echo "::warning::APK não alinhado"
           "$BT/apksigner" verify --verbose --print-certs build/BoneTribe.apk
+          # notificações locais: plugin, receptor e permissão no manifesto
+          "$BT/aapt2" dump xmltree --file AndroidManifest.xml build/BoneTribe.apk > /tmp/manifest.txt
+          grep -q "com.bonetribe.notify.BoneTribeNotify" /tmp/manifest.txt
+          grep -q "com.bonetribe.notify.BoneTribeNotifyReceiver" /tmp/manifest.txt
+          grep -q "android.permission.POST_NOTIFICATIONS" /tmp/manifest.txt
+          echo "Notificações locais registradas no manifesto."
 
       # Sem o secret, compila uma vez com uma configuração de exemplo só para
       # garantir que a integração do Firebase continua compilando.

@@ -32,6 +32,8 @@ Cada partida dura poucos minutos e termina com uma criatura única. Asas de morc
 • Coleção de ossos, companheiros e relíquias
 • Gabinete de Curiosidades com 30 itens para colecionar
 • Calendários de login de 7 e 28 dias
+• Missões diárias e semanais
+• Trilha sonora e efeitos sonoros
 
 📸 COMPARTILHE SUA CRIATURA
 No fim de cada partida, o jogo gera o Cartão da Criatura pronto para postar. Consegue montar algo pior?

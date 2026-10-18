@@ -775,3 +775,191 @@ func test_16_update_1_1() -> void:
 	holder.queue_free()
 	Profile.data = backup
 	Profile.save()
+
+
+func test_17_audio() -> void:
+	# todo som usado no código existe em data/audio.json e tem arquivo
+	var used := {}
+	var re := RegEx.new()
+	re.compile("Audio\\.play\\(\"([a-z_0-9]+)\"")
+	var re_map := RegEx.new()
+	re_map.compile("\"(special_[a-z]+|summon|swing)\"")
+	for path in _gd_files("res://scripts"):
+		var src := FileAccess.get_file_as_string(path)
+		for m in re.search_all(src):
+			used[m.get_string(1)] = path
+	var run_src := FileAccess.get_file_as_string("res://scripts/scenes/run.gd")
+	for k in ["hit_crit", "hit_hero", "hit", "bleed_tick", "poison_tick", "boss_die", "monster_die", "guard_break", "guard_up", "chest", "event", "tower_clear", "victory", "defeat"]:
+		used[k] = "run.gd"
+	for m in re_map.search_all(run_src.substr(run_src.find("const SPECIAL_SFX"), 400)):
+		used[m.get_string(1)] = "SPECIAL_SFX"
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/audio.json"))
+	for id in used:
+		check(cfg.sfx.has(id), "som %s existe em audio.json (%s)" % [id, used[id]])
+	for id in cfg.sfx:
+		var n := int(cfg.sfx[id].get("variants", 0))
+		var files: Array = [id] if n <= 0 else range(1, n + 1).map(func(i): return "%s_%d" % [id, i])
+		for f in files:
+			check(ResourceLoader.exists("res://audio/sfx/%s.wav" % f), "arquivo do som " + f)
+	for t in cfg.music:
+		check(ResourceLoader.exists("res://audio/music/%s.ogg" % cfg.music[t]), "música " + t)
+	check(Audio._players.size() == cfg.sfx.size(), "todos os sons carregados na memória (toque imediato)")
+
+	# sincronia: cada som da partida fica colado a um efeito na tela, sem espera entre os dois
+	var lines := run_src.split("\n")
+	var visual := RegEx.new()
+	visual.compile("fx\\.|_anim\\(|_anim|cam\\.shake|_show_banner|Haptics\\.|hero_view\\.|\\.pop_slot|spark_burst|float_text|damage_number|_dialog_frame|_show_prop|stage\\.dim|Widgets\\.|reassemble|attack_anim|die_anim|var parts := _dialog_frame|tween_property\\(flying|v5\\.refresh|_panel_header|Meta\\.add_curiosity|Audio\\.music|state\\.hunter_met|overlay_root\\.add_child")
+	var bad := []
+	for i in lines.size():
+		if not lines[i].contains("Audio.play("):
+			continue
+		var ok := false
+		for d in [-1, 1, -2, 2, -3, 3, -4, 4, -5, 5]:
+			var j: int = i + d
+			if j < 0 or j >= lines.size():
+				continue
+			# não pode haver espera entre o som e o efeito
+			var waits := false
+			for k in range(mini(i, j), maxi(i, j) + 1):
+				if lines[k].contains("await ") and k != j:
+					waits = true
+			if waits:
+				continue
+			if visual.search(lines[j]) != null:
+				ok = true
+				break
+		if not ok:
+			bad.append("%d: %s" % [i + 1, lines[i].strip_edges()])
+	check(bad.is_empty(), "todo som da partida está junto do seu efeito visual: %s" % [bad])
+
+	# o som de impacto vem depois do impulso do golpe e junto do número de dano
+	var atk := run_src.substr(run_src.find("func _anim_attack"), 3000)
+	check(atk.find("Audio.play(\"swing\")") < atk.find("await _wait(0.12)") and atk.find("await _wait(0.12)") < atk.find("Audio.play(\"hit_crit\")"), "golpe: impulso no começo, impacto depois da espera")
+	check(atk.find("fx.damage_number") < atk.find("Audio.play(\"hit_crit\")") and atk.find("Audio.play(\"hit_crit\")") - atk.find("fx.damage_number") < 160, "impacto toca no mesmo quadro do número de dano")
+
+	# opções desligam os efeitos
+	var before: bool = Audio.sound_on()
+	Profile.data.settings["sound"] = false
+	check(not Audio.sound_on(), "efeitos podem ser desligados")
+	Profile.data.settings["sound"] = before
+	Audio.record_history = true
+	Audio.history.clear()
+	Audio.play("hit")
+	check(Audio.history == ["hit"], "som registrado ao tocar")
+	Audio.record_history = false
+
+
+func _gd_files(dir: String) -> Array:
+	var out := []
+	var d := DirAccess.open(dir)
+	if d == null:
+		return out
+	for f in d.get_files():
+		if f.ends_with(".gd"):
+			out.append(dir + "/" + f)
+	for sub in d.get_directories():
+		out.append_array(_gd_files(dir + "/" + sub))
+	return out
+
+
+func test_18_retention() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	# --- missões
+	Profile.data.missions = {"day": -1, "daily": [], "week": -1, "weekly": []}
+	var daily := Missions.list("daily")
+	var weekly := Missions.list("weekly")
+	check(daily.size() == 3 and weekly.size() == 3, "3 missões diárias e 3 semanais")
+	var stats := {}
+	for m in daily:
+		stats[Missions.def(String(m.id)).stat] = true
+	check(stats.size() == 3, "missões do dia não repetem a mesma estatística")
+	for kind in ["daily", "weekly"]:
+		for d in GameData.missions[kind]:
+			check(tr_all("mission_" + String(d.id)), "texto da missão " + String(d.id))
+	var again := Missions.list("daily").map(func(m): return m.id)
+	check(again == daily.map(func(m): return m.id), "missões do dia não mudam no mesmo dia")
+	var m0: Dictionary = daily[0]
+	var d0 := Missions.def(String(m0.id))
+	var got := [""]
+	var cb := func(id): got[0] = id
+	Profile.mission_done.connect(cb)
+	Profile.stat_add(String(d0.stat), int(d0.target) - 1)
+	check(not Missions.is_done(m0) and got[0] == "", "missão incompleta")
+	check(Missions.claim("daily", 0).is_empty(), "não resgata missão incompleta")
+	Profile.stat_add(String(d0.stat), 5)
+	check(Missions.is_done(m0) and got[0] == String(m0.id) and int(m0.progress) == int(d0.target), "missão concluída avisa e não passa do alvo")
+	Profile.mission_done.disconnect(cb)
+	var dia0 := int(Profile.data.diamonds)
+	var dust0 := int(Profile.data.dust)
+	var r := Missions.claim("daily", 0)
+	check(int(Profile.data.diamonds) == dia0 + int(r.diamonds) and int(Profile.data.dust) == dust0 + int(r.dust) and int(r.dust) > 0, "resgate paga pó e diamantes")
+	check(Missions.claim("daily", 0).is_empty(), "não resgata duas vezes")
+	Profile.data.missions.day = -5
+	check(not Missions.list("daily")[0].claimed, "novo dia sorteia missões novas")
+	Profile.data.towers = {"unlocked": 5, "selected": 5, "cleared": {}, "best": {}, "wins": {}}
+	check(int(Missions.reward("d_kills").dust) > int(GameData.missions.daily[0].reward.dust), "recompensa de pó acompanha a torre")
+
+	# --- recompensa offline
+	Profile.data.runs_played = 5
+	Profile.data.offline = {"last_seen": Backend.now() - 3 * 3600, "pending": 0, "ad_day": -1, "ad_count": 0}
+	Offline.accrue()
+	var p3 := Offline.pending()
+	check(p3 > 0 and absi(p3 - int(Offline.rate_per_hour() * 3)) <= 2, "3 horas fora rendem 3 horas de pó (%d)" % p3)
+	Profile.data.offline.last_seen = Backend.now() - 48 * 3600
+	Offline.accrue()
+	check(Offline.pending() == Offline.cap(), "pó offline tem limite de %d horas" % int(GameData.bal("offline/max_hours", 8)))
+	Profile.data.offline.last_seen = Backend.now() - 60
+	var before := Offline.pending()
+	Offline.accrue()
+	check(Offline.pending() == before, "ausência curta não rende")
+	var dust1 := int(Profile.data.dust)
+	var n := Offline.collect(true)
+	check(n == before * 2 and int(Profile.data.dust) == dust1 + n and Offline.pending() == 0, "coletar com anúncio dobra o pó")
+	check(Offline.ad_left() == Ads.limit("offline_double") - 1, "anúncio de dobrar tem limite diário")
+	Profile.data.runs_played = 0
+	Profile.data.offline.last_seen = Backend.now() - 5 * 3600
+	Offline.accrue()
+	check(Offline.pending() == 0, "sem pó offline antes da 1ª partida")
+	for k in ["offline_title", "offline_text", "offline_double", "notif_daily_body", "notif_hunter_body", "menu_notifications", "missions_title"]:
+		check(tr_all(k), "texto " + k)
+
+	# --- notificações (agenda local; no PC só registra)
+	Profile.data.runs_played = 2
+	Profile.data.settings["notifications"] = true
+	Profile.data.hunter = {"stolen": [{"id": "bone_skull_wolf", "level": 1}]}
+	Notify.reschedule()
+	check(Notify.scheduled.has(1) and Notify.scheduled.has(2) and Notify.scheduled.has(3), "agenda prêmio diário, pó do Ossudo e Caçador")
+	check(int(Notify.scheduled[1].delay) >= 600 and int(Notify.scheduled[2].delay) == Offline.cap_seconds(), "horários dos lembretes")
+	check(String(Notify.scheduled[3].body).contains(tr("bone_skull_wolf_name")), "lembrete do Caçador cita o osso")
+	Profile.data.settings["notifications"] = false
+	Notify.reschedule()
+	check(Notify.scheduled.is_empty(), "notificações desligadas não agendam nada")
+	Profile.data.settings["notifications"] = true
+	Notify.cancel_all()
+
+	# --- tutorial
+	Profile.data.tutorial = {}
+	Profile.data.runs_played = 0
+	check(Tutorial.take("attach") and not Tutorial.take("attach"), "dica aparece uma vez só")
+	Profile.data.runs_played = Tutorial.MAX_RUNS
+	check(not Tutorial.take("combat"), "dicas da partida só nas primeiras partidas")
+	check(Tutorial.take("ossuary", true), "dicas da tela inicial valem depois")
+	var run_src := FileAccess.get_file_as_string("res://scripts/scenes/run.gd")
+	var re := RegEx.new()
+	re.compile("_tip\\(\"([a-z]+)\"\\)")
+	for m in re.search_all(run_src):
+		check(tr_all("tip_" + m.get_string(1)), "texto da dica " + m.get_string(1))
+	check(tr_all("tip_ossuary") and tr_all("tip_towers"), "dicas da tela inicial traduzidas")
+
+	# --- popups abrem
+	Profile.data.runs_played = 3
+	var holder := Control.new()
+	add_child(holder)
+	MissionsPopup.open(holder)
+	Profile.data.offline.pending = 120
+	var bg := OfflinePopup.open(holder)
+	await get_tree().process_frame
+	check(holder.get_child_count() == 2 and bg != null, "telas de Missões e de pó offline abrem")
+	holder.queue_free()
+	Profile.data = backup
+	Profile.save()

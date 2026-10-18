@@ -36,6 +36,7 @@ func _upgrades() -> void:
 			var s: String = stat
 			b.pressed.connect(func():
 				if Meta.ossuary_upgrade(s):
+					Audio.play("upgrade")
 					Haptics.medium()
 					toast(tr("upgraded"), Style.C_CANDLE)
 					rebuild())
@@ -100,6 +101,7 @@ func _companions() -> void:
 				var cid2: String = id
 				up.pressed.connect(func():
 					if Meta.companion_upgrade(cid2):
+						Audio.play("upgrade")
 						Haptics.medium()
 						toast(tr("upgraded"), Style.C_CANDLE)
 						rebuild())
@@ -141,6 +143,7 @@ func _relics() -> void:
 				var uid := int(r.uid)
 				up.pressed.connect(func():
 					if Meta.relic_upgrade(uid):
+						Audio.play("upgrade")
 						Haptics.medium()
 						rebuild())
 				v.add_child(up)

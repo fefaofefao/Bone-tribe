@@ -56,6 +56,8 @@ func _ready() -> void:
 	_build_world()
 	_build_ui()
 	_refresh_hud()
+	Audio.music("crypt")
+	Profile.mission_done.connect(_on_mission_done)
 	Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower})
 	_run_loop()
 
@@ -385,6 +387,7 @@ func _curiosity_roll(event_type: String) -> void:
 
 func _gain_curiosity(cid: String) -> void:
 	var stars := Meta.add_curiosity(cid)
+	Audio.play("chest")
 	state.flags["curiosities"] = int(state.flags.get("curiosities", 0)) + 1
 	var icon := Sprite2D.new()
 	icon.texture = load("res://art/ui/%s.png" % cid)
@@ -422,6 +425,7 @@ func _walk() -> void:
 	# O Ossinho avança: poeira nos passos e um leve escurecer entre salas.
 	for i in 3:
 		fx.dust_puff(HERO_POS + Vector2(randf_range(-20, 20), 0), Color(0.8, 0.75, 0.7, 0.45), 3)
+		Audio.play("step")
 		hero_view.get_node("Body").position.y = -8.0
 		var tw := create_tween()
 		tw.tween_property(hero_view.get_node("Body"), "position:y", 0.0, 0.12)
@@ -511,8 +515,10 @@ func _play_event(ev: Dictionary) -> void:
 	_clear_panel()
 	_show_prop(String(ev.get("prop", "")))
 	var type := String(ev.get("type", "combat"))
+	Audio.play("chest" if type == "chest" else "event")
 	_panel_header(type, "event_type_" + type)
 	_panel_text(tr(String(ev.text)))
+	_tip("choices")
 	var options: Array = []
 	for o in ev.get("options", []):
 		var req: Dictionary = o.get("requires", {})
@@ -614,6 +620,7 @@ func _do(a: Dictionary) -> void:
 			hero_view.hit_anim()
 			cam.shake(0.3)
 			Haptics.medium()
+			Audio.play("trap")
 			fx.damage_number(hero_view.body_center_global() + Vector2(0, -60), "-%d" % int(d), Style.C_DANGER)
 			_refresh_hud()
 			await _wait(0.6)
@@ -622,6 +629,7 @@ func _do(a: Dictionary) -> void:
 			if h > 0.5:
 				fx.damage_number(hero_view.body_center_global() + Vector2(0, -60), "+%d" % int(h), Style.C_HEAL)
 				fx.spark_burst(hero_view.body_center_global(), Style.C_HEAL, 8, 200)
+				Audio.play("heal")
 			_refresh_hud()
 			await _wait(0.5)
 		"max_hp_pct":
@@ -629,6 +637,7 @@ func _do(a: Dictionary) -> void:
 			var before_max := state.max_hp
 			state.recalc()
 			fx.float_text(hero_view.body_center_global() + Vector2(0, -100), tr("result_max_hp") % int(state.max_hp - before_max), Style.C_HEAL)
+			Audio.play("upgrade")
 			_refresh_hud()
 			await _wait(0.5)
 		"bone":
@@ -744,6 +753,7 @@ func _do(a: Dictionary) -> void:
 				hero_view.set_slot(slot3, inst3)
 				hero_view.pop_slot(slot3)
 				fx.spark_burst(hero_view.slot_global_position(slot3), Style.C_CANDLE, 18, 360)
+				Audio.play("upgrade")
 				fx.float_text(hero_view.slot_global_position(slot3) + Vector2(0, -50), tr("bone_upgraded") % [tr(String(GameData.bone(String(inst3.id)).name)), int(inst3.level) - 1], Style.C_CANDLE, 26)
 				Haptics.medium()
 				_refresh_hud()
@@ -795,6 +805,7 @@ func _bigorna_forge() -> void:
 	hero_view.set_slot(slot, inst2)
 	hero_view.pop_slot(slot)
 	fx.spark_burst(hero_view.slot_global_position(slot), Color(1, 0.6, 0.2), 26, 460)
+	Audio.play("forge")
 	fx.embers(hero_view.slot_global_position(slot), Color(1, 0.5, 0.2), 14, 30)
 	cam.shake(0.5)
 	Haptics.heavy()
@@ -925,6 +936,7 @@ func _gain_dust(n: int, from: Vector2) -> void:
 	state.add_dust(n)
 	fx.float_text(from + Vector2(0, -120), "+" + Style.num(n) + " " + tr("dust_short"), Style.C_DUST)
 	fx.spark_burst(from, Style.C_DUST, 6, 160)
+	Audio.play("dust_gain")
 	_refresh_hud()
 
 
@@ -1000,6 +1012,7 @@ func _combat(ids: Array, is_boss := false) -> void:
 		"max_turns": int(GameData.bal("combat/boss_max_turns" if is_boss else "combat/max_turns", 15)), "companion": comp})
 	_spawn_ally_views()
 	_combat_panel(enemies)
+	Audio.music("boss" if is_boss else "combat")
 	await _wait(0.5)
 	var killed: Array = []
 	while true:
@@ -1019,6 +1032,7 @@ func _combat(ids: Array, is_boss := false) -> void:
 				hero.flags.erase("dead_emitted")
 				combat.result = ""
 				hero_view.reassemble()
+				Audio.play("revive")
 				hero_view.set_equipped(state.equipped)
 				fx.spark_burst(hero_view.body_center_global(), Style.C_CANDLE, 20, 400)
 				_refresh_hud_from(hero)
@@ -1029,6 +1043,7 @@ func _combat(ids: Array, is_boss := false) -> void:
 		break
 	state.absorb_hero(hero)
 	_refresh_hud()
+	Audio.music("crypt")
 	if combat.result == "flee":
 		for f in enemy_views:
 			var v: Node2D = enemy_views[f]
@@ -1040,6 +1055,8 @@ func _combat(ids: Array, is_boss := false) -> void:
 		await _wait(0.8)
 		return
 	hero_view.victory_anim()
+	if is_boss:
+		Audio.play("victory", 1.0, -4.0)
 	await _wait(0.5)
 	await _combat_rewards(killed, is_boss)
 
@@ -1091,6 +1108,9 @@ func _combat_panel(enemies: Array) -> void:
 	combat_panel.focus_requested.connect(_set_focus)
 	if enemies.size() > 1 or enemies[0].is_boss:
 		combat_panel.log_line(tr("combat_tap_focus"), Style.C_MUTED)
+		_tip("focus")
+	else:
+		_tip("combat")
 
 
 func _set_focus(f: Fighter) -> void:
@@ -1182,6 +1202,7 @@ func _animate(evs: Array, killed: Array) -> void:
 				var f: Fighter = ev.dst
 				var col := Color("d8343f") if ev.status == "bleed" else Color("8fe04a")
 				fx.damage_number(_pos_of(f) + Vector2(0, -40), "-%d" % int(ev.dmg), col, false, 26)
+				Audio.play("bleed_tick" if ev.status == "bleed" else "poison_tick")
 				var v := _view_of(f)
 				if v and v != hero_view:
 					v.refresh()
@@ -1194,12 +1215,16 @@ func _animate(evs: Array, killed: Array) -> void:
 					v2.refresh()
 				if ev.status == "stun":
 					fx.float_text(_pos_of(ev.dst) + Vector2(0, -90), tr("combat_stun"), Color("ffd84a"), 22)
+					Audio.play("stun")
 			"heal":
 				fx.damage_number(_pos_of(ev.dst) + Vector2(0, -70), "+%d" % int(ev.amount), Style.C_HEAL, false, 24)
+				if String(ev.get("source", "")) != "lifesteal" and String(ev.get("source", "")) != "regen":
+					Audio.play("heal")
 				if ev.dst.is_hero:
 					hero_view.flash(Style.C_HEAL, 0.35, 0.2)
 			"summon":
 				fx.float_text(_pos_of(ev.src) + Vector2(0, -150), tr("combat_summon"), Color("c58cff"), 30)
+				Audio.play("summon")
 				ev.src.flags["floor"] = state.floor_n
 				var view_src := _view_of(ev.src)
 				if view_src:
@@ -1216,6 +1241,7 @@ func _animate(evs: Array, killed: Array) -> void:
 				var f2: Fighter = ev.dst
 				if f2.is_hero:
 					hero_view.collapse_anim()
+					Audio.play("hero_die")
 					cam.shake(0.6)
 					Haptics.heavy()
 					fx.bone_burst(hero_view.body_center_global(), 10)
@@ -1228,6 +1254,7 @@ func _animate(evs: Array, killed: Array) -> void:
 					if v4:
 						_last_positions[f2] = v4.center_global()
 						v4.die_anim(fx)
+					Audio.play("boss_die" if f2.is_boss else "monster_die")
 					cam.shake(0.35 if not f2.is_boss else 0.9)
 					Haptics.medium()
 					if f2.is_boss:
@@ -1245,6 +1272,7 @@ func _animate(evs: Array, killed: Array) -> void:
 					_relayout_enemies()
 			"revive":
 				hero_view.reassemble()
+				Audio.play("revive")
 				fx.smoke(hero_view.body_center_global(), Color(0.6, 0.35, 0.9, 0.8), 10)
 				fx.float_text(hero_view.body_center_global() + Vector2(0, -150), tr("form_lich_name"), Color("c58cff"), 34)
 				await _wait(0.8)
@@ -1252,12 +1280,14 @@ func _animate(evs: Array, killed: Array) -> void:
 				var v5 := _view_of(ev.dst)
 				if v5:
 					v5.refresh()
+					Audio.play("guard_break" if ev.state == "broken" else "guard_up")
 					if ev.state == "broken":
 						fx.spark_burst(v5.center_global(), Color(0.5, 0.7, 1.0), 18, 420)
 						fx.float_text(v5.top_global(), tr("combat_guard_broken"), Color(0.6, 0.8, 1.0), 28)
 						cam.shake(0.4)
 			"stunned":
 				fx.float_text(_pos_of(ev.dst) + Vector2(0, -110), tr("combat_stun"), Color("ffd84a"), 22)
+				Audio.play("stun", 1.0, -6.0)
 				await _wait(0.2)
 			"turn":
 				if is_instance_valid(_turn_label):
@@ -1305,6 +1335,7 @@ func _anim_attack(ev: Dictionary) -> void:
 	var dir := 1.0 if src.is_hero or src.is_ally else -1.0
 	if kind in ["normal", "counter"] and src_view:
 		src_view.attack_anim(dir, false)
+		Audio.play("swing")
 		await _wait(0.12)
 	elif kind == "ally":
 		if src_view:
@@ -1314,11 +1345,13 @@ func _anim_attack(ev: Dictionary) -> void:
 	if ev.dodged:
 		if dst_view:
 			dst_view.dodge_anim()
+		Audio.play("miss")
 		fx.float_text(hit_pos + Vector2(0, -90), tr("combat_miss"), Color(0.8, 0.9, 1.0), 26)
 		await _wait(0.22)
 		return
 	if ev.blocked:
 		fx.shockwave(hit_pos, Color(0.5, 0.75, 1.0), 1.4, 0.3)
+		Audio.play("block")
 		fx.float_text(hit_pos + Vector2(0, -90), tr("combat_blocked"), Color(0.6, 0.8, 1.0), 26)
 		await _wait(0.22)
 		return
@@ -1336,6 +1369,12 @@ func _anim_attack(ev: Dictionary) -> void:
 	if kind == "reflect":
 		color = Color(0.7, 0.8, 1.0)
 	fx.damage_number(hit_pos + Vector2(0, -50), str(int(ev.dmg)), color, crit, 32 if kind != "reflect" else 24)
+	if crit:
+		Audio.play("hit_crit")
+	elif dst.is_hero:
+		Audio.play("hit_hero")
+	else:
+		Audio.play("hit", 1.0, -5.0 if kind in ["reflect", "ally"] else 0.0)
 	if kind in ["normal", "counter", "ally"]:
 		fx.slash(hit_pos, Color(1, 0.95, 0.85) if not crit else Color(1, 0.85, 0.3), dir < 0)
 	fx.spark_burst(hit_pos, Color(1, 0.85, 0.6) if not dst.is_hero else Color(1, 0.4, 0.3), 6 if not crit else 14, 300 if not crit else 460)
@@ -1355,10 +1394,17 @@ func _hitstop(t: float) -> void:
 	Engine.time_scale = 1.0
 
 
+## Som de cada golpe especial (tocado junto com o nome do golpe e o efeito).
+const SPECIAL_SFX := {"eye_beam": "special_beam", "fire_breath": "special_fire", "flame_claw": "special_fire",
+	"golem_punch": "special_punch", "tail_slam": "special_punch", "wave": "special_wave", "rat_swarm": "summon",
+	"arrow_volley": "swing", "extra_action": "special_extra"}
+
+
 func _anim_special(ev: Dictionary) -> void:
 	var name := String(ev.name)
 	var src: Fighter = ev.src
 	fx.float_text(_pos_of(src) + Vector2(0, -170), tr("special_" + name), Style.C_CANDLE, 30)
+	Audio.play(String(SPECIAL_SFX.get(name, "special_extra")))
 	match name:
 		"eye_beam":
 			var t := combat._hero_target()
@@ -1490,6 +1536,7 @@ func _rejection_check() -> void:
 
 func _offer_bone(inst: Dictionary, from: Vector2) -> void:
 	var bid := String(inst.id)
+	Audio.play("bone_drop")
 	if Profile.discover_bone(bid):
 		fx.float_text(hero_view.body_center_global() + Vector2(0, -240), tr("collection_new"), Style.C_CANDLE, 24)
 	var free := state.free_slot_for(bid)
@@ -1541,6 +1588,7 @@ func _swap(slot: String, inst: Dictionary, from: Vector2) -> void:
 	if not old.is_empty():
 		var v := state.crush_value(old)
 		fx.bone_burst(hero_view.slot_global_position(slot), 8)
+		Audio.play("crush")
 		state.add_dust(v)
 		fx.float_text(hero_view.slot_global_position(slot) + Vector2(0, -40), tr("bone_crushed") % v, Style.C_DUST, 24)
 		hero_view.set_slot(slot, {})
@@ -1555,6 +1603,7 @@ func _crush(inst: Dictionary, from: Vector2) -> void:
 	var v := state.crush_value(inst)
 	state.add_dust(v)
 	fx.bone_burst(from, 10)
+	Audio.play("crush")
 	fx.dust_puff(from, Color(0.9, 0.85, 0.75, 0.7), 8)
 	fx.float_text(from + Vector2(0, -60), tr("bone_crushed") % v, Style.C_DUST, 28)
 	Haptics.light()
@@ -1587,6 +1636,7 @@ func _attach(slot: String, inst: Dictionary, from: Vector2) -> void:
 	var target := hero_view.slot_global_position(slot)
 	var ctrl := (from + target) * 0.5 + Vector2(0, -180)
 	var tw := create_tween()
+	Audio.play("bone_fly")
 	tw.tween_property(flying, "scale", Vector2.ONE * 0.75, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_method(func(t: float):
 		var p := from.lerp(ctrl, t).lerp(ctrl.lerp(target, t), t)
@@ -1601,12 +1651,18 @@ func _attach(slot: String, inst: Dictionary, from: Vector2) -> void:
 	state.equip(slot, inst)
 	hero_view.set_slot(slot, inst)
 	hero_view.pop_slot(slot)
+	Audio.play("attach")
+	if not demo:
+		Profile.stat_add("attached")
 	fx.spark_burst(target, fcol, 18, 420)
 	fx.shockwave(target, fcol, 1.8, 0.4)
 	cam.shake(0.35)
 	Haptics.medium()
 	_refresh_hud()
 	fx.float_text(target + Vector2(0, -70), tr("bone_equipped") % tr(String(GameData.bone(bid).get("name", ""))), Style.C_BONE, 26)
+	_tip("attach")
+	if fam != "" and int(Body.family_counts(state.equipped).get(fam, 0)) >= 2:
+		_tip("family")
 	await _wait(0.55)
 	await cam.reset(0.3).finished
 	await _check_forms()
@@ -1625,9 +1681,14 @@ func _transformation(fid: String) -> void:
 	var f: Dictionary = GameData.forms[fid]
 	var secret := bool(f.get("secret", false))
 	var newly := Profile.discover_form(fid)
+	if not demo:
+		Profile.stat_add("forms")
+	_tip("form")
 	Backend.log_event("form", {"form": fid, "new": newly})
 	var col := Color(String(f.get("aura", "#ffffff")))
 	Haptics.heavy()
+	Audio.play("form")
+	Audio.duck(12.0, 2.6)
 	stage.dim(1.0, 0.4)
 	cam.focus(hero_view.body_center_global() + Vector2(0, -20), 1.55, 0.6)
 	Engine.time_scale = 0.4
@@ -1654,6 +1715,7 @@ func _transformation(fid: String) -> void:
 # ================================================================ diálogos
 
 func _dialog_frame(title_key: String, title_color := Style.C_CANDLE) -> Array:
+	Audio.play("ui_open")
 	var bg := Widgets.dim_overlay(overlay_root)
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -1705,6 +1767,7 @@ func _bone_choice_dialog(inst: Dictionary) -> Dictionary:
 		var b := Style.button(label, "", 78)
 		b.pressed.connect(func(): done.call({"action": "swap", "slot": s}))
 		v.add_child(b)
+	_tip("swap")
 	var cb := Style.button(tr("btn_crush") + "  (+" + str(state.crush_value(inst)) + ")", "DarkButton", 78)
 	cb.icon = load("res://art/ui/ui_icon_dust.png")
 	cb.expand_icon = true
@@ -1718,9 +1781,13 @@ func _bone_choice_dialog(inst: Dictionary) -> Dictionary:
 
 func _levelup_dialog() -> void:
 	Haptics.medium()
+	Audio.play("levelup")
+	if not demo:
+		Profile.stat_add("levelups")
 	fx.spark_burst(hero_view.body_center_global(), Style.C_XP, 20, 420)
 	fx.shockwave(hero_view.body_center_global(), Style.C_XP, 2.4, 0.5)
 	var parts := _dialog_frame("levelup_title", Style.C_XP)
+	_tip("levelup")
 	var bg: Control = parts[0]
 	var v: VBoxContainer = parts[1]
 	v.add_child(Style.label(tr("levelup_subtitle"), 24, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
@@ -1848,6 +1915,9 @@ func _boss_floor(boss_id: String) -> void:
 	await cam.focus(Vector2(520, 560), 1.12, 0.6).finished
 	_show_banner(tr(String(GameData.monster(boss_id).get("name", ""))), Style.C_DANGER, 1.2)
 	Haptics.heavy()
+	Audio.play("boss_intro")
+	Audio.duck(10.0, 2.0)
+	_tip("boss")
 	cam.shake(0.5)
 	var b := Style.button(tr("opt_fight"), "CandleButton", 80)
 	panel_box.add_child(b)
@@ -1864,12 +1934,15 @@ func _boss_floor(boss_id: String) -> void:
 	var first := Profile.boss_wins(boss_id) == 0
 	state.bosses_beaten.append(boss_id)
 	Profile.register_boss_win(boss_id)
+	if not demo:
+		Profile.stat_add("bosses")
 	Backend.log_event("boss_win", {"boss": boss_id, "floor": state.floor_n, "first": first})
 	var m := GameData.monster(boss_id)
 	var dia := int(m.get("diamonds_first", 0)) if first else int(m.get("diamonds_repeat", 0))
 	if dia > 0 and not demo:
 		Profile.add_diamonds(dia, "boss_" + boss_id)
 		fx.float_text(hero_view.body_center_global() + Vector2(0, -230), tr("reward_diamonds") % dia, Style.C_DIAMOND, 30)
+		Audio.play("diamond_gain")
 		await _wait(0.6)
 	if first and not demo:
 		var cid := Meta.random_curiosity(boss_id, state.rng)
@@ -1890,6 +1963,8 @@ func _boss_floor(boss_id: String) -> void:
 
 func _hunter_floor() -> void:
 	state.hunter_met = true
+	Audio.play("hunter")
+	Audio.duck(8.0, 1.6)
 	_clear_panel()
 	_panel_header("boss", "hunter_title")
 	var stolen := Meta.hunter_stolen()
@@ -1942,6 +2017,7 @@ func _end_run() -> void:
 	if not demo:
 		Profile.add_dust(int(rewards.total), "run_end")
 		Profile.data.runs_played = int(Profile.data.runs_played) + 1
+		Profile.stat_add("runs")
 		Profile.stat_add("floors", state.floor_n)
 		if state.dead:
 			Profile.stat_add("deaths")
@@ -1953,6 +2029,8 @@ func _end_run() -> void:
 		stolen = Meta.hunter_steal(state.equipped)
 	Backend.log_event("run_end", {"floor": state.floor_n, "dead": state.dead, "dust": rewards.total, "tower": state.tower})
 	await _wait(0.6)
+	Audio.music("")
+	Audio.play("tower_clear" if not tower_rew.is_empty() else ("victory" if state.victory else "defeat"))
 	var parts := _dialog_frame("victory_title" if state.victory else "run_end_title", Style.C_CANDLE if state.victory else Style.C_BONE)
 	var bg: Control = parts[0]
 	var v: VBoxContainer = parts[1]
@@ -1984,6 +2062,7 @@ func _end_run() -> void:
 			var ok: bool = await Ads.show_rewarded("double_dust")
 			if ok:
 				Profile.add_dust(total[0], "double_dust_ad")
+				Audio.play("dust_gain")
 				total[0] *= 2
 				dust_l.text = tr("run_end_dust") % Style.num(total[0])
 				fx.spark_burst(Vector2(360, 600), Style.C_DUST, 20, 400))
@@ -2055,3 +2134,60 @@ func _clear_shown_hps() -> void:
 	for f in [combat.hero] + combat.enemies + combat.allies:
 		f.shown_hp = -1.0
 
+
+
+## Missão concluída durante a partida: aviso no topo, sem interromper o jogo.
+func _on_mission_done(id: String) -> void:
+	if demo:
+		return
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", Style.flat_box(Color(Style.C_PANEL, 0.95), Style.C_CANDLE, 16, 2, 10))
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var l := Style.bold(tr("mission_done_toast") % (tr("mission_" + id) % int(Missions.def(id).get("target", 1))), 22, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	p.add_child(l)
+	p.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	p.offset_left = 60
+	p.offset_right = -60
+	p.offset_top = 270
+	overlay_root.add_child(p)
+	Audio.play("mission")
+	p.modulate.a = 0.0
+	var tw := p.create_tween()
+	tw.tween_property(p, "modulate:a", 1.0, 0.2)
+	tw.tween_interval(2.2)
+	tw.tween_property(p, "modulate:a", 0.0, 0.4)
+	tw.tween_callback(p.queue_free)
+
+
+## Dica do tutorial (uma vez cada, nas primeiras partidas): balão do Ossudo no
+## topo da tela, sem pausar o jogo. Toque para fechar.
+func _tip(key: String) -> void:
+	if demo or autoplay or not Tutorial.take(key):
+		return
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", Style.flat_box(Color(0.12, 0.09, 0.14, 0.97), Color(0.6, 0.85, 1.0), 18, 3, 12))
+	var row := Style.hbox(12)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(row)
+	row.add_child(Widgets.icon("res://art/ui/companion_ossudo.png", 64))
+	var l := Style.label(tr("tip_" + key), 21, Style.C_TEXT)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(l)
+	p.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	p.offset_left = 24
+	p.offset_right = -24
+	p.offset_top = 128
+	overlay_root.add_child(p)
+	Audio.play("tutorial")
+	p.gui_input.connect(func(e: InputEvent):
+		if (e is InputEventScreenTouch or e is InputEventMouseButton) and e.pressed and is_instance_valid(p):
+			p.queue_free())
+	p.modulate.a = 0.0
+	var tw := p.create_tween()
+	tw.tween_property(p, "modulate:a", 1.0, 0.25)
+	tw.tween_interval(6.0)
+	tw.tween_property(p, "modulate:a", 0.0, 0.4)
+	tw.tween_callback(p.queue_free)

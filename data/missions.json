@@ -1,0 +1,24 @@
+{
+	"_doc": "Missões: 3 diárias (trocam à meia-noite UTC, hora do servidor) e 3 semanais (trocam na segunda). Cada missão conta uma estatística (Profile.stat_add). O pó da recompensa é multiplicado pelo pó da torre mais alta liberada, para continuar valendo a pena.",
+	"daily_count": 3,
+	"weekly_count": 3,
+	"daily": [
+		{"id": "d_kills", "stat": "kills", "target": 40, "reward": {"dust": 150, "diamonds": 5}},
+		{"id": "d_kills_big", "stat": "kills", "target": 80, "reward": {"dust": 250, "diamonds": 8}},
+		{"id": "d_runs", "stat": "runs", "target": 3, "reward": {"dust": 150, "diamonds": 5}},
+		{"id": "d_bosses", "stat": "bosses", "target": 1, "reward": {"dust": 200, "diamonds": 8}},
+		{"id": "d_floors", "stat": "floors", "target": 30, "reward": {"dust": 200, "diamonds": 5}},
+		{"id": "d_crush", "stat": "bones_crushed", "target": 8, "reward": {"dust": 150, "diamonds": 5}},
+		{"id": "d_attach", "stat": "attached", "target": 6, "reward": {"dust": 150, "diamonds": 5}},
+		{"id": "d_levelups", "stat": "levelups", "target": 5, "reward": {"dust": 150, "diamonds": 5}},
+		{"id": "d_forms", "stat": "forms", "target": 1, "reward": {"dust": 200, "diamonds": 8}}
+	],
+	"weekly": [
+		{"id": "w_kills", "stat": "kills", "target": 400, "reward": {"dust": 1200, "diamonds": 40}},
+		{"id": "w_bosses", "stat": "bosses", "target": 10, "reward": {"dust": 1200, "diamonds": 40}},
+		{"id": "w_runs", "stat": "runs", "target": 20, "reward": {"dust": 1000, "diamonds": 35}},
+		{"id": "w_floors", "stat": "floors", "target": 250, "reward": {"dust": 1200, "diamonds": 40}},
+		{"id": "w_forms", "stat": "forms", "target": 6, "reward": {"dust": 1000, "diamonds": 35}},
+		{"id": "w_crush", "stat": "bones_crushed", "target": 60, "reward": {"dust": 1000, "diamonds": 35}}
+	]
+}

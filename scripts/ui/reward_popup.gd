@@ -62,6 +62,7 @@ static func result_color(r: Dictionary) -> Color:
 
 
 func _ready() -> void:
+	Audio.play("ui_claim")
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	Haptics.heavy()
 	var bg := Widgets.dim_overlay(self, 0.82)

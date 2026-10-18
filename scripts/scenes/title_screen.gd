@@ -40,9 +40,12 @@ var _tower_prev: Button
 var _tower_next: Button
 var _cal_btn: Button
 var _cal_dot: Panel
+var _mis_btn: Button
+var _mis_dot: Panel
 
 
 func _ready() -> void:
+	Audio.music("hub")
 	_world = Node2D.new()
 	add_child(_world)
 	var stage := CryptStage.new()
@@ -74,8 +77,13 @@ func _ready() -> void:
 	_build_top_bar()
 	_build_nav()
 	Profile.currency_changed.connect(_refresh_currency)
+	Profile.offline_ready.connect(func():
+		if is_inside_tree() and _home and _home.visible:
+			_show_offline())
 	_refresh_currency()
 	Backend.log_event("hub_open", {"runs": Profile.data.runs_played})
+	if Dev.env("BT_OPEN") != "":
+		_debug_open.call_deferred(Dev.env("BT_OPEN"))
 	if Dev.env("BT_TAB") != "":
 		_open_tab.call_deferred(Dev.env("BT_TAB"))
 	elif String(Router.params.get("tab", "")) != "":
@@ -108,7 +116,18 @@ func _after_open() -> void:
 		await RewardPopup.show_on(_ui, "subscription_daily", sub).closed
 	if Store.can_claim_login():
 		await _open_calendar()
+	await _show_offline()
+	Notify.maybe_ask_permission()
+	_hub_tips()
 	_refresh_currency()
+
+
+## Pó que o Ossudo juntou com o jogo fechado.
+func _show_offline() -> void:
+	var bg := OfflinePopup.open(_ui)
+	if bg:
+		await bg.tree_exited
+		_refresh_currency()
 
 
 func _open_calendar() -> void:
@@ -256,12 +275,27 @@ func _build_home() -> void:
 	_cal_dot.position = Vector2(90, -6)
 	_cal_dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_cal_btn.add_child(_cal_dot)
+	# Missões: logo abaixo de Prêmios, com aviso quando há missão para resgatar
+	_mis_btn = _cal_btn.duplicate(0)
+	for c in _mis_btn.get_children():
+		c.queue_free()
+	_mis_btn.icon = load("res://art/ui/ui_event_choice.png")
+	_mis_btn.text = tr("missions_short")
+	_mis_btn.offset_top = 545
+	_mis_btn.offset_bottom = 645
+	_mis_btn.pressed.connect(func(): MissionsPopup.open(_ui, _refresh_cal_dot))
+	Style.juice(_mis_btn)
+	_home.add_child(_mis_btn)
+	_mis_dot = _cal_dot.duplicate(0)
+	_mis_btn.add_child(_mis_dot)
 	_refresh_cal_dot()
 
 
 func _refresh_cal_dot() -> void:
 	if _cal_dot:
 		_cal_dot.visible = Store.can_claim_login()
+	if _mis_dot:
+		_mis_dot.visible = Missions.claimable_count() > 0
 
 
 func _refresh_chips() -> void:
@@ -571,7 +605,18 @@ func _settings_menu() -> void:
 	var q: String = Profile.setting("quality")
 	var items := [
 		[tr("menu_language") + ": " + tr("lang_" + Profile.current_locale()), _language_menu],
+		[tr("menu_sound") + ": " + tr("on" if Audio.sound_on() else "off"), func():
+			Profile.set_setting("sound", not Audio.sound_on())
+			Audio.play("ui_tap")],
+		[tr("menu_music") + ": " + tr("on" if Audio.music_on() else "off"), func():
+			Profile.set_setting("music", not Audio.music_on())
+			Audio.refresh_settings()],
 		[tr("menu_vibration") + ": " + tr("on" if vib else "off"), func(): Profile.set_setting("vibration", not vib)],
+		[tr("menu_notifications") + ": " + tr("on" if Notify.enabled() else "off"), func():
+			Profile.set_setting("notifications", not Notify.enabled())
+			if Notify.enabled():
+				Profile.data.notify.asked = false
+				Notify.maybe_ask_permission()],
 		[tr("menu_quality") + ": " + tr("quality_" + q), func():
 			Profile.set_setting("quality", "low" if q == "high" else "high")
 			Router.go("title", {})],
@@ -633,3 +678,60 @@ func _credits() -> void:
 	close.pressed.connect(bg.queue_free)
 	v.add_child(close)
 	Widgets.pop_in(p)
+
+
+## Tutorial na tela inicial: depois da 1ª partida, mostra onde gastar o pó;
+## quando a 2ª torre abre, mostra o seletor de torres.
+func _hub_tips() -> void:
+	if int(Profile.data.runs_played) >= 1 and Profile.dust() >= Meta.ossuary_cost("atk") and Tutorial.take("ossuary", true):
+		_hub_tip("ossuary", _tab_buttons.get("ossuary"))
+	elif Meta.tower_unlocked() >= 2 and Tutorial.take("towers", true):
+		_hub_tip("towers", _tower_next)
+
+
+func _hub_tip(key: String, target: Control) -> void:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", Style.flat_box(Color(0.12, 0.09, 0.14, 0.97), Color(0.6, 0.85, 1.0), 18, 3, 12))
+	var row := Style.hbox(12)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(row)
+	row.add_child(Widgets.icon("res://art/ui/companion_ossudo.png", 64))
+	var l := Style.label(tr("tip_" + key), 21, Style.C_TEXT)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(l)
+	p.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	p.offset_left = 24
+	p.offset_right = -24
+	p.offset_top = 96
+	_ui.add_child(p)
+	Audio.play("tutorial")
+	p.gui_input.connect(func(e: InputEvent):
+		if (e is InputEventScreenTouch or e is InputEventMouseButton) and e.pressed and is_instance_valid(p):
+			p.queue_free())
+	var tw := p.create_tween()
+	tw.tween_interval(7.0)
+	tw.tween_property(p, "modulate:a", 0.0, 0.4)
+	tw.tween_callback(p.queue_free)
+	# o botão indicado pulsa por alguns segundos
+	if target and is_instance_valid(target):
+		target.pivot_offset = target.size * 0.5
+		var pulse := target.create_tween().set_loops(6)
+		pulse.tween_property(target, "modulate", Color(1.6, 1.4, 0.8), 0.35)
+		pulse.tween_property(target, "modulate", Color.WHITE, 0.35)
+
+
+## Ferramenta de desenvolvimento (BT_OPEN): abre uma tela para capturas.
+func _debug_open(what: String) -> void:
+	match what:
+		"missions":
+			MissionsPopup.open(_ui)
+		"offline":
+			Profile.data.offline.pending = 1240
+			OfflinePopup.open(_ui)
+		"stats":
+			StatsPopup.open(_ui)
+		"tip":
+			_hub_tip("ossuary", _tab_buttons.get("ossuary"))
+

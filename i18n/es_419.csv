@@ -1289,3 +1289,51 @@ stats_bones,Huesos descubiertos
 stats_forms,Formas descubiertas
 stats_families,Familias completas
 stats_since_note,* contados desde la versión 1.1
+menu_sound,Efectos de sonido
+menu_music,Música
+missions_title,Misiones
+missions_short,Misiones
+missions_daily,Diarias · cambian en %s
+missions_weekly,Semanales · cambian en %s
+missions_days,%d días
+missions_claim,Reclamar
+missions_claimed,Hecha
+mission_done_toast,Misión cumplida: %s
+diamonds_short,diamantes
+mission_d_kills,Derrota %d monstruos
+mission_d_kills_big,Derrota %d monstruos
+mission_d_runs,Juega %d partidas
+mission_d_bosses,Vence a %d jefe
+mission_d_floors,Sube %d pisos
+mission_d_crush,Tritura %d huesos
+mission_d_attach,Encaja %d huesos
+mission_d_levelups,Sube de nivel %d veces
+mission_d_forms,Despierta %d forma
+mission_w_kills,Derrota %d monstruos
+mission_w_bosses,Vence a %d jefes
+mission_w_runs,Juega %d partidas
+mission_w_floors,Sube %d pisos
+mission_w_forms,Despierta %d formas
+mission_w_crush,Tritura %d huesos
+offline_title,¡Bienvenido de nuevo!
+offline_text,"Mientras no estabas, Ossudo juntó polvo de hueso para ti."
+offline_collect,Recoger
+offline_double,Recoger %s (anuncio)
+menu_notifications,Notificaciones
+notif_daily_title,Tu premio diario llegó
+notif_daily_body,Misiones nuevas y ofertas del día te esperan en la cripta.
+notif_offline_title,Ossudo llenó la bolsa de polvo
+notif_offline_body,Ven a recoger el polvo de hueso antes de que lo riegue todo.
+notif_hunter_title,El Cazador tiene tu hueso
+notif_hunter_body,Está usando tu %s. Véncelo para recuperarlo con un nivel más.
+tip_choices,Cada piso trae un suceso. Toca una opción para decidir: Huesito hace el resto.
+tip_combat,El combate es automático. ¡Atento a tu vida y a los huesos que sueltan los monstruos!
+tip_focus,Toca a un enemigo para que Huesito lo ataque primero.
+tip_attach,¡Hueso nuevo encajado! Cada hueso cambia el cuerpo y los atributos de Huesito.
+tip_family,2 piezas de la misma familia dan un bono. ¡Junta 4 para despertar una forma!
+tip_swap,Espacio ocupado: cámbialo por el hueso nuevo o tritúralo por polvo de hueso.
+tip_levelup,¡Subiste de nivel! Elige un bono que dura hasta el final de esta partida.
+tip_boss,¡Jefe! La primera victoria siempre suelta un hueso legendario.
+tip_form,¡Forma despertada! Las formas dan poderes especiales mientras las piezas sigan en tu cuerpo.
+tip_ossuary,¡Tienes polvo de hueso! Gástalo en el Osario para ser más fuerte en todas las partidas.
+tip_towers,¡Torre nueva desbloqueada! Usa las flechas sobre Jugar para elegir la torre.

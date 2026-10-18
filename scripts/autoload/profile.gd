@@ -4,6 +4,8 @@ extends Node
 
 signal changed
 signal currency_changed
+## Uma missão acabou de ser concluída (para avisar na tela).
+signal mission_done(id: String)
 
 const SAVE_PATH := "user://profile.json"
 ## Versão do formato do save. Ao mudar, acrescente um passo em _migrate():
@@ -21,13 +23,17 @@ func _ready() -> void:
 func defaults() -> Dictionary:
 	return {
 		"version": SAVE_VERSION,
-		"settings": {"locale": "", "vibration": true, "quality": "high", "fast_combat": false},
+		"settings": {"locale": "", "vibration": true, "quality": "high", "fast_combat": false, "sound": true, "music": true, "notifications": true},
 		"dust": 0,
 		"diamonds": 0,
 		"runs_played": 0,
 		"best_index": 0,
 		"towers": {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}, "wins": {}},
 		"families_done": {},
+		"missions": {"day": -1, "daily": [], "week": -1, "weekly": []},
+		"offline": {"last_seen": 0, "pending": 0, "ad_day": -1, "ad_count": 0},
+		"notify": {"asked": false},
+		"tutorial": {},
 		"stats": {"kills": 0, "dust_total": 0, "bones_crushed": 0, "play_time": 0, "deaths": 0, "floors": 0},
 		"first_open_time": 0,
 		"ossuary": {"hp": 0, "atk": 0, "def": 0, "drop": 0},
@@ -59,6 +65,7 @@ func load_profile() -> void:
 	if FileAccess.file_exists(SAVE_PATH):
 		parsed = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
 	load_from(parsed if typeof(parsed) == TYPE_DICTIONARY else {})
+	Offline.accrue()
 	if int(data.first_open_time) == 0:
 		data.first_open_time = Backend.now()
 		save()
@@ -134,6 +141,7 @@ func _merge(base: Dictionary, incoming: Dictionary) -> void:
 
 
 func save() -> void:
+	data.offline.last_seen = Backend.now()
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(data, "\t"))
@@ -269,6 +277,7 @@ func register_boss_win(boss_id: String) -> void:
 ## Estatísticas da tela "Estatísticas" (salvas junto com o próximo save).
 func stat_add(key: String, n: float = 1) -> void:
 	data.stats[key] = data.stats.get(key, 0) + n
+	Missions.track(key, n)
 
 
 func stat(key: String) -> float:
@@ -277,4 +286,16 @@ func stat(key: String) -> float:
 
 func _process(delta: float) -> void:
 	data.stats.play_time = float(data.stats.get("play_time", 0)) + delta
+
+
+## Voltando do segundo plano: soma o pó do Ossudo e avisa a tela inicial.
+signal offline_ready
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_RESUMED:
+		Offline.accrue()
+		offline_ready.emit()
+	elif what == NOTIFICATION_APPLICATION_PAUSED:
+		save()
 

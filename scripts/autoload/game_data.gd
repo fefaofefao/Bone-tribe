@@ -24,6 +24,7 @@ var app: Dictionary = {}
 var admob: Dictionary = {}
 var accessories: Dictionary = {}
 var towers: Array = []
+var missions: Dictionary = {}
 
 var bone_order: Array = []
 var monster_order: Array = []
@@ -62,6 +63,7 @@ func reload() -> void:
 	admob = _read("admob.json", {})
 	accessories = _index(_read("accessories.json", []), [])
 	towers = _read("towers.json", {}).get("towers", [])
+	missions = _read("missions.json", {})
 	for e in load_errors:
 		push_error(e)
 

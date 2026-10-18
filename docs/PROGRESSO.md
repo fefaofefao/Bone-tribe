@@ -76,6 +76,11 @@
 - Tela de Estatísticas; save com versão e migração; famílias completas preservadas.
 - Fichas da loja atualizadas e notas da versão nos 3 idiomas em `store/novidades_1.1.0.md`.
 
+### Versão 1.2.0
+- Som e música sincronizados com a tela (`scripts/autoload/audio.gd`, `data/audio.json`, `tools/gen_audio.py`).
+- Missões diárias e semanais, notificações locais (`addons/bonetribe_notify`), pó offline do Ossudo e tutorial guiado.
+- Notas da versão em `store/novidades_1.2.0.md`.
+
 ## Concluído
 Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
 
@@ -91,4 +96,4 @@ Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo
 - O ambiente de desenvolvimento não acessa `dl.google.com`, então o AAB só é gerado e validado no GitHub Actions (todos os builds passaram).
 - O vídeo de 8 segundos do Cartão da Criatura não foi feito: exige um codificador nativo (plugin Android); o cartão exporta a imagem 1080x1920.
 - O compartilhamento nativo também exige plugin; a imagem é salva em `user://cards/`.
-- Áudio não foi pedido nos passos e não foi incluído.
+- Áudio: sons e músicas são placeholders sintetizados (`tools/gen_audio.py`); troque pelos finais mantendo os nomes.
