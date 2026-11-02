@@ -49,6 +49,9 @@ func _ready() -> void:
 	state = RunState.new({"demo": demo, "tower": tower, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
 	if start_bone != "":
 		Profile.discover_bone(start_bone)
+	# ferramenta de desenvolvimento (BT_FLOOR=n): começa a partida no andar n
+	if Dev.env("BT_FLOOR") != "":
+		state.floor_n = maxi(0, int(Dev.env("BT_FLOOR")) - 1)
 	speed = 2.0 if Profile.setting("fast_combat") else 1.0
 	if demo:
 		speed = 1.6
