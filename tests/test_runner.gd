@@ -963,3 +963,16 @@ func test_18_retention() -> void:
 	holder.queue_free()
 	Profile.data = backup
 	Profile.save()
+
+
+func test_19_android_exit() -> void:
+	check(ProjectSettings.get_setting("application/config/quit_on_go_back") == false,
+		"botão Voltar não encerra o processo (evita falha de mutex destruído no Android)")
+	check(Router.has_method("minimize_app") and Router.minimize_app() == false,
+		"Voltar minimiza o app no Android e não faz nada no computador")
+	var src := FileAccess.get_file_as_string("res://scripts/autoload/router.gd")
+	check(src.contains("NOTIFICATION_WM_GO_BACK_REQUEST") and src.contains("moveTaskToBack"),
+		"Router trata o Voltar com moveTaskToBack")
+	for f in ["router.gd", "profile.gd", "backend_service.gd", "notify_service.gd", "audio.gd"]:
+		var code := FileAccess.get_file_as_string("res://scripts/autoload/" + f)
+		check(not code.contains("get_tree().quit()") or f == "router.gd", "%s não fecha o jogo sozinho" % f)

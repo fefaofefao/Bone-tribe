@@ -30,6 +30,26 @@ func _ready() -> void:
 		go(start, {"demo": Dev.env("BT_DEMO") == "1"})
 
 
+## Botão Voltar do Android: em vez de encerrar o processo (o encerramento do
+## Godot derruba o app no Android 16 com "mutex destruído"), salva e manda o
+## jogo para o segundo plano, como o botão Início.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		Profile.save()
+		minimize_app()
+
+
+func minimize_app() -> bool:
+	if OS.get_name() != "Android" or not Engine.has_singleton("AndroidRuntime"):
+		return false
+	var runtime: Object = Engine.get_singleton("AndroidRuntime")
+	var activity: Object = runtime.getActivity()
+	if activity == null:
+		return false
+	activity.runOnUiThread(runtime.createRunnableFromGodotCallable(func(): activity.moveTaskToBack(true)))
+	return true
+
+
 ## Ferramenta de desenvolvimento: BT_SHOT=<arquivo.png> [BT_SHOT_DELAY=s]
 ## captura a tela depois do atraso e fecha o jogo. BT_SHOTS=n tira n capturas.
 func _debug_capture() -> void:

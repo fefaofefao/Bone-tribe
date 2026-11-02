@@ -81,6 +81,9 @@
 - Missões diárias e semanais, notificações locais (`addons/bonetribe_notify`), pó offline do Ossudo e tutorial guiado.
 - Notas da versão em `store/novidades_1.2.0.md`.
 
+### Versão 1.2.1
+- Correção da falha ao fechar no Android 16 (botão Voltar agora minimiza o jogo). Notas em `store/novidades_1.2.1.md`.
+
 ## Concluído
 Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
 

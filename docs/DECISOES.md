@@ -255,3 +255,9 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - **Pó offline:** o Ossudo junta 50 de pó por hora × o pó da torre mais alta liberada, até 8 horas (ausências de 10 min ou mais, só depois da 1ª partida). Ao voltar: coletar ou dobrar com anúncio (3 por dia).
 - **Tutorial guiado:** 9 dicas na partida (escolhas, combate, mira, encaixe, família, trocar/triturar, nível, chefe, forma), uma vez cada, nas 3 primeiras partidas, num balão do Ossudo que não pausa o jogo; e 2 na tela inicial (Ossuário depois da 1ª partida, com o botão pulsando; seletor de torres quando a 2ª abre). Cada dica vista vai para o Analytics (`tutorial_step`).
 
+
+## Versão 1.2.1: falha ao fechar no Android 16
+- **Sintoma (Play Console):** falha `std::__ndk1::recursive_mutex::lock()` em `libc++_shared.so`, ~45% dos usuários. Rastreamento: `GodotLib.step` (thread de renderização) → `pthread_mutex_lock` → `HandleUsingDestroyedMutex` → `abort`. Ou seja, o motor ainda desenhava um quadro enquanto o encerramento do processo já tinha destruído as travas globais. O Android 16 aborta nesse caso (versões antigas ignoravam).
+- **Causa:** o botão Voltar do Android encerrava o jogo (padrão do Godot `application/config/quit_on_go_back=true`), e o encerramento do Godot no Android cai nessa corrida.
+- **Correção:** `quit_on_go_back=false`; o `Router` trata `NOTIFICATION_WM_GO_BACK_REQUEST` salvando o perfil e mandando o app para o segundo plano (`moveTaskToBack`), igual ao botão Início. O jogo nunca encerra o próprio processo; quem fecha é o Android, sem relatório de falha. Teste `test_19_android_exit`.
+- Não muda nada no jogo nem no save.
