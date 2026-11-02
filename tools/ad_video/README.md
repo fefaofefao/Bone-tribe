@@ -7,3 +7,8 @@
 3. `python3 tools/ad_video/build.py <pasta> audio/sfx` (gera o vertical 9:16 e o horizontal 16:9)
 
 Os tempos dos trechos ficam em `SEGS` no build.py (a demonstração é determinística com --fixed-fps).
+
+## Anúncios em inglês (A 10 s, B 15 s, C 20 s)
+
+`tools/ad_video/en/record.sh <pasta>` grava em inglês a demonstração, a derrota para o Rei Rato (`BT_FLOOR=10`) e o Ossuário;
+`overlays_en.py <pasta>/ov` gera os textos; `build_en.py <pasta> audio/sfx [ABC]` monta vertical e horizontal.
