@@ -161,7 +161,7 @@ jobs:
           grep -n "app_id" project.godot || echo "AdMob: usando o ID de app de teste"
 
       - name: Testes automáticos
-        run: godot --headless --path . res://tests/TestRunner.tscn
+        run: timeout 1500 godot --headless --path . res://tests/TestRunner.tscn
 
       - name: Exportar AAB
         run: |

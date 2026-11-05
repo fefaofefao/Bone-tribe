@@ -169,11 +169,33 @@ func _offer_popup(pid: String, desc_key: String) -> void:
 		await get_tree().process_frame
 
 
+## Corpo da partida recorde, só com ossos que existem nesta versão.
+static func best_body() -> Dictionary:
+	var bb: Dictionary = Profile.data.get("best_body", {})
+	var eq: Variant = bb.get("equipped", {})
+	if not (eq is Dictionary) or (eq as Dictionary).is_empty():
+		return {}
+	var out := {}
+	for slot in eq:
+		var inst: Variant = eq[slot]
+		if not (inst is Dictionary) or GameData.bone(String(inst.get("id", ""))).is_empty() or not GameData.slots().any(func(x): return String(x.id) == String(slot)):
+			return {}
+		out[slot] = {"id": String(inst.id), "level": int(inst.get("level", 1))}
+		if inst.has("rarity"):
+			out[slot]["rarity"] = String(inst.rarity)
+	return out
+
+
 func _refresh_hero() -> void:
 	var eq: Dictionary = GameData.skeleton.get("starting_bones", {}).duplicate()
 	var sb := String(Profile.data.get("starting_bone", ""))
 	if sb != "" and Meta.can_start_with(sb):
 		eq[GameData.bone_slots(sb)[0]] = sb
+	else:
+		# sem osso inicial escolhido: mostra o corpo da partida recorde
+		var best := best_body()
+		if not best.is_empty():
+			eq = best
 	_hero.set_equipped(eq)
 	_hero.set_skin(Store.equipped_skin())
 	if _companion:
@@ -278,6 +300,7 @@ func _build_home() -> void:
 	_cal_btn.offset_top = 430
 	_cal_btn.offset_bottom = 530
 	_cal_btn.pressed.connect(_open_calendar)
+	Style.juice(_cal_btn)
 	Style.juice(_cal_btn)
 	_home.add_child(_cal_btn)
 	_cal_dot = Panel.new()
@@ -434,6 +457,7 @@ func _loadout_card(icon_path: String, caption: String, value: String, tab: Strin
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.clip_contents = true
 	b.pressed.connect(func(): _open_tab(tab))
+	Style.juice(b)
 	var h := Style.hbox(10)
 	h.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	h.offset_left = 12

@@ -30,6 +30,10 @@ var _shadow: Sprite2D
 var _root: Bone2D
 var _busy_parts: Dictionary = {}
 var _form_scale := 1.0
+var _look := 0.0          # 0 = olhando para frente, 1 = virado para o inimigo
+var _look_target := 0.0
+var _blink := 0.0         # piscada: o crânio fecha um pouco por um instante
+var _next_blink := 2.5
 var _base_rest_rot: Dictionary = {}   # base part id -> rotação de repouso
 var _collapse_tweens: Array[Tween] = []
 
@@ -307,6 +311,12 @@ func _process(delta: float) -> void:
 	_shadow.scale = Vector2(3.2, 0.7) * $Body.scale.x
 	if not idle_enabled:
 		return
+	_look = lerpf(_look, _look_target, clampf(delta * 6.0, 0.0, 1.0))
+	_next_blink -= delta
+	if _next_blink <= 0.0:
+		_blink = 1.0
+		_next_blink = randf_range(2.5, 5.5)
+	_blink = maxf(0.0, _blink - delta * 7.0)
 	var breath := sin(_t * 2.2)
 	var upper := Vector2(0, breath * 2.5 + lowered)
 	for p in base_nodes:
@@ -330,8 +340,10 @@ func _process(delta: float) -> void:
 			"extra":
 				pos.y += lowered
 			"skull":
-				pos += upper + Vector2(0, sin(_t * 2.2 - 0.6) * 1.5)
-				rot += sin(_t * 1.1) * 2.0
+				pos += upper + Vector2(_look * 4.0, sin(_t * 2.2 - 0.6) * 1.5)
+				rot += sin(_t * 1.1) * 2.0 * (1.0 - _look) + _look * 8.0
+				# piscada: o crânio achata rápido e volta (as órbitas "fecham")
+				n.scale = Vector2(1.0 + _blink * 0.04, 1.0 - sin(_blink * PI) * 0.12)
 			"arm":
 				pos += upper
 				rot += sin(_t * 2.2 + (0.8 if s == "slot_arm_left" else 0.0)) * 4.0
@@ -405,6 +417,11 @@ func victory_anim() -> void:
 	var tw := create_tween()
 	tw.tween_property(body, "position:y", -50.0, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tw.tween_property(body, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+
+
+## Combate: a cabeça vira um pouco para o lado dos inimigos.
+func set_look(on: bool) -> void:
+	_look_target = 1.0 if on else 0.0
 
 
 ## Desmonta o Ossinho: cada peça cai e quica (morte).

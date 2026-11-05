@@ -95,7 +95,7 @@ func damage_number(pos: Vector2, text: String, color: Color, crit := false, size
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_override("font", Style.font_bold)
-	var fs := size_px + (18 if crit else 0)
+	var fs := size_px + (22 if crit else 0)
 	l.add_theme_font_size_override("font_size", fs)
 	l.add_theme_color_override("font_color", color)
 	l.add_theme_constant_override("outline_size", 10)
@@ -107,6 +107,19 @@ func damage_number(pos: Vector2, text: String, color: Color, crit := false, size
 	l.z_index = 60
 	add_child(l)
 	l.scale = Vector2.ONE * (0.3 if crit else 0.6)
+	if crit:
+		# crítico: maior, com "!" e um tranco de rotação
+		l.text += "!"
+		l.add_theme_constant_override("outline_size", 14)
+		l.add_theme_color_override("font_outline_color", Color(0.35, 0.12, 0.0, 0.95))
+		l.rotation = deg_to_rad(randf_range(-14.0, -6.0))
+		var rt := l.create_tween()
+		rt.tween_property(l, "rotation", 0.0, 0.35).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	elif text.begins_with("+") and color.g > color.r and color.g > color.b:
+		# cura: sobe fazendo um arco leve para o lado
+		var side := -1.0 if randf() < 0.5 else 1.0
+		var at := l.create_tween()
+		at.tween_property(l, "position:x", l.position.x + 34.0 * side, 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	var tw := l.create_tween()
 	tw.tween_property(l, "scale", Vector2.ONE * (1.35 if crit else 1.0), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.parallel().tween_property(l, "position:y", l.position.y - 46, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -193,6 +206,38 @@ func beam(a: Vector2, b: Vector2, color: Color, width := 18.0, time := 0.25) -> 
 	tw.tween_callback(l.queue_free)
 	spark_burst(b, color, 8)
 	light_flash(b, color, 1.0, 2.0, 0.3)
+
+
+## Feixe de luz da raridade (osso raro ou lendário caindo): coluna que desce
+## do alto até o osso e some devagar.
+func rarity_pillar(pos: Vector2, color: Color, legendary := false) -> void:
+	var top := pos + Vector2(0, -620)
+	for layer in [[120.0 if legendary else 84.0, Color(color, 0.35)], [48.0 if legendary else 34.0, Color(color, 0.6)], [10.0, Color(1, 1, 1, 0.5)]]:
+		var l := Line2D.new()
+		l.points = PackedVector2Array([top, pos])
+		l.width = float(layer[0])
+		l.default_color = layer[1]
+		# só o miolo soma luz; o resto mistura normal para a cor da raridade aparecer
+		if float(layer[0]) <= 10.0:
+			l.material = _add_mat
+		l.begin_cap_mode = Line2D.LINE_CAP_ROUND
+		l.end_cap_mode = Line2D.LINE_CAP_ROUND
+		var g := Gradient.new()
+		g.set_color(0, Color(1, 1, 1, 0.0))
+		g.set_color(1, Color(1, 1, 1, 1.0))
+		l.gradient = g
+		add_child(l)
+		l.modulate.a = 0.0
+		var tw := l.create_tween()
+		tw.tween_property(l, "modulate:a", 1.0, 0.12)
+		tw.tween_interval(0.5 if legendary else 0.3)
+		tw.tween_property(l, "modulate:a", 0.0, 0.7)
+		tw.parallel().tween_property(l, "width", 4.0, 0.7)
+		tw.tween_callback(l.queue_free)
+	light_flash(pos, color, 1.8 if legendary else 1.3, 3.5 if legendary else 2.6, 0.9)
+	spark_burst(pos, color, 22 if legendary else 12, 420.0 if legendary else 300.0)
+	if legendary:
+		shockwave(pos, color, 3.2, 0.6)
 
 
 ## Sopro de fogo em leque.

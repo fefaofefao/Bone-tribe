@@ -54,6 +54,9 @@ func _ready() -> void:
 	if not resumed:
 		var start_bone := "" if demo else Meta.take_start_bone()
 		var tower := 1 if demo else int(p.get("tower", Meta.tower_selected()))
+		# ferramenta de desenvolvimento (BT_TOWER=n): joga a torre n (capturas de tela)
+		if Dev.env("BT_TOWER") != "":
+			tower = int(Dev.env("BT_TOWER"))
 		state = RunState.new({"demo": demo, "tower": tower, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
 		if start_bone != "":
 			Profile.discover_bone(start_bone)
@@ -87,6 +90,7 @@ func _build_world() -> void:
 	add_child(world)
 	stage = CryptStage.new()
 	stage.tint = Color(String(GameData.tower(state.tower).get("tint", "#948aa3")))
+	stage.theme = String(GameData.tower(state.tower).get("theme", "crypt"))
 	world.add_child(stage)
 	hero_view = preload("res://scenes/Ossinho.tscn").instantiate()
 	hero_view.position = HERO_POS
@@ -285,6 +289,25 @@ func _build_ui() -> void:
 	speed_btn.pressed.connect(_toggle_speed)
 	hud.add_child(speed_btn)
 	_update_speed_btn()
+
+	# maldição da torre (21+): fica visível a partida toda; tocar mostra o que faz
+	var curse := String(GameData.tower(state.tower).get("curse", ""))
+	if curse != "" and not demo:
+		var cb := Button.new()
+		cb.text = tr("tower_curse_line") % tr(curse + "_name")
+		cb.add_theme_font_size_override("font_size", 20)
+		cb.add_theme_color_override("font_color", Color("d7aaff"))
+		cb.add_theme_stylebox_override("normal", Style.flat_box(Color(0.25, 0.1, 0.35, 0.8), Color("b57cff"), 14, 2, 8))
+		cb.add_theme_stylebox_override("hover", Style.flat_box(Color(0.3, 0.12, 0.42, 0.85), Color("d7aaff"), 14, 2, 8))
+		cb.add_theme_stylebox_override("pressed", Style.flat_box(Color(0.35, 0.15, 0.5, 0.9), Color("d7aaff"), 14, 2, 8))
+		cb.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+		cb.offset_top = 136
+		cb.offset_bottom = 184
+		cb.offset_left = -150
+		cb.offset_right = 150
+		cb.pressed.connect(func(): _top_notice(tr("tower_curse_line") % tr(curse + "_name") + "\n" + tr(curse + "_desc"), Color("d7aaff"), "", 2.4))
+		Style.juice(cb)
+		hud.add_child(cb)
 
 	# status do esqueleto: pode ser aberto a qualquer momento (pausa o jogo)
 	status_btn = Style.button(tr("btn_status"), "DarkButton", 56)
@@ -1050,7 +1073,7 @@ func _combat(ids: Array, is_boss := false, elite := false) -> void:
 		if elite:
 			# elite: dourado e um pouco maior
 			ev_view.scale *= 1.12
-			ev_view.sprite.self_modulate = Color(1.35, 1.15, 0.65)
+			ev_view.set_elite()
 			fx.spark_burst(ev_view.center_global(), Style.C_CANDLE, 16, 320)
 	if elite:
 		Audio.play("boss_intro")
@@ -1066,6 +1089,7 @@ func _combat(ids: Array, is_boss := false, elite := false) -> void:
 		"max_turns": int(GameData.bal("combat/boss_max_turns" if is_boss else "combat/max_turns", 15)), "companion": comp})
 	_spawn_ally_views()
 	_combat_panel(enemies)
+	hero_view.set_look(true)
 	Audio.music("boss" if is_boss else "combat")
 	await _wait(0.5)
 	var killed: Array = []
@@ -1097,6 +1121,7 @@ func _combat(ids: Array, is_boss := false, elite := false) -> void:
 			state.dead = true
 			return
 		break
+	hero_view.set_look(false)
 	state.absorb_hero(hero)
 	_refresh_hud()
 	Audio.music("crypt")
@@ -1594,6 +1619,14 @@ func _rejection_check() -> void:
 
 func _offer_bone(inst: Dictionary, from: Vector2) -> void:
 	var bid := String(inst.id)
+	var rarity := Body.instance_rarity(inst)
+	if rarity == "rare" or rarity == "legendary":
+		# feixe da cor da raridade; o lendário ainda treme a tela
+		fx.rarity_pillar(from, Style.rarity_color(rarity), rarity == "legendary"); Audio.play("form" if rarity == "legendary" else "upgrade")
+		if rarity == "legendary":
+			cam.shake(0.35)
+			Haptics.medium()
+		await _wait(0.35)
 	Audio.play("bone_drop")
 	if Profile.discover_bone(bid):
 		fx.float_text(hero_view.body_center_global() + Vector2(0, -240), tr("collection_new"), Style.C_CANDLE, 24)
@@ -2082,6 +2115,10 @@ func _end_run() -> void:
 		if state.dead:
 			Profile.stat_add("deaths")
 		Profile.data.best_index = maxi(int(Profile.data.best_index), state.floor_n)
+		# corpo do recorde (torre mais alta, depois andar mais alto): aparece na tela inicial
+		var score := state.tower * 100 + state.floor_n
+		if score >= int(Profile.data.best_body.get("score", 0)):
+			Profile.data.best_body = {"score": score, "tower": state.tower, "floor": state.floor_n, "equipped": state.equipped.duplicate(true)}
 		Profile.save()
 	var tower_rew := {} if demo else Meta.tower_finish(state.tower, state.floor_n, state.beat_final_boss())
 	var stolen := {}

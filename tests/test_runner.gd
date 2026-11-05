@@ -9,6 +9,8 @@ var checks := 0
 
 func _ready() -> void:
 	for f in _suites():
+		if OS.get_environment("BT_TEST_VERBOSE") == "1":
+			print("> ", f)
 		await call(f)
 	print("")
 	print("Testes: %d verificações, %d falhas" % [checks, failures.size()])
@@ -1152,3 +1154,58 @@ func test_21_continue_run() -> void:
 	check(end_i > 0 and src.find("RunSave.clear()", end_i) < src.find("state.end_rewards()", end_i), "fim de partida apaga a gravação antes de pagar o pó")
 	var lose_i := src.find("if combat.result == \"lose\":")
 	check(src.find("RunSave.clear()", lose_i) < src.find("_death_dialog()", lose_i), "morte apaga a gravação antes da tela de reviver")
+
+
+func test_22_visual_polish() -> void:
+	# cenário de cada torre
+	for n in range(1, GameData.towers.size() + 1):
+		var th := String(GameData.tower(n).get("theme", ""))
+		check(CryptStage.THEMES.has(th), "torre %d tem cenário conhecido (%s)" % [n, th])
+		if n > 20:
+			check(th == "cursed", "torre amaldiçoada %d tem névoa roxa" % n)
+	for th in CryptStage.THEMES:
+		var st := CryptStage.new()
+		st.theme = th
+		add_child(st)
+		await get_tree().process_frame
+		check(st.get_child_count() > 5, "cenário %s monta" % th)
+		st.queue_free()
+	# corpo do recorde na tela inicial: só com ossos válidos
+	var TS: Script = load("res://scripts/scenes/title_screen.gd")
+	var backup: Dictionary = Profile.data.duplicate(true)
+	Profile.data.best_body = {}
+	check(TS.best_body().is_empty(), "sem recorde: esqueleto básico")
+	Profile.data.best_body = {"score": 105, "equipped": {"slot_skull": {"id": "bone_skull_wolf", "level": 2.0}, "slot_ribs": {"id": "bone_ribs_basic", "level": 1}}}
+	var bb: Dictionary = TS.best_body()
+	check(bb.size() == 2 and bb.slot_skull.level is int and int(bb.slot_skull.level) == 2, "corpo do recorde volta do save com nível inteiro")
+	Profile.data.best_body = {"score": 105, "equipped": {"slot_skull": {"id": "bone_sumiu", "level": 1}}}
+	check(TS.best_body().is_empty(), "recorde com osso desconhecido não quebra a tela inicial")
+	Profile.data = backup
+	# elite, feixe de raridade e números de dano
+	var fxl := FxLayer.new()
+	add_child(fxl)
+	fxl.rarity_pillar(Vector2(300, 600), Style.rarity_color("legendary"), true)
+	fxl.damage_number(Vector2(300, 500), "120", Color("ffd23f"), true)
+	fxl.damage_number(Vector2(300, 500), "+30", Style.C_HEAL)
+	await get_tree().process_frame
+	check(fxl.get_child_count() >= 4, "feixe de raridade e números aparecem")
+	var crit_l: Label = null
+	for c in fxl.get_children():
+		if c is Label and (c as Label).text == "120!":
+			crit_l = c
+	check(crit_l != null, "crítico ganha ponto de exclamação")
+	fxl.queue_free()
+	MonsterFactory.tower = 1
+	var mv := MonsterView.new()
+	add_child(mv)
+	mv.setup(MonsterFactory.make("monster_crypt_wolf", 3))
+	mv.set_elite()
+	check(mv.sprite.self_modulate.b < 0.9, "elite fica dourado")
+	mv.queue_free()
+	# esqueleto olha para o inimigo e pisca
+	var os: Node2D = load("res://scenes/Ossinho.tscn").instantiate()
+	add_child(os)
+	os.set_look(true)
+	await get_tree().create_timer(0.5).timeout
+	check(os._look > 0.8, "cabeça vira para o inimigo no combate")
+	os.queue_free()

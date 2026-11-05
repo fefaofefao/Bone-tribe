@@ -28,6 +28,7 @@ func defaults() -> Dictionary:
 		"diamonds": 0,
 		"runs_played": 0,
 		"best_index": 0,
+		"best_body": {},
 		"towers": {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}, "wins": {}},
 		"families_done": {},
 		"missions": {"day": -1, "daily": [], "week": -1, "weekly": []},
@@ -122,6 +123,11 @@ func _sample_profile() -> void:
 		data.discovered_bones[id] = true
 	for id in ["form_night_manticore", "form_werewolf", "form_swarm_queen"]:
 		data.discovered_forms[id] = true
+	for id in ["bone_skull_dragon", "bone_skull_centaur"]:
+		data.discovered_bones[id] = true
+	data.best_body = {"score": 317, "tower": 3, "floor": 17, "equipped": {"slot_skull": {"id": "bone_skull_wolf", "level": 2}, "slot_ribs": {"id": "bone_ribs_turtle", "level": 1},
+		"slot_arm_left": {"id": "bone_claw_bear", "level": 1}, "slot_arm_right": {"id": "bone_claw_bear", "level": 1}, "slot_legs": {"id": "bone_legs_spider", "level": 1},
+		"slot_back": {"id": "bone_wings_bat", "level": 1}, "slot_tail": {"id": "bone_tail_scorpion", "level": 1}}}
 	data.ossuary = {"hp": 4, "atk": 5, "def": 2, "drop": 1}
 	data.towers = {"unlocked": 3, "selected": 3, "cleared": {"1": true, "2": true}, "best": {"1": 30, "2": 30, "3": 17}}
 	data.companions["companion_lumi"] = {"unlocked": true, "level": 3}

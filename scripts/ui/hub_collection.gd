@@ -58,6 +58,13 @@ func _bone_cell(id: String, is_start: bool) -> Control:
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if is_start:
 		btn.add_theme_stylebox_override("normal", Style.flat_box(Color(0.3, 0.2, 0.08), Style.C_CANDLE, 16, 3, 8))
+	elif found and String(b.get("rarity", "")) in ["rare", "legendary"]:
+		# moldura da cor da raridade (só nos ossos já descobertos)
+		var rc := Style.rarity_color(String(b.rarity))
+		var fill := Color(0.13, 0.1, 0.14).lerp(rc, 0.12)
+		btn.add_theme_stylebox_override("normal", Style.flat_box(fill, Color(rc, 0.9), 16, 3, 8))
+		btn.add_theme_stylebox_override("hover", Style.flat_box(fill.lightened(0.06), rc, 16, 3, 8))
+		btn.add_theme_stylebox_override("pressed", Style.flat_box(fill.lightened(0.1), rc.lightened(0.2), 16, 3, 8))
 	Style.juice(btn)
 	var v := Style.vbox(2)
 	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -69,6 +76,24 @@ func _bone_cell(id: String, is_start: bool) -> Control:
 	if not found:
 		ic.modulate = Color(0, 0, 0, 0.75)
 	v.add_child(ic)
+	if found and String(b.get("rarity", "")) == "legendary":
+		# brilho pulsando atrás do osso lendário
+		var glow := TextureRect.new()
+		glow.texture = load("res://art/fx/fx_soft.png")
+		glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		glow.stretch_mode = TextureRect.STRETCH_SCALE
+		glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		glow.modulate = Color(Style.rarity_color("legendary"), 0.55)
+		glow.show_behind_parent = true
+		glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		glow.offset_left = 30
+		glow.offset_right = -30
+		glow.offset_top = -10
+		glow.offset_bottom = 10
+		ic.add_child(glow)
+		var tw := glow.create_tween().set_loops()
+		tw.tween_property(glow, "modulate:a", 0.25, 1.1).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(glow, "modulate:a", 0.6, 1.1).set_trans(Tween.TRANS_SINE)
 	var nm := Style.label(tr(String(b.name)) if found else tr("unknown_item"), 17, Style.rarity_color(String(b.rarity)) if found else Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	nm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(nm)

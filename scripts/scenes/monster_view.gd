@@ -18,6 +18,7 @@ var flying := false
 var dead := false
 var art_size := Vector2(300, 300)
 var display_scale := 0.5
+var _elite_fx: Node2D
 
 
 func setup(f: Fighter) -> void:
@@ -74,6 +75,52 @@ func setup(f: Fighter) -> void:
 	hp_bar.visible = not f.is_ally
 	add_child(hp_bar)
 	refresh()
+
+
+## Elite: dourado, maior, coroa sobre a barra de vida e faíscas o tempo todo.
+func set_elite() -> void:
+	sprite.self_modulate = Color(1.35, 1.15, 0.65)
+	_elite_fx = Node2D.new()
+	add_child(_elite_fx)
+	var crown := Polygon2D.new()
+	crown.polygon = PackedVector2Array([Vector2(-16, 0), Vector2(-18, -16), Vector2(-9, -8), Vector2(0, -20), Vector2(9, -8), Vector2(18, -16), Vector2(16, 0)])
+	crown.color = Color("ffc94a")
+	var edge := Line2D.new()
+	edge.points = crown.polygon
+	edge.closed = true
+	edge.width = 2.5
+	edge.default_color = Color(0.35, 0.2, 0.05)
+	crown.add_child(edge)
+	crown.position = hp_bar.position + Vector2(60, -6)
+	_elite_fx.add_child(crown)
+	var p := GPUParticles2D.new()
+	p.amount = 14
+	p.lifetime = 1.4
+	p.texture = load("res://art/fx/fx_spark.png")
+	p.position = Vector2(0, -art_size.y * display_scale * 0.5)
+	p.visibility_rect = Rect2(-300, -300, 600, 600)
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	p.material = add
+	var m := ParticleProcessMaterial.new()
+	m.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	m.emission_box_extents = Vector3(art_size.x * display_scale * 0.45, art_size.y * display_scale * 0.45, 1)
+	m.direction = Vector3(0, -1, 0)
+	m.spread = 40.0
+	m.initial_velocity_min = 10.0
+	m.initial_velocity_max = 30.0
+	m.gravity = Vector3(0, -10, 0)
+	m.scale_min = 0.15
+	m.scale_max = 0.35
+	m.color = Color(1, 0.8, 0.3, 0.9)
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(1, 1, 1, 1))
+	ramp.set_color(1, Color(1, 1, 1, 0))
+	var rt := GradientTexture1D.new()
+	rt.gradient = ramp
+	m.color_ramp = rt
+	p.process_material = m
+	_elite_fx.add_child(p)
 
 
 func top_global() -> Vector2:
@@ -159,6 +206,8 @@ func die_anim(fx_parent: Node) -> void:
 	dead = true
 	hp_bar.visible = false
 	_focus_ring.visible = false
+	if _elite_fx:
+		_elite_fx.visible = false
 	flash(Color.WHITE, 1.0, 0.3)
 	var center := center_global()
 	if fx_parent and fx_parent.has_method("bone_burst"):

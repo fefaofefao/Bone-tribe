@@ -239,12 +239,26 @@ func juice(c: Control) -> void:
 		b.button_down.connect(func():
 			Haptics.light()
 			Audio.play("ui_tap")
-			var tw := b.create_tween()
-			tw.tween_property(b, "scale", Vector2(0.94, 0.94), 0.06))
+			_kill_juice(b)
+			var tw := b.create_tween().set_parallel(true)
+			tw.tween_property(b, "scale", Vector2(0.94, 0.94), 0.06)
+			# brilho enquanto o dedo está no botão (self_modulate não mexe nos filhos)
+			tw.tween_property(b, "self_modulate", Color(1.28, 1.22, 1.08), 0.06)
+			b.set_meta("juice_tw", tw))
 		b.button_up.connect(func():
+			_kill_juice(b)
 			var tw := b.create_tween()
 			tw.tween_property(b, "scale", Vector2(1.05, 1.05), 0.08).set_trans(Tween.TRANS_BACK)
-			tw.tween_property(b, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_SINE))
+			tw.parallel().tween_property(b, "self_modulate", Color.WHITE, 0.2)
+			tw.tween_property(b, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_SINE)
+			b.set_meta("juice_tw", tw))
+
+
+func _kill_juice(b: Control) -> void:
+	if b.has_meta("juice_tw"):
+		var old: Tween = b.get_meta("juice_tw")
+		if old and old.is_valid():
+			old.kill()
 
 
 ## Formata números grandes com separador de milhar conforme o idioma.

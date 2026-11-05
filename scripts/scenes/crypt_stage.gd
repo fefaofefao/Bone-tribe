@@ -19,6 +19,23 @@ var _flames: Array = []
 var low := false
 ## Cor do ambiente (cada torre tem a sua); transparente = cor padrão.
 var tint := Color(0, 0, 0, 0)
+## Cenário da torre (data/towers.json -> theme): crypt, frost, swamp ou cursed.
+var theme := "crypt"
+
+const THEMES := {
+	"crypt": {"fog": Color(0.7, 0.62, 0.8, 0.1), "candle": Color(1.0, 0.72, 0.42), "dust": Color(1, 0.9, 0.75, 0.35), "embers": true,
+		"props": [["env_tombstone", Vector2(40, 770), 0.6], ["env_bone_pile", Vector2(600, 790), 0.55], ["env_tombstone", Vector2(700, 780), 0.5]]},
+	"frost": {"fog": Color(0.7, 0.85, 1.0, 0.22), "candle": Color(0.8, 0.88, 1.0), "dust": Color(0.85, 0.92, 1.0, 0.3), "embers": false, "snow": true,
+		"props": [["env_tombstone", Vector2(40, 770), 0.6], ["env_tombstone", Vector2(640, 786), 0.42], ["env_bone_pile", Vector2(700, 796), 0.4]]},
+	"swamp": {"fog": Color(0.5, 0.85, 0.45, 0.24), "candle": Color(0.95, 0.85, 0.5), "dust": Color(0.8, 1.0, 0.6, 0.3), "embers": false, "spores": true,
+		"props": [["env_bone_pile", Vector2(50, 792), 0.5], ["env_bone_pile", Vector2(610, 794), 0.6], ["env_tombstone", Vector2(705, 780), 0.45]]},
+	"cursed": {"fog": Color(0.62, 0.35, 0.9, 0.26), "candle": Color(0.85, 0.6, 1.0), "dust": Color(0.85, 0.7, 1.0, 0.35), "embers": false, "wisps": true,
+		"props": [["env_tombstone", Vector2(40, 770), 0.6], ["env_bone_pile", Vector2(600, 790), 0.55], ["env_tombstone", Vector2(700, 780), 0.5]]},
+}
+
+
+func _theme() -> Dictionary:
+	return THEMES.get(theme, THEMES.crypt)
 
 
 func _ready() -> void:
@@ -47,7 +64,7 @@ func _ready() -> void:
 	modulate_node.color = (tint if tint.a > 0.0 else Color(0.58, 0.53, 0.64)) if not low else Color(0.92, 0.9, 0.96)
 	add_child(modulate_node)
 
-	for prop in [["env_tombstone", Vector2(40, 770), 0.6], ["env_bone_pile", Vector2(600, 790), 0.55], ["env_tombstone", Vector2(700, 780), 0.5]]:
+	for prop in _theme().props:
 		var s := Sprite2D.new()
 		s.texture = load("res://art/env/%s.png" % prop[0])
 		s.centered = true
@@ -98,7 +115,7 @@ func _add_candle(pos: Vector2, k: float) -> void:
 	light.texture = load("res://art/fx/fx_light.png")
 	light.position = flame.position + Vector2(0, -10)
 	light.texture_scale = 1.6 + k * 2.4
-	light.color = Color(1.0, 0.72, 0.42)
+	light.color = _theme().candle
 	light.energy = 0.9
 	light.range_item_cull_mask = 1 | 2
 	add_child(light)
@@ -149,7 +166,7 @@ func _add_ambient() -> void:
 	pm.gravity = Vector3(0, 0, 0)
 	pm.scale_min = 0.05
 	pm.scale_max = 0.14
-	pm.color = Color(1, 0.9, 0.75, 0.35)
+	pm.color = _theme().dust
 	var ramp := Gradient.new()
 	ramp.offsets = PackedFloat32Array([0.0, 0.3, 0.7, 1.0])
 	ramp.colors = PackedColorArray([Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)])
@@ -161,6 +178,10 @@ func _add_ambient() -> void:
 	pm.turbulence_noise_scale = 3.0
 	dust.process_material = pm
 	add_child(dust)
+	_add_theme_particles(rt)
+	if not bool(_theme().get("embers", false)):
+		_add_fog(rt)
+		return
 	# brasas subindo pelo ar
 	var emb := GPUParticles2D.new()
 	emb.amount = 18
@@ -189,7 +210,11 @@ func _add_ambient() -> void:
 	em.turbulence_noise_scale = 2.0
 	emb.process_material = em
 	add_child(emb)
-	# névoa rasteira
+	_add_fog(rt)
+
+
+## Névoa rasteira (cor do cenário da torre).
+func _add_fog(rt: GradientTexture1D) -> void:
 	var fog := GPUParticles2D.new()
 	fog.amount = 10
 	fog.lifetime = 12.0
@@ -207,10 +232,57 @@ func _add_ambient() -> void:
 	fm.gravity = Vector3.ZERO
 	fm.scale_min = 2.0
 	fm.scale_max = 3.5
-	fm.color = Color(0.7, 0.62, 0.8, 0.1)
+	fm.color = _theme().fog
 	fm.color_ramp = rt
 	fog.process_material = fm
 	add_child(fog)
+
+
+## Partículas próprias do cenário: neve caindo, esporos subindo ou luzes da maldição.
+func _add_theme_particles(rt: GradientTexture1D) -> void:
+	var th := _theme()
+	var cfg := {}
+	if th.get("snow", false):
+		cfg = {"amount": 110, "life": 9.0, "pos": Vector2(360, 300), "box": Vector3(440, 300, 1), "dir": Vector3(0.15, 1, 0), "v": [40.0, 80.0],
+			"grav": Vector3(0, 8, 0), "scale": [0.12, 0.3], "color": Color(0.95, 0.97, 1.0, 0.9), "add": false}
+	elif th.get("spores", false):
+		cfg = {"amount": 60, "life": 10.0, "pos": Vector2(360, 820), "box": Vector3(420, 140, 1), "dir": Vector3(0.1, -1, 0), "v": [14.0, 34.0],
+			"grav": Vector3(0, -3, 0), "scale": [0.14, 0.34], "color": Color(0.7, 1.0, 0.4, 0.85), "add": true}
+	elif th.get("wisps", false):
+		cfg = {"amount": 30, "life": 6.0, "pos": Vector2(360, 700), "box": Vector3(400, 200, 1), "dir": Vector3(0, -1, 0), "v": [8.0, 20.0],
+			"grav": Vector3(0, -3, 0), "scale": [0.12, 0.3], "color": Color(0.75, 0.45, 1.0, 0.8), "add": true}
+	if cfg.is_empty():
+		return
+	var p := GPUParticles2D.new()
+	p.amount = int(cfg.amount)
+	p.lifetime = float(cfg.life)
+	p.preprocess = float(cfg.life)
+	p.position = cfg.pos
+	p.texture = load("res://art/fx/fx_soft.png")
+	p.z_index = -16
+	# área de desenho grande: a neve nasce acima da tela e cai por ela toda
+	p.visibility_rect = Rect2(-520, -200, 1040, 1700)
+	if cfg.add:
+		var add := CanvasItemMaterial.new()
+		add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		p.material = add
+	var m := ParticleProcessMaterial.new()
+	m.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	m.emission_box_extents = cfg.box
+	m.direction = cfg.dir
+	m.spread = 20.0
+	m.initial_velocity_min = float(cfg.v[0])
+	m.initial_velocity_max = float(cfg.v[1])
+	m.gravity = cfg.grav
+	m.scale_min = float(cfg.scale[0])
+	m.scale_max = float(cfg.scale[1])
+	m.color = cfg.color
+	m.color_ramp = rt
+	m.turbulence_enabled = true
+	m.turbulence_noise_strength = 2.0
+	m.turbulence_noise_scale = 2.5
+	p.process_material = m
+	add_child(p)
 
 
 func _process(delta: float) -> void:

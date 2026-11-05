@@ -87,6 +87,7 @@
 ### Versão 1.3.0
 - Status do esqueleto durante a partida; corpo correto depois de reviver com anúncio; Estatísticas numa linha; ganho das melhorias de companheiros e do Ossuário.
 - Torres 21 a 40 com maldições; 16 eventos novos em 5 tipos (Elite, Aposta, Santuário, Enigma, Arena).
+- Continuar a partida (gravação por andar), acabamento visual (botões, feixe de raridade, cenários por região, maldição no topo, elite, números de dano, corpo recorde na tela inicial, molduras da Coleção) e correção do fechamento no Android 16.
 - Notas em `store/novidades_1.3.0.md`.
 
 ## Concluído

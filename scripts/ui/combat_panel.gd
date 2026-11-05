@@ -81,6 +81,7 @@ func _enemy_card(f: Fighter) -> Dictionary:
 	panel.add_theme_stylebox_override("hover", Style.flat_box(Color(0.16, 0.11, 0.14, 0.96), Color(1, 1, 1, 0.2), 14, 2, 8))
 	panel.add_theme_stylebox_override("pressed", Style.flat_box(Color(0.2, 0.14, 0.1, 0.96), Style.C_CANDLE, 14, 2, 8))
 	panel.pressed.connect(func(): focus_requested.emit(f))
+	Style.juice(panel)
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 8)
 	h.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
