@@ -105,6 +105,13 @@ func _migrate(from_version: int) -> void:
 				data.families_done[fam] = true
 		for k in data.towers.cleared:
 			data.towers.wins[k] = maxi(1, int(data.towers.wins.get(k, 0)))
+	# torres novas (1.3: 21 a 40): quem já venceu a última torre antiga ganha a
+	# seguinte liberada, sem precisar vencê-la de novo
+	var top := 0
+	for k in data.towers.cleared:
+		top = maxi(top, int(k))
+	if top > 0 and int(data.towers.unlocked) <= top and top < GameData.towers.size():
+		data.towers.unlocked = top + 1
 
 
 ## Ferramenta de desenvolvimento: perfil de exemplo para capturas de tela.

@@ -76,14 +76,24 @@
 		"prototype_mode": false
 	},
 	"event_weights": {
-		"combat": 45,
-		"choice": 20,
-		"chest": 10,
-		"merchant": 8,
-		"ally": 5,
-		"altar": 5,
+		"combat": 35,
+		"choice": 17,
+		"chest": 9,
+		"merchant": 7,
+		"ally": 4,
+		"altar": 4,
 		"rest": 5,
-		"rare": 2
+		"rare": 2,
+		"elite": 4,
+		"gamble": 3,
+		"shrine": 4,
+		"riddle": 3,
+		"arena": 3
+	},
+	"elite": {
+		"hp_mult": 1.7,
+		"atk_mult": 1.3,
+		"xp_mult": 2.0
 	},
 	"prototype_event_weights": {
 		"combat": 60,

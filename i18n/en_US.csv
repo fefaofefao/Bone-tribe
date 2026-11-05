@@ -1337,3 +1337,151 @@ tip_boss,Boss! The first win always drops a legendary bone.
 tip_form,Form awakened! Forms grant special powers while the pieces stay on your body.
 tip_ossuary,You have bone dust! Spend it in the Ossuary to get stronger in every run.
 tip_towers,New tower unlocked! Use the arrows above Play to pick a tower.
+stats_tower_cols,record floor  ·  wins
+companion_now,Now: %s
+companion_next,Level %d: %s
+companion_next_at,At level %d: %s
+companion_maxed,Max level!
+companion_fx_ossudo,%d%% chance of an extra bone
+companion_fx_lumi,heals %s%% HP every %d turns
+companion_fx_bigorna,%d forge(s) per run
+ossuary_next,Next level: %s
+btn_status,Status
+status_title,Status
+status_stats,Stats
+status_families,Families
+status_bones,Equipped bones
+status_form,Form: %s
+status_pieces,piece(s)
+tower_21_name,Venom Well
+tower_22_name,Hall of Winds
+tower_23_name,Iron Fortress
+tower_24_name,Crimson Castle
+tower_25_name,Grim Slaughterhouse
+tower_26_name,Thorn Garden
+tower_27_name,Arena of Fury
+tower_28_name,Endless Graveyard
+tower_29_name,Thunder Chamber
+tower_30_name,Toxic Marsh
+tower_31_name,Tower of Crows
+tower_32_name,Basalt Bastion
+tower_33_name,Vampire Hall
+tower_34_name,Blade Pit
+tower_35_name,Thorn Wall
+tower_36_name,Wrath Forge
+tower_37_name,Endless Necropolis
+tower_38_name,Storm Bell
+tower_39_name,Serpent's Nest
+tower_40_name,Abyss Summit
+tower_curse_line,Curse: %s
+curse_venom_name,Venom
+curse_venom_desc,Enemies may poison you with every hit.
+curse_bleed_name,Bleeding
+curse_bleed_desc,Enemies may make you bleed with every hit.
+curse_swift_name,Swiftness
+curse_swift_desc,Enemies are faster and dodge more.
+curse_vampire_name,Vampirism
+curse_vampire_desc,Enemies steal life with every hit.
+curse_thorns_name,Thorns
+curse_thorns_desc,Enemies reflect part of the damage they take.
+curse_rage_name,Fury
+curse_rage_desc,Enemies land critical hits more often.
+curse_iron_name,Iron
+curse_iron_desc,Enemies have 20% more HP.
+curse_undying_name,Undying
+curse_undying_desc,Enemies regenerate HP every turn.
+curse_stun_name,Thunder
+curse_stun_desc,Enemy hits may stun you.
+event_type_elite,Elite
+event_type_gamble,Gamble
+event_type_shrine,Shrine
+event_type_riddle,Riddle
+event_type_arena,Arena
+elite_banner,ELITE!
+elite_name_fmt,Elite %s
+event_elite_nest_res_1,"The nest is yours! Among the bones, one shines brighter than the rest."
+event_elite_nest_opt_1,Fight the elite
+event_elite_nest_text,A golden-eyed monster guards a nest full of shiny bones. It is much stronger than the others.
+event_elite_champion_res_1,The champion falls. You learn from every blow you took.
+event_elite_champion_opt_1,Accept the duel
+event_elite_champion_res_2,"The long way is thorny, but you get through."
+event_elite_champion_opt_2,Go around (lose HP)
+event_elite_champion_text,"The champion of this tower slams his shield on the ground: ""Only those who beat me may pass!"""
+event_elite_pair_res_1,A legendary bone rolls to your feet!
+event_elite_pair_opt_1,Fight them both
+event_elite_pair_text,Two golden monsters share a legendary treasure. They notice you at the same time.
+event_bone_dice_opt_1,Bet all your dust
+event_bone_dice_res_small,You win! The gambler laughs and pays up.
+event_bone_dice_res_lose2,Not this time.
+event_bone_dice_opt_2,Small bet (20 dust)
+event_skull_cups_res_win,Found it! The bone is yours.
+event_skull_cups_res_lose,Empty... and the skull bites your finger.
+event_skull_cups_opt_1,Left skull
+event_skull_cups_opt_2,Middle skull
+event_skull_cups_opt_3,Right skull
+event_skull_cups_text,"Three skulls upside down on the table. A bone hides under one of them. ""Choose wisely..."""
+event_bone_wheel_res_jackpot,Jackpot!
+event_bone_wheel_res_upgrade,The wheel stops on the hammer: one of your bones levels up!
+event_bone_wheel_res_heal,The wheel stops on the heart.
+event_bone_wheel_res_xp,The wheel stops on the star.
+event_bone_wheel_res_bad,The wheel stops on the skull... a blade pops out!
+event_bone_wheel_opt_1,Spin the wheel (30 dust)
+event_bone_wheel_text,A wheel made of ribs spins on its own. It costs 30 dust to spin.
+event_shrine_blessings_opt_1,Blessing of Strength (+8% attack)
+event_shrine_blessings_opt_2,Blessing of Life (+12% max HP)
+event_shrine_blessings_opt_3,Blessing of Luck (+6% crit)
+event_shrine_blessings_text,An ancient shrine offers a blessing. You can only choose one.
+event_dark_pact_res_1,Your bones turn black and heavy with power.
+event_dark_pact_opt_1,"+25% attack, -15% max HP"
+event_dark_pact_res_2,The shadow drinks a little of you... and leaves you thirsty.
+event_dark_pact_opt_2,"+8% lifesteal, but lose 30% HP now"
+event_dark_pact_res_3,The voice sighs and fades away.
+event_dark_pact_opt_3,Refuse the pact
+event_dark_pact_text,"A voice comes from the shadows: ""I can give you power... but everything has a price."""
+event_wishing_well_res_1,Your wish comes true! You feel renewed.
+event_wishing_well_res_2,The well swallows the dust and stays silent.
+event_wishing_well_opt_1,Toss 25 dust and make a wish
+event_wishing_well_opt_2,Drink the water
+event_wishing_well_text,"A wishing well glows in the dark. At the bottom, bone coins."
+event_riddle_teeth_res_wrong,"""Wrong!"" The sphinx swipes at you before letting you pass."
+event_riddle_teeth_opt_1,A skull
+event_riddle_teeth_res_right,"""Correct!"" The sphinx steps aside and leaves a gift."
+event_riddle_teeth_opt_2,A comb
+event_riddle_teeth_opt_3,A wolf
+event_riddle_teeth_text,"A bone sphinx blocks the door: ""What has teeth but never bites?"""
+event_riddle_dark_res_right,"""Correct!"" The sphinx steps aside and leaves a gift."
+event_riddle_dark_opt_1,Darkness
+event_riddle_dark_res_wrong,"""Wrong!"" The sphinx swipes at you before letting you pass."
+event_riddle_dark_opt_2,A candle
+event_riddle_dark_opt_3,A giant
+event_riddle_dark_text,"The sphinx asks: ""The more of me there is, the less you see. What am I?"""
+event_riddle_stairs_res_wrong,"""Wrong!"" The sphinx swipes at you before letting you pass."
+event_riddle_stairs_opt_1,A ghost
+event_riddle_stairs_opt_2,A stone
+event_riddle_stairs_res_right,"""Correct!"" The sphinx steps aside and leaves a gift."
+event_riddle_stairs_opt_3,A staircase
+event_riddle_stairs_text,"The sphinx smiles: ""What goes up and down but never moves?"""
+event_riddle_map_res_wrong,"""Wrong!"" The sphinx swipes at you before letting you pass."
+event_riddle_map_opt_1,A dream
+event_riddle_map_res_right,"""Correct!"" The sphinx steps aside and leaves a gift."
+event_riddle_map_opt_2,A map
+event_riddle_map_opt_3,A painting
+event_riddle_map_text,"The sphinx asks: ""I have cities but no houses, forests but no trees, rivers but no fish. What am I?"""
+event_bone_arena_res_1,The crowd cheers and throws bone dust into the arena.
+event_bone_arena_opt_1,One wave
+event_bone_arena_res_2,Standing ovation! The arena master hands you a rare bone.
+event_bone_arena_opt_2,Two waves (bigger prize)
+event_bone_arena_text,"An arena of bones. The skull crowd chants: ""Waves! Waves!"" The longer you last, the bigger the prize."
+event_arena_champion_res_1,You are the new champion! The crowd throws golden bones.
+event_arena_champion_opt_1,Enter the final
+event_arena_champion_text,The arena final: three challengers and then the golden champion.
+event_rat_pit_res_1,The golden cheese is worth a good handful of dust!
+event_rat_pit_opt_1,Jump into the pit
+event_rat_pit_text,"A pit full of skeleton rats. A sign says: ""Whoever empties the pit takes the golden cheese."""
+event_dice_gambler_res_win,Double six! The gambler pays double.
+event_dice_gambler_res_lose,Snake eyes... The gambler keeps half your dust.
+event_dice_gambler_opt_1,Bet all your dust
+event_dice_gambler_res_small,You win! The gambler laughs and pays up.
+event_dice_gambler_res_lose2,Not this time.
+event_dice_gambler_opt_2,Small bet (20 dust)
+event_dice_gambler_text,"A gambling skeleton shakes two bone dice: ""Double or half? Luck loves a risk-taker!"""

@@ -1337,3 +1337,151 @@ tip_boss,¡Jefe! La primera victoria siempre suelta un hueso legendario.
 tip_form,¡Forma despertada! Las formas dan poderes especiales mientras las piezas sigan en tu cuerpo.
 tip_ossuary,¡Tienes polvo de hueso! Gástalo en el Osario para ser más fuerte en todas las partidas.
 tip_towers,¡Torre nueva desbloqueada! Usa las flechas sobre Jugar para elegir la torre.
+stats_tower_cols,piso récord  ·  victorias
+companion_now,Ahora: %s
+companion_next,Nivel %d: %s
+companion_next_at,En el nivel %d: %s
+companion_maxed,¡Nivel máximo!
+companion_fx_ossudo,%d%% de probabilidad de hueso extra
+companion_fx_lumi,cura %s%% de vida cada %d turnos
+companion_fx_bigorna,%d forja(s) por partida
+ossuary_next,Siguiente nivel: %s
+btn_status,Estado
+status_title,Estado
+status_stats,Atributos
+status_families,Familias
+status_bones,Huesos equipados
+status_form,Forma: %s
+status_pieces,pieza(s)
+tower_21_name,Pozo Venenoso
+tower_22_name,Pasillo de los Vientos
+tower_23_name,Fortaleza de Hierro
+tower_24_name,Castillo Carmesí
+tower_25_name,Matadero Sombrío
+tower_26_name,Jardín de Espinas
+tower_27_name,Arena de la Furia
+tower_28_name,Cementerio Eterno
+tower_29_name,Cámara del Trueno
+tower_30_name,Pantano Tóxico
+tower_31_name,Torre de los Cuervos
+tower_32_name,Bastión de Basalto
+tower_33_name,Salón de los Vampiros
+tower_34_name,Foso de las Cuchillas
+tower_35_name,Muralla de Espinas
+tower_36_name,Forja de la Ira
+tower_37_name,Necrópolis sin Fin
+tower_38_name,Campana de la Tormenta
+tower_39_name,Nido de la Serpiente
+tower_40_name,Cumbre del Abismo
+tower_curse_line,Maldición: %s
+curse_venom_name,Veneno
+curse_venom_desc,Los enemigos pueden envenenarte con cada golpe.
+curse_bleed_name,Sangrado
+curse_bleed_desc,Los enemigos pueden hacerte sangrar con cada golpe.
+curse_swift_name,Velocidad
+curse_swift_desc,Los enemigos son más rápidos y esquivan más.
+curse_vampire_name,Vampirismo
+curse_vampire_desc,Los enemigos roban vida con cada golpe.
+curse_thorns_name,Espinas
+curse_thorns_desc,Los enemigos reflejan parte del daño recibido.
+curse_rage_name,Furia
+curse_rage_desc,Los enemigos aciertan golpes críticos más a menudo.
+curse_iron_name,Hierro
+curse_iron_desc,Los enemigos tienen un 20% más de vida.
+curse_undying_name,Inmortales
+curse_undying_desc,Los enemigos regeneran vida cada turno.
+curse_stun_name,Trueno
+curse_stun_desc,Los golpes enemigos pueden aturdirte.
+event_type_elite,Élite
+event_type_gamble,Apuesta
+event_type_shrine,Santuario
+event_type_riddle,Acertijo
+event_type_arena,Arena
+elite_banner,¡ÉLITE!
+elite_name_fmt,%s de Élite
+event_elite_nest_res_1,"¡El nido es tuyo! Entre los huesos, uno brilla más que los demás."
+event_elite_nest_opt_1,Enfrentar a la élite
+event_elite_nest_text,Un monstruo de ojos dorados vigila un nido lleno de huesos brillantes. Es mucho más fuerte que los demás.
+event_elite_champion_res_1,El campeón cae. Aprendes de cada golpe recibido.
+event_elite_champion_opt_1,Aceptar el duelo
+event_elite_champion_res_2,"El camino largo tiene espinas, pero pasas."
+event_elite_champion_opt_2,Rodear (pierdes vida)
+event_elite_champion_text,"El campeón de esta torre golpea el suelo con su escudo: ""¡Solo pasa quien me venza!"""
+event_elite_pair_res_1,¡Un hueso legendario rueda hasta tus pies!
+event_elite_pair_opt_1,Luchar contra los dos
+event_elite_pair_text,Dos monstruos dorados comparten un tesoro legendario. Te notan al mismo tiempo.
+event_bone_dice_opt_1,Apostar todo el polvo
+event_bone_dice_res_small,¡Ganas! El apostador se ríe y paga.
+event_bone_dice_res_lose2,Esta vez no.
+event_bone_dice_opt_2,Apuesta pequeña (20 de polvo)
+event_skull_cups_res_win,¡Lo encontraste! El hueso es tuyo.
+event_skull_cups_res_lose,Vacío... y el cráneo te muerde el dedo.
+event_skull_cups_opt_1,Cráneo de la izquierda
+event_skull_cups_opt_2,Cráneo de la medio
+event_skull_cups_opt_3,Cráneo de la derecha
+event_skull_cups_text,"Tres cráneos boca abajo en la mesa. Bajo uno de ellos hay un hueso. ""Elige bien..."""
+event_bone_wheel_res_jackpot,¡Premio gordo!
+event_bone_wheel_res_upgrade,La ruleta se detiene en el martillo: ¡uno de tus huesos sube de nivel!
+event_bone_wheel_res_heal,La ruleta se detiene en el corazón.
+event_bone_wheel_res_xp,La ruleta se detiene en la estrella.
+event_bone_wheel_res_bad,La ruleta se detiene en la calavera... ¡salta una cuchilla!
+event_bone_wheel_opt_1,Girar la ruleta (30 de polvo)
+event_bone_wheel_text,Una ruleta hecha de costillas gira sola. Cuesta 30 de polvo girarla.
+event_shrine_blessings_opt_1,Bendición de la Fuerza (+8% de ataque)
+event_shrine_blessings_opt_2,Bendición de la Vida (+12% de vida máxima)
+event_shrine_blessings_opt_3,Bendición de la Suerte (+6% de crítico)
+event_shrine_blessings_text,Un santuario antiguo ofrece una bendición. Solo puedes elegir una.
+event_dark_pact_res_1,Tus huesos se vuelven negros y pesados de poder.
+event_dark_pact_opt_1,"+25% de ataque, -15% de vida máxima"
+event_dark_pact_res_2,La sombra bebe un poco de ti... y te deja la sed.
+event_dark_pact_opt_2,"+8% de robo de vida, pero pierdes 30% de vida ahora"
+event_dark_pact_res_3,La voz suspira y desaparece.
+event_dark_pact_opt_3,Rechazar el pacto
+event_dark_pact_text,"Una voz sale de las sombras: ""Puedo darte poder... pero todo tiene un precio."""
+event_wishing_well_res_1,¡El deseo se cumple! Te sientes renovado.
+event_wishing_well_res_2,El pozo se traga el polvo y se queda en silencio.
+event_wishing_well_opt_1,Tirar 25 de polvo y pedir un deseo
+event_wishing_well_opt_2,Beber el agua
+event_wishing_well_text,"Un pozo de los deseos brilla en la oscuridad. En el fondo, monedas de hueso."
+event_riddle_teeth_res_wrong,"""¡Incorrecto!"" La esfinge te da un zarpazo antes de dejarte pasar."
+event_riddle_teeth_opt_1,Una calavera
+event_riddle_teeth_res_right,"""¡Correcto!"" La esfinge abre paso y deja un regalo."
+event_riddle_teeth_opt_2,Un peine
+event_riddle_teeth_opt_3,Un lobo
+event_riddle_teeth_text,"Una esfinge de huesos bloquea la puerta: ""¿Qué tiene dientes pero nunca muerde?"""
+event_riddle_dark_res_right,"""¡Correcto!"" La esfinge abre paso y deja un regalo."
+event_riddle_dark_opt_1,La oscuridad
+event_riddle_dark_res_wrong,"""¡Incorrecto!"" La esfinge te da un zarpazo antes de dejarte pasar."
+event_riddle_dark_opt_2,Una vela
+event_riddle_dark_opt_3,Un gigante
+event_riddle_dark_text,"La esfinge pregunta: ""Cuanto más crezco, menos ves. ¿Qué soy?"""
+event_riddle_stairs_res_wrong,"""¡Incorrecto!"" La esfinge te da un zarpazo antes de dejarte pasar."
+event_riddle_stairs_opt_1,Un fantasma
+event_riddle_stairs_opt_2,Una piedra
+event_riddle_stairs_res_right,"""¡Correcto!"" La esfinge abre paso y deja un regalo."
+event_riddle_stairs_opt_3,Una escalera
+event_riddle_stairs_text,"La esfinge sonríe: ""¿Qué sube y baja pero nunca se mueve?"""
+event_riddle_map_res_wrong,"""¡Incorrecto!"" La esfinge te da un zarpazo antes de dejarte pasar."
+event_riddle_map_opt_1,Un sueño
+event_riddle_map_res_right,"""¡Correcto!"" La esfinge abre paso y deja un regalo."
+event_riddle_map_opt_2,Un mapa
+event_riddle_map_opt_3,Una pintura
+event_riddle_map_text,"La esfinge pregunta: ""Tengo ciudades pero no casas, bosques pero no árboles, ríos pero no peces. ¿Qué soy?"""
+event_bone_arena_res_1,El público aplaude y lanza polvo de hueso a la arena.
+event_bone_arena_opt_1,Una oleada
+event_bone_arena_res_2,¡Ovación de pie! El dueño de la arena te entrega un hueso raro.
+event_bone_arena_opt_2,Dos oleadas (premio mayor)
+event_bone_arena_text,"Una arena de huesos. El público de calaveras grita: ""¡Oleadas! ¡Oleadas!"" Cuanto más aguantes, mayor el premio."
+event_arena_champion_res_1,¡Eres el nuevo campeón! El público lanza huesos dorados.
+event_arena_champion_opt_1,Entrar en la final
+event_arena_champion_text,La final de la arena: tres retadores y luego el campeón dorado.
+event_rat_pit_res_1,¡El queso de oro vale un buen puñado de polvo!
+event_rat_pit_opt_1,Saltar al foso
+event_rat_pit_text,"Un foso lleno de ratas esqueleto. Un cartel dice: ""Quien vacíe el foso se lleva el queso de oro."""
+event_dice_gambler_res_win,¡Doble seis! El apostador paga el doble.
+event_dice_gambler_res_lose,Dos unos... El apostador se queda con la mitad de tu polvo.
+event_dice_gambler_opt_1,Apostar todo el polvo
+event_dice_gambler_res_small,¡Ganas! El apostador se ríe y paga.
+event_dice_gambler_res_lose2,Esta vez no.
+event_dice_gambler_opt_2,Apuesta pequeña (20 de polvo)
+event_dice_gambler_text,"Un esqueleto apostador agita dos dados de hueso: ""¿El doble o la mitad? ¡La suerte ama a quien arriesga!"""

@@ -84,6 +84,11 @@
 ### Versão 1.2.1
 - Correção da falha ao fechar no Android 16 (botão Voltar agora minimiza o jogo). Notas em `store/novidades_1.2.1.md`.
 
+### Versão 1.3.0
+- Status do esqueleto durante a partida; corpo correto depois de reviver com anúncio; Estatísticas numa linha; ganho das melhorias de companheiros e do Ossuário.
+- Torres 21 a 40 com maldições; 16 eventos novos em 5 tipos (Elite, Aposta, Santuário, Enigma, Arena).
+- Notas em `store/novidades_1.3.0.md`.
+
 ## Concluído
 Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
 

@@ -159,18 +159,23 @@ Formas secretas alimentam conversa na comunidade e vídeos do tipo "descobri uma
 
 ## Eventos
 
-O MVP tem 60 eventos, sorteados pelos pesos abaixo, com tom de humor leve e mistério. A IA escreve os textos nos 3 idiomas, e cada evento é revisado por alguém antes de entrar no jogo.
+O jogo tem 76 eventos (60 do MVP e 16 da versão 1.3), sorteados pelos pesos abaixo, com tom de humor leve e mistério. A IA escreve os textos nos 3 idiomas, e cada evento é revisado por alguém antes de entrar no jogo.
 
 | Tipo | Peso | Exemplo |
 | --- | --- | --- |
-| Combate | 45% | Três ratos-esqueleto disputam um queijo petrificado. Eles param e olham para você. |
-| Escolha | 20% | Uma bruxa oferece um osso brilhante em troca de metade da sua vida. Aceitar ou recusar? |
-| Baú ou armadilha | 10% | Um baú range sozinho. Pode ser tesouro, pode ser um mímico com fome. |
-| Mercador | 8% | O Coveiro Ambulante vende ossos usados: "garantia de 7 dias ou seu crânio de volta". |
-| Aliado | 5% | Um esqueleto preso numa jaula pede ajuda. Libertar custa pó de osso, mas ele luta ao seu lado. |
-| Altar de troca | 5% | O altar aceita um osso seu e devolve um de outra família, sem dizer qual. |
+| Combate | 35% | Três ratos-esqueleto disputam um queijo petrificado. Eles param e olham para você. |
+| Escolha | 17% | Uma bruxa oferece um osso brilhante em troca de metade da sua vida. Aceitar ou recusar? |
+| Baú ou armadilha | 9% | Um baú range sozinho. Pode ser tesouro, pode ser um mímico com fome. |
+| Mercador | 7% | O Coveiro Ambulante vende ossos usados: "garantia de 7 dias ou seu crânio de volta". |
+| Aliado | 4% | Um esqueleto preso numa jaula pede ajuda. Libertar custa pó de osso, mas ele luta ao seu lado. |
+| Altar de troca | 4% | O altar aceita um osso seu e devolve um de outra família, sem dizer qual. |
 | Descanso | 5% | Uma fogueira de velas azuis: cure 30% da vida ou melhore um osso em um nível. |
 | Raro | 2% | Seu reflexo no lago tem um osso a mais. Ele estende a mão. |
+| Elite (1.3) | 4% | Um monstro dourado (+70% de vida, +30% de ataque, o dobro de experiência) guarda um ninho de ossos raros. |
+| Aposta (1.3) | 3% | Dados de osso: "dobra ou metade?" do pó da partida; crânios virados; roleta de costelas. |
+| Santuário (1.3) | 4% | Escolha uma bênção (ataque, vida ou crítico) ou aceite um pacto sombrio com preço. |
+| Enigma (1.3) | 3% | Uma esfinge faz uma charada com 3 respostas: acertar dá experiência e osso, errar dá uma patada. |
+| Arena (1.3) | 3% | Ondas de monstros seguidas; quanto mais ondas, maior o prêmio. |
 
 **Eventos que leem o corpo**
 
@@ -382,7 +387,7 @@ Os números abaixo são valores iniciais para o protótipo, não finais. A meta 
 \end{aligned}
 ```
 
-**Torres:** os 30 andares da Cripta formam a Torre 1. O jogo vai até a Torre 20 (desde a versão 1.1; antes, 10), cada uma com 30 andares, monstros mais fortes e mais pó de osso; novas regiões trazem monstros, chefes e ossos próprios (valores em `data/towers.json`). Vencer o chefe do andar 30 da torre N libera a N+1 (cada região de torres tem seus chefes, ver docs/DECISOES.md) e paga diamantes na 1ª vez; torres já liberadas podem ser jogadas de novo a qualquer momento. Valores atuais no código: `data/balance.json`.
+**Torres:** os 30 andares da Cripta formam a Torre 1. O jogo vai até a Torre 40 (desde a versão 1.3; 20 na 1.1, 10 antes), cada uma com 30 andares, monstros mais fortes e mais pó de osso; novas regiões trazem monstros, chefes e ossos próprios (valores em `data/towers.json`). Vencer o chefe do andar 30 da torre N libera a N+1 (cada região de torres tem seus chefes, ver docs/DECISOES.md) e paga diamantes na 1ª vez; torres já liberadas podem ser jogadas de novo a qualquer momento. As Torres 21 a 40 misturam os chefes das 3 regiões e cada uma tem uma **maldição** que vale para todos os inimigos dela (veneno, sangria, velocidade, vampirismo, espinhos, fúria, ferro, imortais ou trovão). Valores atuais no código: `data/balance.json`.
 
 **Chances e recompensas**
 

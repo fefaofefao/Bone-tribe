@@ -55,7 +55,7 @@ func _exec(actions: Array) -> void:
 				if ids.is_empty():
 					for i in int(a.get("count", 1)):
 						ids.append(MonsterFactory.random_for_floor(state.floor_n, state.rng))
-				_combat(ids, false)
+				_combat(ids, false, bool(a.get("elite", false)))
 			"dust":
 				state.add_dust(int(a.get("amount", state.rng.randi_range(int(a.get("min", 10)), int(a.get("max", 20))))))
 			"dust_mult":
@@ -123,11 +123,13 @@ func _exec(actions: Array) -> void:
 				pass
 
 
-func _combat(ids: Array, is_boss: bool) -> void:
+func _combat(ids: Array, is_boss: bool, elite := false) -> void:
 	var enemies := []
 	for id in ids:
 		var f := MonsterFactory.make(String(id), state.floor_n)
 		if f:
+			if elite:
+				MonsterFactory.make_elite(f)
 			enemies.append(f)
 	var hero := state.make_hero()
 	var allies := []
@@ -157,7 +159,7 @@ func _combat(ids: Array, is_boss: bool) -> void:
 		if e.alive():
 			continue
 		state.kills += 1
-		xp += MonsterFactory.xp_for(e.id, state.floor_n)
+		xp += roundi(MonsterFactory.xp_for(e.id, state.floor_n) * (float(GameData.bal("elite/xp_mult", 2.0)) if e.flags.get("elite", false) else 1.0))
 		state.add_dust(int(GameData.bal("dust/per_kill", 3)))
 		var m := GameData.monster(e.id)
 		if String(m.get("kind", "")) == "boss":

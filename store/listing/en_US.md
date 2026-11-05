@@ -24,7 +24,7 @@ Each run takes a few minutes and ends with a one-of-a-kind creature. Bat wings, 
 ⚔️ AUTO-BATTLER, ONE-HANDED PLAY
 • Tap, choose and watch Bonesy fight
 • 30 monsters, 9 bosses and a secret at the bottom of the crypt
-• 20 towers, each harder than the last, with bones found only in the higher towers
+• 40 towers, each harder than the last, with curses and bones found only in the higher towers
 
 🏛️ PROGRESSION
 • Ossuary with permanent upgrades

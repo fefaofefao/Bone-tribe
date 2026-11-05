@@ -19,7 +19,7 @@ static func enemy_atk(floor_n: int) -> float:
 		* float(GameData.tower(tower).get("atk_mult", 1.0))
 
 
-static func make(monster_id: String, floor_n: int) -> Fighter:
+static func make(monster_id: String, floor_n: int, cursed := true) -> Fighter:
 	var m := GameData.monster(monster_id)
 	if m.is_empty():
 		push_error("monstro desconhecido: " + monster_id)
@@ -46,7 +46,40 @@ static func make(monster_id: String, floor_n: int) -> Fighter:
 	f.regen = float(m.get("regen", 0.0))
 	f.effects = (m.get("abilities", []) as Array).duplicate(true)
 	f.flags["floor"] = floor_n
+	if cursed:
+		apply_curse(f)
 	return f
+
+
+## Monstro de elite (eventos "Elite" e final da Arena): mais vida, mais ataque
+## e o dobro de experiência. A recompensa vem nas ações do próprio evento.
+static func make_elite(f: Fighter) -> void:
+	var e: Dictionary = GameData.bal("elite", {})
+	f.max_hp = roundf(f.max_hp * float(e.get("hp_mult", 1.7)))
+	f.hp = f.max_hp
+	f.atk *= float(e.get("atk_mult", 1.3))
+	f.flags["elite"] = true
+
+
+## Maldição da torre em jogo: vale para todos os inimigos dela.
+static func apply_curse(f: Fighter) -> void:
+	var c := GameData.tower_curse(tower)
+	if c.is_empty():
+		return
+	if c.has("hp_mult"):
+		f.max_hp = roundf(f.max_hp * float(c.hp_mult))
+		f.hp = f.max_hp
+	var add: Dictionary = c.get("add", {})
+	f.speed += float(add.get("speed", 0.0))
+	f.dodge = clampf(f.dodge + float(add.get("dodge", 0.0)), 0.0, 0.6)
+	f.lifesteal += float(add.get("lifesteal", 0.0))
+	f.reflect += float(add.get("reflect", 0.0))
+	f.crit = clampf(f.crit + float(add.get("crit", 0.0)), 0.0, 0.9)
+	f.regen += float(add.get("regen", 0.0))
+	f.def += float(add.get("def", 0.0))
+	for e in c.get("effects", []):
+		f.effects.append((e as Dictionary).duplicate(true))
+	f.flags["curse"] = String(GameData.tower(tower).get("curse", ""))
 
 
 ## Monstro aleatório adequado ao andar (comuns e raros; nunca chefes/lacaios).
@@ -118,7 +151,7 @@ static func boss_drop(monster_id: String, wins_before: int, rng: RandomNumberGen
 
 ## Aliado que luta ao lado do Ossinho (não pode ser alvo dos inimigos).
 static func make_ally(ally_id: String, floor_n: int) -> Fighter:
-	var f := make(ally_id, floor_n)
+	var f := make(ally_id, floor_n, false)
 	if f == null:
 		return null
 	f.is_ally = true
@@ -184,7 +217,7 @@ static func altar_bone(old_id: String, rng: RandomNumberGenerator) -> String:
 
 ## O Caçador de Ossos: um esqueleto rival vestindo os ossos que roubou.
 static func make_hunter(floor_n: int) -> Fighter:
-	var f := make("boss_bone_hunter", floor_n)
+	var f := make("boss_bone_hunter", floor_n, false)
 	if f == null:
 		return null
 	var c := Body.compute(Meta.hunter_body())
@@ -207,4 +240,5 @@ static func make_hunter(floor_n: int) -> Fighter:
 			f.effects.append(e)
 		elif t == "multi_hit":
 			f.effects.append({"type": "multi_attack", "hits": int(e.get("hits", 2)), "mult": float(e.get("mult", 0.6))})
+	apply_curse(f)
 	return f

@@ -63,6 +63,10 @@ func _ready() -> void:
 	Profile.mission_done.connect(_on_mission_done)
 	Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower})
 	_run_loop()
+	# ferramenta de desenvolvimento (BT_STATUS=s): abre o Status depois de s segundos
+	if Dev.env("BT_STATUS") != "":
+		await get_tree().create_timer(float(Dev.env("BT_STATUS"))).timeout
+		open_status()
 
 
 # ================================================================ construção
@@ -271,6 +275,13 @@ func _build_ui() -> void:
 	hud.add_child(speed_btn)
 	_update_speed_btn()
 
+	# status do esqueleto: pode ser aberto a qualquer momento (pausa o jogo)
+	status_btn = Style.button(tr("btn_status"), "DarkButton", 56)
+	status_btn.custom_minimum_size = Vector2(120, 56)
+	status_btn.position = Vector2(16, 132)
+	status_btn.pressed.connect(open_status)
+	hud.add_child(status_btn)
+
 	overlay_root = Control.new()
 	overlay_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -285,6 +296,16 @@ func _build_ui() -> void:
 	_banner.modulate.a = 0.0
 	_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(_banner)
+
+
+var status_btn: Button
+
+
+func open_status() -> Control:
+	if overlay_root == null or not is_instance_valid(overlay_root):
+		return null
+	Haptics.light()
+	return StatusPopup.open(overlay_root, state)
 
 
 func _toggle_speed() -> void:
@@ -323,7 +344,7 @@ func _refresh_hud() -> void:
 
 
 func _wait(t: float) -> void:
-	await get_tree().create_timer(t / speed).timeout
+	await get_tree().create_timer(t / speed, false).timeout
 
 
 # ================================================================ loop
@@ -349,6 +370,9 @@ func _run_loop() -> void:
 			await _hunter_floor()
 		else:
 			var ev := _demo_event() if demo else state.take_event()
+			# ferramenta de desenvolvimento (BT_EVENT=id): força esse evento no 1º andar
+			if Dev.env("BT_EVENT") != "" and state.floor_n == 1 and GameData.events.has(Dev.env("BT_EVENT")):
+				ev = GameData.events[Dev.env("BT_EVENT")]
 			if ev.is_empty():
 				continue
 			await _play_event(ev)
@@ -421,7 +445,10 @@ func _intro() -> void:
 	cam.position = HERO_POS + Vector2(60, -160)
 	await cam.reset(0.9).finished
 	_show_banner(tr("floor_forgotten_crypt") if state.tower == 1 else tr("tower_label") % [state.tower, tr(String(GameData.tower(state.tower).get("name", "")))], Style.C_BONE, 1.6)
-	await get_tree().create_timer(0.6).timeout
+	await get_tree().create_timer(0.6, false).timeout
+	var curse := String(GameData.tower(state.tower).get("curse", ""))
+	if curse != "":
+		_top_notice(tr("tower_curse_line") % tr(curse + "_name") + "\n" + tr(curse + "_desc"), Color("d7aaff"), "", 3.0)
 
 
 func _walk() -> void:
@@ -603,7 +630,7 @@ func _do(a: Dictionary) -> void:
 			else:
 				for i in int(a.get("count", 1)):
 					ids.append(MonsterFactory.random_for_floor(state.floor_n, state.rng))
-			await _combat(ids)
+			await _combat(ids, false, bool(a.get("elite", false)))
 		"result":
 			await _show_result(tr(String(a.text)))
 		"dust":
@@ -992,18 +1019,28 @@ func _relayout_enemies() -> void:
 		tw.tween_property(v, "position", pos[i], 0.25)
 
 
-func _combat(ids: Array, is_boss := false) -> void:
+func _combat(ids: Array, is_boss := false, elite := false) -> void:
 	var enemies := []
 	for id in ids:
 		var f := MonsterFactory.make_hunter(state.floor_n) if String(id) == "boss_bone_hunter" else MonsterFactory.make(String(id), state.floor_n)
 		if f != null:
+			if elite:
+				MonsterFactory.make_elite(f)
 			enemies.append(f)
 	if enemies.is_empty():
 		return
 	enemy_views.clear()
 	var pos := _enemy_positions(enemies)
 	for i in enemies.size():
-		_spawn_view(enemies[i], pos[i])
+		var ev_view := _spawn_view(enemies[i], pos[i])
+		if elite:
+			# elite: dourado e um pouco maior
+			ev_view.scale *= 1.12
+			ev_view.sprite.self_modulate = Color(1.35, 1.15, 0.65)
+			fx.spark_burst(ev_view.center_global(), Style.C_CANDLE, 16, 320)
+	if elite:
+		Audio.play("boss_intro")
+		_show_banner(tr("elite_banner"), Style.C_CANDLE, 0.9)
 	var hero := state.make_hero()
 	var comp: Dictionary = _companion_combat()
 	var allies := []
@@ -1129,7 +1166,9 @@ func _set_focus(f: Fighter) -> void:
 
 
 func _who(f: Fighter) -> String:
-	return tr("hero_name") if f.is_hero else tr(f.name_key)
+	if f.is_hero:
+		return tr("hero_name")
+	return tr("elite_name_fmt") % tr(f.name_key) if f.flags.get("elite", false) else tr(f.name_key)
 
 
 func _cp_log(text: String, color: Color = Style.C_TEXT) -> void:
@@ -1266,7 +1305,7 @@ func _animate(evs: Array, killed: Array) -> void:
 						fx.spark_burst(_last_positions.get(f2, Vector2(540, 600)), Style.C_CANDLE, 30, 700)
 						stage.dim(0.5, 0.1)
 						Engine.time_scale = 0.25
-						await get_tree().create_timer(0.9, true, false, true).timeout
+						await get_tree().create_timer(0.9, false, false, true).timeout
 						Engine.time_scale = 1.0
 						stage.dim(0.0, 0.5)
 					if f2 == combat.focus:
@@ -1393,7 +1432,7 @@ func _anim_attack(ev: Dictionary) -> void:
 
 func _hitstop(t: float) -> void:
 	Engine.time_scale = 0.05
-	await get_tree().create_timer(t, true, false, true).timeout
+	await get_tree().create_timer(t, false, false, true).timeout
 	Engine.time_scale = 1.0
 
 
@@ -1452,7 +1491,7 @@ func _combat_rewards(killed: Array, is_boss: bool) -> void:
 	var drops: Array = []
 	for f in killed:
 		state.kills += 1
-		xp += MonsterFactory.xp_for(f.id, state.floor_n)
+		xp += roundi(MonsterFactory.xp_for(f.id, state.floor_n) * (float(GameData.bal("elite/xp_mult", 2.0)) if f.flags.get("elite", false) else 1.0))
 		var m := GameData.monster(f.id)
 		if m.has("dust_drop"):
 			_gain_dust(state.rng.randi_range(int(m.dust_drop[0]), int(m.dust_drop[1])), _last_pos(f))
@@ -1705,7 +1744,7 @@ func _transformation(fid: String) -> void:
 	cam.shake(0.6)
 	var key := "form_discovered" if secret else "form_activated"
 	_show_banner(tr(key) % tr(String(f.name)), col, 1.6)
-	await get_tree().create_timer(1.1, true, false, true).timeout
+	await get_tree().create_timer(1.1, false, false, true).timeout
 	Engine.time_scale = 1.0
 	_clear_panel()
 	_panel_text("[b]%s[/b]\n%s" % [tr(String(f.name)), tr(String(f.desc))])
@@ -2143,10 +2182,15 @@ func _clear_shown_hps() -> void:
 func _on_mission_done(id: String) -> void:
 	if demo:
 		return
+	_top_notice(tr("mission_done_toast") % (tr("mission_" + id) % int(Missions.def(id).get("target", 1))), Style.C_CANDLE, "mission", 2.2)
+
+
+## Aviso no topo da tela que some sozinho (missão concluída, maldição da torre).
+func _top_notice(text: String, color: Color, sfx: String, secs: float) -> void:
 	var p := PanelContainer.new()
-	p.add_theme_stylebox_override("panel", Style.flat_box(Color(Style.C_PANEL, 0.95), Style.C_CANDLE, 16, 2, 10))
+	p.add_theme_stylebox_override("panel", Style.flat_box(Color(Style.C_PANEL, 0.95), color, 16, 2, 10))
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var l := Style.bold(tr("mission_done_toast") % (tr("mission_" + id) % int(Missions.def(id).get("target", 1))), 22, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER)
+	var l := Style.bold(text, 22, color, HORIZONTAL_ALIGNMENT_CENTER)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p.add_child(l)
 	p.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
@@ -2154,11 +2198,12 @@ func _on_mission_done(id: String) -> void:
 	p.offset_right = -60
 	p.offset_top = 270
 	overlay_root.add_child(p)
-	Audio.play("mission")
+	if sfx != "":
+		Audio.play(sfx)
 	p.modulate.a = 0.0
 	var tw := p.create_tween()
 	tw.tween_property(p, "modulate:a", 1.0, 0.2)
-	tw.tween_interval(2.2)
+	tw.tween_interval(secs)
 	tw.tween_property(p, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(p.queue_free)
 

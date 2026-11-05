@@ -1337,3 +1337,151 @@ tip_boss,Chefe! Na primeira vitória ele sempre solta um osso lendário.
 tip_form,Forma despertada! Formas dão poderes especiais enquanto as peças estiverem no corpo.
 tip_ossuary,Você tem pó de osso! Gaste no Ossuário para ficar mais forte em todas as partidas.
 tip_towers,Torre nova liberada! Use as setas acima do Jogar para escolher a torre.
+stats_tower_cols,andar recorde  ·  vitórias
+companion_now,Agora: %s
+companion_next,Nível %d: %s
+companion_next_at,No nível %d: %s
+companion_maxed,Nível máximo!
+companion_fx_ossudo,%d%% de chance de osso extra
+companion_fx_lumi,cura %s%% da vida a cada %d turnos
+companion_fx_bigorna,%d forja(s) por partida
+ossuary_next,Próximo nível: %s
+btn_status,Status
+status_title,Status
+status_stats,Atributos
+status_families,Famílias
+status_bones,Ossos equipados
+status_form,Forma: %s
+status_pieces,peça(s)
+tower_21_name,Poço Venenoso
+tower_22_name,Corredor dos Ventos
+tower_23_name,Fortaleza de Ferro
+tower_24_name,Castelo Carmesim
+tower_25_name,Abatedouro Sombrio
+tower_26_name,Jardim de Espinhos
+tower_27_name,Arena da Fúria
+tower_28_name,Cemitério Eterno
+tower_29_name,Câmara do Trovão
+tower_30_name,Pântano Tóxico
+tower_31_name,Torre dos Corvos
+tower_32_name,Bastião de Basalto
+tower_33_name,Salão dos Vampiros
+tower_34_name,Fosso das Lâminas
+tower_35_name,Muralha de Espinhos
+tower_36_name,Forja da Ira
+tower_37_name,Necrópole Sem Fim
+tower_38_name,Sino da Tempestade
+tower_39_name,Ninho da Serpente
+tower_40_name,Cume do Abismo
+tower_curse_line,Maldição: %s
+curse_venom_name,Veneno
+curse_venom_desc,Os inimigos podem envenenar a cada golpe.
+curse_bleed_name,Sangria
+curse_bleed_desc,Os inimigos podem causar sangramento a cada golpe.
+curse_swift_name,Velocidade
+curse_swift_desc,Os inimigos são mais rápidos e esquivam mais.
+curse_vampire_name,Vampirismo
+curse_vampire_desc,Os inimigos roubam vida a cada golpe.
+curse_thorns_name,Espinhos
+curse_thorns_desc,Os inimigos refletem parte do dano recebido.
+curse_rage_name,Fúria
+curse_rage_desc,Os inimigos acertam golpes críticos com mais frequência.
+curse_iron_name,Ferro
+curse_iron_desc,Os inimigos têm 20% a mais de vida.
+curse_undying_name,Imortais
+curse_undying_desc,Os inimigos regeneram vida a cada turno.
+curse_stun_name,Trovão
+curse_stun_desc,Os golpes inimigos podem atordoar.
+event_type_elite,Elite
+event_type_gamble,Aposta
+event_type_shrine,Santuário
+event_type_riddle,Enigma
+event_type_arena,Arena
+elite_banner,ELITE!
+elite_name_fmt,%s de Elite
+event_elite_nest_res_1,"O ninho é seu! Entre os ossos, um brilha mais que os outros."
+event_elite_nest_opt_1,Enfrentar o elite
+event_elite_nest_text,Um monstro de olhos dourados guarda um ninho cheio de ossos brilhantes. Ele é bem mais forte que os outros.
+event_elite_champion_res_1,O campeão cai. Você aprende com cada golpe que levou.
+event_elite_champion_opt_1,Aceitar o duelo
+event_elite_champion_res_2,"O caminho longo tem espinhos, mas você passa."
+event_elite_champion_opt_2,Dar a volta (perde vida)
+event_elite_champion_text,"O campeão desta torre bate o escudo no chão: ""Só passa quem me vencer!"""
+event_elite_pair_res_1,Um osso lendário rola até os seus pés!
+event_elite_pair_opt_1,Lutar contra os dois
+event_elite_pair_text,Dois monstros dourados dividem um tesouro lendário. Eles notam você ao mesmo tempo.
+event_bone_dice_opt_1,Apostar todo o pó
+event_bone_dice_res_small,Você ganha! O apostador ri e paga.
+event_bone_dice_res_lose2,Não foi dessa vez.
+event_bone_dice_opt_2,Aposta pequena (20 de pó)
+event_skull_cups_res_win,Achou! O osso é seu.
+event_skull_cups_res_lose,Vazio... e o crânio morde seu dedo.
+event_skull_cups_opt_1,Crânio da esquerda
+event_skull_cups_opt_2,Crânio da meio
+event_skull_cups_opt_3,Crânio da direita
+event_skull_cups_text,"Três crânios virados na mesa. Debaixo de um deles há um osso. ""Escolha bem..."""
+event_bone_wheel_res_jackpot,Prêmio grande!
+event_bone_wheel_res_upgrade,A roleta para no martelo: um osso seu sobe de nível!
+event_bone_wheel_res_heal,A roleta para no coração.
+event_bone_wheel_res_xp,A roleta para na estrela.
+event_bone_wheel_res_bad,A roleta para na caveira... uma lâmina salta!
+event_bone_wheel_opt_1,Girar a roleta (30 de pó)
+event_bone_wheel_text,Uma roleta feita de costelas gira sozinha. Custa 30 de pó para girar.
+event_shrine_blessings_opt_1,Bênção da Força (+8% de ataque)
+event_shrine_blessings_opt_2,Bênção da Vida (+12% de vida máxima)
+event_shrine_blessings_opt_3,Bênção da Sorte (+6% de crítico)
+event_shrine_blessings_text,Um santuário antigo oferece uma bênção. Só dá para escolher uma.
+event_dark_pact_res_1,Seus ossos ficam negros e pesados de poder.
+event_dark_pact_opt_1,"+25% de ataque, -15% de vida máxima"
+event_dark_pact_res_2,A sombra bebe um pouco de você... e deixa a sede.
+event_dark_pact_opt_2,"Roubo de vida +8%, mas perde 30% da vida agora"
+event_dark_pact_res_3,A voz suspira e some.
+event_dark_pact_opt_3,Recusar o pacto
+event_dark_pact_text,"Uma voz sai das sombras: ""Posso te dar poder... mas tudo tem um preço."""
+event_wishing_well_res_1,O desejo se realiza! Você se sente renovado.
+event_wishing_well_res_2,O poço engole o pó e fica em silêncio.
+event_wishing_well_opt_1,Jogar 25 de pó e fazer um desejo
+event_wishing_well_opt_2,Beber a água
+event_wishing_well_text,"Um poço de desejos brilha no escuro. No fundo, moedas de osso."
+event_riddle_teeth_res_wrong,"""Errado!"" A esfinge dá uma patada antes de deixar você passar."
+event_riddle_teeth_opt_1,Uma caveira
+event_riddle_teeth_res_right,"""Correto!"" A esfinge abre caminho e deixa um presente."
+event_riddle_teeth_opt_2,Um pente
+event_riddle_teeth_opt_3,Um lobo
+event_riddle_teeth_text,"Uma esfinge de ossos bloqueia a porta: ""O que tem dentes, mas não morde?"""
+event_riddle_dark_res_right,"""Correto!"" A esfinge abre caminho e deixa um presente."
+event_riddle_dark_opt_1,A escuridão
+event_riddle_dark_res_wrong,"""Errado!"" A esfinge dá uma patada antes de deixar você passar."
+event_riddle_dark_opt_2,Uma vela
+event_riddle_dark_opt_3,Um gigante
+event_riddle_dark_text,"A esfinge pergunta: ""Quanto mais eu cresço, menos você vê. O que sou eu?"""
+event_riddle_stairs_res_wrong,"""Errado!"" A esfinge dá uma patada antes de deixar você passar."
+event_riddle_stairs_opt_1,Um fantasma
+event_riddle_stairs_opt_2,Uma pedra
+event_riddle_stairs_res_right,"""Correto!"" A esfinge abre caminho e deixa um presente."
+event_riddle_stairs_opt_3,Uma escada
+event_riddle_stairs_text,"A esfinge sorri: ""O que sobe e desce, mas nunca sai do lugar?"""
+event_riddle_map_res_wrong,"""Errado!"" A esfinge dá uma patada antes de deixar você passar."
+event_riddle_map_opt_1,Um sonho
+event_riddle_map_res_right,"""Correto!"" A esfinge abre caminho e deixa um presente."
+event_riddle_map_opt_2,Um mapa
+event_riddle_map_opt_3,Uma pintura
+event_riddle_map_text,"A esfinge pergunta: ""Tenho cidades, mas não casas; florestas, mas não árvores; rios, mas não peixes. O que sou?"""
+event_bone_arena_res_1,A plateia aplaude e joga pó de osso na arena.
+event_bone_arena_opt_1,Uma onda
+event_bone_arena_res_2,Ovação de pé! O dono da arena entrega um osso raro.
+event_bone_arena_opt_2,Duas ondas (prêmio maior)
+event_bone_arena_text,"Uma arena de ossos. A plateia de caveiras grita: ""Ondas! Ondas!"" Quanto mais você aguentar, maior o prêmio."
+event_arena_champion_res_1,Você é o novo campeão! A plateia joga ossos dourados.
+event_arena_champion_opt_1,Entrar na final
+event_arena_champion_text,"A final da arena: três desafiantes e, depois, o campeão dourado."
+event_rat_pit_res_1,O queijo de ouro vale um bom punhado de pó!
+event_rat_pit_opt_1,Pular no poço
+event_rat_pit_text,"Um poço cheio de ratos esqueletos. Um cartaz diz: ""Quem esvaziar o poço leva o queijo de ouro."""
+event_dice_gambler_res_win,Dois seis! O apostador paga em dobro.
+event_dice_gambler_res_lose,Dois uns... O apostador fica com metade do seu pó.
+event_dice_gambler_opt_1,Apostar todo o pó
+event_dice_gambler_res_small,Você ganha! O apostador ri e paga.
+event_dice_gambler_res_lose2,Não foi dessa vez.
+event_dice_gambler_opt_2,Aposta pequena (20 de pó)
+event_dice_gambler_text,"Um esqueleto apostador sacode dois dados de osso: ""Dobra ou metade? A sorte gosta de quem arrisca!"""

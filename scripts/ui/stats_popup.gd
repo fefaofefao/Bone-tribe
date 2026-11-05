@@ -6,7 +6,7 @@ extends RefCounted
 
 static func open(parent: Node) -> void:
 	var bg := Widgets.dim_overlay(parent, 0.85)
-	var p := Style.panel()
+	var p := Style.panel(Style.C_PANEL)
 	p.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	p.offset_left = 24
 	p.offset_right = -24
@@ -50,11 +50,12 @@ static func _fill(v: VBoxContainer) -> void:
 		if Meta.tower_cleared(n):
 			cleared += 1
 	_row(v, "stats_towers_cleared", "%d / %d" % [cleared, Meta.tower_count()])
+	v.add_child(Style.label(_t("stats_tower_cols"), 17, Style.C_MUTED, HORIZONTAL_ALIGNMENT_RIGHT))
+	var floors := int(GameData.bal("run/floors", 30))
 	for n in range(1, Meta.tower_unlocked() + 1):
 		var wins := int(d.towers.get("wins", {}).get(str(n), 0))
-		var txt := _t("stats_tower_best") % Meta.tower_best(n)
-		if wins > 0:
-			txt += "  ·  " + _t("stats_tower_wins") % wins
+		var txt := "%d/%d" % [Meta.tower_best(n), floors]
+		txt += "  ·  ×%d" % wins
 		_row_text(v, _t("tower_label") % [n, _t(String(GameData.tower(n).get("name", "")))], txt)
 
 	_head(v, "stats_bosses")
@@ -106,11 +107,25 @@ static func _row(v: VBoxContainer, key: String, value: String) -> void:
 
 
 static func _row_text(v: VBoxContainer, label: String, value: String) -> void:
-	var row := Style.hbox(10)
-	var l := Style.label(label, 22, Style.C_TEXT)
+	# uma linha só: rótulo à esquerda (corta com "…" se não couber) e número à direita
+	var box := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(1, 1, 1, 0.045 if v.get_child_count() % 2 == 0 else 0.0)
+	sb.set_corner_radius_all(10)
+	sb.content_margin_left = 12
+	sb.content_margin_right = 12
+	sb.content_margin_top = 6
+	sb.content_margin_bottom = 6
+	box.add_theme_stylebox_override("panel", sb)
+	var row := Style.hbox(12)
+	box.add_child(row)
+	var l := Style.nowrap(Style.label(label, 22, Style.C_TEXT))
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.clip_text = true
+	l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	l.custom_minimum_size.x = 60
 	row.add_child(l)
-	var r := Style.bold(value, 22, Style.C_BONE)
+	var r := Style.nowrap(Style.bold(value, 22, Style.C_BONE))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(r)
-	v.add_child(row)
+	v.add_child(box)

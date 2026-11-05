@@ -361,6 +361,39 @@ static func bigorna_uses(id: String) -> int:
 	return int(c.get("forge_uses", 1)) + int((companion_level(id) - 1) / int(c.get("per_level_uses_every", 5)))
 
 
+## Texto do efeito do companheiro num nível (para a tela de melhoria).
+## Usa as mesmas fórmulas do jogo: o que aparece é o que o jogador recebe.
+static func companion_effect_text(id: String, level: int) -> String:
+	var c: Dictionary = GameData.companions.get(id, {})
+	var tr := func(k: String) -> String: return String(TranslationServer.translate(k))
+	match id:
+		"companion_ossudo":
+			var ch := float(c.get("extra_bone_chance", 0.15)) + float(c.get("per_level", 0.02)) * (level - 1)
+			return tr.call("companion_fx_ossudo") % roundi(ch * 100.0)
+		"companion_lumi":
+			var e: Dictionary = c.get("combat", {})
+			var pct := float(e.get("heal_pct", 0.08)) * (1.0 + float(c.get("per_level", 0.1)) * (level - 1))
+			return tr.call("companion_fx_lumi") % [String.num(pct * 100.0, 1), int(e.get("heal_every", 3))]
+		"companion_bigorna":
+			return tr.call("companion_fx_bigorna") % companion_uses_at(id, level)
+	return ""
+
+
+static func companion_uses_at(id: String, level: int) -> int:
+	var c: Dictionary = GameData.companions.get(id, {})
+	return int(c.get("forge_uses", 1)) + int((level - 1) / int(c.get("per_level_uses_every", 5)))
+
+
+## Próximo nível em que o efeito muda de verdade (a Bigorna ganha um uso a cada 5).
+static func companion_next_change(id: String) -> int:
+	var lv := companion_level(id)
+	var now := companion_effect_text(id, lv)
+	for l in range(lv + 1, companion_max(id) + 1):
+		if companion_effect_text(id, l) != now:
+			return l
+	return -1
+
+
 # --------------------------------------------------------- Caçador de Ossos
 
 const RANK := {"basic": 0, "common": 1, "rare": 2, "legendary": 3}

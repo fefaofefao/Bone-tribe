@@ -314,7 +314,7 @@ func _breath_damage(eq: Dictionary) -> float:
 
 
 func test_09_events() -> void:
-	check(GameData.events.size() == 60, "60 eventos (%d)" % GameData.events.size())
+	check(GameData.events.size() == 76, "76 eventos (%d)" % GameData.events.size())
 	var body := 0
 	var types := {}
 	for id in GameData.events:
@@ -332,8 +332,12 @@ func test_09_events() -> void:
 		if ev.has("prop"):
 			check(ResourceLoader.exists("res://art/props/%s.png" % ev.prop), "arte do cenário %s" % ev.prop)
 	check(body == 15, "15 eventos ligados ao corpo (%d)" % body)
-	for t in ["combat", "choice", "chest", "merchant", "ally", "altar", "rest", "rare"]:
+	for t in ["combat", "choice", "chest", "merchant", "ally", "altar", "rest", "rare", "elite", "gamble", "shrine", "riddle", "arena"]:
 		check(int(types.get(t, 0)) > 0, "há eventos do tipo " + t)
+	for t in GameData.bal("event_weights", {}):
+		check(int(types.get(t, 0)) > 0, "tipo sorteável %s tem eventos" % t)
+		check(ResourceLoader.exists("res://art/ui/ui_event_%s.png" % t), "ícone do tipo " + t)
+		check(tr_all("event_type_" + t), "nome do tipo " + t)
 	# toda partida automática termina sem travar
 	for seed in 12:
 		var ar := AutoRunner.new({"seed": 500 + seed})
@@ -601,7 +605,7 @@ func test_14_firebase_provider() -> void:
 
 
 func test_15_towers() -> void:
-	check(GameData.towers.size() == 20, "20 torres")
+	check(GameData.towers.size() == 40, "40 torres")
 	var prev := {}
 	for i in GameData.towers.size():
 		var t: Dictionary = GameData.towers[i]
@@ -976,3 +980,91 @@ func test_19_android_exit() -> void:
 	for f in ["router.gd", "profile.gd", "backend_service.gd", "notify_service.gd", "audio.gd"]:
 		var code := FileAccess.get_file_as_string("res://scripts/autoload/" + f)
 		check(not code.contains("get_tree().quit()") or f == "router.gd", "%s não fecha o jogo sozinho" % f)
+
+
+func test_20_update_1_3() -> void:
+	# --- maldições das torres 21+
+	var old_tower := MonsterFactory.tower
+	MonsterFactory.tower = 1
+	var plain := MonsterFactory.make("monster_crypt_wolf", 5)
+	check(not plain.flags.has("curse"), "torre 1 não tem maldição")
+	for n in range(1, GameData.towers.size() + 1):
+		var t: Dictionary = GameData.tower(n)
+		check((n > 20) == t.has("curse"), "só as torres 21+ têm maldição (%d)" % n)
+		if t.has("curse"):
+			check(GameData.tower_curses.has(String(t.curse)), "maldição %s existe" % t.curse)
+			check(tr_all(String(t.curse) + "_name") and tr_all(String(t.curse) + "_desc"), "maldição %s traduzida" % t.curse)
+		for f in ["10", "20", "30"]:
+			check(GameData.monsters.has(String(t.bosses[f])), "chefe do andar %s da torre %d existe" % [f, n])
+	MonsterFactory.tower = 21
+	var venom := MonsterFactory.make("monster_crypt_wolf", 5)
+	check(String(venom.flags.get("curse", "")) == "curse_venom", "torre 21: inimigos amaldiçoados")
+	check(venom.effects.any(func(e): return String(e.get("type", "")) == "on_hit_status" and String(e.get("status", "")) == "poison"), "maldição do veneno dá veneno ao golpe")
+	var ally := MonsterFactory.make_ally("ally_caged_skeleton", 5)
+	check(ally == null or not ally.flags.has("curse"), "aliados não recebem a maldição")
+	MonsterFactory.tower = 23
+	var iron := MonsterFactory.make("monster_crypt_wolf", 5)
+	MonsterFactory.tower = 22
+	var base22 := MonsterFactory.make("monster_crypt_wolf", 5, false)
+	check(iron.max_hp > base22.max_hp, "maldição do ferro: mais vida")
+	# --- elite
+	MonsterFactory.tower = 1
+	var e := MonsterFactory.make("monster_crypt_wolf", 5)
+	var hp0 := e.max_hp
+	MonsterFactory.make_elite(e)
+	check(e.max_hp > hp0 * 1.5 and e.flags.get("elite", false), "elite tem bem mais vida")
+	MonsterFactory.tower = old_tower
+	# eventos novos: partidas automáticas passam por eles sem travar
+	var seen := {}
+	for seed in 30:
+		var ar := AutoRunner.new({"seed": 900 + seed})
+		var st := ar.play()
+		for id in st.seen_events:
+			seen[String(GameData.events[id].type)] = true
+	for t in ["elite", "gamble", "shrine", "riddle", "arena"]:
+		check(seen.has(t), "partidas automáticas encontram eventos do tipo " + t)
+	# --- save: quem venceu a última torre antiga ganha a próxima liberada
+	var backup: Dictionary = Profile.data.duplicate(true)
+	var saved: Dictionary = Profile.data.duplicate(true)
+	saved.towers = {"unlocked": 20, "selected": 20, "cleared": {}, "best": {}, "wins": {}}
+	for n in range(1, 21):
+		saved.towers.cleared[str(n)] = true
+	Profile.load_from(saved)
+	check(Meta.tower_unlocked() == 21, "quem venceu a Torre 20 abre a Torre 21 (%d)" % Meta.tower_unlocked())
+	saved.towers = {"unlocked": 4, "selected": 4, "cleared": {"1": true, "2": true, "3": true}, "best": {}, "wins": {}}
+	Profile.load_from(saved)
+	check(Meta.tower_unlocked() == 4, "save comum não muda de torre (%d)" % Meta.tower_unlocked())
+	Profile.data = backup
+	# --- companheiros: o ganho do próximo nível aparece
+	for id in ["companion_ossudo", "companion_lumi", "companion_bigorna"]:
+		check(Meta.companion_effect_text(id, 1) != "", "efeito do companheiro %s" % id)
+		check(Meta.companion_effect_text(id, 1) != Meta.companion_effect_text(id, 10), "companheiro %s melhora com o nível" % id)
+	# --- remontar depois de reviver
+	var os: Node2D = load("res://scenes/Ossinho.tscn").instantiate()
+	add_child(os)
+	await get_tree().process_frame
+	var spine: Node2D = os.base_nodes["ossinho_spine"]
+	var rest := spine.rotation_degrees
+	var skull: Node2D = os.slot_nodes["slot_skull"]
+	var skull_before := skull.position
+	os.collapse_anim()
+	await get_tree().create_timer(0.3).timeout
+	os.reassemble()
+	await get_tree().create_timer(0.5).timeout
+	check(is_equal_approx(spine.rotation_degrees, rest), "reviver põe a coluna de pé de novo (%.1f)" % spine.rotation_degrees)
+	check(skull.position.distance_to(skull_before) < 12.0, "crânio volta para o lugar depois de reviver (%.1f)" % skull.position.distance_to(skull_before))
+	os.queue_free()
+	# --- telas: Status da partida e Estatísticas numa linha
+	var holder := Control.new()
+	add_child(holder)
+	var rs := RunState.new({"seed": 3})
+	var v := VBoxContainer.new()
+	holder.add_child(v)
+	StatusPopup.fill(v, rs)
+	check(v.get_child_count() > 8, "tela de Status mostra atributos e ossos")
+	var v2 := VBoxContainer.new()
+	holder.add_child(v2)
+	StatsPopup._row_text(v2, "Monstros derrotados", "12.345 *")
+	var labels := v2.find_children("*", "Label", true, false)
+	check(labels.size() == 2 and labels.all(func(l): return (l as Label).autowrap_mode == TextServer.AUTOWRAP_OFF), "estatística numa linha só")
+	holder.queue_free()

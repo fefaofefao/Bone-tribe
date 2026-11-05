@@ -27,6 +27,8 @@ func _upgrades() -> void:
 		tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tv.add_child(Style.bold(tr("ossuary_" + stat) + "  " + tr("hud_level") % Meta.ossuary_level(stat), 26, Style.C_BONE))
 		tv.add_child(Style.label(tr("ossuary_" + stat + "_desc") % _stat_value(stat), 20, Style.C_MUTED))
+		if Meta.ossuary_level(stat) < Meta.ossuary_max():
+			tv.add_child(Style.bold(tr("ossuary_next") % _stat_value(stat, 1), 19, Color("8fe08a")))
 		h.add_child(tv)
 		if Meta.ossuary_level(stat) >= Meta.ossuary_max():
 			h.add_child(Style.nowrap(Style.bold(tr("max_level"), 22, Style.C_CANDLE)))
@@ -44,8 +46,12 @@ func _upgrades() -> void:
 		box.add_child(c)
 
 
-func _stat_value(stat: String) -> String:
+func _stat_value(stat: String, extra_levels: int = 0) -> String:
 	var st := Meta.ossuary_stats()
+	if extra_levels != 0:
+		var per: Dictionary = GameData.bal("ossuary/per_level", {})
+		var key: String = {"hp": "hp_pct", "atk": "atk_pct", "def": "def", "drop": "drop_bonus"}[stat]
+		st[key] = float(st[key]) + extra_levels * float(per.get(stat, 0.05 if stat != "def" else 1))
 	match stat:
 		"hp":
 			return "+%d%%" % int(roundf(float(st.hp_pct) * 100))
@@ -80,6 +86,8 @@ func _companions() -> void:
 		tv.add_child(Style.bold(title, 26, Style.C_BONE))
 		tv.add_child(Style.label(tr(String(c_data.role)), 19, Style.C_CANDLE))
 		tv.add_child(Style.label(tr(String(c_data.desc)), 20, Style.C_MUTED))
+		if unlocked:
+			tv.add_child(_companion_gain(id))
 		if not unlocked:
 			tv.add_child(Style.label(tr("companion_lock_" + id), 19, Color("e07a8a")))
 		else:
@@ -109,6 +117,22 @@ func _companions() -> void:
 			tv.add_child(row)
 		h.add_child(tv)
 		box.add_child(c)
+
+
+## "Agora: 19% de chance…  →  Nível 4: 21%…": o que a melhoria dá.
+func _companion_gain(id: String) -> Control:
+	var v := Style.vbox(2)
+	var lv := Meta.companion_level(id)
+	v.add_child(Style.label(tr("companion_now") % Meta.companion_effect_text(id, lv), 19, Style.C_TEXT))
+	if lv >= Meta.companion_max(id):
+		v.add_child(Style.bold(tr("companion_maxed"), 19, Style.C_CANDLE))
+		return v
+	var nxt := Meta.companion_next_change(id)
+	if nxt == lv + 1:
+		v.add_child(Style.bold(tr("companion_next") % [nxt, Meta.companion_effect_text(id, nxt)], 19, Color("8fe08a")))
+	elif nxt > 0:
+		v.add_child(Style.bold(tr("companion_next_at") % [nxt, Meta.companion_effect_text(id, nxt)], 19, Color("8fe08a")))
+	return v
 
 
 # ----------------------------------------------------------------- relíquias

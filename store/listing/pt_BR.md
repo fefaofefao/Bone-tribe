@@ -24,7 +24,7 @@ Cada partida dura poucos minutos e termina com uma criatura única. Asas de morc
 ⚔️ COMBATE AUTOMÁTICO, JOGÁVEL COM UMA MÃO
 • Toque, escolha e assista ao Ossinho lutar
 • 30 monstros, 9 chefes e um segredo no fundo da cripta
-• 20 torres, cada uma mais difícil, com ossos exclusivos das torres mais altas
+• 40 torres, cada uma mais difícil, com maldições e ossos exclusivos das torres mais altas
 
 🏛️ PROGRESSÃO
 • Ossuário com melhorias permanentes

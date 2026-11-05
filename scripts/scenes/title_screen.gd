@@ -379,6 +379,9 @@ func _refresh_tower() -> void:
 	if _play_hint:
 		var best := int(Profile.data.get("best_index", 0))
 		_play_hint.text = tr("tower_difficulty_hint") if n > 1 and not locked else (tr("home_best_floor") % best if best > 0 else tr("home_first_run"))
+		var curse := String(GameData.tower(n).get("curse", ""))
+		if curse != "":
+			_play_hint.text = tr("tower_curse_line") % tr(curse + "_name") + " · " + tr(curse + "_desc")
 
 
 ## Cartão do equipamento (companheiro / osso inicial): toca e abre a aba certa.

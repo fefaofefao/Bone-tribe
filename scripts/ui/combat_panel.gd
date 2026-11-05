@@ -97,7 +97,9 @@ func _enemy_card(f: Fighter) -> Dictionary:
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(v)
-	var name_l := Style.nowrap(Style.bold(tr(f.name_key), 20, Style.C_DANGER.lightened(0.3) if f.is_boss else Style.C_TEXT))
+	var elite: bool = f.flags.get("elite", false)
+	var nm := tr("elite_name_fmt") % tr(f.name_key) if elite else tr(f.name_key)
+	var name_l := Style.nowrap(Style.bold(nm, 20, Style.C_DANGER.lightened(0.3) if f.is_boss else (Style.C_CANDLE if elite else Style.C_TEXT)))
 	name_l.clip_text = true
 	name_l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name_l.mouse_filter = Control.MOUSE_FILTER_IGNORE

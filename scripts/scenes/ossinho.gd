@@ -30,6 +30,8 @@ var _shadow: Sprite2D
 var _root: Bone2D
 var _busy_parts: Dictionary = {}
 var _form_scale := 1.0
+var _base_rest_rot: Dictionary = {}   # base part id -> rotação de repouso
+var _collapse_tweens: Array[Tween] = []
 
 
 func _ready() -> void:
@@ -43,6 +45,7 @@ func _ready() -> void:
 	for p in GameData.skeleton.get("base_parts", []):
 		var n: Bone2D = _root.get_node(String(p.id))
 		base_nodes[p.id] = n
+		_base_rest_rot[p.id] = n.rotation_degrees
 		_config_sprite(n.get_node("Sprite"), p, "res://art/bones/%s.png" % p.id, tex_scale)
 	for s in GameData.slots():
 		slot_defs[s.id] = s
@@ -407,12 +410,14 @@ func victory_anim() -> void:
 ## Desmonta o Ossinho: cada peça cai e quica (morte).
 func collapse_anim() -> void:
 	idle_enabled = false
+	_kill_collapse()
 	var i := 0
 	for s in slot_nodes:
 		var n: Node2D = slot_nodes[s]
 		if not n.get_node("Sprite").visible:
 			continue
 		var tw := create_tween().set_parallel(true)
+		_collapse_tweens.append(tw)
 		var fall := -n.position.y - 10.0
 		tw.tween_property(n, "position:y", n.position.y + fall, 0.45 + i * 0.04).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 		tw.tween_property(n, "position:x", n.position.x + randf_range(-60, 60), 0.5)
@@ -421,15 +426,38 @@ func collapse_anim() -> void:
 	for p in base_nodes:
 		var n2: Node2D = base_nodes[p]
 		var tw2 := create_tween().set_parallel(true)
+		_collapse_tweens.append(tw2)
 		tw2.tween_property(n2, "position:y", -10.0, 0.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 		tw2.tween_property(n2, "rotation_degrees", 90.0 if p == "ossinho_spine" else 0.0, 0.5)
 
 
 ## Remonta depois de reviver.
+## Antes só religava a animação parada: a coluna continuava deitada (90°) e,
+## se o jogador voltasse do anúncio antes da queda terminar, as peças seguiam
+## caindo. Agora para a queda e põe cada peça de volta no lugar.
 func reassemble() -> void:
+	_kill_collapse()
+	for p in base_nodes:
+		var def := _base_def(p)
+		base_nodes[p].position = Vector2(def.attach[0], def.attach[1])
+		base_nodes[p].rotation_degrees = float(_base_rest_rot.get(p, 0.0))
+	for s in slot_nodes:
+		var d: Dictionary = slot_defs[s]
+		slot_nodes[s].position = Vector2(d.attach[0], d.attach[1])
+		slot_nodes[s].rotation_degrees = float(d.get("rest_rot", 0))
+	_busy_parts.clear()
+	$Body.position = Vector2.ZERO
+	$Body.rotation_degrees = 0.0
 	idle_enabled = true
 	modulate = Color.WHITE
 	flash(Color(1, 0.9, 0.6), 1.0, 0.6)
+
+
+func _kill_collapse() -> void:
+	for tw in _collapse_tweens:
+		if tw and tw.is_valid():
+			tw.kill()
+	_collapse_tweens.clear()
 
 
 ## Flutua (transformação em câmera lenta).

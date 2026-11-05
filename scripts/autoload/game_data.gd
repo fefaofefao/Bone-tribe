@@ -24,6 +24,7 @@ var app: Dictionary = {}
 var admob: Dictionary = {}
 var accessories: Dictionary = {}
 var towers: Array = []
+var tower_curses: Dictionary = {}
 var missions: Dictionary = {}
 
 var bone_order: Array = []
@@ -62,7 +63,9 @@ func reload() -> void:
 	app = _read("app.json", {})
 	admob = _read("admob.json", {})
 	accessories = _index(_read("accessories.json", []), [])
-	towers = _read("towers.json", {}).get("towers", [])
+	var td: Dictionary = _read("towers.json", {})
+	towers = td.get("towers", [])
+	tower_curses = td.get("curses", {})
 	missions = _read("missions.json", {})
 	for e in load_errors:
 		push_error(e)
@@ -176,6 +179,11 @@ func tower(n: int) -> Dictionary:
 	if towers.is_empty():
 		return {}
 	return towers[clampi(n, 1, towers.size()) - 1]
+
+
+## Maldição da torre (torres 21+): {} quando não tem.
+func tower_curse(n: int) -> Dictionary:
+	return tower_curses.get(String(tower(n).get("curse", "")), {})
 
 
 ## Primeira torre em que o monstro aparece (chefes: a 1ª torre que os tem).
