@@ -166,7 +166,16 @@ jobs:
       - name: Exportar AAB
         run: |
           mkdir -p build
+          # 1ª exportação instala o modelo de build Android em android/build
           godot --headless --path . --install-android-build-template --export-release "Android" build/BoneTribe.aab
+          # troca a Activity do modelo pela nossa (fechar o app sem a falha de
+          # "mutex destruído" no Android 16) e exporta de novo com ela
+          GA=android/build/src/main/java/com/godot/game/GodotApp.java
+          test -f "$GA"
+          cp android_template/GodotApp.java "$GA"
+          grep -q "Process.killProcess" "$GA"
+          rm -f build/BoneTribe.aab
+          godot --headless --path . --export-release "Android" build/BoneTribe.aab
           ls -la build
           test -s build/BoneTribe.aab
 
@@ -191,6 +200,9 @@ jobs:
           grep -q "com.bonetribe.notify.BoneTribeNotifyReceiver" /tmp/manifest.txt
           grep -q "android.permission.POST_NOTIFICATIONS" /tmp/manifest.txt
           echo "Notificações locais registradas no manifesto."
+          # Activity própria (fecha sem o desmonte nativo do Godot)
+          unzip -p build/BoneTribe.apk 'classes*.dex' | grep -a -q "Encerrando o processo sem o desmonte nativo"
+          echo "GodotApp com o encerramento seguro."
 
       # Sem o secret, compila uma vez com uma configuração de exemplo só para
       # garantir que a integração do Firebase continua compilando.

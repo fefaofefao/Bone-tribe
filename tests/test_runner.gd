@@ -983,6 +983,11 @@ func test_19_android_exit() -> void:
 
 
 func test_20_update_1_3() -> void:
+	# --- fechar o app no Android 16: Activity própria encerra o processo direto
+	var ga := FileAccess.get_file_as_string("res://android_template/GodotApp.java")
+	check(ga.contains("public void onDestroy()") and ga.contains("Process.killProcess(Process.myPid())"), "GodotApp encerra o processo antes do desmonte do Godot")
+	var wf := FileAccess.get_file_as_string("res://.github/workflows/android-aab.yml")
+	check(wf.contains("cp android_template/GodotApp.java"), "workflow usa a GodotApp do projeto")
 	# --- maldições das torres 21+
 	var old_tower := MonsterFactory.tower
 	MonsterFactory.tower = 1
