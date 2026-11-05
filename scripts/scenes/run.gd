@@ -38,17 +38,25 @@ var level_label: Label
 var floor_label: Label
 var floor_dots: HBoxContainer
 var speed_btn: Button
+var resumed := false   # partida carregada de "Continuar"
 
 
 func _ready() -> void:
 	var p := Router.params
 	demo = bool(p.get("demo", false))
 	autoplay = demo or Dev.env("BT_AUTO") == "1"
-	var start_bone := "" if demo else Meta.take_start_bone()
-	var tower := 1 if demo else int(p.get("tower", Meta.tower_selected()))
-	state = RunState.new({"demo": demo, "tower": tower, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
-	if start_bone != "":
-		Profile.discover_bone(start_bone)
+	resumed = false
+	if not demo and bool(p.get("resume", false)):
+		var saved := RunSave.load_state()
+		if saved != null:
+			state = saved
+			resumed = true
+	if not resumed:
+		var start_bone := "" if demo else Meta.take_start_bone()
+		var tower := 1 if demo else int(p.get("tower", Meta.tower_selected()))
+		state = RunState.new({"demo": demo, "tower": tower, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
+		if start_bone != "":
+			Profile.discover_bone(start_bone)
 	# ferramenta de desenvolvimento (BT_FLOOR=n): começa a partida no andar n
 	if Dev.env("BT_FLOOR") != "":
 		state.floor_n = maxi(0, int(Dev.env("BT_FLOOR")) - 1)
@@ -61,7 +69,10 @@ func _ready() -> void:
 	_refresh_hud()
 	Audio.music("crypt")
 	Profile.mission_done.connect(_on_mission_done)
-	Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower})
+	if resumed:
+		Backend.log_event("run_resume", {"tower": state.tower, "floor": state.floor_n})
+	else:
+		Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower})
 	_run_loop()
 	# ferramenta de desenvolvimento (BT_STATUS=s): abre o Status depois de s segundos
 	if Dev.env("BT_STATUS") != "":
@@ -352,6 +363,9 @@ func _wait(t: float) -> void:
 func _run_loop() -> void:
 	await _intro()
 	while not state.dead and state.floor_n < state.total_floors:
+		# grava a partida antes de cada andar ("Continuar" se o app fechar)
+		if not demo:
+			RunSave.save(state)
 		state.floor_n += 1
 		if state.pending_skip > 0:
 			# voo sobre o abismo: pula andares, mas nunca um chefe
@@ -1064,6 +1078,8 @@ func _combat(ids: Array, is_boss := false, elite := false) -> void:
 				combat_panel.refresh()
 			_refresh_hud_from(hero)
 		if combat.result == "lose":
+			# morreu: sem "Continuar" (fechar o app na tela de morte não salva a partida)
+			RunSave.clear()
 			state.absorb_hero(hero)
 			var revived: bool = await _death_dialog()
 			if revived:
@@ -2055,6 +2071,8 @@ func _hunter_floor() -> void:
 # ================================================================ fim
 
 func _end_run() -> void:
+	# apaga antes de pagar: o pó da partida nunca é pago duas vezes
+	RunSave.clear()
 	var rewards := state.end_rewards()
 	if not demo:
 		Profile.add_dust(int(rewards.total), "run_end")

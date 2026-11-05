@@ -59,6 +59,93 @@ func _init(opts: Dictionary = {}) -> void:
 	recalc(true)
 
 
+# ------------------------------------------------- continuar a partida
+
+const SAVE_FIELDS := ["floor_n", "total_floors", "prototype", "hp", "max_hp", "equipped", "dust", "xp", "level",
+	"picks", "bonus_stats", "allies", "companion_id", "seen_events", "bosses_beaten", "kills", "bones_found",
+	"forms_announced", "flags", "pending_skip", "hunter_met", "bigorna_left", "tower"]
+
+
+## Foto da partida para "Continuar" (só tipos que o JSON guarda sem perder nada).
+func to_dict() -> Dictionary:
+	var d := {}
+	for k in SAVE_FIELDS:
+		var v: Variant = get(k)
+		d[k] = v.duplicate(true) if (v is Dictionary or v is Array) else v
+	# o JSON transforma chaves em texto: o baú garantido por bloco vira lista
+	d["segment_chest"] = segment_chest.keys().map(func(x): return int(x))
+	d["next_event"] = String(next_event.get("id", ""))
+	d["rng_seed"] = str(rng.seed)
+	d["rng_state"] = str(rng.state)
+	return d
+
+
+## Monta a partida a partir da foto. Devolve null se a foto não serve mais
+## (osso, torre ou companheiro que não existe nesta versão).
+static func from_dict(d: Dictionary) -> RunState:
+	var tower_n := int(d.get("tower", 1))
+	if tower_n < 1 or tower_n > GameData.towers.size():
+		return null
+	var eq: Dictionary = d.get("equipped", {})
+	if eq.is_empty():
+		return null
+	for slot in eq:
+		if not (eq[slot] is Dictionary) or GameData.bone(String(eq[slot].get("id", ""))).is_empty():
+			return null
+	for id in d.get("picks", []):
+		if not GameData.levelups.has(String(id)):
+			return null
+	var st := RunState.new({"seed": 1, "tower": tower_n, "companion": String(d.get("companion_id", ""))})
+	for k in SAVE_FIELDS:
+		if not d.has(k):
+			continue
+		var cur: Variant = st.get(k)
+		var v: Variant = d[k]
+		if cur is int:
+			st.set(k, int(v))
+		elif cur is float:
+			st.set(k, float(v))
+		elif cur is bool:
+			st.set(k, bool(v))
+		elif cur is String:
+			st.set(k, String(v))
+		elif cur is Array and v is Array:
+			st.set(k, (v as Array).duplicate(true))
+		elif cur is Dictionary and v is Dictionary:
+			st.set(k, (v as Dictionary).duplicate(true))
+	# o JSON devolve todo número como decimal: inteiros voltam a ser inteiros
+	st.flags = _ints_back(st.flags)
+	st.equipped = _ints_back(st.equipped)
+	st.segment_chest = {}
+	for seg in d.get("segment_chest", []):
+		st.segment_chest[int(seg)] = true
+	var ne := String(d.get("next_event", ""))
+	st.next_event = GameData.events.get(ne, {}) if ne != "" else {}
+	st.rng.seed = int(String(d.get("rng_seed", "1")))
+	st.rng.state = int(String(d.get("rng_state", "0")))
+	st.dead = false
+	st.victory = false
+	MonsterFactory.tower = st.tower
+	st._cache = {}
+	var hp_saved := st.hp
+	st.recalc()
+	st.hp = clampf(hp_saved, 1.0, st.max_hp)
+	return st
+
+
+static func _ints_back(v: Variant) -> Variant:
+	if v is Dictionary:
+		var out := {}
+		for k in v:
+			out[k] = _ints_back(v[k])
+		return out
+	if v is Array:
+		return (v as Array).map(func(x): return _ints_back(x))
+	if v is float and is_equal_approx(v, roundf(v)) and absf(v) < 1e15:
+		return int(v)
+	return v
+
+
 # ------------------------------------------------------------- atributos
 
 func extras() -> Array:

@@ -236,10 +236,22 @@ func _build_home() -> void:
 	_home.add_child(bottom)
 	_chips = Style.vbox(10)
 	bottom.add_child(_chips)
+	# partida em andamento (o app foi fechado no meio): continuar de onde parou
+	var resume := RunSave.info()
+	if not resume.is_empty():
+		var cont := Style.button(tr("btn_continue_run") % [int(resume.tower), int(resume.floor)], "CandleButton", 96)
+		cont.add_theme_font_size_override("font_size", 30)
+		cont.pressed.connect(func(): Router.go("run", {"resume": true}))
+		bottom.add_child(cont)
+		Widgets.pop_in(cont)
 	bottom.add_child(_tower_picker())
-	var play := Style.button(tr("btn_play"), "CandleButton", 112)
-	play.add_theme_font_size_override("font_size", 44)
-	play.pressed.connect(func(): Router.go("run", {"tower": _tower_view}))
+	var play := Style.button(tr("btn_play") if resume.is_empty() else tr("btn_new_run"), "CandleButton" if resume.is_empty() else "DarkButton", 112 if resume.is_empty() else 84)
+	play.add_theme_font_size_override("font_size", 44 if resume.is_empty() else 30)
+	play.pressed.connect(func():
+		if RunSave.has_save():
+			_confirm_new_run()
+		else:
+			Router.go("run", {"tower": _tower_view}))
 	bottom.add_child(play)
 	_play_btn = play
 	_play_hint = Style.label("", 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
@@ -382,6 +394,36 @@ func _refresh_tower() -> void:
 		var curse := String(GameData.tower(n).get("curse", ""))
 		if curse != "":
 			_play_hint.text = tr("tower_curse_line") % tr(curse + "_name") + " · " + tr(curse + "_desc")
+
+
+## Começar outra partida com uma em andamento: confirma antes de descartar.
+func _confirm_new_run() -> void:
+	var bg := Widgets.dim_overlay(_ui, 0.8)
+	var p := Style.panel()
+	p.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	p.custom_minimum_size = Vector2(600, 0)
+	p.offset_left = -300
+	p.offset_right = 300
+	p.offset_top = -200
+	p.offset_bottom = 200
+	bg.add_child(p)
+	var v := Style.vbox(16)
+	p.add_child(v)
+	v.add_child(Style.title(tr("new_run_title"), 40))
+	v.add_child(Style.label(tr("new_run_warning"), 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	var yes := Style.button(tr("btn_new_run_confirm"), "DarkButton", 80)
+	yes.pressed.connect(func():
+		RunSave.clear()
+		Backend.log_event("run_abandon", {})
+		Router.go("run", {"tower": _tower_view}))
+	v.add_child(yes)
+	var no := Style.button(tr("btn_continue_short"), "CandleButton", 80)
+	no.pressed.connect(func(): Router.go("run", {"resume": true}))
+	v.add_child(no)
+	var cancel := Style.button(tr("btn_back"), "", 64)
+	cancel.pressed.connect(bg.queue_free)
+	v.add_child(cancel)
+	Widgets.pop_in(p)
 
 
 ## Cartão do equipamento (companheiro / osso inicial): toca e abre a aba certa.

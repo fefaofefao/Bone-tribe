@@ -27,7 +27,10 @@ func _ready() -> void:
 	var start := Dev.env("BT_START")
 	if start != "":
 		await get_tree().process_frame
-		go(start, {"demo": Dev.env("BT_DEMO") == "1"})
+		if start == "resume":
+			go("run", {"resume": true})
+		else:
+			go(start, {"demo": Dev.env("BT_DEMO") == "1"})
 
 
 ## Botão Voltar do Android: em vez de encerrar o processo (o encerramento do

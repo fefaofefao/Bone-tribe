@@ -1485,3 +1485,9 @@ event_dice_gambler_res_small,¡Ganas! El apostador se ríe y paga.
 event_dice_gambler_res_lose2,Esta vez no.
 event_dice_gambler_opt_2,Apuesta pequeña (20 de polvo)
 event_dice_gambler_text,"Un esqueleto apostador agita dos dados de hueso: ""¿El doble o la mitad? ¡La suerte ama a quien arriesga!"""
+btn_continue_run,Continuar · Torre %d · Piso %d
+btn_new_run,Nueva partida
+new_run_title,¿Nueva partida?
+new_run_warning,"Tienes una partida en curso. Si empiezas otra, se perderá."
+btn_new_run_confirm,Empezar otra
+btn_continue_short,Continuar la partida

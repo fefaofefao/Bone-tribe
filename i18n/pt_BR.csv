@@ -1485,3 +1485,9 @@ event_dice_gambler_res_small,Você ganha! O apostador ri e paga.
 event_dice_gambler_res_lose2,Não foi dessa vez.
 event_dice_gambler_opt_2,Aposta pequena (20 de pó)
 event_dice_gambler_text,"Um esqueleto apostador sacode dois dados de osso: ""Dobra ou metade? A sorte gosta de quem arrisca!"""
+btn_continue_run,Continuar · Torre %d · Andar %d
+btn_new_run,Nova partida
+new_run_title,Nova partida?
+new_run_warning,"Você tem uma partida em andamento. Se começar outra, ela será perdida."
+btn_new_run_confirm,Começar outra
+btn_continue_short,Continuar a partida

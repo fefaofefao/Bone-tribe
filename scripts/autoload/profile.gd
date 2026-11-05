@@ -156,6 +156,7 @@ func save() -> void:
 
 
 func reset() -> void:
+	RunSave.clear()
 	data = defaults()
 	data.first_open_time = Backend.now()
 	save()

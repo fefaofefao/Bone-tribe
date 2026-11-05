@@ -1073,3 +1073,82 @@ func test_20_update_1_3() -> void:
 	var labels := v2.find_children("*", "Label", true, false)
 	check(labels.size() == 2 and labels.all(func(l): return (l as Label).autowrap_mode == TextServer.AUTOWRAP_OFF), "estatística numa linha só")
 	holder.queue_free()
+
+
+func test_21_continue_run() -> void:
+	RunSave.clear()
+	check(not RunSave.has_save(), "sem partida salva no começo")
+	var st := RunState.new({"seed": 77, "tower": 3, "companion": "companion_ossudo"})
+	st.floor_n = 12
+	st.equip("slot_skull", {"id": "bone_skull_wolf", "level": 3})
+	st.dust = 345
+	st.xp = 17
+	st.level = 4
+	var lu: Array = GameData.levelups.keys()
+	st.picks = [lu[0], lu[1]]
+	st.bonus_stats = {"atk_pct": 0.08, "crit": 0.06}
+	st.allies = ["ally_caged_skeleton"]
+	st.seen_events = {"event_rats_cheese": true, "event_witch_bone": true}
+	st.bosses_beaten = ["boss_rat_king"]
+	st.forms_announced = {"form_werewolf": true}
+	st.flags = {"revive_ad_used": true, "curiosities": 2}
+	st.segment_chest = {0: true}
+	st.next_event = GameData.events["event_blue_campfire"]
+	st.hunter_met = true
+	st.recalc()
+	st.hp = st.max_hp * 0.4
+	for i in 5:
+		st.rng.randf()
+	RunSave.save(st)
+	check(RunSave.has_save(), "partida gravada")
+	var info := RunSave.info()
+	check(int(info.get("tower", 0)) == 3 and int(info.get("floor", 0)) == 13, "botão Continuar mostra torre 3, andar 13 (%s)" % str(info))
+	var ld := RunSave.load_state()
+	check(ld != null, "partida carregada")
+	if ld == null:
+		return
+	var a := st.to_dict()
+	var b := ld.to_dict()
+	for k in a:
+		var same: bool = JSON.stringify(a[k]) == JSON.stringify(b[k])
+		if a[k] is float:
+			same = is_equal_approx(float(a[k]), float(b[k]))
+		check(same, "campo %s igual depois de continuar (%s / %s)" % [k, str(a[k]), str(b[k])])
+	check(ld.segment_chest.has(0), "baú garantido do bloco continua marcado")
+	check(String(ld.next_event.get("id", "")) == "event_blue_campfire", "próximo evento revelado continua o mesmo")
+	check(ld.equipped["slot_skull"].level is int and int(ld.equipped["slot_skull"].level) == 3, "nível do osso continua número inteiro")
+	check(is_equal_approx(ld.hp, st.hp) and is_equal_approx(ld.max_hp, st.max_hp), "vida igual (%.1f/%.1f)" % [ld.hp, ld.max_hp])
+	var same_rng := true
+	for i in 20:
+		if st.rng.randi() != ld.rng.randi():
+			same_rng = false
+	check(same_rng, "sorteios seguem iguais depois de continuar (sem trocar o evento fechando o app)")
+	check(String(ld.pick_event().get("id", "x")) == String(st.pick_event().get("id", "y")), "mesmo evento sorteado depois de continuar")
+	check(MonsterFactory.tower == 3, "monstros da torre certa depois de continuar")
+	# partida morta não grava
+	RunSave.clear()
+	st.dead = true
+	RunSave.save(st)
+	check(not RunSave.has_save(), "partida perdida não fica para continuar")
+	st.dead = false
+	# foto com osso que não existe mais: descartada sem travar
+	var bad := st.to_dict()
+	bad.equipped["slot_skull"] = {"id": "bone_que_nao_existe", "level": 1}
+	var f := FileAccess.open(RunSave.PATH, FileAccess.WRITE)
+	f.store_string(JSON.stringify({"version": RunSave.VERSION, "state": bad}))
+	f.close()
+	check(RunSave.load_state() == null and not RunSave.has_save(), "partida com osso desconhecido é descartada")
+	check(not FileAccess.file_exists(RunSave.PATH), "arquivo inválido é apagado")
+	# arquivo corrompido
+	f = FileAccess.open(RunSave.PATH, FileAccess.WRITE)
+	f.store_string("{ quebrado")
+	f.close()
+	check(not RunSave.has_save(), "arquivo corrompido não quebra a tela inicial")
+	RunSave.clear()
+	# perfil não muda: nada da partida vai para o save do perfil
+	check(not Profile.defaults().has("run_save"), "perfil sem campo novo")
+	var src := FileAccess.get_file_as_string("res://scripts/scenes/run.gd")
+	var end_i := src.find("func _end_run()")
+	check(end_i > 0 and src.find("RunSave.clear()", end_i) < src.find("state.end_rewards()", end_i), "fim de partida apaga a gravação antes de pagar o pó")
+	var lose_i := src.find("if combat.result == \"lose\":")
+	check(src.find("RunSave.clear()", lose_i) < src.find("_death_dialog()", lose_i), "morte apaga a gravação antes da tela de reviver")

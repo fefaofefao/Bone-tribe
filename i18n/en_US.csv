@@ -1485,3 +1485,9 @@ event_dice_gambler_res_small,You win! The gambler laughs and pays up.
 event_dice_gambler_res_lose2,Not this time.
 event_dice_gambler_opt_2,Small bet (20 dust)
 event_dice_gambler_text,"A gambling skeleton shakes two bone dice: ""Double or half? Luck loves a risk-taker!"""
+btn_continue_run,Continue · Tower %d · Floor %d
+btn_new_run,New run
+new_run_title,New run?
+new_run_warning,"You have a run in progress. If you start another one, it will be lost."
+btn_new_run_confirm,Start another
+btn_continue_short,Continue the run
