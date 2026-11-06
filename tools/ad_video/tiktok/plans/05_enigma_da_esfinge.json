@@ -1,0 +1,63 @@
+{
+ "song_len": 16.1,
+ "segs": [
+  {
+   "src": "riddle",
+   "start": 2.0,
+   "dur": 1.35,
+   "crop": "panel"
+  },
+  {
+   "src": "riddle",
+   "start": 3.5,
+   "dur": 5.43,
+   "freeze": true,
+   "crop": "panel"
+  },
+  {
+   "src": "riddle",
+   "start": 4.4,
+   "dur": 1.81,
+   "crop": "panel"
+  },
+  {
+   "src": "riddle",
+   "start": 5.6,
+   "dur": 1.81,
+   "crop": "panel"
+  },
+  {
+   "src": "riddle",
+   "start": 3.5,
+   "dur": 2.72,
+   "freeze": true,
+   "crop": "panel"
+  }
+ ],
+ "end": {
+  "src": "demo",
+  "start": 65.0
+ },
+ "caps": [
+  {
+   "img": "q1",
+   "t0": 0,
+   "t1": 4.07
+  },
+  {
+   "img": "q2",
+   "t0": 4.07,
+   "t1": 6.78
+  },
+  {
+   "img": "q4",
+   "t0": 6.78,
+   "t1": 10.41
+  },
+  {
+   "img": "q3",
+   "t0": 10.41,
+   "t1": 13.13
+  }
+ ]
+}

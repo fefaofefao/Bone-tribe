@@ -1,0 +1,68 @@
+{
+ "song_len": 16.1,
+ "segs": [
+  {
+   "src": "arena",
+   "start": 2.0,
+   "dur": 1.35
+  },
+  {
+   "src": "arena",
+   "start": 3.5,
+   "dur": 2.72,
+   "freeze": true,
+   "crop": "panel"
+  },
+  {
+   "src": "arena",
+   "start": 4.5,
+   "dur": 1.81
+  },
+  {
+   "src": "arena",
+   "start": 6.5,
+   "dur": 1.81
+  },
+  {
+   "src": "arena",
+   "start": 8.5,
+   "dur": 0.91
+  },
+  {
+   "src": "arena",
+   "start": 13.4,
+   "dur": 1.81
+  },
+  {
+   "src": "arena",
+   "start": 15.3,
+   "dur": 0.91
+  },
+  {
+   "src": "arena",
+   "start": 17.0,
+   "dur": 1.81
+  }
+ ],
+ "end": {
+  "src": "demo",
+  "start": 65.0
+ },
+ "caps": [
+  {
+   "img": "a1",
+   "t0": 0,
+   "t1": 4.07
+  },
+  {
+   "img": "a2",
+   "t0": 4.07,
+   "t1": 8.6
+  },
+  {
+   "img": "a4",
+   "t0": 9.51,
+   "t1": 13.13
+  }
+ ]
+}

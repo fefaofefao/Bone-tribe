@@ -1417,7 +1417,7 @@ event_bone_dice_opt_2,Aposta pequena (20 de pó)
 event_skull_cups_res_win,Achou! O osso é seu.
 event_skull_cups_res_lose,Vazio... e o crânio morde seu dedo.
 event_skull_cups_opt_1,Crânio da esquerda
-event_skull_cups_opt_2,Crânio da meio
+event_skull_cups_opt_2,Crânio do meio
 event_skull_cups_opt_3,Crânio da direita
 event_skull_cups_text,"Três crânios virados na mesa. Debaixo de um deles há um osso. ""Escolha bem..."""
 event_bone_wheel_res_jackpot,Prêmio grande!

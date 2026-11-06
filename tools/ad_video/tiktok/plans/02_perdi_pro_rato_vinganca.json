@@ -1,0 +1,70 @@
+{
+ "song_len": 16.1,
+ "segs": [
+  {
+   "src": "lose",
+   "start": 15.4,
+   "dur": 3.16,
+   "crop": "boss"
+  },
+  {
+   "src": "ossuary",
+   "start": 0.5,
+   "dur": 0.91,
+   "crop": "ui"
+  },
+  {
+   "src": "demo",
+   "start": 5.4,
+   "dur": 0.9
+  },
+  {
+   "src": "demo",
+   "start": 12.4,
+   "dur": 0.91
+  },
+  {
+   "src": "demo",
+   "start": 28.9,
+   "dur": 0.91
+  },
+  {
+   "src": "demo",
+   "start": 36.0,
+   "dur": 2.72
+  },
+  {
+   "src": "demo",
+   "start": 52.4,
+   "dur": 1.81,
+   "crop": "boss"
+  },
+  {
+   "src": "demo",
+   "start": 56.3,
+   "dur": 1.81,
+   "crop": "boss"
+  }
+ ],
+ "end": {
+  "src": "demo",
+  "start": 65.0
+ },
+ "caps": [
+  {
+   "img": "f1",
+   "t0": 0,
+   "t1": 3.16
+  },
+  {
+   "img": "f2",
+   "t0": 3.16,
+   "t1": 6.79
+  },
+  {
+   "img": "f3",
+   "t0": 11.31,
+   "t1": 13.13
+  }
+ ]
+}

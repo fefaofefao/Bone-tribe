@@ -1,0 +1,22 @@
+{"song_len": 16.1,
+ "segs": [
+  {"src": "demo", "start": 4.9, "dur": 1.35},
+  {"src": "demo", "start": 12.45, "dur": 0.9},
+  {"src": "demo", "start": 28.9, "dur": 0.91},
+  {"src": "demo", "start": 34.9, "dur": 0.91},
+  {"src": "elite", "start": 3.9, "dur": 1.81},
+  {"src": "frost", "start": 5.0, "dur": 0.9},
+  {"src": "cursed", "start": 1.4, "dur": 0.91},
+  {"src": "demo", "start": 36.0, "dur": 2.72},
+  {"src": "demo", "start": 56.3, "dur": 1.81, "crop": "boss"},
+  {"src": "elite", "start": 11.85, "dur": 0.91}
+ ],
+ "end": {"src": "demo", "start": 65.0},
+ "caps": [
+  {"img": "c1", "t0": 0.0, "t1": 2.25},
+  {"img": "c2", "t0": 2.25, "t1": 4.07},
+  {"img": "c3", "t0": 4.07, "t1": 5.88},
+  {"img": "c4", "t0": 5.88, "t1": 7.69},
+  {"img": "c5", "t0": 8.1, "t1": 10.41},
+  {"img": "c6", "t0": 10.41, "t1": 12.22}
+ ]}

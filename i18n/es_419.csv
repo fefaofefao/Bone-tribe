@@ -1417,7 +1417,7 @@ event_bone_dice_opt_2,Apuesta pequeña (20 de polvo)
 event_skull_cups_res_win,¡Lo encontraste! El hueso es tuyo.
 event_skull_cups_res_lose,Vacío... y el cráneo te muerde el dedo.
 event_skull_cups_opt_1,Cráneo de la izquierda
-event_skull_cups_opt_2,Cráneo de la medio
+event_skull_cups_opt_2,Cráneo del medio
 event_skull_cups_opt_3,Cráneo de la derecha
 event_skull_cups_text,"Tres cráneos boca abajo en la mesa. Bajo uno de ellos hay un hueso. ""Elige bien..."""
 event_bone_wheel_res_jackpot,¡Premio gordo!

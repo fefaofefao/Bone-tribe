@@ -1,0 +1,17 @@
+{"song_len": 16.1,
+ "segs": [
+  {"src": "elite", "start": 2.9, "dur": 2.25},
+  {"src": "elite", "start": 5.0, "dur": 0.9},
+  {"src": "elite", "start": 6.0, "dur": 0.91},
+  {"src": "elite", "start": 7.1, "dur": 0.91},
+  {"src": "elite", "start": 7.6, "dur": 1.81},
+  {"src": "elite", "start": 10.6, "dur": 0.91},
+  {"src": "elite", "start": 11.85, "dur": 2.72},
+  {"src": "elite", "start": 14.6, "dur": 1.81}
+ ],
+ "end": {"src": "demo", "start": 65.0},
+ "caps": [
+  {"img": "e1", "t0": 0.0, "t1": 3.16},
+  {"img": "e2", "t0": 3.16, "t1": 5.88},
+  {"img": "e3", "t0": 7.69, "t1": 12.22}
+ ]}
