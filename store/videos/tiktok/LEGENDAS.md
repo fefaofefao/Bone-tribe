@@ -20,3 +20,10 @@ Observações:
 - Os vídeos 5 e 6 terminam com pergunta: responda os comentários nas primeiras horas (o TikTok entrega mais vídeos com conversa).
 - O cartão final diz "GRÁTIS na Play Store · procure: Bone Tribe" (sem botão falso). Coloque o link da Play Store na bio.
 - Como é o seu próprio jogo e não é publicidade paga, não precisa do rótulo de parceria paga. Se impulsionar (Promote), o TikTok marca como anúncio sozinho.
+
+## Vídeo 11 — avatar com o celular
+`BoneTribe_tiktok_11_avatar_celular.mp4`: abertura com o avatar de IA (PixVerse, marca d'água mantida e etiqueta "avatar de IA"), zoom no celular e gameplay dentro do celular.
+
+Legenda: `Alguém mais jogando esse? 💀 Você monta seu esqueleto com os ossos dos monstros. Grátis na Play Store! #jogomobile #roguelike #indiegame #bonetribe #fyp`
+
+Ao postar, ative **"Conteúdo gerado por IA"** (Mais opções → Rótulo de conteúdo de IA). É regra do TikTok para pessoa realista feita por IA.
