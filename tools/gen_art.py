@@ -543,7 +543,7 @@ def _only():
 def _extra_drawers():
     """Ossos da expansão (mais de 10 por parte), desenhados em módulos separados."""
     draw = {}
-    for mod in ("art_extra_head", "art_extra_limbs", "art_extra_back", "art_wave2_bones"):
+    for mod in ("art_extra_head", "art_extra_limbs", "art_extra_back", "art_wave2_bones", "art_wave3_bones"):
         try:
             draw.update(__import__(mod).DRAW)
         except ImportError:
@@ -1180,10 +1180,11 @@ def gen_monsters():
     import artlib
     from PIL import ImageOps
     draw = dict(MONSTER_DRAW)
-    try:
-        draw.update(__import__("art_wave2_monsters").DRAW)
-    except ImportError:
-        pass
+    for mod in ("art_wave2_monsters", "art_wave3_monsters"):
+        try:
+            draw.update(__import__(mod).DRAW)
+        except ImportError:
+            pass
     only = _only()
     for m in data("monsters.json"):
         if only and m["id"] not in only:

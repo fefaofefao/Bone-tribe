@@ -217,6 +217,21 @@ static func daily_bought(id: String) -> bool:
 	return (s.get("daily_bought", []) as Array).has(id)
 
 
+## Usos de conveniência dos diamantes (data/shop.json -> diamond_uses).
+static func use_price(key: String) -> int:
+	return int(GameData.shop.get("diamond_uses", {}).get(key, {}).get("price", 0))
+
+
+static func use_limit(key: String, field: String) -> int:
+	return int(GameData.shop.get("diamond_uses", {}).get(key, {}).get(field, 0))
+
+
+## Paga um uso: true se tinha diamantes (registra o motivo no Analytics).
+static func pay_use(key: String) -> bool:
+	var price := use_price(key)
+	return price > 0 and Profile.spend_diamonds(price, "use_" + key)
+
+
 static func diamond_item(id: String) -> Dictionary:
 	for it in GameData.shop.get("diamond_items", []):
 		if it.id == id:

@@ -38,6 +38,14 @@
 			"atk": 0.05,
 			"def": 1,
 			"drop": 0.01
+		},
+		"_doc_extra": "Melhorias avançadas (1.4): aparecem depois de vencer a Torre 1; atributos secundários com teto baixo e custo bem maior que as 4 básicas, para o começo do jogo continuar igual.",
+		"extra": {
+			"crit": {"stat": "crit", "per": 0.005, "max": 20, "cost_base": 150, "cost_exp": 1.45, "icon": "ui_levelup_empty_eye"},
+			"crit_mult": {"stat": "crit_mult", "per": 0.02, "max": 20, "cost_base": 150, "cost_exp": 1.45, "icon": "ui_levelup_heavy_skull"},
+			"dodge": {"stat": "dodge", "per": 0.004, "max": 20, "cost_base": 180, "cost_exp": 1.45, "icon": "ui_levelup_quick_knees"},
+			"lifesteal": {"stat": "lifesteal", "per": 0.004, "max": 20, "cost_base": 200, "cost_exp": 1.5, "icon": "ui_levelup_hungry_jaw"},
+			"regen": {"stat": "regen", "per": 0.001, "max": 15, "cost_base": 220, "cost_exp": 1.5, "icon": "ui_levelup_warm_marrow"}
 		}
 	},
 	"drops": {

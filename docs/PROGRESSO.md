@@ -90,6 +90,10 @@
 - Continuar a partida (gravação por andar), acabamento visual (botões, feixe de raridade, cenários por região, maldição no topo, elite, números de dano, corpo recorde na tela inicial, molduras da Coleção) e correção do fechamento no Android 16.
 - Notas em `store/novidades_1.3.0.md`.
 
+### Versão 1.3.1 e 1.4.0
+- 1.3.1: falhas do Play Console (anúncio x popup destruído; partículas de GPU no driver MediaTek).
+- 1.4.0: desistir da partida, avaliação no Google Play, usos de diamante, Ossuário avançado, relíquias e Status mostrando ganhos, 6 monstros + 3 chefes + 15 ossos + 7 formas secretas, correções (raio do inimigo, botão de velocidade, cartão estreito). Notas em `store/novidades_1.4.0.md`.
+
 ## Concluído
 Todos os 7 passos foram concluídos. Ver "Problemas" e "Próximos passos" abaixo.
 

@@ -155,6 +155,8 @@ Além das formas por família, existem receitas escondidas com ossos específico
 - **Quimera:** ossos de 5 famílias diferentes ao mesmo tempo. +8% em todos os atributos por família equipada.
 - **Cavaleiro Abissal:** Pinça de Caranguejo, Carapaça de Besouro e Pernas de Centauro. Contra-ataca todo golpe bloqueado.
 
+Na versão 1.4 entraram mais 7 receitas (16 formas no total): Ceifador Alado, Minotauro de Engrenagens, Draco do Pântano, Gárgula de Pedra, Alfa da Matilha, Vespa da Tempestade e Salamandra de Brasa (receitas em `data/forms.json`).
+
 Formas secretas alimentam conversa na comunidade e vídeos do tipo "descobri uma forma que ninguém conhece". Novas receitas a cada atualização mantêm esse interesse vivo com custo baixo.
 
 ## Eventos
@@ -198,6 +200,8 @@ O capítulo 1 tem 14 monstros comuns, um para cada osso comum e raro do catálog
 | 20 | Golem Esquecido | Escudo que só quebra com 3 golpes seguidos; ensina ataques múltiplos | Gaiola de Golem ou Punho de Golem |
 | 30 | Dragão Ancião | Sopro que dobra de dano se o jogador não tiver defesa contra fogo | Crânio de Dragão ou Asas de Dragão |
 | Secreto | Hidra | Aparece só se o jogador vencer o Dragão com a forma Wyrm Ósseo | Coluna de Hidra |
+
+Versão 1.4: mais 6 monstros (Escaravelho de Ossos e Cavaleiro Esqueleto desde a Torre 1; Água-viva Fantasma da 4; Abutre Carniceiro da 7; Diabrete de Gelo e Serpente de Ossos da 11) e 3 chefes (Rainha Aranha, Kraken Ósseo e Cavaleiro da Morte, a partir da Torre 14), com 15 ossos novos (117 no total).
 
 **O Caçador de Ossos (rival recorrente)**
 

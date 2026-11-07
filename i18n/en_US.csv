@@ -1493,3 +1493,104 @@ btn_new_run_confirm,Start another
 btn_continue_short,Continue the run
 ad_loading,Loading ad…
 purchase_loading,Opening Google Play…
+status_bone_now,At current level: %s
+relic_next,Next level: %s
+btn_quit_run,Give up
+quit_run_title,Give up this run?
+quit_run_text,The run ends as a defeat. You keep %s bone dust and the Hunter may take one of your bones.
+btn_quit_run_confirm,Give up
+btn_keep_playing,Keep playing
+btn_reroll_diamonds,Reroll
+btn_other_event,Another event
+btn_double_dust_diamonds,Double dust
+offline_double_diamonds,Double (%s) for %d
+mission_swap,Swap  %d
+ossuary_advanced,Advanced upgrades
+ossuary_advanced_sub,Unlocked after clearing Tower 1. Rare stats with a level cap.
+ossuary_extra_now,Now: %s
+form_winged_reaper_name,Winged Reaper
+form_winged_reaper_desc,+12% lifesteal; hits may cause bleeding.
+form_clockwork_minotaur_name,Clockwork Minotaur
+form_clockwork_minotaur_desc,"+6 defense; every 3 turns, a punch for 160% damage."
+form_swamp_drake_name,Swamp Drake
+form_swamp_drake_desc,+10% HP; tail slam every 3 turns and poisonous hits.
+form_stone_gargoyle_name,Stone Gargoyle
+form_stone_gargoyle_desc,+8% dodge; the first hit of each fight deals no damage.
+form_pack_alpha_name,Pack Alpha
+form_pack_alpha_desc,"+10% crit, +3 speed and always strikes first on turn 1."
+form_storm_hornet_name,Storm Hornet
+form_storm_hornet_desc,+6% dodge; every 3 turns it attacks twice.
+form_ember_salamander_name,Ember Salamander
+form_ember_salamander_desc,+25% fire damage; flaming claw every 3 turns.
+monster_bone_scarab_name,Bone Scarab
+monster_skeleton_knight_name,Skeleton Knight
+monster_ghost_jelly_name,Ghost Jelly
+monster_carrion_vulture_name,Carrion Vulture
+monster_frost_imp_name,Frost Imp
+monster_bone_serpent_name,Bone Serpent
+boss_spider_queen_name,Spider Queen
+boss_bone_kraken_name,Bone Kraken
+boss_death_knight_name,Death Knight
+bone_shell_scarab_name,Scarab Shell
+bone_shell_scarab_desc,+14 defense and reflects 6% of damage taken.
+bone_shell_scarab_part,Scarab
+bone_shell_scarab_adj,Armored
+bone_legs_scarab_name,Scarab Legs
+bone_legs_scarab_desc,"+8 defense, +15 HP and 10% trap avoidance."
+bone_legs_scarab_part,Scarab
+bone_legs_scarab_adj,Armored
+bone_helm_knight_name,Knight Helm
+bone_helm_knight_desc,+10 defense and 5% crit.
+bone_helm_knight_part,Knight
+bone_helm_knight_adj,Noble
+bone_shield_knight_name,Knight Shield
+bone_shield_knight_desc,+14 defense and +2 attack.
+bone_shield_knight_part,Knight
+bone_shield_knight_adj,Loyal
+bone_tentacle_jelly_name,Jelly Tentacle
+bone_tentacle_jelly_desc,+5 attack. Hits may stun (20%).
+bone_tentacle_jelly_part,Jelly
+bone_tentacle_jelly_adj,Electric
+bone_bell_jelly_name,Jelly Bell
+bone_bell_jelly_desc,+25 HP and regenerates 1.5% HP per turn.
+bone_bell_jelly_part,Jelly
+bone_bell_jelly_adj,Ethereal
+bone_wings_vulture_name,Vulture Wings
+bone_wings_vulture_desc,+4 speed and 10% dodge.
+bone_wings_vulture_part,Vulture
+bone_wings_vulture_adj,Scavenging
+bone_skull_vulture_name,Vulture Skull
+bone_skull_vulture_desc,8% crit and +5% bone drop chance.
+bone_skull_vulture_part,Vulture
+bone_skull_vulture_adj,Scavenging
+bone_skull_imp_name,Imp Skull
+bone_skull_imp_desc,+4 attack and +2 speed.
+bone_skull_imp_part,Imp
+bone_skull_imp_adj,Frozen
+bone_tail_imp_name,Imp Tail
+bone_tail_imp_desc,+12 HP. Hits may stun (12%).
+bone_tail_imp_part,Imp
+bone_tail_imp_adj,Frozen
+bone_spine_serpent_name,Serpent Spine
+bone_spine_serpent_desc,+20 HP and 8% lifesteal.
+bone_spine_serpent_part,Serpent
+bone_spine_serpent_adj,Shadowy
+bone_fang_serpent_name,Serpent Fang
+bone_fang_serpent_desc,+6 attack. Hits poison (60%).
+bone_fang_serpent_part,Serpent
+bone_fang_serpent_adj,Venomous
+bone_legs_spider_queen_name,Spider Queen Legs
+bone_legs_spider_queen_desc,"+5 speed, 10% dodge and +20 HP. Poison that stacks with every hit."
+bone_legs_spider_queen_part,Queen
+bone_legs_spider_queen_adj,Royal
+bone_tentacles_kraken_name,Kraken Tentacles
+bone_tentacles_kraken_desc,"+35 HP and +10 defense. Every 4 turns, a 180% damage slam."
+bone_tentacles_kraken_part,Kraken
+bone_tentacles_kraken_adj,Abyssal
+bone_blade_death_knight_name,Death Knight Blade
+bone_blade_death_knight_desc,+10 attack and 10% crit. Every 4 turns it attacks twice.
+bone_blade_death_knight_part,Death
+bone_blade_death_knight_adj,Relentless
+event_boss_spider_queen_text,"Webs glitter on the ceiling. The Spider Queen slowly descends, crown askew, eight legs ready to wrap you up."
+event_boss_bone_kraken_text,The black water bubbles. Bone tentacles rise from the depths and an eye as big as a shield opens: the Bone Kraken is awake.
+event_boss_death_knight_text,"An empty suit of armor rises from the throne and its blade ignites. The Death Knight points at you: ""Only one of us leaves."""

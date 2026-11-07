@@ -29,9 +29,10 @@ func defaults() -> Dictionary:
 		"runs_played": 0,
 		"best_index": 0,
 		"best_body": {},
+		"review": {"count": 0, "last": 0, "pending": false},
 		"towers": {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}, "wins": {}},
 		"families_done": {},
-		"missions": {"day": -1, "daily": [], "week": -1, "weekly": []},
+		"missions": {"day": -1, "daily": [], "week": -1, "weekly": [], "swap_day": -1},
 		"offline": {"last_seen": 0, "pending": 0, "ad_day": -1, "ad_count": 0},
 		"notify": {"asked": false},
 		"tutorial": {},
@@ -106,6 +107,22 @@ func _migrate(from_version: int) -> void:
 				data.families_done[fam] = true
 		for k in data.towers.cleared:
 			data.towers.wins[k] = maxi(1, int(data.towers.wins.get(k, 0)))
+	# ossos novos (1.4, wave 3) nas famílias: quem tinha todos os ossos antigos de uma
+	# família continua com a família completa (bônus permanente)
+	for fam in GameData.families:
+		if data.families_done.has(fam):
+			continue
+		var all_old := true
+		var any_old := false
+		for id in GameData.bones_by({"family": fam}):
+			if int(GameData.bone(id).get("wave", 1)) >= 3:
+				continue
+			any_old = true
+			if not data.discovered_bones.has(id):
+				all_old = false
+				break
+		if any_old and all_old:
+			data.families_done[fam] = true
 	# torres novas (1.3: 21 a 40): quem já venceu a última torre antiga ganha a
 	# seguinte liberada, sem precisar vencê-la de novo
 	var top := 0

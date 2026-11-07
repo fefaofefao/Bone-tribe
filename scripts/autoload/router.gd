@@ -15,6 +15,8 @@ var _busy := false
 
 
 func _ready() -> void:
+	# a transição roda mesmo com o jogo pausado (ex.: desistir da partida)
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_layer = CanvasLayer.new()
 	_layer.layer = 90
 	add_child(_layer)

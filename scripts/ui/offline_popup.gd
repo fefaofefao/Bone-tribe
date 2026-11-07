@@ -47,6 +47,18 @@ static func open(parent: Node, on_close: Callable = Callable()) -> Control:
 				return
 			close.call(Offline.collect(ok)))
 		v.add_child(dbl)
+	# dobrar com diamantes (1.4): divide o limite diário com o anúncio
+	if Offline.ad_left() > 0:
+		var price := Store.use_price("offline_double")
+		var dd := Style.button(TranslationServer.translate("offline_double_diamonds") % [Style.num(amount * 2), price], "DarkButton", 72)
+		dd.icon = load("res://art/ui/ui_icon_diamond.png")
+		dd.expand_icon = true
+		dd.add_theme_constant_override("icon_max_width", 30)
+		dd.disabled = Profile.diamonds() < price
+		dd.pressed.connect(func():
+			if not closed[0] and Store.pay_use("offline_double"):
+				close.call(Offline.collect(true)))
+		v.add_child(dd)
 	var take := Style.button(TranslationServer.translate("offline_collect"), "" if Offline.ad_left() > 0 else "CandleButton", 76)
 	take.pressed.connect(func():
 		if not closed[0]:

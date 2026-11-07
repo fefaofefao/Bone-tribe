@@ -109,6 +109,43 @@ static func claim(kind: String, index: int) -> Dictionary:
 	return r
 
 
+## Troca de missão diária com diamantes (1.4): uma por dia, só missão ainda não
+## concluída. A nova não repete a estatística das outras do dia.
+static func can_swap(index: int) -> bool:
+	var arr: Array = list("daily")
+	if index < 0 or index >= arr.size():
+		return false
+	var m: Dictionary = arr[index]
+	return not bool(m.claimed) and not is_done(m) and int(Profile.data.missions.get("swap_day", -1)) != day()
+
+
+static func swap(index: int) -> bool:
+	if not can_swap(index):
+		return false
+	var arr: Array = list("daily")
+	var used := {}
+	var ids := {}
+	for m in arr:
+		used[String(def(String(m.id)).get("stat", ""))] = true
+		ids[String(m.id)] = true
+	var pool := []
+	for d in _cfg().get("daily", []):
+		if not used.has(String(d.stat)) and not ids.has(String(d.id)):
+			pool.append(d)
+	if pool.is_empty():
+		return false
+	if not Store.pay_use("mission_swap"):
+		return false
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var nd: Dictionary = pool[rng.randi() % pool.size()]
+	arr[index] = {"id": nd.id, "progress": 0, "claimed": false}
+	Profile.data.missions.swap_day = day()
+	Profile.save()
+	Backend.log_event("mission_swap", {"to": String(nd.id)})
+	return true
+
+
 static func claimable_count() -> int:
 	var n := 0
 	for kind in ["daily", "weekly"]:

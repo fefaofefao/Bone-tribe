@@ -100,7 +100,10 @@ func _after_open() -> void:
 	await get_tree().create_timer(0.5).timeout
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
-	if bool(Router.params.get("after_run", false)):
+	if bool(Router.params.get("after_run", false)) and ReviewPrompt.should_ask():
+		# volta de uma partida boa: pede avaliação e não mostra anúncio desta vez
+		await ReviewPrompt.ask()
+	elif bool(Router.params.get("after_run", false)):
 		var before := int(Profile.data.ads.interstitials_seen)
 		await Ads.maybe_show_interstitial()
 		var p := Store.iap("iap_remove_ads")

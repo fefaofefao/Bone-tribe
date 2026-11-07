@@ -200,6 +200,8 @@ jobs:
           grep -q "com.bonetribe.notify.BoneTribeNotifyReceiver" /tmp/manifest.txt
           grep -q "android.permission.POST_NOTIFICATIONS" /tmp/manifest.txt
           echo "Notificações locais registradas no manifesto."
+          grep -q "com.bonetribe.review.BoneTribeReview" /tmp/manifest.txt
+          echo "Plugin de avaliação (In-App Review) registrado no manifesto."
           # Activity própria (fecha sem o desmonte nativo do Godot)
           unzip -p build/BoneTribe.apk 'classes*.dex' | grep -a -q "Encerrando o processo sem o desmonte nativo"
           echo "GodotApp com o encerramento seguro."

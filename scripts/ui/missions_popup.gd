@@ -75,6 +75,27 @@ static func _section(v: VBoxContainer, kind: String, subtitle: String, rebuild: 
 		col.add_child(Style.label("%d / %d  ·  +%s %s  +%d %s" % [int(m.progress), target, Style.num(int(r.dust)), _t("dust_short"), int(r.diamonds), _t("diamonds_short")], 18, Style.C_MUTED))
 		if bool(m.claimed):
 			row.add_child(Style.nowrap(Style.bold(_t("missions_claimed"), 20, Style.C_HEAL)))
+		elif kind == "daily" and Missions.can_swap(i):
+			# trocar esta missão por diamantes (uma por dia)
+			var sv := Style.vbox(6)
+			var b2 := Style.button(_t("missions_claim"), "DarkButton", 56)
+			b2.custom_minimum_size.x = 150
+			b2.disabled = true
+			sv.add_child(b2)
+			var price := Store.use_price("mission_swap")
+			var sw := Style.button(_t("mission_swap") % price, "DarkButton", 48)
+			sw.add_theme_font_size_override("font_size", 18)
+			sw.icon = load("res://art/ui/ui_icon_diamond.png")
+			sw.expand_icon = true
+			sw.add_theme_constant_override("icon_max_width", 24)
+			sw.disabled = Profile.diamonds() < price
+			var idx2 := i
+			sw.pressed.connect(func():
+				if Missions.swap(idx2):
+					Audio.play("ui_buy")
+					rebuild.call())
+			sv.add_child(sw)
+			row.add_child(sv)
 		else:
 			var b := Style.button(_t("missions_claim"), "CandleButton" if done else "DarkButton", 64)
 			b.custom_minimum_size.x = 150

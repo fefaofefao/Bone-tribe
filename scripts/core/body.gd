@@ -204,8 +204,16 @@ static func instance_stats(inst: Dictionary) -> Dictionary:
 
 static func stat_value_text(key: String, v: float) -> String:
 	if PCT_STATS.has(key):
-		return "%d%%" % int(roundf(v * 100.0))
-	return str(snappedf(v, 0.1)).trim_suffix(".0")
+		var pct := v * 100.0
+		# passos pequenos (0,5% de crítico, 0,1% de regeneração) com uma casa decimal
+		if absf(pct - roundf(pct)) >= 0.05:
+			return _decimal("%.1f" % pct) + "%"
+		return "%d%%" % int(roundf(pct))
+	return _decimal(str(snappedf(v, 0.1)).trim_suffix(".0"))
+
+
+static func _decimal(s: String) -> String:
+	return s if Profile.current_locale() == "en_US" else s.replace(".", ",")
 
 
 ## "Ataque 5 → 6 · Vida 15 → 19" (ou só os valores, sem "antes").

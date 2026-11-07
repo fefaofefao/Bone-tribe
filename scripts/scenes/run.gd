@@ -77,7 +77,15 @@ func _ready() -> void:
 	else:
 		Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower})
 	_run_loop()
-	# ferramenta de desenvolvimento (BT_STATUS=s): abre o Status depois de s segundos
+	# ferramenta de desenvolvimento (BT_QUIT=s): abre "Desistir" depois de s segundos e confirma
+	if Dev.env("BT_QUIT") != "":
+		await get_tree().create_timer(float(Dev.env("BT_QUIT"))).timeout
+		_confirm_quit()
+		await get_tree().create_timer(1.0, true, false, true).timeout
+		for b in overlay_root.find_children("*", "Button", true, false):
+			if (b as Button).text == tr("btn_quit_run_confirm"):
+				(b as Button).pressed.emit()
+		# ferramenta de desenvolvimento (BT_STATUS=s): abre o Status depois de s segundos
 	if Dev.env("BT_STATUS") != "":
 		await get_tree().create_timer(float(Dev.env("BT_STATUS"))).timeout
 		open_status()
@@ -284,8 +292,8 @@ func _build_ui() -> void:
 
 	speed_btn = Style.button("", "DarkButton", 56)
 	speed_btn.custom_minimum_size = Vector2(96, 56)
-	speed_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	speed_btn.position = Vector2(720 - 112, 132)
+	# sem âncora na direita: ancorado antes de a tela ter tamanho, ele ia para fora dela
+	speed_btn.position = Vector2(720 - 112 - 104, 132)
 	speed_btn.pressed.connect(_toggle_speed)
 	hud.add_child(speed_btn)
 	_update_speed_btn()
@@ -303,11 +311,20 @@ func _build_ui() -> void:
 		cb.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 		cb.offset_top = 136
 		cb.offset_bottom = 184
-		cb.offset_left = -150
-		cb.offset_right = 150
+		cb.offset_left = -205
+		cb.offset_right = 35
 		cb.pressed.connect(func(): _top_notice(tr("tower_curse_line") % tr(curse + "_name") + "\n" + tr(curse + "_desc"), Color("d7aaff"), "", 2.4))
 		Style.juice(cb)
 		hud.add_child(cb)
+
+	# desistir da partida (canto superior direito): conta como derrota
+	if not demo:
+		quit_btn = Style.button(tr("btn_quit_run"), "DarkButton", 56)
+		quit_btn.custom_minimum_size = Vector2(96, 56)
+		quit_btn.add_theme_font_size_override("font_size", 20)
+		quit_btn.position = Vector2(720 - 112, 132)
+		quit_btn.pressed.connect(_confirm_quit)
+		hud.add_child(quit_btn)
 
 	# status do esqueleto: pode ser aberto a qualquer momento (pausa o jogo)
 	status_btn = Style.button(tr("btn_status"), "DarkButton", 56)
@@ -333,6 +350,57 @@ func _build_ui() -> void:
 
 
 var status_btn: Button
+var quit_btn: Button
+
+
+## Desistir: pausa, pede confirmação e termina a partida como derrota (pó dos andares
+## já subidos, Caçador leva um osso), sem esperar a partida terminar sozinha.
+## Botão com preço em diamantes (desligado se não houver diamantes suficientes).
+func _diamond_button(text: String, price: int, min_h := 62) -> Button:
+	var b := Style.button("%s  %d" % [text, price], "DarkButton", min_h)
+	b.add_theme_font_size_override("font_size", 22)
+	b.icon = load("res://art/ui/ui_icon_diamond.png")
+	b.expand_icon = true
+	b.add_theme_constant_override("icon_max_width", 30)
+	b.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	b.disabled = Profile.diamonds() < price
+	return b
+
+
+func _confirm_quit() -> void:
+	if state.dead or _run_recorded or overlay_root == null:
+		return
+	var tree := get_tree()
+	var was_paused := tree.paused
+	tree.paused = true
+	var bg := Widgets.dim_overlay(overlay_root, 0.85)
+	bg.process_mode = Node.PROCESS_MODE_ALWAYS
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.add_child(center)
+	var p := Style.panel(Style.C_PANEL)
+	p.custom_minimum_size = Vector2(620, 0)
+	center.add_child(p)
+	var v := Style.vbox(16)
+	p.add_child(v)
+	v.add_child(Style.title(tr("quit_run_title"), 46))
+	var rew := state.end_rewards()
+	v.add_child(Style.label(tr("quit_run_text") % Style.num(int(rew.total)), 23, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	var yes := Style.button(tr("btn_quit_run_confirm"), "DarkButton", 78)
+	yes.pressed.connect(func():
+		yes.disabled = true
+		state.dead = true
+		state.victory = false
+		Backend.log_event("run_quit", {"floor": state.floor_n, "tower": state.tower})
+		_record_run_end()
+		Router.go("card", {"equipped": state.equipped.duplicate(true), "floor": state.floor_n, "tower": state.tower, "victory": false, "demo": demo}))
+	v.add_child(yes)
+	var no := Style.button(tr("btn_keep_playing"), "CandleButton", 78)
+	no.pressed.connect(func():
+		tree.paused = was_paused
+		bg.queue_free())
+	v.add_child(no)
+	Widgets.pop_in(p)
 
 
 func open_status() -> Control:
@@ -620,6 +688,12 @@ func _play_event(ev: Dictionary) -> void:
 		forge.pressed.connect(func(): option_chosen.emit(-2))
 		panel_box.add_child(forge)
 		buttons.append(forge)
+	# outro evento com diamantes (1.4): até 3 por partida
+	if not autoplay and not demo and int(state.flags.get("dia_events", 0)) < Store.use_limit("reroll_event", "per_run"):
+		var other := _diamond_button(tr("btn_other_event"), Store.use_price("reroll_event"), 58)
+		other.pressed.connect(func(): option_chosen.emit(-3))
+		panel_box.add_child(other)
+		buttons.append(other)
 	var choice := -1
 	if autoplay:
 		await _wait(1.2)
@@ -632,6 +706,15 @@ func _play_event(ev: Dictionary) -> void:
 		choice = await option_chosen
 	if choice == -2:
 		await _bigorna_forge()
+		await _play_event(ev)
+		return
+	if choice == -3:
+		var nev := state.pick_event() if Store.pay_use("reroll_event") else {}
+		if not nev.is_empty():
+			state.flags["dia_events"] = int(state.flags.get("dia_events", 0)) + 1
+			Backend.log_event("event_reroll", {"from": ev.id, "to": nev.id})
+			await _play_event(nev)
+			return
 		await _play_event(ev)
 		return
 	for b in buttons:
@@ -1490,9 +1573,18 @@ func _anim_special(ev: Dictionary) -> void:
 	Audio.play(String(SPECIAL_SFX.get(name, "special_extra")))
 	match name:
 		"eye_beam":
-			var t := combat._hero_target()
-			if t:
-				fx.beam(hero_view.slot_global_position("slot_skull"), _pos_of(t), Color(0.5, 0.75, 1.0), 22, 0.35)
+			# o raio sai de quem usou o golpe: antes saía sempre da caveira do Ossinho,
+			# mesmo quando era o inimigo (Lich do Sino, Ciclope, Peixe-Lanterna) que atirava
+			if src.is_hero:
+				var t := combat._hero_target()
+				if t:
+					fx.beam(hero_view.slot_global_position("slot_skull"), _pos_of(t), Color(0.5, 0.75, 1.0), 22, 0.35)
+			else:
+				var v := _view_of(src)
+				var from := _pos_of(src) + Vector2(-20, -40)
+				if v and v.has_method("top_global"):
+					from = v.top_global() + Vector2(-10, 50)
+				fx.beam(from, hero_view.slot_global_position("slot_skull"), Color(1.0, 0.45, 0.4), 22, 0.35)
 		"fire_breath":
 			if src.is_hero:
 				fx.fire_breath(hero_view.slot_global_position("slot_skull"), Vector2(560, 650))
@@ -1886,16 +1978,32 @@ func _levelup_dialog() -> void:
 	var picked := [""]
 	var reroll_used := int(state.flags.get("rerolls", 0))
 	var reroll_lim := Ads.limit("reroll_levelup")
+	var dia_used := int(state.flags.get("dia_rerolls", 0))
+	var dia_lim := Store.use_limit("reroll_levelup", "per_run")
+	var rr := Style.hbox(10)
 	if not autoplay and reroll_used < reroll_lim:
 		var rb := Style.button(tr("btn_reroll_ad") % (reroll_lim - reroll_used), "DarkButton", 62)
 		rb.add_theme_font_size_override("font_size", 22)
+		rb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		rb.pressed.connect(func():
 			rb.disabled = true
 			if await Ads.show_rewarded("reroll_levelup") and is_instance_valid(rb) and is_instance_valid(bg) and not bg.is_queued_for_deletion():
 				state.flags["rerolls"] = int(state.flags.get("rerolls", 0)) + 1
 				picked[0] = "__reroll__"
 				dialog_closed.emit("__reroll__"))
-		v.add_child(rb)
+		rr.add_child(rb)
+	# trocar as opções com diamantes (1.4): até 3 por partida, além do anúncio
+	if not autoplay and not demo and dia_used < dia_lim:
+		var db := _diamond_button(tr("btn_reroll_diamonds"), Store.use_price("reroll_levelup"))
+		db.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		db.pressed.connect(func():
+			if Store.pay_use("reroll_levelup"):
+				state.flags["dia_rerolls"] = int(state.flags.get("dia_rerolls", 0)) + 1
+				picked[0] = "__reroll__"
+				dialog_closed.emit("__reroll__"))
+		rr.add_child(db)
+	if rr.get_child_count() > 0:
+		v.add_child(rr)
 	for i in choices.size():
 		var id: String = choices[i]
 		var lu: Dictionary = GameData.levelups[id]
@@ -2103,7 +2211,14 @@ func _hunter_floor() -> void:
 
 # ================================================================ fim
 
-func _end_run() -> void:
+var _run_recorded := false
+
+
+## Registra o fim da partida no perfil uma vez só (pó, estatísticas, torre, Caçador).
+func _record_run_end() -> Dictionary:
+	if _run_recorded:
+		return {}
+	_run_recorded = true
 	# apaga antes de pagar: o pó da partida nunca é pago duas vezes
 	RunSave.clear()
 	var rewards := state.end_rewards()
@@ -2124,6 +2239,19 @@ func _end_run() -> void:
 	var stolen := {}
 	if state.dead and not demo:
 		stolen = Meta.hunter_steal(state.equipped)
+	if not demo:
+		ReviewPrompt.note_run(not state.bosses_beaten.is_empty(), not tower_rew.is_empty())
+		Profile.save()
+	return {"rewards": rewards, "tower_rew": tower_rew, "stolen": stolen}
+
+
+func _end_run() -> void:
+	var rec := _record_run_end()
+	if rec.is_empty():
+		return
+	var rewards: Dictionary = rec.rewards
+	var tower_rew: Dictionary = rec.tower_rew
+	var stolen: Dictionary = rec.stolen
 	Backend.log_event("run_end", {"floor": state.floor_n, "dead": state.dead, "dust": rewards.total, "tower": state.tower})
 	await _wait(0.6)
 	Audio.music("")
@@ -2167,6 +2295,20 @@ func _end_run() -> void:
 					fx.spark_burst(Vector2(360, 600), Style.C_DUST, 20, 400)
 					Audio.play("dust_gain"))
 		v.add_child(dbl)
+		# alternativa ao anúncio: dobrar com diamantes (uma vez; some quando um dos dois é usado)
+		var dd := _diamond_button(tr("btn_double_dust_diamonds"), Store.use_price("run_double_dust"), 70)
+		dd.pressed.connect(func():
+			if dbl.disabled or dd.disabled or not Store.pay_use("run_double_dust"):
+				return
+			dd.disabled = true
+			dbl.disabled = true
+			Profile.add_dust(total[0], "double_dust_diamonds")
+			total[0] *= 2
+			dust_l.text = tr("run_end_dust") % Style.num(total[0])
+			fx.spark_burst(Vector2(360, 600), Style.C_DUST, 20, 400)
+			Audio.play("dust_gain"))
+		dbl.pressed.connect(func(): dd.disabled = true)
+		v.add_child(dd)
 	var card := Style.button(tr("btn_view_card"), "", 84)
 	card.pressed.connect(func(): dialog_closed.emit(true))
 	v.add_child(card)

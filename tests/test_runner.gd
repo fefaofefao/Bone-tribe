@@ -198,11 +198,11 @@ func _eq(pairs: Array) -> Dictionary:
 
 func test_06_catalog_counts() -> void:
 	var cat := GameData.catalog_bones()
-	check(cat.size() == 102, "102 ossos no catálogo (%d)" % cat.size())
+	check(cat.size() == 117, "117 ossos no catálogo (%d)" % cat.size())
 	var r := {"common": 0, "rare": 0, "legendary": 0}
 	for id in cat:
 		r[GameData.bones[id].rarity] += 1
-	check(r.common == 71 and r.rare == 21 and r.legendary == 10, "71 comuns, 21 raros, 10 lendários: %s" % [r])
+	check(r.common == 79 and r.rare == 25 and r.legendary == 13, "79 comuns, 25 raros, 13 lendários: %s" % [r])
 	# mais de 10 variações para cada parte do corpo
 	for slot in ["slot_skull", "slot_ribs", "slot_arm_left", "slot_legs", "slot_back", "slot_tail"]:
 		var n := GameData.bones_by({"slot": slot}).size()
@@ -223,8 +223,8 @@ func test_06_catalog_counts() -> void:
 			commons += 1
 		elif k == "boss":
 			bosses.append(id)
-	check(commons == 30, "30 monstros comuns/raros (%d)" % commons)
-	check(bosses.size() == 10 and bosses.has("boss_hydra"), "9 chefes + Hidra")
+	check(commons == 36, "36 monstros comuns/raros (%d)" % commons)
+	check(bosses.size() == 13 and bosses.has("boss_hydra"), "12 chefes + Hidra")
 	var family_forms := 0
 	var secrets := 0
 	for id in GameData.forms:
@@ -232,7 +232,7 @@ func test_06_catalog_counts() -> void:
 			secrets += 1
 		else:
 			family_forms += 1
-	check(family_forms == 6 and secrets == 3, "6 formas de família e 3 secretas")
+	check(family_forms == 6 and secrets == 10, "6 formas de família e 10 secretas")
 	for id in cat:
 		var b: Dictionary = GameData.bones[id]
 		if b.rarity == "legendary":
@@ -1150,7 +1150,7 @@ func test_21_continue_run() -> void:
 	# perfil não muda: nada da partida vai para o save do perfil
 	check(not Profile.defaults().has("run_save"), "perfil sem campo novo")
 	var src := FileAccess.get_file_as_string("res://scripts/scenes/run.gd")
-	var end_i := src.find("func _end_run()")
+	var end_i := src.find("func _record_run_end()")
 	check(end_i > 0 and src.find("RunSave.clear()", end_i) < src.find("state.end_rewards()", end_i), "fim de partida apaga a gravação antes de pagar o pó")
 	var lose_i := src.find("if combat.result == \"lose\":")
 	check(src.find("RunSave.clear()", lose_i) < src.find("_death_dialog()", lose_i), "morte apaga a gravação antes da tela de reviver")
@@ -1223,7 +1223,7 @@ func test_23_crash_fixes_1_3_1() -> void:
 	check(bg != null, "popup do pó offline abre")
 	var buttons := bg.find_children("*", "Button", true, false)
 	var dbl: Button = buttons[0]
-	var take: Button = buttons[1]
+	var take: Button = buttons.filter(func(b): return (b as Button).text == TranslationServer.translate("offline_collect"))[0]
 	dbl.pressed.emit()
 	await get_tree().process_frame
 	check(Ads._showing, "anúncio em andamento")
@@ -1259,3 +1259,124 @@ func test_23_crash_fixes_1_3_1() -> void:
 	await get_tree().process_frame
 	check(os.find_children("*", "GPUParticles2D", true, false).is_empty(), "aura do Ossinho sem partículas de GPU")
 	os.queue_free()
+
+
+func test_24_update_1_4() -> void:
+	# --- curas pequenas (roubo de vida/regeneração < 1) não deixam a barra atrás
+	MonsterFactory.tower = 1
+	var ok_small := true
+	for sd in [3, 7, 11, 19, 23]:
+		var stv := RunState.new({"seed": sd})
+		var hv := stv.make_hero()
+		hv.lifesteal = 0.04
+		hv.regen = 0.004
+		var env := [MonsterFactory.make("monster_corpse_bear", 8), MonsterFactory.make("monster_bone_wasp", 8)]
+		var cbv := Combat.new(hv, env, {"rng": stv.rng})
+		var n := 0
+		while not cbv.finished() and n < 40:
+			n += 1
+			var evs := cbv.step()
+			var shown := {}
+			for ev in evs:
+				for f in ev.get("hps", {}):
+					shown[f] = ev.hps[f]
+			for f in shown:
+				if absf(float(shown[f]) - f.hp) > 0.001:
+					ok_small = false
+	check(ok_small, "curas pequenas atualizam a vida mostrada")
+	var backup: Dictionary = Profile.data.duplicate(true)
+	# --- save de quem já joga (formato da 1.3): carrega sem perder nada
+	var old := Profile.defaults()
+	old.erase("review")
+	old.missions.erase("swap_day")
+	old.dust = 12345
+	old.diamonds = 321
+	old.ossuary = {"hp": 7, "atk": 9, "def": 3, "drop": 2}
+	old.discovered_bones = {}
+	for id in GameData.bones_by({"family": "family_beast"}):
+		if int(GameData.bone(id).get("wave", 1)) < 3:
+			old.discovered_bones[id] = true
+	old.families_done = {}
+	old.towers = {"unlocked": 3, "selected": 2, "cleared": {"1": true, "2": true}, "best": {"1": 30, "2": 30, "3": 12}, "wins": {"1": 3, "2": 1}}
+	Profile.load_from(old)
+	check(Profile.dust() == 12345 and Profile.diamonds() == 321, "save antigo: pó e diamantes iguais")
+	check(Meta.ossuary_level("atk") == 9 and Meta.ossuary_level("crit") == 0, "save antigo: Ossuário igual e avançadas no nível 0")
+	check(Meta.tower_unlocked() == 3 and Meta.tower_selected() == 2, "save antigo: torres iguais")
+	check(Profile.data.families_done.has("family_beast"), "família completa com os ossos antigos continua completa")
+	check(Profile.data.has("review") and Profile.data.missions.has("swap_day"), "campos novos entram com valor padrão")
+	# --- melhorias avançadas do Ossuário
+	check(Meta.ossuary_extra_unlocked(), "avançadas liberadas depois da Torre 1")
+	Profile.data.towers.cleared = {}
+	check(not Meta.ossuary_extra_unlocked(), "avançadas escondidas antes de vencer a Torre 1")
+	Profile.data.towers.cleared = {"1": true}
+	var atk_lv := Meta.ossuary_level("atk")
+	Profile.data.ossuary["atk"] = 0
+	check(Meta.ossuary_cost("crit") > Meta.ossuary_cost("atk") * 4, "avançada custa bem mais que a básica no mesmo nível")
+	Profile.data.ossuary["atk"] = atk_lv
+	Profile.data.dust = 1000000
+	var crit0 := float(Meta.ossuary_stats().get("crit", 0.0))
+	check(Meta.ossuary_upgrade("crit"), "comprar Crítico avançado")
+	check(is_equal_approx(float(Meta.ossuary_stats().get("crit", 0.0)) - crit0, 0.005), "Crítico avançado: +0,5% por nível")
+	Profile.data.ossuary["crit"] = Meta.ossuary_max("crit")
+	check(not Meta.ossuary_upgrade("crit"), "avançada tem teto de nível")
+	check(Body.stat_value_text("crit", 0.005).contains("0") and Body.stat_value_text("crit", 0.005).contains("5"), "0,5% aparece com decimal (%s)" % Body.stat_value_text("crit", 0.005))
+	# --- relíquia: ganho do próximo nível
+	var r := Meta.add_relic("relic_knuckle_ring")
+	var s1 := Meta.relic_stats_at(r, 1)
+	var s2 := Meta.relic_stats_at(r, 2)
+	check(float(s2.get("atk_pct", 0)) > float(s1.get("atk_pct", 0)), "relíquia mostra ganho do próximo nível")
+	# --- diamantes: usos de conveniência
+	for k in ["reroll_levelup", "reroll_event", "mission_swap", "offline_double", "run_double_dust"]:
+		check(Store.use_price(k) > 0, "preço do uso %s" % k)
+	Profile.data.diamonds = 100
+	Profile.data.missions = {"day": -1, "daily": [], "week": -1, "weekly": [], "swap_day": -1}
+	var before_id := String(Missions.list("daily")[0].id)
+	check(Missions.can_swap(0), "pode trocar uma missão do dia")
+	check(Missions.swap(0), "troca a missão")
+	check(String(Missions.list("daily")[0].id) != before_id and Profile.diamonds() == 100 - Store.use_price("mission_swap"), "missão trocada e diamantes cobrados")
+	check(not Missions.can_swap(1) and not Missions.swap(1), "só uma troca por dia")
+	var stats := {}
+	for m in Missions.list("daily"):
+		stats[String(Missions.def(String(m.id)).stat)] = true
+	check(stats.size() == Missions.list("daily").size(), "missão trocada não repete estatística")
+	Profile.data.diamonds = 3
+	check(not Store.pay_use("reroll_event"), "sem diamantes suficientes não paga")
+	# --- desistir, avaliação e raio
+	var rsrc := FileAccess.get_file_as_string("res://scripts/scenes/run.gd")
+	check(rsrc.contains("func _confirm_quit()") and rsrc.contains("_record_run_end()"), "desistir registra o fim da partida")
+	check(rsrc.contains("if src.is_hero:") and rsrc.contains("hero_view.slot_global_position(\"slot_skull\"), Color(1.0, 0.45, 0.4)"), "raio do inimigo sai do inimigo")
+	Profile.data.runs_played = 5
+	Profile.data.review = {"count": 0, "last": 0, "pending": false}
+	ReviewPrompt.note_run(false, false)
+	check(not ReviewPrompt.should_ask(), "sem chefe vencido não pede avaliação")
+	ReviewPrompt.note_run(true, false)
+	check(ReviewPrompt.should_ask(), "pede avaliação depois de vencer um chefe")
+	Profile.data.review.count = ReviewPrompt.MAX_ASKS
+	check(not ReviewPrompt.should_ask(), "no máximo 2 pedidos")
+	Profile.data.review = {"count": 1, "last": Backend.now() - 86400, "pending": true}
+	check(not ReviewPrompt.should_ask(), "espera 45 dias entre pedidos")
+	# --- conteúdo novo
+	for id in ["monster_bone_scarab", "monster_skeleton_knight", "monster_ghost_jelly", "monster_carrion_vulture", "monster_frost_imp", "monster_bone_serpent", "boss_spider_queen", "boss_bone_kraken", "boss_death_knight"]:
+		check(GameData.monsters.has(id) and ResourceLoader.exists(GameData.monster_texture_path(id)), "monstro novo com arte: " + id)
+		for b in GameData.monster(id).get("drops", []):
+			check(ResourceLoader.exists(GameData.bone_texture_path(String(b))) and tr_all(String(b) + "_desc"), "osso novo com arte e texto: " + String(b))
+	var eq := {"slot_skull": {"id": "bone_skull_hyena", "level": 1}, "slot_arm_left": {"id": "bone_claw_wolf", "level": 1}, "slot_tail": {"id": "bone_tail_wolf", "level": 1}}
+	check(Body.active_forms(eq).has("form_pack_alpha"), "forma secreta nova ativa com a receita")
+	# --- status: o que cada osso dá
+	var rs := RunState.new({"seed": 5})
+	rs.equip("slot_skull", {"id": "bone_skull_wolf", "level": 3})
+	var v := VBoxContainer.new()
+	add_child(v)
+	StatusPopup.fill(v, rs)
+	var texts := []
+	for l in v.find_children("*", "Label", true, false):
+		texts.append((l as Label).text)
+	var joined := " | ".join(texts)
+	check(joined.contains(tr("bone_skull_wolf_desc")), "Status mostra a descrição do osso")
+	check(joined.contains(tr("status_bone_now").split("%")[0]), "Status mostra o valor atual do osso que subiu de nível")
+	v.queue_free()
+	# --- cartão: foto com o esqueleto de frente
+	var csrc := FileAccess.get_file_as_string("res://scripts/scenes/creature_card.gd")
+	check(csrc.contains("func capture_card()") and csrc.contains("creature.scale.x = 2.5"), "foto do cartão com a largura cheia")
+	Profile.data = backup
+	Profile.save()

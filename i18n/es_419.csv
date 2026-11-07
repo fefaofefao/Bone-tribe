@@ -1493,3 +1493,104 @@ btn_new_run_confirm,Empezar otra
 btn_continue_short,Continuar la partida
 ad_loading,Cargando anuncio…
 purchase_loading,Abriendo Google Play…
+status_bone_now,Con el nivel actual: %s
+relic_next,Siguiente nivel: %s
+btn_quit_run,Rendirse
+quit_run_title,¿Rendirte?
+quit_run_text,La partida termina como derrota. Te llevas %s de polvo de hueso y el Cazador puede llevarse uno de tus huesos.
+btn_quit_run_confirm,Rendirse
+btn_keep_playing,Seguir jugando
+btn_reroll_diamonds,Cambiar opciones
+btn_other_event,Otro evento
+btn_double_dust_diamonds,Duplicar polvo
+offline_double_diamonds,Duplicar (%s) por %d
+mission_swap,Cambiar  %d
+ossuary_advanced,Mejoras avanzadas
+ossuary_advanced_sub,Desbloqueadas al vencer la Torre 1. Atributos raros con límite de nivel.
+ossuary_extra_now,Ahora: %s
+form_winged_reaper_name,Segador Alado
+form_winged_reaper_desc,+12% de robo de vida; los golpes pueden causar sangrado.
+form_clockwork_minotaur_name,Minotauro de Engranajes
+form_clockwork_minotaur_desc,"+6 de defensa; cada 3 turnos, un puñetazo de 160% de daño."
+form_swamp_drake_name,Draco del Pantano
+form_swamp_drake_desc,+10% de vida; coletazo cada 3 turnos y golpes venenosos.
+form_stone_gargoyle_name,Gárgola de Piedra
+form_stone_gargoyle_desc,+8% de esquiva; el primer golpe de cada combate no hace daño.
+form_pack_alpha_name,Alfa de la Manada
+form_pack_alpha_desc,"+10% de crítico, +3 de velocidad y siempre ataca primero en el 1.er turno."
+form_storm_hornet_name,Avispa de la Tormenta
+form_storm_hornet_desc,+6% de esquiva; cada 3 turnos ataca dos veces.
+form_ember_salamander_name,Salamandra de Brasa
+form_ember_salamander_desc,+25% de daño de fuego; garra llameante cada 3 turnos.
+monster_bone_scarab_name,Escarabajo de Huesos
+monster_skeleton_knight_name,Caballero Esqueleto
+monster_ghost_jelly_name,Medusa Fantasma
+monster_carrion_vulture_name,Buitre Carroñero
+monster_frost_imp_name,Diablillo de Hielo
+monster_bone_serpent_name,Serpiente de Huesos
+boss_spider_queen_name,Reina Araña
+boss_bone_kraken_name,Kraken Óseo
+boss_death_knight_name,Caballero de la Muerte
+bone_shell_scarab_name,Caparazón de Escarabajo
+bone_shell_scarab_desc,+14 de defensa y refleja el 6% del daño recibido.
+bone_shell_scarab_part,Escarabajo
+bone_shell_scarab_adj,Blindado
+bone_legs_scarab_name,Patas de Escarabajo
+bone_legs_scarab_desc,"+8 de defensa, +15 de vida y 10% de evitar trampas."
+bone_legs_scarab_part,Escarabajo
+bone_legs_scarab_adj,Blindado
+bone_helm_knight_name,Yelmo de Caballero
+bone_helm_knight_desc,+10 de defensa y 5% de crítico.
+bone_helm_knight_part,Caballero
+bone_helm_knight_adj,Noble
+bone_shield_knight_name,Escudo de Caballero
+bone_shield_knight_desc,+14 de defensa y +2 de ataque.
+bone_shield_knight_part,Caballero
+bone_shield_knight_adj,Leal
+bone_tentacle_jelly_name,Tentáculo de Medusa
+bone_tentacle_jelly_desc,+5 de ataque. Los golpes pueden aturdir (20%).
+bone_tentacle_jelly_part,Medusa
+bone_tentacle_jelly_adj,Eléctrico
+bone_bell_jelly_name,Campana de Medusa
+bone_bell_jelly_desc,"+25 de vida y regenera 1,5% de vida por turno."
+bone_bell_jelly_part,Medusa
+bone_bell_jelly_adj,Etéreo
+bone_wings_vulture_name,Alas de Buitre
+bone_wings_vulture_desc,+4 de velocidad y 10% de esquiva.
+bone_wings_vulture_part,Buitre
+bone_wings_vulture_adj,Carroñero
+bone_skull_vulture_name,Cráneo de Buitre
+bone_skull_vulture_desc,8% de crítico y +5% de probabilidad de hueso.
+bone_skull_vulture_part,Buitre
+bone_skull_vulture_adj,Carroñero
+bone_skull_imp_name,Cráneo de Diablillo
+bone_skull_imp_desc,+4 de ataque y +2 de velocidad.
+bone_skull_imp_part,Diablillo
+bone_skull_imp_adj,Helado
+bone_tail_imp_name,Cola de Diablillo
+bone_tail_imp_desc,+12 de vida. Los golpes pueden aturdir (12%).
+bone_tail_imp_part,Diablillo
+bone_tail_imp_adj,Helado
+bone_spine_serpent_name,Espina de Serpiente
+bone_spine_serpent_desc,+20 de vida y 8% de robo de vida.
+bone_spine_serpent_part,Serpiente
+bone_spine_serpent_adj,Sombrío
+bone_fang_serpent_name,Colmillo de Serpiente
+bone_fang_serpent_desc,+6 de ataque. Los golpes envenenan (60%).
+bone_fang_serpent_part,Serpiente
+bone_fang_serpent_adj,Ponzoñoso
+bone_legs_spider_queen_name,Patas de la Reina Araña
+bone_legs_spider_queen_desc,"+5 de velocidad, 10% de esquiva y +20 de vida. Veneno que se acumula con cada golpe."
+bone_legs_spider_queen_part,Reina
+bone_legs_spider_queen_adj,Real
+bone_tentacles_kraken_name,Tentáculos del Kraken
+bone_tentacles_kraken_desc,"+35 de vida y +10 de defensa. Cada 4 turnos, golpe de 180% de daño."
+bone_tentacles_kraken_part,Kraken
+bone_tentacles_kraken_adj,Abisal
+bone_blade_death_knight_name,Hoja del Caballero de la Muerte
+bone_blade_death_knight_desc,+10 de ataque y 10% de crítico. Cada 4 turnos ataca dos veces.
+bone_blade_death_knight_part,Muerte
+bone_blade_death_knight_adj,Implacable
+event_boss_spider_queen_text,"Hilos de telaraña brillan en el techo. La Reina Araña baja despacio, con la corona torcida y ocho patas listas para envolverte."
+event_boss_bone_kraken_text,El agua negra burbujea. Tentáculos de hueso suben del fondo y se abre un ojo del tamaño de un escudo: el Kraken Óseo despertó.
+event_boss_death_knight_text,Una armadura vacía se levanta del trono y la hoja se enciende. El Caballero de la Muerte te señala: —Solo uno de nosotros sale de aquí.

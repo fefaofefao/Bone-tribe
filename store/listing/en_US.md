@@ -12,7 +12,7 @@ Each run takes a few minutes and ends with a one-of-a-kind creature. Bat wings, 
 
 🦴 BUILD YOUR BODY
 • 7 slots: skull, ribs, two arms, legs, back and tail
-• 102 bones from 6 monster families: more than 10 options for every body part
+• 117 bones from 6 monster families: more than 10 options for every body part
 • Match pieces from the same family to awaken forms like the Night Manticore
 • Discover 3 secret forms… and watch out for rejection!
 
@@ -23,7 +23,7 @@ Each run takes a few minutes and ends with a one-of-a-kind creature. Bat wings, 
 
 ⚔️ AUTO-BATTLER, ONE-HANDED PLAY
 • Tap, choose and watch Bonesy fight
-• 30 monsters, 9 bosses and a secret at the bottom of the crypt
+• 36 monsters, 12 bosses and a secret at the bottom of the crypt
 • 40 towers, each harder than the last, with curses and bones found only in the higher towers
 
 🏛️ PROGRESSION

@@ -186,17 +186,33 @@ func _build_card(p: Dictionary) -> void:
 	box.add_child(footer)
 
 
+var _capturing := false
+
+
 func _process(delta: float) -> void:
 	_t += delta
-	if creature:
+	if creature and not _capturing:
 		# giro "3D" falso: a escala horizontal segue o cosseno
 		var c := cos(_t * 1.1)
 		creature.scale.x = 2.5 * (c if absf(c) > 0.08 else 0.08 * signf(c + 0.0001))
 
 
+## Foto do cartão com o esqueleto de frente: o giro "3D" encolhe a largura dele, e a
+## foto tirada no meio do giro saía com o personagem estreito.
+func capture_card() -> Image:
+	_capturing = true
+	if creature:
+		creature.scale.x = 2.5
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	var img := viewport.get_texture().get_image()
+	_capturing = false
+	return img
+
+
 func _share() -> void:
 	Haptics.medium()
-	var img := viewport.get_texture().get_image()
+	var img := await capture_card()
 	DirAccess.make_dir_recursive_absolute("user://cards")
 	var path := "user://cards/bonetribe_%d.png" % Backend.now()
 	img.save_png(path)

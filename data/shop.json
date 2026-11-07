@@ -309,6 +309,8 @@
 			"per": "day"
 		}
 	},
+	"_doc_diamond_uses": "Usos de conveniência dos diamantes (1.4): não compram força direta e têm limite. reroll_levelup e reroll_event por partida; mission_swap por dia; offline_double vale como o dobro do dia; run_double_dust é a alternativa ao anúncio, uma vez por partida.",
+	"diamond_uses": {"reroll_levelup": {"price": 5, "per_run": 3}, "reroll_event": {"price": 8, "per_run": 3}, "mission_swap": {"price": 10, "per_day": 1}, "offline_double": {"price": 20}, "run_double_dust": {"price": 15}},
 	"kit24": {
 		"window_s": 86400
 	}

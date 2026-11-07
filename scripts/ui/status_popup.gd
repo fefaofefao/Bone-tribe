@@ -102,6 +102,20 @@ static func fill(v: VBoxContainer, state: RunState) -> void:
 		row.add_child(nl)
 		row.add_child(Style.nowrap(Style.label(_t(slot), 17, Style.C_MUTED)))
 		v.add_child(row)
+		# o que o osso dá: a descrição dele e, se subiu de nível ou de raridade, os valores de agora
+		var info := Style.vbox(0)
+		var m := MarginContainer.new()
+		m.add_theme_constant_override("margin_left", 54)
+		m.add_child(info)
+		var desc := _t(String(b.get("desc", "")))
+		if desc != "" and desc != String(b.get("desc", "")):
+			info.add_child(Style.label(desc, 17, Style.C_MUTED))
+		var upgraded := lv > 1 or (inst.has("rarity") and String(inst.rarity) != String(b.get("rarity", "")))
+		var now := Body.stats_compare_text({}, Body.instance_stats(inst))
+		if upgraded and now != "":
+			info.add_child(Style.label(_t("status_bone_now") % now, 17, Style.C_HEAL))
+		if info.get_child_count() > 0:
+			v.add_child(m)
 
 
 static func _head(v: VBoxContainer, key: String) -> void:

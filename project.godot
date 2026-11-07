@@ -16,7 +16,7 @@ general/ios/enabled=false
 
 config/name="BoneTribe"
 config/description="Bone Tribe — roguelite de eventos com corpo montável."
-config/version="1.3.1"
+config/version="1.4.0"
 run/main_scene="res://scenes/TitleScreen.tscn"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "GL Compatibility")
@@ -49,7 +49,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GodotGooglePlayBilling/plugin.cfg", "res://addons/admob/plugin.cfg", "res://addons/bonetribe_firebase/plugin.cfg", "res://addons/bonetribe_notify/plugin.cfg")
+enabled=PackedStringArray("res://addons/GodotGooglePlayBilling/plugin.cfg", "res://addons/admob/plugin.cfg", "res://addons/bonetribe_firebase/plugin.cfg", "res://addons/bonetribe_notify/plugin.cfg", "res://addons/bonetribe_review/plugin.cfg")
 
 [gui]
 

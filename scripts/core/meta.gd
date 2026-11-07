@@ -37,25 +37,52 @@ static func ossuary_level(stat: String) -> int:
 ## para sempre haver uma melhoria possível rumo à próxima torre.
 static func ossuary_cost(stat: String) -> int:
 	var lv := ossuary_level(stat)
+	var ex := ossuary_extra(stat)
+	if not ex.is_empty():
+		return int(roundf(float(ex.get("cost_base", 150)) * pow(lv + 1.0, float(ex.get("cost_exp", 1.45)))))
 	return int(roundf(float(GameData.bal("ossuary/cost_base", 50)) * pow(lv + 1.0, float(GameData.bal("ossuary/cost_exp", 1.6)))))
 
 
-static func ossuary_max() -> int:
+static func ossuary_max(stat: String = "") -> int:
+	var ex := ossuary_extra(stat)
+	if not ex.is_empty():
+		return int(ex.get("max", 20))
 	return int(GameData.bal("ossuary/max_level", 30))
+
+
+## Melhorias avançadas do Ossuário (1.4): {} se não for uma delas.
+static func ossuary_extra(stat: String) -> Dictionary:
+	return GameData.bal("ossuary/extra", {}).get(stat, {}) if stat != "" else {}
+
+
+static func ossuary_extra_ids() -> Array:
+	return (GameData.bal("ossuary/extra", {}) as Dictionary).keys()
+
+
+## As avançadas aparecem depois de vencer a Torre 1 (o começo do jogo fica igual).
+static func ossuary_extra_unlocked() -> bool:
+	return tower_cleared(1)
 
 
 static func ossuary_stats() -> Dictionary:
 	var per: Dictionary = GameData.bal("ossuary/per_level", {})
-	return {
+	var out := {
 		"hp_pct": ossuary_level("hp") * float(per.get("hp", 0.05)),
 		"atk_pct": ossuary_level("atk") * float(per.get("atk", 0.05)),
 		"def": ossuary_level("def") * float(per.get("def", 1)),
 		"drop_bonus": ossuary_level("drop") * float(per.get("drop", 0.01)),
 	}
+	for id in ossuary_extra_ids():
+		var lv := ossuary_level(id)
+		if lv > 0:
+			var ex := ossuary_extra(id)
+			var k := String(ex.get("stat", id))
+			out[k] = float(out.get(k, 0.0)) + lv * float(ex.get("per", 0.0))
+	return out
 
 
 static func ossuary_upgrade(stat: String) -> bool:
-	if ossuary_level(stat) >= ossuary_max():
+	if ossuary_level(stat) >= ossuary_max(stat):
 		return false
 	if not Profile.spend_dust(ossuary_cost(stat), "ossuary_" + stat):
 		return false
@@ -177,6 +204,14 @@ static func equip_relic(uid: int) -> void:
 
 static func relic_power(r: Dictionary) -> float:
 	return 1.0 + float(GameData.bal("relics/per_level", 0.15)) * (int(r.get("level", 1)) - 1)
+
+
+## Atributos de uma relíquia num nível (a mesma conta de relic_stats).
+static func relic_stats_at(r: Dictionary, level: int) -> Dictionary:
+	var out := {}
+	var p := 1.0 + float(GameData.bal("relics/per_level", 0.15)) * (level - 1)
+	_add(out, GameData.relics.get(r.id, {}).get("stats", {}), p)
+	return out
 
 
 static func relic_upgrade_cost(r: Dictionary) -> int:

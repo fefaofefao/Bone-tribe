@@ -9,6 +9,7 @@ var rng := RandomNumberGenerator.new()
 func build() -> void:
 	rng.randomize()
 	_upgrades()
+	_advanced_upgrades()
 	_companions()
 	_relics()
 	_cabinet()
@@ -27,10 +28,10 @@ func _upgrades() -> void:
 		tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tv.add_child(Style.bold(tr("ossuary_" + stat) + "  " + tr("hud_level") % Meta.ossuary_level(stat), 26, Style.C_BONE))
 		tv.add_child(Style.label(tr("ossuary_" + stat + "_desc") % _stat_value(stat), 20, Style.C_MUTED))
-		if Meta.ossuary_level(stat) < Meta.ossuary_max():
+		if Meta.ossuary_level(stat) < Meta.ossuary_max(stat):
 			tv.add_child(Style.bold(tr("ossuary_next") % _stat_value(stat, 1), 19, Color("8fe08a")))
 		h.add_child(tv)
-		if Meta.ossuary_level(stat) >= Meta.ossuary_max():
+		if Meta.ossuary_level(stat) >= Meta.ossuary_max(stat):
 			h.add_child(Style.nowrap(Style.bold(tr("max_level"), 22, Style.C_CANDLE)))
 		else:
 			var cost := Meta.ossuary_cost(stat)
@@ -38,6 +39,44 @@ func _upgrades() -> void:
 			var s: String = stat
 			b.pressed.connect(func():
 				if Meta.ossuary_upgrade(s):
+					Audio.play("upgrade")
+					Haptics.medium()
+					toast(tr("upgraded"), Style.C_CANDLE)
+					rebuild())
+			h.add_child(b)
+		box.add_child(c)
+
+
+## Melhorias avançadas (depois da Torre 1): atributos secundários, teto baixo.
+func _advanced_upgrades() -> void:
+	if not Meta.ossuary_extra_unlocked():
+		return
+	var box := section("ossuary_advanced", tr("ossuary_advanced_sub"))
+	for id in Meta.ossuary_extra_ids():
+		var ex := Meta.ossuary_extra(id)
+		var stat := String(ex.get("stat", id))
+		var lv := Meta.ossuary_level(id)
+		var mx := Meta.ossuary_max(id)
+		var c := card()
+		var h := Style.hbox(14)
+		c.add_child(h)
+		h.add_child(Widgets.icon("res://art/ui/%s.png" % String(ex.get("icon", "ui_icon_attack")), 64))
+		var tv := Style.vbox(2)
+		tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tv.add_child(Style.bold(tr("stat_" + stat) + "  " + tr("hud_level") % lv + " / " + str(mx), 26, Style.C_BONE))
+		var per := float(ex.get("per", 0.0))
+		tv.add_child(Style.label(tr("ossuary_extra_now") % ("+" + Body.stat_value_text(stat, lv * per)), 20, Style.C_MUTED))
+		if lv < mx:
+			tv.add_child(Style.bold(tr("ossuary_next") % ("+" + Body.stat_value_text(stat, (lv + 1) * per)), 19, Color("8fe08a")))
+		h.add_child(tv)
+		if lv >= mx:
+			h.add_child(Style.nowrap(Style.bold(tr("max_level"), 22, Style.C_CANDLE)))
+		else:
+			var cost := Meta.ossuary_cost(id)
+			var b := price_button(cost, "dust", Profile.dust() >= cost)
+			var sid: String = id
+			b.pressed.connect(func():
+				if Meta.ossuary_upgrade(sid):
 					Audio.play("upgrade")
 					Haptics.medium()
 					toast(tr("upgraded"), Style.C_CANDLE)
@@ -161,6 +200,14 @@ func _relics() -> void:
 			v.add_child(Widgets.icon("res://art/ui/%s.png" % r.id, 72))
 			v.add_child(Style.bold(tr(String(rd.name)) + " +" + str(int(r.level) - 1), 21, Style.rarity_color(String(rd.rarity)), HORIZONTAL_ALIGNMENT_CENTER))
 			v.add_child(Style.label(tr(String(rd.desc)), 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+			# ganho do próximo nível: "Vida 5% → 6%"
+			var lv := int(r.level)
+			if lv < int(GameData.bal("relics/max_level", 10)):
+				var gain := Body.stats_compare_text(Meta.relic_stats_at(r, lv), Meta.relic_stats_at(r, lv + 1))
+				if gain != "":
+					v.add_child(Style.bold(tr("relic_next") % gain, 17, Color("8fe08a"), HORIZONTAL_ALIGNMENT_CENTER))
+			else:
+				v.add_child(Style.bold(tr("companion_maxed"), 17, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER))
 			if int(r.level) < int(GameData.bal("relics/max_level", 10)):
 				var cost := Meta.relic_upgrade_cost(r)
 				var up := price_button(cost, "dust", Profile.dust() >= cost)

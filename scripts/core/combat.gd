@@ -96,6 +96,8 @@ func step() -> Array:
 			var h := f.heal(f.max_hp * f.regen)
 			if h > 0.5:
 				_emit({"t": "heal", "dst": f, "amount": h, "source": "regen"})
+			elif h > 0.0:
+				_sync_last(f)
 	_companion_turn()
 	for en in enemies:
 		if en.alive() and en.guard_max > 0 and en.guard_broken_turns > 0:
@@ -158,6 +160,8 @@ func _companion_turn() -> void:
 		var h := hero.heal(hero.max_hp * float(companion.get("heal_pct", 0.0)))
 		if h > 0.5:
 			_emit({"t": "heal", "dst": hero, "amount": h, "source": "companion"})
+		elif h > 0.0:
+			_sync_last(hero)
 
 
 # ------------------------------------------------------------ Ossinho
@@ -362,6 +366,8 @@ func _attack(src: Fighter, dst: Fighter, mult: float, kind: String, element: Str
 		var h := src.heal(dmg * src.lifesteal)
 		if h >= 1.0:
 			_emit({"t": "heal", "dst": src, "amount": h, "source": "lifesteal"})
+		elif h > 0.0:
+			_sync_last(src)
 	# Reflexo.
 	if dst.reflect > 0.0 and dmg > 0.0 and src.alive() and kind != "reflect":
 		var r := maxf(1.0, roundf(dmg * dst.reflect))
@@ -460,6 +466,13 @@ func _emit(ev: Dictionary) -> void:
 		hps[f] = f.hp
 	ev["hps"] = hps
 	_log.append(ev)
+
+
+## Cura pequena demais para mostrar número: só corrige a vida do último
+## evento, para a barra não ficar atrás da vida real.
+func _sync_last(f: Fighter) -> void:
+	if not _log.is_empty() and _log[-1].has("hps"):
+		_log[-1].hps[f] = f.hp
 
 
 ## Roda o combate inteiro sem animação (testes e simulação).
