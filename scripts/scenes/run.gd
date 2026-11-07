@@ -57,7 +57,8 @@ func _ready() -> void:
 		# ferramenta de desenvolvimento (BT_TOWER=n): joga a torre n (capturas de tela)
 		if Dev.env("BT_TOWER") != "":
 			tower = int(Dev.env("BT_TOWER"))
-		state = RunState.new({"demo": demo, "tower": tower, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
+		var endless := not demo and (bool(p.get("endless", false)) or Dev.env("BT_ENDLESS") == "1")
+		state = RunState.new({"demo": demo, "tower": tower, "endless": endless, "companion": "" if demo else String(Profile.data.get("selected_companion", "")), "start_bone": start_bone})
 		if start_bone != "":
 			Profile.discover_bone(start_bone)
 	# ferramenta de desenvolvimento (BT_FLOOR=n): começa a partida no andar n
@@ -75,7 +76,7 @@ func _ready() -> void:
 	if resumed:
 		Backend.log_event("run_resume", {"tower": state.tower, "floor": state.floor_n})
 	else:
-		Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower})
+		Backend.log_event("run_start", {"demo": demo, "runs": Profile.data.runs_played, "tower": state.tower, "endless": state.endless})
 	_run_loop()
 	# ferramenta de desenvolvimento (BT_QUIT=s): abre "Desistir" depois de s segundos e confirma
 	if Dev.env("BT_QUIT") != "":
@@ -99,6 +100,9 @@ func _build_world() -> void:
 	stage = CryptStage.new()
 	stage.tint = Color(String(GameData.tower(state.tower).get("tint", "#948aa3")))
 	stage.theme = String(GameData.tower(state.tower).get("theme", "crypt"))
+	if state.endless:
+		stage.tint = Color(String(GameData.bal("endless/tint", "#9a7cc4")))
+		stage.theme = String(GameData.bal("endless/theme", "cursed"))
 	world.add_child(stage)
 	hero_view = preload("res://scenes/Ossinho.tscn").instantiate()
 	hero_view.position = HERO_POS
@@ -393,7 +397,7 @@ func _confirm_quit() -> void:
 		state.victory = false
 		Backend.log_event("run_quit", {"floor": state.floor_n, "tower": state.tower})
 		_record_run_end()
-		Router.go("card", {"equipped": state.equipped.duplicate(true), "floor": state.floor_n, "tower": state.tower, "victory": false, "demo": demo}))
+		Router.go("card", {"equipped": state.equipped.duplicate(true), "floor": state.floor_n, "tower": state.tower, "victory": false, "demo": demo, "endless": state.endless}))
 	v.add_child(yes)
 	var no := Style.button(tr("btn_keep_playing"), "CandleButton", 78)
 	no.pressed.connect(func():
@@ -485,6 +489,10 @@ func _refresh_hud() -> void:
 	level_label.text = tr("hud_level") % state.level
 	dust_label.text = Style.num(state.dust)
 	floor_label.text = tr("hud_tower_floor") % [state.tower, maxi(1, state.floor_n), state.total_floors]
+	if state.endless:
+		# Infinito: andar atual e o recorde do jogador sempre à vista
+		floor_label.text = tr("hud_endless_floor") % [maxi(1, state.floor_n), maxi(Meta.endless_best(), state.floor_n)]
+		floor_label.add_theme_color_override("font_color", Style.C_CANDLE if state.floor_n > Meta.endless_best() and Meta.endless_best() > 0 else Style.C_BONE)
 	for c in floor_dots.get_children():
 		c.queue_free()
 	var seg_start := int((maxi(1, state.floor_n) - 1) / 10) * 10
@@ -517,6 +525,7 @@ func _run_loop() -> void:
 		if not demo:
 			RunSave.save(state)
 		state.floor_n += 1
+		state.on_new_floor()
 		if state.pending_skip > 0:
 			# voo sobre o abismo: pula andares, mas nunca um chefe
 			var target := state.floor_n + state.pending_skip
@@ -525,7 +534,9 @@ func _run_loop() -> void:
 				n += 1
 			state.floor_n = n
 			state.pending_skip = 0
+			state.on_new_floor()
 		_refresh_hud()
+		_endless_floor_notice()
 		await _walk()
 		var boss := state.boss_for_floor(state.floor_n)
 		if boss != "":
@@ -547,6 +558,20 @@ func _run_loop() -> void:
 	await _end_run()
 
 
+## Infinito: avisa quando passa do recorde e quando começa uma nova volta.
+func _endless_floor_notice() -> void:
+	if not state.endless:
+		return
+	var best := Meta.endless_best()
+	if best > 0 and state.floor_n == best + 1 and not bool(state.flags.get("record_shown", false)):
+		state.flags["record_shown"] = true
+		_show_banner(tr("endless_new_record_live"), Style.C_CANDLE, 1.4)
+		Audio.play("levelup")
+		Haptics.medium()
+	elif state.floor_n > 1 and state.content_floor() == 1:
+		_top_notice(tr("endless_lap") % (state.lap_of() + 1), Color("d7aaff"), "", 2.4)
+
+
 ## Mapa Rasgado (Gabinete): revela o tipo do próximo evento.
 func _reveal_next() -> void:
 	if demo or state.stat("reveal_next") <= 0.0 or state.dead:
@@ -558,8 +583,10 @@ func _reveal_next() -> void:
 		return
 	var saved := state.floor_n
 	state.floor_n = n
+	state.on_new_floor()
 	state.next_event = state.pick_event()
 	state.floor_n = saved
+	state.on_new_floor()
 	_next_icon.texture = load("res://art/ui/ui_event_%s.png" % String(state.next_event.get("type", "combat")))
 	_next_icon.visible = true
 
@@ -608,7 +635,13 @@ func _intro() -> void:
 	cam.zoom = Vector2.ONE * 1.25
 	cam.position = HERO_POS + Vector2(60, -160)
 	await cam.reset(0.9).finished
-	_show_banner(tr("floor_forgotten_crypt") if state.tower == 1 else tr("tower_label") % [state.tower, tr(String(GameData.tower(state.tower).get("name", "")))], Style.C_BONE, 1.6)
+	var intro_name := tr("floor_forgotten_crypt") if state.tower == 1 else tr("tower_label") % [state.tower, tr(String(GameData.tower(state.tower).get("name", "")))]
+	if state.endless:
+		intro_name = tr("endless_title")
+	_show_banner(intro_name, Style.C_BONE, 1.6)
+	if state.endless and Meta.endless_best() > 0 and not resumed:
+		await get_tree().create_timer(0.4, false).timeout
+		_top_notice(tr("endless_beat_record") % Meta.endless_best(), Style.C_CANDLE, "", 2.6)
 	await get_tree().create_timer(0.6, false).timeout
 	var curse := String(GameData.tower(state.tower).get("curse", ""))
 	if curse != "":
@@ -808,7 +841,7 @@ func _do(a: Dictionary) -> void:
 				ids = a.monsters
 			else:
 				for i in int(a.get("count", 1)):
-					ids.append(MonsterFactory.random_for_floor(state.floor_n, state.rng))
+					ids.append(MonsterFactory.random_for_floor(state.content_floor(), state.rng))
 			await _combat(ids, false, bool(a.get("elite", false)))
 		"result":
 			await _show_result(tr(String(a.text)))
@@ -1729,7 +1762,10 @@ func _roll_drops(f: Fighter) -> Array:
 	var out := []
 	var m := GameData.monster(f.id)
 	if String(m.get("kind", "")) == "boss":
-		var bid := MonsterFactory.boss_drop(f.id, Profile.boss_wins(f.id), state.rng)
+		# no Infinito o chefe nunca usa a "1ª vitória" (osso garantido): ela fica
+		# guardada para quando o jogador chegar à torre desse chefe
+		var wins := maxi(1, Profile.boss_wins(f.id)) if state.endless else Profile.boss_wins(f.id)
+		var bid := MonsterFactory.boss_drop(f.id, wins, state.rng)
 		if bid != "":
 			out.append(bid)
 		return out
@@ -2189,9 +2225,12 @@ func _boss_floor(boss_id: String) -> void:
 	await _combat([boss_id], true)
 	if state.dead:
 		return
-	var first := Profile.boss_wins(boss_id) == 0
+	var first := Profile.boss_wins(boss_id) == 0 and not state.endless
 	state.bosses_beaten.append(boss_id)
-	Profile.register_boss_win(boss_id)
+	# Infinito: chefe ainda não vencido nas torres não conta como vencido
+	# (a 1ª vitória dele, com osso lendário e diamantes, continua nas torres)
+	if not state.endless or Profile.boss_wins(boss_id) > 0:
+		Profile.register_boss_win(boss_id)
 	if not demo:
 		Profile.stat_add("bosses")
 	Backend.log_event("boss_win", {"boss": boss_id, "floor": state.floor_n, "first": first})
@@ -2288,20 +2327,25 @@ func _record_run_end() -> Dictionary:
 		Profile.stat_add("floors", state.floor_n)
 		if state.dead:
 			Profile.stat_add("deaths")
-		Profile.data.best_index = maxi(int(Profile.data.best_index), state.floor_n)
-		# corpo do recorde (torre mais alta, depois andar mais alto): aparece na tela inicial
-		var score := state.tower * 100 + state.floor_n
-		if score >= int(Profile.data.best_body.get("score", 0)):
-			Profile.data.best_body = {"score": score, "tower": state.tower, "floor": state.floor_n, "equipped": state.equipped.duplicate(true)}
+		if not state.endless:
+			Profile.data.best_index = maxi(int(Profile.data.best_index), state.floor_n)
+			# corpo do recorde (torre mais alta, depois andar mais alto): aparece na tela inicial
+			var score := state.tower * 100 + state.floor_n
+			if score >= int(Profile.data.best_body.get("score", 0)):
+				Profile.data.best_body = {"score": score, "tower": state.tower, "floor": state.floor_n, "equipped": state.equipped.duplicate(true)}
 		Profile.save()
-	var tower_rew := {} if demo else Meta.tower_finish(state.tower, state.floor_n, state.beat_final_boss())
+	var tower_rew := {} if (demo or state.endless) else Meta.tower_finish(state.tower, state.floor_n, state.beat_final_boss())
+	var endless_rec := {}
+	if state.endless and not demo:
+		endless_rec = Meta.endless_finish(state.floor_n, state.equipped)
+		Backend.log_event("endless_end", {"floor": state.floor_n, "record": bool(endless_rec.new_record), "prev_best": int(endless_rec.best)})
 	var stolen := {}
 	if state.dead and not demo:
 		stolen = Meta.hunter_steal(state.equipped)
 	if not demo:
 		ReviewPrompt.note_run(not state.bosses_beaten.is_empty(), not tower_rew.is_empty())
 		Profile.save()
-	return {"rewards": rewards, "tower_rew": tower_rew, "stolen": stolen}
+	return {"rewards": rewards, "tower_rew": tower_rew, "stolen": stolen, "endless": endless_rec}
 
 
 func _end_run() -> void:
@@ -2319,7 +2363,17 @@ func _end_run() -> void:
 	var bg: Control = parts[0]
 	var v: VBoxContainer = parts[1]
 	v.add_child(Style.bold(Body.creature_name(state.equipped), 32, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER))
-	v.add_child(Style.label(tr("run_end_tower_floor") % [state.tower, state.floor_n], 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	if state.endless:
+		var er: Dictionary = rec.get("endless", {})
+		v.add_child(Style.label(tr("run_end_endless_floor") % state.floor_n, 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+		if bool(er.get("new_record", false)):
+			var nr := Style.bold(tr("endless_new_record") % state.floor_n, 30, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER)
+			v.add_child(nr)
+			Widgets.pop_in(nr, 0.3)
+		else:
+			v.add_child(Style.label(tr("endless_record_line") % Meta.endless_best(), 22, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	else:
+		v.add_child(Style.label(tr("run_end_tower_floor") % [state.tower, state.floor_n], 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
 	v.add_child(Style.label(tr("run_end_bosses") % state.bosses_beaten.size(), 24, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
 	if not stolen.is_empty():
 		var hrow := Style.hbox(10)
@@ -2376,7 +2430,7 @@ func _end_run() -> void:
 	else:
 		await dialog_closed
 	_close_dialog(bg)
-	Router.go("card", {"equipped": state.equipped.duplicate(true), "floor": state.floor_n, "tower": state.tower, "victory": state.victory, "demo": demo})
+	Router.go("card", {"equipped": state.equipped.duplicate(true), "floor": state.floor_n, "tower": state.tower, "victory": state.victory, "demo": demo, "endless": state.endless})
 
 
 # ================================================================ demonstração

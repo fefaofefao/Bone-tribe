@@ -49,7 +49,7 @@ func _ready() -> void:
 	root.add_child(row)
 	var again := Style.button(tr("btn_play_again"), "", 80)
 	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	again.pressed.connect(func(): Router.go("run", {}))
+	again.pressed.connect(func(): Router.go("run", {"endless": bool(p.get("endless", false))}))
 	row.add_child(again)
 	var menu := Style.button(tr("btn_menu"), "DarkButton", 80)
 	menu.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -177,6 +177,8 @@ func _build_card(p: Dictionary) -> void:
 	if not forms.is_empty():
 		box.add_child(Style.bold(tr("card_forms") % tr(String(GameData.forms[forms[0]].name)), 46, aura, HORIZONTAL_ALIGNMENT_CENTER))
 	var sub := tr("card_tower_floor") % [int(p.get("tower", 1)), int(p.get("floor", 1))]
+	if bool(p.get("endless", false)):
+		sub = tr("card_endless_floor") % int(p.get("floor", 1))
 	if p.get("victory", false):
 		sub += "  ·  " + tr("card_victory")
 	box.add_child(Style.label(sub, 40, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))

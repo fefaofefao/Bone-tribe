@@ -7,16 +7,29 @@ extends RefCounted
 ## Torre em jogo (o RunState define ao começar a partida). Multiplica a vida
 ## e o ataque de todos os lutadores criados: monstros, chefes, Caçador e aliados.
 static var tower := 1
+## Modo Infinito (o RunState define): depois do andar endless/after_floor a vida
+## e o ataque crescem mais rápido a cada andar.
+static var endless := false
+## Torre usada só para escolher monstros (0 = a torre em jogo). O Infinito
+## sobe uma faixa a cada volta, para os monstros das torres altas aparecerem.
+static var pool_tower := 0
 
 
 static func enemy_hp(floor_n: int) -> float:
 	return float(GameData.bal("enemy/hp_base", 30)) * pow(float(GameData.bal("enemy/hp_growth", 1.12)), floor_n) \
-		* float(GameData.tower(tower).get("hp_mult", 1.0))
+		* float(GameData.tower(tower).get("hp_mult", 1.0)) * _endless_mult(floor_n, "hp")
 
 
 static func enemy_atk(floor_n: int) -> float:
 	return float(GameData.bal("enemy/atk_base", 5)) * pow(float(GameData.bal("enemy/atk_growth", 1.10)), floor_n) \
-		* float(GameData.tower(tower).get("atk_mult", 1.0))
+		* float(GameData.tower(tower).get("atk_mult", 1.0)) * _endless_mult(floor_n, "atk")
+
+
+static func _endless_mult(floor_n: int, stat: String) -> float:
+	if not endless:
+		return 1.0
+	var extra := maxi(0, floor_n - int(GameData.bal("endless/after_floor", 30)))
+	return pow(float(GameData.bal("endless/%s_growth_after" % stat, 1.0)), extra)
 
 
 static func make(monster_id: String, floor_n: int, cursed := true) -> Fighter:
@@ -34,6 +47,9 @@ static func make(monster_id: String, floor_n: int, cursed := true) -> Fighter:
 	if f.is_boss:
 		hp *= float(GameData.bal("boss/hp_mult", 8))
 		atk *= float(GameData.bal("boss/atk_mult", 1.5))
+		if endless:
+			hp *= float(GameData.bal("endless/boss_hp_mult", 1.0))
+			atk *= float(GameData.bal("endless/boss_atk_mult", 1.0))
 	f.max_hp = roundf(hp)
 	f.hp = f.max_hp
 	f.atk = atk
@@ -95,7 +111,8 @@ static func random_for_floor(floor_n: int, rng: RandomNumberGenerator) -> String
 		if floor_n < int(fl[0]) or floor_n > int(fl[1]):
 			continue
 		var tw: Array = m.get("towers", [1, 99])
-		if tower < int(tw[0]) or tower > int(tw[1]):
+		var pt := pool_tower if pool_tower > 0 else tower
+		if pt < int(tw[0]) or pt > int(tw[1]):
 			continue
 		pool.append(id)
 		# monstros da região da torre aparecem um pouco mais, para serem vistos

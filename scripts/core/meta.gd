@@ -521,6 +521,34 @@ static func tower_best(n: int) -> int:
 	return int(Profile.data.towers.best.get(str(n), 0))
 
 
+# ------------------------------------------------------------ modo infinito
+
+## O Infinito abre depois de vencer o Rei Rato uma vez (data/balance.json).
+static func endless_unlocked() -> bool:
+	return Profile.boss_wins(String(GameData.bal("endless/unlock_boss", "boss_rat_king"))) > 0
+
+
+static func endless_best() -> int:
+	return int(Profile.data.get("endless", {}).get("best", 0))
+
+
+## Fim de partida no Infinito: guarda o recorde (andar alcançado) e o corpo
+## dele. Devolve {"best": recorde anterior, "new_record": bool}.
+static func endless_finish(floor_n: int, equipped: Dictionary) -> Dictionary:
+	if not Profile.data.has("endless") or not (Profile.data.endless is Dictionary):
+		Profile.data["endless"] = {"best": 0, "runs": 0, "body": {}, "last": 0}
+	var e: Dictionary = Profile.data.endless
+	var prev := int(e.get("best", 0))
+	e["runs"] = int(e.get("runs", 0)) + 1
+	e["last"] = floor_n
+	var rec := floor_n > prev
+	if rec:
+		e["best"] = floor_n
+		e["body"] = {"floor": floor_n, "equipped": equipped.duplicate(true), "at": Backend.now()}
+	Profile.save()
+	return {"best": prev, "new_record": rec}
+
+
 ## Fim de partida na torre n. Na 1ª vitória sobre o Dragão Ancião dela paga os
 ## diamantes da torre e libera a próxima. Devolve {"diamonds", "unlocked"} ou {}.
 static func tower_finish(n: int, floor_n: int, beat_dragon: bool) -> Dictionary:

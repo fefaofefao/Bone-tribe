@@ -1598,3 +1598,17 @@ speed_ad_title,Combat x2
 speed_ad_text,Watch an ad and fight at double speed until the end of this run.
 btn_speed_ad,Watch (ad)
 btn_speed_locked,x2 AD
+hud_endless_floor,Endless · Floor %d · Best %d
+endless_title,Endless Mode
+endless_new_record_live,New record!
+endless_lap,Lap %d: new bosses and stronger monsters
+endless_beat_record,Your record: floor %d. Can you beat it?
+run_end_endless_floor,Endless Mode · floor reached: %d
+endless_new_record,New record: floor %d!
+endless_record_line,Your record: floor %d
+card_endless_floor,Endless Mode · Floor %d
+btn_continue_endless,Continue · Endless · Floor %d
+btn_endless,Endless Mode
+btn_endless_record,Endless Mode · Best: floor %d
+btn_endless_locked,Endless Mode · beat the Rat King
+tip_endless,"Endless Mode unlocked! Endless floors, each one harder. How far can you go?"

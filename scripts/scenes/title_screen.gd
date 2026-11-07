@@ -266,7 +266,8 @@ func _build_home() -> void:
 	# partida em andamento (o app foi fechado no meio): continuar de onde parou
 	var resume := RunSave.info()
 	if not resume.is_empty():
-		var cont := Style.button(tr("btn_continue_run") % [int(resume.tower), int(resume.floor)], "CandleButton", 96)
+		var cont_txt := tr("btn_continue_endless") % int(resume.floor) if bool(resume.get("endless", false)) else tr("btn_continue_run") % [int(resume.tower), int(resume.floor)]
+		var cont := Style.button(cont_txt, "CandleButton", 96)
 		cont.add_theme_font_size_override("font_size", 30)
 		cont.pressed.connect(func(): Router.go("run", {"resume": true}))
 		bottom.add_child(cont)
@@ -283,6 +284,7 @@ func _build_home() -> void:
 	_play_btn = play
 	_play_hint = Style.label("", 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	bottom.add_child(_play_hint)
+	bottom.add_child(_endless_button())
 	_refresh_chips()
 	var tw := create_tween().set_loops()
 	tw.tween_property(play, "scale", Vector2(1.03, 1.03), 0.8).set_trans(Tween.TRANS_SINE)
@@ -424,8 +426,32 @@ func _refresh_tower() -> void:
 			_play_hint.text = tr("tower_curse_line") % tr(curse + "_name") + " · " + tr(curse + "_desc")
 
 
+## Modo Infinito: botão abaixo do Jogar, com o recorde do jogador. Trancado
+## (com o que falta) até vencer o Rei Rato uma vez.
+var _endless_btn: Button
+
+
+func _endless_button() -> Control:
+	var open := Meta.endless_unlocked()
+	var best := Meta.endless_best()
+	var txt := tr("btn_endless_locked")
+	if open:
+		txt = tr("btn_endless_record") % best if best > 0 else tr("btn_endless")
+	var b := Style.button(txt, "DarkButton", 72)
+	b.add_theme_font_size_override("font_size", 26)
+	b.disabled = not open
+	b.name = "EndlessButton"
+	_endless_btn = b
+	b.pressed.connect(func():
+		if RunSave.has_save():
+			_confirm_new_run(true)
+		else:
+			Router.go("run", {"endless": true}))
+	return b
+
+
 ## Começar outra partida com uma em andamento: confirma antes de descartar.
-func _confirm_new_run() -> void:
+func _confirm_new_run(endless := false) -> void:
 	var bg := Widgets.dim_overlay(_ui, 0.8)
 	var p := Style.panel()
 	p.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
@@ -443,7 +469,7 @@ func _confirm_new_run() -> void:
 	yes.pressed.connect(func():
 		RunSave.clear()
 		Backend.log_event("run_abandon", {})
-		Router.go("run", {"tower": _tower_view}))
+		Router.go("run", {"endless": true} if endless else {"tower": _tower_view}))
 	v.add_child(yes)
 	var no := Style.button(tr("btn_continue_short"), "CandleButton", 80)
 	no.pressed.connect(func(): Router.go("run", {"resume": true}))
@@ -761,6 +787,8 @@ func _hub_tips() -> void:
 		_hub_tip("ossuary", _tab_buttons.get("ossuary"))
 	elif Meta.tower_unlocked() >= 2 and Tutorial.take("towers", true):
 		_hub_tip("towers", _tower_next)
+	elif Meta.endless_unlocked() and _endless_btn != null and Tutorial.take("endless", true):
+		_hub_tip("endless", _endless_btn)
 
 
 func _hub_tip(key: String, target: Control) -> void:

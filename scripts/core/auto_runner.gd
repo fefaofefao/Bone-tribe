@@ -16,11 +16,14 @@ func _init(opts: Dictionary = {}) -> void:
 
 func play() -> RunState:
 	var guard := 0
-	while not state.dead and guard < 100:
+	# no Infinito o limite é só uma trava de segurança (ninguém passa de 1000)
+	var max_floors := 1000 if state.endless else 100
+	while not state.dead and guard < max_floors:
 		guard += 1
 		if state.floor_n >= state.total_floors:
 			break
 		state.floor_n += 1
+		state.on_new_floor()
 		var boss := state.boss_for_floor(state.floor_n)
 		if boss != "":
 			_combat([boss], true)
@@ -54,7 +57,7 @@ func _exec(actions: Array) -> void:
 				var ids: Array = a.get("monsters", [])
 				if ids.is_empty():
 					for i in int(a.get("count", 1)):
-						ids.append(MonsterFactory.random_for_floor(state.floor_n, state.rng))
+						ids.append(MonsterFactory.random_for_floor(state.content_floor(), state.rng))
 				_combat(ids, false, bool(a.get("elite", false)))
 			"dust":
 				state.add_dust(int(a.get("amount", state.rng.randi_range(int(a.get("min", 10)), int(a.get("max", 20))))))
@@ -163,7 +166,7 @@ func _combat(ids: Array, is_boss: bool, elite := false) -> void:
 		state.add_dust(int(GameData.bal("dust/per_kill", 3)))
 		var m := GameData.monster(e.id)
 		if String(m.get("kind", "")) == "boss":
-			var bb := MonsterFactory.boss_drop(e.id, 0, state.rng)
+			var bb := MonsterFactory.boss_drop(e.id, 1 if state.endless else 0, state.rng)
 			if bb != "":
 				offer({"id": bb, "level": 1})
 			continue

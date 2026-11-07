@@ -48,7 +48,10 @@ static func fill(v: VBoxContainer, state: RunState) -> void:
 	var c := state.compute()
 	var s: Dictionary = c.stats
 	v.add_child(Style.bold(Body.creature_name(state.equipped), 26, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER))
-	v.add_child(Style.label(_t("hud_level") % state.level + "  ·  " + _t("hud_tower_floor") % [state.tower, maxi(1, state.floor_n), state.total_floors], 19, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	var where := _t("hud_tower_floor") % [state.tower, maxi(1, state.floor_n), state.total_floors]
+	if state.endless:
+		where = _t("hud_endless_floor") % [maxi(1, state.floor_n), maxi(Meta.endless_best(), state.floor_n)]
+	v.add_child(Style.label(_t("hud_level") % state.level + "  ·  " + where, 19, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 	for fid in c.forms:
 		v.add_child(Style.bold(_t("status_form") % _t(String(GameData.forms[fid].get("name", fid + "_name"))), 22, Color("d7aaff"), HORIZONTAL_ALIGNMENT_CENTER))
 

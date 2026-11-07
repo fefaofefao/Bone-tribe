@@ -241,6 +241,26 @@
 		"rest": 0.08,
 		"altar": 0.1
 	},
+	"endless": {
+		"_doc": "Modo Infinito: andares sem fim. O andar n usa a fórmula normal de vida/ataque (enemy) com o andar real e, depois de after_floor, cresce mais rápido (hp_growth_after e atk_growth_after por andar). Eventos e monstros seguem o andar da volta (1 a lap_floors). Chefes a cada 10 andares: cada volta usa o trio seguinte de boss_laps (depois recomeça). A cada volta entram monstros de pool_tower_per_lap torres acima. Sem maldição. Libera ao vencer unlock_boss uma vez.",
+		"unlock_boss": "boss_rat_king",
+		"lap_floors": 30,
+		"after_floor": 30,
+		"hp_growth_after": 1.0,
+		"atk_growth_after": 1.0,
+		"boss_hp_mult": 0.7,
+		"boss_atk_mult": 0.9,
+		"pool_tower_per_lap": 3,
+		"dust_mult": 1.0,
+		"theme": "cursed",
+		"tint": "#9a7cc4",
+		"boss_laps": [
+			["boss_rat_king", "boss_forgotten_golem", "boss_ancient_dragon"],
+			["boss_ghoul_matriarch", "boss_frost_titan", "boss_magma_wyrm"],
+			["boss_swamp_behemoth", "boss_bell_lich", "boss_obsidian_dragon"],
+			["boss_spider_queen", "boss_bone_kraken", "boss_death_knight"]
+		]
+	},
 	"offline": {
 		"_doc": "Pó que o Ossudo junta com o jogo fechado: dust_per_hour x pó da torre mais alta liberada, até max_hours; só conta ausências de pelo menos min_minutes.",
 		"dust_per_hour": 50,

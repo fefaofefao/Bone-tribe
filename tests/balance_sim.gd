@@ -2,6 +2,7 @@ extends Node
 ## Simulação de equilíbrio (não altera o perfil real):
 ##   godot --headless --path . res://tests/BalanceSim.tscn [-- players=40 runs=6]
 ##   godot --headless --path . res://tests/BalanceSim.tscn -- mode=towers [players=12 runs=120]
+##   godot --headless --path . res://tests/BalanceSim.tscn -- mode=endless [players=12 runs=120]
 ## Simula jogadores novos: a cada partida o pó de osso vira melhorias do Ossuário.
 
 func _ready() -> void:
@@ -12,6 +13,9 @@ func _ready() -> void:
 			args[kv[0]] = kv[1]
 	if args.get("mode", "") == "towers":
 		_towers(int(args.get("players", "12")), int(args.get("runs", "120")))
+		return
+	if args.get("mode", "") == "endless":
+		_endless(int(args.get("players", "12")), int(args.get("runs", "120")))
 		return
 	var players := int(args.get("players", "40"))
 	var runs := int(args.get("runs", "6"))
@@ -82,6 +86,60 @@ func _ready() -> void:
 
 
 ## Gasta todo o pó no Ossuário (ataque, vida, defesa, chance de osso).
+## Modo Infinito: cada jogador progride pelas torres como em mode=towers e, em
+## alguns pontos da progressão, joga 3 partidas no Infinito. Mostra até que
+## andar chega (média, menor e maior) e a torre em que ele estava.
+func _endless(players: int, runs: int) -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	var n_towers := GameData.towers.size()
+	var checkpoints := [3, 10, 30, 60, 120, 200]
+	var res := {}
+	for c in checkpoints:
+		res[c] = {"floors": [], "tower": 0.0, "laps": 0}
+	for p in players:
+		Profile.data.ossuary = {"hp": 0, "atk": 0, "def": 0, "drop": 0}
+		var bank := 0
+		var unlocked := 1
+		for r in runs:
+			var t := mini(unlocked, n_towers)
+			var st := AutoRunner.new({"seed": p * 7919 + r, "tower": t}).play()
+			bank += int(st.end_rewards().total)
+			if st.beat_final_boss() and unlocked == t and t <= n_towers:
+				unlocked = mini(n_towers + 1, t + 1)
+			bank = _spend(bank)
+			if checkpoints.has(r + 1):
+				var d: Dictionary = res[r + 1]
+				d.tower += mini(unlocked, n_towers)
+				for k in 3:
+					var es := AutoRunner.new({"seed": p * 104729 + r * 7 + k, "endless": true}).play()
+					d.floors.append(es.floor_n)
+					bank += int(es.end_rewards().total)
+				bank = _spend(bank)
+	MonsterFactory.tower = 1
+	MonsterFactory.endless = false
+	MonsterFactory.pool_tower = 0
+	print("")
+	print("== Infinito: %d jogadores, 3 partidas em cada ponto da progressão ==" % players)
+	for c in checkpoints:
+		if c > runs:
+			continue
+		var f: Array = res[c].floors
+		if f.is_empty():
+			continue
+		f.sort()
+		var sum := 0.0
+		for x in f:
+			sum += x
+		var at_boss := 0
+		for x in f:
+			if int(x) % 10 == 0:
+				at_boss += 1
+		print("após %3d partidas (torre média %4.1f): andar médio %5.1f, mediana %d, mín %d, máx %d, %d%% param num chefe" % [c, res[c].tower / players, sum / f.size(), f[f.size() / 2], f[0], f[-1], 100 * at_boss / f.size()])
+	Profile.data = backup
+	Profile.save()
+	get_tree().quit()
+
+
 func _spend(bank: int) -> int:
 	var order := ["atk", "hp", "atk", "hp", "def", "drop"]
 	var i := 0

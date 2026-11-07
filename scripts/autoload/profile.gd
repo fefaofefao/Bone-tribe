@@ -31,6 +31,7 @@ func defaults() -> Dictionary:
 		"best_body": {},
 		"review": {"count": 0, "last": 0, "pending": false},
 		"towers": {"unlocked": 1, "selected": 1, "cleared": {}, "best": {}, "wins": {}},
+		"endless": {"best": 0, "runs": 0, "body": {}, "last": 0},
 		"families_done": {},
 		"missions": {"day": -1, "daily": [], "week": -1, "weekly": [], "swap_day": -1},
 		"offline": {"last_seen": 0, "pending": 0, "ad_day": -1, "ad_count": 0},

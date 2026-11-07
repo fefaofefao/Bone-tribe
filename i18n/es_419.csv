@@ -1598,3 +1598,17 @@ speed_ad_title,Combate x2
 speed_ad_text,Mira un anuncio y lucha a doble velocidad hasta el final de esta partida.
 btn_speed_ad,Mirar (anuncio)
 btn_speed_locked,x2 AD
+hud_endless_floor,Infinito · Piso %d · Récord %d
+endless_title,Modo Infinito
+endless_new_record_live,¡Nuevo récord!
+endless_lap,Vuelta %d: jefes nuevos y monstruos más fuertes
+endless_beat_record,Tu récord: piso %d. ¿Puedes superarlo?
+run_end_endless_floor,Modo Infinito · piso alcanzado: %d
+endless_new_record,¡Nuevo récord: piso %d!
+endless_record_line,Tu récord: piso %d
+card_endless_floor,Modo Infinito · Piso %d
+btn_continue_endless,Continuar · Infinito · Piso %d
+btn_endless,Modo Infinito
+btn_endless_record,Modo Infinito · Récord: piso %d
+btn_endless_locked,Modo Infinito · vence al Rey Rata
+tip_endless,"¡Modo Infinito desbloqueado! Pisos sin fin, cada uno más difícil. ¿Hasta dónde llegas?"

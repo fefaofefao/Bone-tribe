@@ -32,6 +32,8 @@ var bigorna_left := 0
 var next_event: Dictionary = {}
 var segment_chest: Dictionary = {}
 var tower := 1
+## Modo Infinito: andares sem fim, cada um mais difícil (data/balance.json → endless).
+var endless := false
 
 
 func _init(opts: Dictionary = {}) -> void:
@@ -40,10 +42,16 @@ func _init(opts: Dictionary = {}) -> void:
 	else:
 		rng.randomize()
 	demo = bool(opts.get("demo", false))
-	tower = 1 if demo else clampi(int(opts.get("tower", 1)), 1, maxi(1, GameData.towers.size()))
+	endless = bool(opts.get("endless", false)) and not demo
+	tower = 1 if (demo or endless) else clampi(int(opts.get("tower", 1)), 1, maxi(1, GameData.towers.size()))
 	MonsterFactory.tower = tower
 	prototype = bool(opts.get("prototype", GameData.bal("run/prototype_mode", false))) or demo
+	if endless:
+		prototype = false
 	total_floors = int(GameData.bal("run/prototype_floors", 10)) if prototype else int(GameData.bal("run/floors", 30))
+	if endless:
+		total_floors = ENDLESS_FLOORS
+	_sync_factory()
 	companion_id = String(opts.get("companion", ""))
 	if not demo and companion_id != "" and not Meta.companion_unlocked(companion_id):
 		companion_id = ""
@@ -63,7 +71,10 @@ func _init(opts: Dictionary = {}) -> void:
 
 const SAVE_FIELDS := ["floor_n", "total_floors", "prototype", "hp", "max_hp", "equipped", "dust", "xp", "level",
 	"picks", "bonus_stats", "allies", "companion_id", "seen_events", "bosses_beaten", "kills", "bones_found",
-	"forms_announced", "flags", "pending_skip", "hunter_met", "bigorna_left", "tower"]
+	"forms_announced", "flags", "pending_skip", "hunter_met", "bigorna_left", "tower", "endless"]
+
+## "Sem fim" na prática: o laço da partida para no andar ENDLESS_FLOORS.
+const ENDLESS_FLOORS := 99999
 
 
 ## Foto da partida para "Continuar" (só tipos que o JSON guarda sem perder nada).
@@ -95,7 +106,7 @@ static func from_dict(d: Dictionary) -> RunState:
 	for id in d.get("picks", []):
 		if not GameData.levelups.has(String(id)):
 			return null
-	var st := RunState.new({"seed": 1, "tower": tower_n, "companion": String(d.get("companion_id", ""))})
+	var st := RunState.new({"seed": 1, "tower": tower_n, "companion": String(d.get("companion_id", "")), "endless": bool(d.get("endless", false))})
 	for k in SAVE_FIELDS:
 		if not d.has(k):
 			continue
@@ -126,6 +137,7 @@ static func from_dict(d: Dictionary) -> RunState:
 	st.dead = false
 	st.victory = false
 	MonsterFactory.tower = st.tower
+	st._sync_factory()
 	st._cache = {}
 	var hp_saved := st.hp
 	st.recalc()
@@ -306,6 +318,16 @@ func is_boss_floor(n: int = -1) -> bool:
 
 
 func boss_for_floor(n: int) -> String:
+	if endless:
+		var lf := lap_floors()
+		var local := (n - 1) % lf + 1
+		if n < 1 or local % 10 != 0:
+			return ""
+		var laps: Array = GameData.bal("endless/boss_laps", [])
+		if laps.is_empty():
+			return ""
+		var trio: Array = laps[lap_of(n) % laps.size()]
+		return String(trio[clampi(local / 10 - 1, 0, trio.size() - 1)])
 	if prototype:
 		return "boss_rat_king" if n == total_floors else ""
 	var bf: Dictionary = GameData.tower(tower).get("bosses", GameData.bal("run/boss_floors", {}))
@@ -314,6 +336,40 @@ func boss_for_floor(n: int) -> String:
 	if n == int(GameData.bal("run/secret_floor", 31)):
 		return String(GameData.bal("run/secret_boss", "boss_hydra"))
 	return ""
+
+
+# --------------------------------------------------------- modo infinito
+
+static func lap_floors() -> int:
+	return maxi(10, int(GameData.bal("endless/lap_floors", 30)))
+
+
+## Volta do Infinito em que o andar n está (0 = andares 1 a 30).
+func lap_of(n: int = -1) -> int:
+	if n < 0:
+		n = floor_n
+	return maxi(0, n - 1) / lap_floors() if endless else 0
+
+
+## Andar usado para escolher eventos e monstros: no Infinito, o andar dentro
+## da volta (1 a 30), para todo o conteúdo das torres continuar aparecendo.
+func content_floor() -> int:
+	if not endless:
+		return floor_n
+	return (maxi(1, floor_n) - 1) % lap_floors() + 1
+
+
+## Avisa o MonsterFactory do modo e da volta atual (vida/ataque e monstros).
+func _sync_factory() -> void:
+	MonsterFactory.endless = endless
+	MonsterFactory.pool_tower = 0
+	if endless:
+		MonsterFactory.pool_tower = clampi(1 + lap_of() * int(GameData.bal("endless/pool_tower_per_lap", 3)), 1, maxi(1, GameData.towers.size()))
+
+
+## Chama no começo de cada andar (o Infinito troca de volta a cada 30).
+func on_new_floor() -> void:
+	_sync_factory()
 
 
 func segment_index() -> int:
@@ -346,7 +402,8 @@ func event_available(ev: Dictionary) -> bool:
 	if seen_events.has(ev.id) and not ev.get("repeatable", false):
 		return false
 	var fl: Array = ev.get("floors", [1, 99])
-	if floor_n < int(fl[0]) or floor_n > int(fl[1]):
+	var cf := content_floor()
+	if cf < int(fl[0]) or cf > int(fl[1]):
 		return false
 	var req: Dictionary = ev.get("requires", {})
 	if not req.is_empty() and not requirement_met(req):
@@ -400,7 +457,8 @@ func should_meet_hunter() -> bool:
 	if hunter_met or demo or prototype or Meta.hunter_stolen().is_empty():
 		return false
 	var fl: Array = GameData.bal("hunter/floors", [4, 27])
-	if floor_n < int(fl[0]) or floor_n > int(fl[1]) or is_boss_floor():
+	var cf := content_floor()
+	if cf < int(fl[0]) or cf > int(fl[1]) or is_boss_floor():
 		return false
 	# chance por andar calibrada para ~60% de encontros por partida
 	return rng.randf() < float(GameData.bal("hunter/appear_chance", 0.6)) / 15.0
@@ -448,7 +506,7 @@ func end_rewards() -> Dictionary:
 	var per_boss := int(GameData.bal("dust/per_boss", 50))
 	var base := floor_n * per_floor + bosses_beaten.size() * per_boss + dust
 	var bonus := stat("dust_bonus")
-	var tower_mult := float(GameData.tower(tower).get("dust_mult", 1.0))
+	var tower_mult := float(GameData.bal("endless/dust_mult", 1.0)) if endless else float(GameData.tower(tower).get("dust_mult", 1.0))
 	var total := int(roundf(base * (1.0 + bonus) * tower_mult))
 	return {"floors": floor_n * per_floor, "bosses": bosses_beaten.size() * per_boss, "collected": dust, "bonus_pct": bonus,
 		"tower_mult": tower_mult, "total": total}
@@ -456,11 +514,13 @@ func end_rewards() -> Dictionary:
 
 ## Chefe do último andar normal da torre: vencê-lo libera a próxima torre.
 func final_boss() -> String:
+	if endless:
+		return ""
 	return boss_for_floor(int(GameData.bal("run/floors", 30)))
 
 
 func beat_final_boss() -> bool:
-	return bosses_beaten.has(final_boss())
+	return not endless and bosses_beaten.has(final_boss())
 
 
 ## Encaixe que já tem este mesmo osso (para triturar ou trocar direto), ou "".

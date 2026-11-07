@@ -46,7 +46,7 @@ static func info() -> Dictionary:
 	if load_state() == null:
 		clear()
 		return {}
-	return {"tower": int(st.get("tower", 1)), "floor": int(st.get("floor_n", 0)) + 1, "level": int(st.get("level", 1))}
+	return {"tower": int(st.get("tower", 1)), "floor": int(st.get("floor_n", 0)) + 1, "level": int(st.get("level", 1)), "endless": bool(st.get("endless", false))}
 
 
 static func has_save() -> bool:

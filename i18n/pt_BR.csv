@@ -1598,3 +1598,17 @@ speed_ad_title,Combate x2
 speed_ad_text,Assista a um anúncio e lute em velocidade dobrada até o fim desta partida.
 btn_speed_ad,Assistir (anúncio)
 btn_speed_locked,x2 AD
+hud_endless_floor,Infinito · Andar %d · Recorde %d
+endless_title,Modo Infinito
+endless_new_record_live,Novo recorde!
+endless_lap,Volta %d: chefes novos e monstros mais fortes
+endless_beat_record,Seu recorde: andar %d. Consegue passar?
+run_end_endless_floor,Modo Infinito · andar alcançado: %d
+endless_new_record,Novo recorde: andar %d!
+endless_record_line,Seu recorde: andar %d
+card_endless_floor,Modo Infinito · Andar %d
+btn_continue_endless,Continuar · Infinito · Andar %d
+btn_endless,Modo Infinito
+btn_endless_record,Modo Infinito · Recorde: andar %d
+btn_endless_locked,Modo Infinito · vença o Rei Rato
+tip_endless,"Modo Infinito liberado! Andares sem fim, cada um mais difícil. Até onde você chega?"

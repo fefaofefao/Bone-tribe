@@ -107,6 +107,17 @@ Uma partida dura 6 a 8 minutos e se repete em andares de 10 eventos com um chefe
 
 Ao morrer, o jogador pode reviver uma vez com um anúncio recompensado. Se não reviver, a partida termina, o Cartão da Criatura é gerado e o pó de osso vira melhorias permanentes para a próxima tentativa.
 
+### Modo Infinito
+
+Modalidade à parte das torres: os andares não acabam e cada um é mais difícil que o anterior. O jogador testa até onde consegue ir e tenta bater o próprio recorde.
+
+- **Libera** depois de vencer o Rei Rato uma vez. Fica num botão abaixo do Jogar, com o recorde ("Modo Infinito · Recorde: andar 47").
+- **Dificuldade:** vida e ataque dos inimigos seguem a fórmula normal com o andar real (cada andar ~5% mais forte, sem limite). Sem maldição de torre. Chefes do Infinito têm 70% da vida e 90% do ataque, para o recorde não ficar só nos andares de chefe.
+- **Voltas de 30 andares:** eventos e monstros seguem o andar dentro da volta (1 a 30), então todo o conteúdo continua aparecendo. A cada volta entram monstros de 3 torres acima e um trio novo de chefes: Rei Rato/Golem/Dragão; Matriarca Carniçal/Titã de Gelo/Serpe de Magma; Beemote/Lich do Sino/Dragão de Obsidiana; Rainha Aranha/Kraken/Cavaleiro da Morte; depois recomeça.
+- **Recorde:** o andar alcançado. Aparece na tela inicial, no topo da partida ("Infinito · Andar 12 · Recorde 47", em dourado depois de passar), num aviso ao passar do recorde e no fim da partida ("Novo recorde!").
+- **Recompensas:** pó como na Torre 1 (por andar, por chefe e coletado), sem multiplicador de torre. Não libera torres nem conta para o recorde das torres. Chefe que o jogador ainda não venceu nas torres não usa a "1ª vitória" no Infinito (osso lendário garantido, diamantes e curiosidade ficam para a torre dele).
+- Valores em `data/balance.json → endless`. Simulação: `res://tests/BalanceSim.tscn -- mode=endless`.
+
 ## Catálogo de ossos (MVP)
 
 O MVP tem 20 ossos: 12 comuns, 5 raros e 3 lendários, cobrindo todos os encaixes e as 6 famílias. Os lendários só caem de chefes.

@@ -4,6 +4,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 
 ```
 <pt-BR>
+• Modo Infinito: andares sem fim. Bata seu recorde!
 • 3 chefes novos: Rainha Aranha, Kraken Ósseo e Cavaleiro da Morte!
 • 6 monstros, 15 ossos e 7 formas secretas novas.
 • Melhorias avançadas no Ossuário (após a Torre 1).
@@ -13,6 +14,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • Correções: raio dos inimigos, cartão compartilhado e estabilidade.
 </pt-BR>
 <en-US>
+• Endless Mode: endless floors. Beat your record!
 • 3 new bosses: Spider Queen, Bone Kraken and Death Knight!
 • 6 monsters, 15 bones and 7 new secret forms.
 • Advanced Ossuary upgrades (after Tower 1).
@@ -22,6 +24,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • Fixes: enemy eye beams, shared card and stability.
 </en-US>
 <es-419>
+• Modo Infinito: pisos sin fin. ¡Supera tu récord!
 • ¡3 jefes nuevos: Reina Araña, Kraken Óseo y Caballero de la Muerte!
 • 6 monstruos, 15 huesos y 7 formas secretas nuevas.
 • Mejoras avanzadas en el Osario (tras la Torre 1).

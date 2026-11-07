@@ -1443,3 +1443,108 @@ func test_24_update_1_4() -> void:
 	check(csrc.contains("func capture_card()") and csrc.contains("creature.scale.x = 2.5"), "foto do cartão com a largura cheia")
 	Profile.data = backup
 	Profile.save()
+
+
+func test_25_endless_mode() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	# --- perfil antigo (sem o campo do Infinito) carrega com recorde 0
+	var old: Dictionary = Profile.data.duplicate(true)
+	old.erase("endless")
+	Profile.data = old
+	Profile.save()
+	Profile.load_profile()
+	check(Profile.data.has("endless") and Meta.endless_best() == 0, "perfil antigo ganha o Infinito com recorde 0")
+	check(int(Profile.data.dust) == int(backup.dust) and int(Profile.data.diamonds) == int(backup.diamonds), "perfil antigo mantém pó e diamantes")
+	# --- liberação: vencer o Rei Rato uma vez
+	Profile.data.bosses_defeated.erase("boss_rat_king")
+	check(not Meta.endless_unlocked(), "Infinito trancado antes do Rei Rato")
+	Profile.data.bosses_defeated["boss_rat_king"] = 1
+	check(Meta.endless_unlocked(), "Infinito libera depois do Rei Rato")
+	# --- regras da partida
+	var st := RunState.new({"seed": 9, "endless": true, "tower": 7})
+	check(st.endless and st.tower == 1 and st.total_floors >= 10000, "Infinito: torre 1 (sem maldição) e andares sem fim")
+	check(MonsterFactory.endless and MonsterFactory.tower == 1, "MonsterFactory entra no modo Infinito")
+	check(st.boss_for_floor(10) == "boss_rat_king" and st.boss_for_floor(30) == "boss_ancient_dragon", "volta 1: chefes da Torre 1")
+	check(st.boss_for_floor(40) == "boss_ghoul_matriarch" and st.boss_for_floor(120) == "boss_death_knight", "voltas seguintes trocam os chefes")
+	check(st.boss_for_floor(130) == "boss_rat_king" and st.boss_for_floor(15) == "" and st.boss_for_floor(31) == "", "chefes recomeçam e só a cada 10 andares")
+	st.floor_n = 45
+	st.on_new_floor()
+	check(st.content_floor() == 15 and st.lap_of() == 1, "andar 45 = andar 15 da 2ª volta")
+	check(MonsterFactory.pool_tower == 4, "2ª volta traz monstros da Torre 4")
+	var ev_late: Dictionary = GameData.events["event_scorpion_sand"]
+	st.floor_n = 52
+	check(st.event_available(ev_late), "eventos das torres continuam aparecendo depois do andar 30")
+	var ok_pick := true
+	for n in [31, 59, 77, 101, 250]:
+		st.floor_n = n
+		st.on_new_floor()
+		if st.boss_for_floor(n) == "" and st.pick_event().is_empty():
+			ok_pick = false
+		if MonsterFactory.random_for_floor(st.content_floor(), st.rng) == "":
+			ok_pick = false
+	check(ok_pick, "há eventos e monstros em qualquer andar do Infinito")
+	# cada andar mais difícil, e chefe do Infinito um pouco mais leve
+	var mono := true
+	var prev_hp := 0.0
+	var prev_atk := 0.0
+	for n in range(1, 301):
+		var h := MonsterFactory.enemy_hp(n)
+		var a := MonsterFactory.enemy_atk(n)
+		if h <= prev_hp or a <= prev_atk:
+			mono = false
+		prev_hp = h
+		prev_atk = a
+	check(mono, "no Infinito cada andar é mais difícil que o anterior (1 a 300)")
+	var be := MonsterFactory.make("boss_rat_king", 40)
+	MonsterFactory.endless = false
+	var bn := MonsterFactory.make("boss_rat_king", 40)
+	MonsterFactory.endless = true
+	check(be.max_hp < bn.max_hp and be.max_hp > bn.max_hp * 0.5, "chefe do Infinito com menos vida (endless/boss_hp_mult)")
+	check(st.final_boss() == "" and not st.beat_final_boss(), "Infinito não libera torre")
+	check(int(st.end_rewards().tower_mult) == 1, "pó do Infinito sem multiplicador de torre")
+	# --- continuar a partida
+	st.floor_n = 63
+	st.hp = st.max_hp * 0.5
+	var back := RunState.from_dict(JSON.parse_string(JSON.stringify(st.to_dict())))
+	check(back != null and back.endless and back.floor_n == 63 and back.total_floors == st.total_floors, "Continuar mantém o Infinito e o andar")
+	RunSave.save(st)
+	check(bool(RunSave.info().get("endless", false)) and int(RunSave.info().floor) == 64, "botão Continuar sabe que é Infinito")
+	RunSave.clear()
+	# partida normal depois do Infinito volta ao normal
+	var tn := RunState.new({"seed": 2, "tower": 3})
+	check(not tn.endless and not MonsterFactory.endless and MonsterFactory.pool_tower == 0 and MonsterFactory.tower == 3, "partida de torre depois do Infinito volta ao normal")
+	check(tn.boss_for_floor(30) == "boss_ancient_dragon" and tn.content_floor() == tn.floor_n, "torres não mudam")
+	# --- recorde
+	Profile.data.endless = {"best": 0, "runs": 0, "body": {}, "last": 0}
+	var r1 := Meta.endless_finish(37, st.equipped)
+	check(bool(r1.new_record) and Meta.endless_best() == 37, "primeira partida vira recorde")
+	var r2 := Meta.endless_finish(20, st.equipped)
+	check(not bool(r2.new_record) and Meta.endless_best() == 37 and int(Profile.data.endless.runs) == 2, "partida pior não derruba o recorde")
+	var r3 := Meta.endless_finish(52, st.equipped)
+	check(bool(r3.new_record) and int(r3.best) == 37 and Meta.endless_best() == 52 and not Profile.data.endless.body.is_empty(), "novo recorde guarda andar e corpo")
+	# --- partida automática no Infinito termina (morte) e não mexe nas torres
+	var towers_before: Dictionary = Profile.data.towers.duplicate(true)
+	var ar := AutoRunner.new({"seed": 4, "endless": true}).play()
+	check(ar.dead and ar.floor_n >= 5 and ar.floor_n < 1000, "partida automática no Infinito termina numa morte (andar %d)" % ar.floor_n)
+	check(Profile.data.towers == towers_before, "Infinito não mexe no progresso das torres")
+	# --- código da partida: 1ª vitória do chefe fica para as torres
+	var rsrc: String = load("res://scripts/scenes/run.gd").source_code
+	check(rsrc.contains("not state.endless or Profile.boss_wins(boss_id) > 0") and rsrc.contains("maxi(1, Profile.boss_wins(f.id)) if state.endless"), "Infinito não gasta a 1ª vitória dos chefes")
+	# --- HUD mostra o recorde
+	Profile.data.endless.best = 52
+	Router.params = {"endless": true}
+	var run_e: Node = load("res://scenes/Run.tscn").instantiate()
+	get_tree().root.add_child(run_e)
+	for k in 3:
+		await get_tree().process_frame
+	check(run_e.state.endless and run_e.floor_label.text == tr("hud_endless_floor") % [1, 52], "HUD do Infinito mostra andar e recorde")
+	run_e.queue_free()
+	await get_tree().process_frame
+	get_tree().paused = false
+	Router.params = {}
+	RunSave.clear()
+	MonsterFactory.endless = false
+	MonsterFactory.pool_tower = 0
+	MonsterFactory.tower = 1
+	Profile.data = backup
+	Profile.save()
