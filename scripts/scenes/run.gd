@@ -1891,7 +1891,7 @@ func _levelup_dialog() -> void:
 		rb.add_theme_font_size_override("font_size", 22)
 		rb.pressed.connect(func():
 			rb.disabled = true
-			if await Ads.show_rewarded("reroll_levelup"):
+			if await Ads.show_rewarded("reroll_levelup") and is_instance_valid(rb) and is_instance_valid(bg) and not bg.is_queued_for_deletion():
 				state.flags["rerolls"] = int(state.flags.get("rerolls", 0)) + 1
 				picked[0] = "__reroll__"
 				dialog_closed.emit("__reroll__"))
@@ -1972,7 +1972,7 @@ func _death_dialog() -> bool:
 		var b := Style.button(tr("btn_revive_ad"), "CandleButton", 84)
 		b.pressed.connect(func():
 			var ok: bool = await Ads.show_rewarded("revive")
-			if ok:
+			if ok and is_instance_valid(bg) and not bg.is_queued_for_deletion():
 				state.flags["revive_ad_used"] = true
 				res[0] = true
 				dialog_closed.emit(true))
@@ -2159,10 +2159,13 @@ func _end_run() -> void:
 			var ok: bool = await Ads.show_rewarded("double_dust")
 			if ok:
 				Profile.add_dust(total[0], "double_dust_ad")
-				Audio.play("dust_gain")
 				total[0] *= 2
-				dust_l.text = tr("run_end_dust") % Style.num(total[0])
-				fx.spark_burst(Vector2(360, 600), Style.C_DUST, 20, 400))
+				# a tela pode ter mudado durante o anúncio
+				if is_instance_valid(dust_l):
+					dust_l.text = tr("run_end_dust") % Style.num(total[0])
+				if is_instance_valid(fx):
+					fx.spark_burst(Vector2(360, 600), Style.C_DUST, 20, 400)
+					Audio.play("dust_gain"))
 		v.add_child(dbl)
 	var card := Style.button(tr("btn_view_card"), "", 84)
 	card.pressed.connect(func(): dialog_closed.emit(true))

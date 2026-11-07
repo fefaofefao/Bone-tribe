@@ -286,7 +286,10 @@ static func buy_iap(id: String, rng: RandomNumberGenerator) -> Array:
 	var p := iap(id)
 	if p.is_empty():
 		return []
+	var blocker := Widgets.busy_overlay(TranslationServer.translate("purchase_loading"))
 	var ok: bool = await Billing.purchase(id)
+	if is_instance_valid(blocker):
+		blocker.queue_free()
 	if not ok:
 		return []
 	return deliver_iap(id, rng)

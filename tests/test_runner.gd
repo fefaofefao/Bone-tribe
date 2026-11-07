@@ -1209,3 +1209,53 @@ func test_22_visual_polish() -> void:
 	await get_tree().create_timer(0.5).timeout
 	check(os._look > 0.8, "cabeça vira para o inimigo no combate")
 	os.queue_free()
+
+
+func test_23_crash_fixes_1_3_1() -> void:
+	# --- falha 1/2: "Coletar" enquanto o anúncio de dobrar carrega
+	var backup: Dictionary = Profile.data.duplicate(true)
+	Profile.data.offline.pending = 500
+	Profile.data.offline.ad_day = -1
+	var dust0 := Profile.dust()
+	var holder := Control.new()
+	add_child(holder)
+	var bg: Control = OfflinePopup.open(holder)
+	check(bg != null, "popup do pó offline abre")
+	var buttons := bg.find_children("*", "Button", true, false)
+	var dbl: Button = buttons[0]
+	var take: Button = buttons[1]
+	dbl.pressed.emit()
+	await get_tree().process_frame
+	check(Ads._showing, "anúncio em andamento")
+	var blockers := get_tree().root.get_children().filter(func(n): return n is CanvasLayer and n.layer == 100)
+	check(blockers.size() >= 1, "tela bloqueada enquanto o anúncio carrega")
+	take.pressed.emit()   # no aparelho isto era possível antes do bloqueio
+	await get_tree().process_frame
+	var t := 0.0
+	while Ads._showing and t < 6.0:
+		await get_tree().create_timer(0.1).timeout
+		t += 0.1
+	await get_tree().process_frame
+	check(not Ads._showing, "anúncio terminou")
+	check(not is_instance_valid(bg), "popup fechou uma vez só, sem mexer em tela destruída")
+	check(Profile.dust() - dust0 == 500, "pó coletado uma vez só (%d)" % (Profile.dust() - dust0))
+	check(get_tree().root.get_children().filter(func(n): return n is CanvasLayer and n.layer == 100).is_empty(), "bloqueio some depois do anúncio")
+	holder.queue_free()
+	Profile.data = backup
+	Profile.save()
+	# --- falha 3: nenhuma partícula de GPU (driver MediaTek caía ao compilar o shader delas)
+	for f in ["res://scripts/scenes/crypt_stage.gd", "res://scripts/scenes/ossinho.gd", "res://scripts/scenes/monster_view.gd", "res://scripts/scenes/fx_layer.gd"]:
+		var src := FileAccess.get_file_as_string(f)
+		var gpu := src.count("GPUParticles2D.new()")
+		check(gpu == src.count("Particles.to_cpu("), "%s: toda GPUParticles2D vira CPUParticles2D" % f.get_file())
+	var st := CryptStage.new()
+	st.theme = "frost"
+	add_child(st)
+	await get_tree().process_frame
+	check(st.find_children("*", "GPUParticles2D", true, false).is_empty() and st.find_children("*", "CPUParticles2D", true, false).size() >= 3, "cenário só com partículas de CPU")
+	st.queue_free()
+	var os: Node2D = load("res://scenes/Ossinho.tscn").instantiate()
+	add_child(os)
+	await get_tree().process_frame
+	check(os.find_children("*", "GPUParticles2D", true, false).is_empty(), "aura do Ossinho sem partículas de GPU")
+	os.queue_free()

@@ -111,3 +111,28 @@ static func stars(n: int, total: int, size: float = 20.0) -> HBoxContainer:
 		t.modulate = Style.C_CANDLE if i < n else Color(1, 1, 1, 0.18)
 		h.add_child(t)
 	return h
+
+
+## Tela bloqueada com "Carregando…" enquanto um anúncio ou uma compra está aberto.
+## Impede tocar em outro botão no meio (ex.: "Coletar" enquanto o anúncio carrega),
+## que fechava a tela e fazia o fim do anúncio mexer em nós já destruídos.
+static func busy_overlay(text: String) -> CanvasLayer:
+	var tree := Engine.get_main_loop() as SceneTree
+	var layer := CanvasLayer.new()
+	layer.layer = 100
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	var bg := ColorRect.new()
+	bg.color = Color(0.02, 0.01, 0.03, 0.55)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_STOP
+	layer.add_child(bg)
+	var l := Style.bold(text, 30, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER)
+	l.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	l.offset_left = -300
+	l.offset_right = 300
+	l.offset_top = -30
+	l.offset_bottom = 30
+	bg.add_child(l)
+	tree.root.add_child(layer)
+	return layer
+

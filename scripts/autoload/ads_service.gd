@@ -37,10 +37,21 @@ func limit(placement: String) -> int:
 
 ## Mostra um anúncio recompensado. Use com await: retorna true se a recompensa
 ## deve ser entregue.
+var _showing := false
+
+
 func show_rewarded(placement: String) -> bool:
+	# um anúncio por vez (toque duplo não abre dois)
+	if _showing:
+		return false
+	_showing = true
 	Backend.log_event("ad_rewarded_start", {"placement": placement})
 	Audio.set_ad_mute(true)
+	var blocker := Widgets.busy_overlay(tr("ad_loading"))
 	var granted: bool = await provider.show_rewarded(placement)
+	if is_instance_valid(blocker):
+		blocker.queue_free()
+	_showing = false
 	Audio.set_ad_mute(false)
 	Backend.log_event("ad_rewarded_end", {"placement": placement, "granted": granted})
 	rewarded_finished.emit(placement, granted)

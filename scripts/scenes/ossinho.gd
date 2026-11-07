@@ -25,7 +25,7 @@ var _t := 0.0
 var _material: ShaderMaterial
 var _aura: Sprite2D
 var _aura_light: PointLight2D
-var _aura_particles: GPUParticles2D
+var _aura_particles: CPUParticles2D
 var _shadow: Sprite2D
 var _root: Bone2D
 var _busy_parts: Dictionary = {}
@@ -112,11 +112,12 @@ func _build_fx() -> void:
 	_aura_light.range_item_cull_mask = 1
 	_aura_light.color = aura_color
 	add_child(_aura_light)
-	_aura_particles = GPUParticles2D.new()
-	_aura_particles.amount = 24
-	_aura_particles.lifetime = 1.8
-	_aura_particles.position = Vector2(0, -150)
-	_aura_particles.texture = load("res://art/fx/fx_ember.png")
+	var ap := GPUParticles2D.new()
+	_aura_particles = null
+	ap.amount = 24
+	ap.lifetime = 1.8
+	ap.position = Vector2(0, -150)
+	ap.texture = load("res://art/fx/fx_ember.png")
 	var pm := ParticleProcessMaterial.new()
 	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
 	pm.emission_sphere_radius = 90.0
@@ -133,9 +134,10 @@ func _build_fx() -> void:
 	var rt := GradientTexture1D.new()
 	rt.gradient = ramp
 	pm.color_ramp = rt
-	_aura_particles.process_material = pm
-	_aura_particles.material = add
-	_aura_particles.emitting = false
+	ap.process_material = pm
+	ap.material = add
+	ap.emitting = false
+	_aura_particles = Particles.to_cpu(ap)
 	add_child(_aura_particles)
 
 
@@ -235,8 +237,7 @@ func refresh_aura() -> void:
 	_material.set_shader_parameter("tint", tint * skin_tint)
 	var on: bool = Profile.setting("quality") != "low"
 	_aura_particles.emitting = on and aura_strength >= 0.45
-	var pm: ParticleProcessMaterial = _aura_particles.process_material
-	pm.color = aura_color
+	_aura_particles.color = aura_color
 	_aura_light.color = aura_color
 	_aura_light.enabled = on
 

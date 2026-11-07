@@ -25,11 +25,17 @@ static func open(parent: Node, on_close: Callable = Callable()) -> Control:
 	v.add_child(row)
 	v.add_child(Style.label(TranslationServer.translate("offline_text"), 22, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
 	v.add_child(Style.bold("+" + Style.num(amount), 40, Style.C_DUST, HORIZONTAL_ALIGNMENT_CENTER))
+	var closed := [false]
 	var close := func(n: int):
+		# fecha uma vez só: o fim do anúncio podia chegar depois de "Coletar" já ter fechado a tela
+		if closed[0]:
+			return
+		closed[0] = true
 		if n > 0:
 			Audio.play("offline")
 			Haptics.medium()
-		bg.queue_free()
+		if is_instance_valid(bg) and not bg.is_queued_for_deletion():
+			bg.queue_free()
 		if on_close.is_valid():
 			on_close.call()
 	if Offline.ad_left() > 0:
@@ -37,10 +43,14 @@ static func open(parent: Node, on_close: Callable = Callable()) -> Control:
 		dbl.pressed.connect(func():
 			dbl.disabled = true
 			var ok: bool = await Ads.show_rewarded("offline_double")
+			if closed[0]:
+				return
 			close.call(Offline.collect(ok)))
 		v.add_child(dbl)
 	var take := Style.button(TranslationServer.translate("offline_collect"), "" if Offline.ad_left() > 0 else "CandleButton", 76)
-	take.pressed.connect(func(): close.call(Offline.collect(false)))
+	take.pressed.connect(func():
+		if not closed[0]:
+			close.call(Offline.collect(false)))
 	v.add_child(take)
 	Audio.play("ui_open")
 	Widgets.pop_in(p)

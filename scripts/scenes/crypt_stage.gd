@@ -145,7 +145,7 @@ func _add_candle(pos: Vector2, k: float) -> void:
 	pm.turbulence_enabled = true
 	pm.turbulence_noise_strength = 2.0
 	emb.process_material = pm
-	add_child(emb)
+	add_child(Particles.to_cpu(emb))
 
 
 func _add_ambient() -> void:
@@ -177,7 +177,7 @@ func _add_ambient() -> void:
 	pm.turbulence_noise_strength = 1.5
 	pm.turbulence_noise_scale = 3.0
 	dust.process_material = pm
-	add_child(dust)
+	add_child(Particles.to_cpu(dust))
 	_add_theme_particles(rt)
 	if not bool(_theme().get("embers", false)):
 		_add_fog(rt)
@@ -209,7 +209,7 @@ func _add_ambient() -> void:
 	em.turbulence_noise_strength = 3.0
 	em.turbulence_noise_scale = 2.0
 	emb.process_material = em
-	add_child(emb)
+	add_child(Particles.to_cpu(emb))
 	_add_fog(rt)
 
 
@@ -235,7 +235,7 @@ func _add_fog(rt: GradientTexture1D) -> void:
 	fm.color = _theme().fog
 	fm.color_ramp = rt
 	fog.process_material = fm
-	add_child(fog)
+	add_child(Particles.to_cpu(fog))
 
 
 ## Partículas próprias do cenário: neve caindo, esporos subindo ou luzes da maldição.
@@ -282,7 +282,7 @@ func _add_theme_particles(rt: GradientTexture1D) -> void:
 	m.turbulence_noise_strength = 2.0
 	m.turbulence_noise_scale = 2.5
 	p.process_material = m
-	add_child(p)
+	add_child(Particles.to_cpu(p))
 
 
 func _process(delta: float) -> void:

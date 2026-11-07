@@ -29,7 +29,7 @@ func show_interstitial() -> bool:
 
 func _overlay(title_key: String, seconds: float, placement: String) -> void:
 	var layer := CanvasLayer.new()
-	layer.layer = 100
+	layer.layer = 101
 	get_tree().root.add_child(layer)
 	var bg := ColorRect.new()
 	bg.color = Color(0, 0, 0, 0.92)

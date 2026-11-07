@@ -156,12 +156,14 @@ func _offer_popup(pid: String, desc_key: String) -> void:
 	buy.pressed.connect(func():
 		var rng := RandomNumberGenerator.new()
 		await Store.buy_iap(pid, rng)
-		bg.queue_free()
+		if is_instance_valid(bg) and not bg.is_queued_for_deletion():
+			bg.queue_free()
 		done[0] = true)
 	v.add_child(buy)
 	var no := Style.button(tr("btn_not_now"), "DarkButton", 66)
 	no.pressed.connect(func():
-		bg.queue_free()
+		if is_instance_valid(bg) and not bg.is_queued_for_deletion():
+			bg.queue_free()
 		done[0] = true)
 	v.add_child(no)
 	Widgets.pop_in(p)

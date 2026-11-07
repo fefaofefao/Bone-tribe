@@ -120,7 +120,7 @@ func set_elite() -> void:
 	rt.gradient = ramp
 	m.color_ramp = rt
 	p.process_material = m
-	_elite_fx.add_child(p)
+	_elite_fx.add_child(Particles.to_cpu(p))
 
 
 func top_global() -> Vector2:
