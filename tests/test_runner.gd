@@ -1556,6 +1556,17 @@ func test_25_endless_mode() -> void:
 	for k in 3:
 		await get_tree().process_frame
 	check(run_e.state.endless and run_e.floor_label.text == tr("hud_endless_floor") % [1, 52], "HUD do Infinito mostra andar e recorde")
+	# letreiro e aviso do topo somem quando abre a janela do fim (não ficam atrás dela)
+	run_e._show_banner("teste", Color.WHITE, 3.0)
+	run_e._top_notice("teste", Color.WHITE, "", 3.0)
+	await get_tree().create_timer(0.3).timeout
+	run_e.state.floor_n = 60
+	run_e.state.dead = true
+	run_e._end_run()
+	await get_tree().create_timer(0.9).timeout
+	var live_notices: Array = run_e._notices.filter(func(x): return is_instance_valid(x) and not x.is_queued_for_deletion())
+	check(run_e._banner.modulate.a == 0.0 and live_notices.is_empty(), "janela do fim abre sem letreiro nem aviso por trás")
+	check(run_e._endless_best == 52 and Meta.endless_best() == 60, "aviso do recorde usa o recorde do começo da partida")
 	run_e.queue_free()
 	await get_tree().process_frame
 	get_tree().paused = false

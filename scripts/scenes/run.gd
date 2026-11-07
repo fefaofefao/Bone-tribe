@@ -27,6 +27,11 @@ var demo := false
 var autoplay := false
 var _demo_plan: Array = []
 var _banner: Label
+var _banner_tw: Tween
+## avisos do topo ainda na tela (somem quando abre uma janela)
+var _notices: Array = []
+## Infinito: recorde de quando a partida começou (o do perfil muda no fim)
+var _endless_best := 0
 var _turn_label: Label
 var _next_icon: TextureRect
 
@@ -68,6 +73,7 @@ func _ready() -> void:
 	if demo:
 		speed = 1.6
 		_demo_plan = GameData.bal("demo/plan", []).duplicate()
+	_endless_best = Meta.endless_best()
 	_build_world()
 	_build_ui()
 	_refresh_hud()
@@ -374,6 +380,7 @@ func _diamond_button(text: String, price: int, min_h := 62) -> Button:
 func _confirm_quit() -> void:
 	if state.dead or _run_recorded or overlay_root == null:
 		return
+	_hide_floating()
 	var tree := get_tree()
 	var was_paused := tree.paused
 	tree.paused = true
@@ -439,6 +446,7 @@ func _toggle_speed() -> void:
 func _offer_speed_ad() -> void:
 	if state.dead or _run_recorded or overlay_root == null:
 		return
+	_hide_floating()
 	var tree := get_tree()
 	var was_paused := tree.paused
 	tree.paused = true
@@ -491,8 +499,8 @@ func _refresh_hud() -> void:
 	floor_label.text = tr("hud_tower_floor") % [state.tower, maxi(1, state.floor_n), state.total_floors]
 	if state.endless:
 		# Infinito: andar atual e o recorde do jogador sempre à vista
-		floor_label.text = tr("hud_endless_floor") % [maxi(1, state.floor_n), maxi(Meta.endless_best(), state.floor_n)]
-		floor_label.add_theme_color_override("font_color", Style.C_CANDLE if state.floor_n > Meta.endless_best() and Meta.endless_best() > 0 else Style.C_BONE)
+		floor_label.text = tr("hud_endless_floor") % [maxi(1, state.floor_n), maxi(_endless_best, state.floor_n)]
+		floor_label.add_theme_color_override("font_color", Style.C_CANDLE if state.floor_n > _endless_best and _endless_best > 0 else Style.C_BONE)
 	for c in floor_dots.get_children():
 		c.queue_free()
 	var seg_start := int((maxi(1, state.floor_n) - 1) / 10) * 10
@@ -562,7 +570,7 @@ func _run_loop() -> void:
 func _endless_floor_notice() -> void:
 	if not state.endless:
 		return
-	var best := Meta.endless_best()
+	var best := _endless_best
 	if best > 0 and state.floor_n == best + 1 and not bool(state.flags.get("record_shown", false)):
 		state.flags["record_shown"] = true
 		_show_banner(tr("endless_new_record_live"), Style.C_CANDLE, 1.4)
@@ -639,9 +647,10 @@ func _intro() -> void:
 	if state.endless:
 		intro_name = tr("endless_title")
 	_show_banner(intro_name, Style.C_BONE, 1.6)
-	if state.endless and Meta.endless_best() > 0 and not resumed:
+	if state.endless and _endless_best > 0 and not resumed:
 		await get_tree().create_timer(0.4, false).timeout
-		_top_notice(tr("endless_beat_record") % Meta.endless_best(), Style.C_CANDLE, "", 2.6)
+		if not state.dead and not _run_recorded:
+			_top_notice(tr("endless_beat_record") % _endless_best, Style.C_CANDLE, "", 2.6)
 	await get_tree().create_timer(0.6, false).timeout
 	var curse := String(GameData.tower(state.tower).get("curse", ""))
 	if curse != "":
@@ -666,7 +675,10 @@ func _show_banner(text: String, color: Color, hold := 1.2) -> void:
 	_banner.add_theme_color_override("font_color", color)
 	_banner.pivot_offset = _banner.size * 0.5
 	_banner.scale = Vector2(0.6, 0.6)
+	if _banner_tw and _banner_tw.is_valid():
+		_banner_tw.kill()
 	var tw := create_tween()
+	_banner_tw = tw
 	tw.tween_property(_banner, "modulate:a", 1.0, 0.18)
 	tw.parallel().tween_property(_banner, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_interval(hold)
@@ -1993,6 +2005,7 @@ func _transformation(fid: String) -> void:
 # ================================================================ diálogos
 
 func _dialog_frame(title_key: String, title_color := Style.C_CANDLE) -> Array:
+	_hide_floating()
 	Audio.play("ui_open")
 	var bg := Widgets.dim_overlay(overlay_root)
 	var center := CenterContainer.new()
@@ -2006,6 +2019,18 @@ func _dialog_frame(title_key: String, title_color := Style.C_CANDLE) -> Array:
 	v.add_child(Style.title(tr(title_key), 50, title_color))
 	Widgets.pop_in(p)
 	return [bg, v, p]
+
+
+## Letreiros e avisos do topo não ficam por cima/atrás de uma janela aberta.
+func _hide_floating() -> void:
+	if _banner_tw and _banner_tw.is_valid():
+		_banner_tw.kill()
+	if _banner:
+		_banner.modulate.a = 0.0
+	for n in _notices:
+		if is_instance_valid(n):
+			n.queue_free()
+	_notices.clear()
 
 
 func _close_dialog(bg: Control) -> void:
@@ -2511,6 +2536,8 @@ func _top_notice(text: String, color: Color, sfx: String, secs: float) -> void:
 	p.offset_right = -60
 	p.offset_top = 270
 	overlay_root.add_child(p)
+	_notices = _notices.filter(func(x): return is_instance_valid(x))
+	_notices.append(p)
 	if sfx != "":
 		Audio.play(sfx)
 	p.modulate.a = 0.0
