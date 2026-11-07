@@ -44,6 +44,11 @@ func show_rewarded(placement: String) -> bool:
 	# um anúncio por vez (toque duplo não abre dois)
 	if _showing:
 		return false
+	# Cartão do Coveiro: sem anúncios, o prêmio vem direto (limites continuam)
+	if Store.ad_free():
+		Backend.log_event("ad_rewarded_skipped", {"placement": placement, "reason": "subscription"})
+		rewarded_finished.emit(placement, true)
+		return true
 	_showing = true
 	Backend.log_event("ad_rewarded_start", {"placement": placement})
 	Audio.set_ad_mute(true)
@@ -63,7 +68,7 @@ func show_rewarded(placement: String) -> bool:
 func maybe_show_interstitial() -> bool:
 	var cfg: Dictionary = GameData.shop.get("ads", {}).get("interstitial", {})
 	var ads: Dictionary = Profile.data.ads
-	if ads.removed:
+	if ads.removed or Store.ad_free():
 		return false
 	if int(Profile.data.runs_played) < int(cfg.get("min_runs", 3)):
 		return false

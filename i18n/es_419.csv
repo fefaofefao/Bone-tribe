@@ -713,7 +713,7 @@ levelup_thick_bones_desc,+20 de vida máxima
 btn_reroll_ad,"Cambiar opciones (anuncio, %d)"
 ad_place_reroll_levelup,Cambiar las 3 opciones de habilidad
 ad_place_shop_diamonds,5 diamantes
-btn_revive_free,Revivir gratis (Tarjeta del Sepulturero)
+btn_revive_free,"Revivir gratis (Tarjeta del Sepulturero, %d hoy)"
 btn_revive_extra,Usar Revivir extra (%d)
 btn_revive_diamonds,Revivir por %d
 btn_not_now,Ahora no
@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Cofre
 iap_diamonds_vault_name,Bóveda
 shop_ad_diamonds,Ver anuncio: +%d (%d hoy)
 iap_gravedigger_card_name,Tarjeta del Sepulturero
-iap_gravedigger_card_desc,"30 días: 30 diamantes y 300 de polvo por día, 1 revivir gratis por día y 1 cofre raro por semana."
+iap_gravedigger_card_desc,"30 días sin anuncios. Cada día: 1.500 de polvo, 50 diamantes, 1 hueso raro para empezar y 2 revivir gratis. Y 1 cofre raro por semana."
 subscription_active,Activa: %d día(s) restantes
 subscription_daily,Tarjeta del Sepulturero
 per_month,30 días

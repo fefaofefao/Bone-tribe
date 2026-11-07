@@ -344,7 +344,7 @@ static func subscription_days_left() -> int:
 	return maxi(0, int(ceil((int(Profile.data.subscription.until) - Backend.now()) / 86400.0)))
 
 
-## Recompensas diárias (30 diamantes + pó) e o baú raro semanal da assinatura.
+## Recompensas diárias (diamantes, pó e ficha de osso raro) e o baú raro semanal da assinatura.
 static func claim_subscription(rng: RandomNumberGenerator) -> Array:
 	if not subscription_active():
 		return []
@@ -362,13 +362,34 @@ static func claim_subscription(rng: RandomNumberGenerator) -> Array:
 	return out
 
 
+## Revivers grátis do Cartão que ainda restam hoje (daily_free_revive por dia).
+static func free_revives_left() -> int:
+	if not subscription_active():
+		return 0
+	var sub: Dictionary = Profile.data.subscription
+	var per_day := int(iap("iap_gravedigger_card").get("daily_free_revive", 1))
+	if int(sub.get("free_revive_day", -1)) != today():
+		return per_day
+	return maxi(0, per_day - int(sub.get("free_revives_used", 1)))
+
+
 static func free_revive_available() -> bool:
-	return subscription_active() and int(Profile.data.subscription.free_revive_day) != today()
+	return free_revives_left() > 0
 
 
 static func use_free_revive() -> void:
-	Profile.data.subscription.free_revive_day = today()
+	var sub: Dictionary = Profile.data.subscription
+	if int(sub.get("free_revive_day", -1)) != today():
+		sub["free_revive_day"] = today()
+		sub["free_revives_used"] = 0
+	sub["free_revives_used"] = int(sub.get("free_revives_used", 0)) + 1
 	Profile.save()
+
+
+## Cartão do Coveiro ativo com "sem anúncios": nada de intersticial e os
+## anúncios recompensados entregam o prêmio sem mostrar o anúncio.
+static func ad_free() -> bool:
+	return subscription_active() and bool(iap("iap_gravedigger_card").get("ad_free", false))
 
 
 # --------------------------------------------------------- ofertas especiais

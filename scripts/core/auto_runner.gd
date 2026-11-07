@@ -73,7 +73,7 @@ func _exec(actions: Array) -> void:
 			"bone":
 				var bid := String(a.get("id", ""))
 				if bid == "":
-					var pool: Array = GameData.bones_by(a.get("pool", {}).merged({"tower": state.tower}))
+					var pool: Array = GameData.bones_by(a.get("pool", {}).merged({"tower": state.content_tower()}))
 					pool = pool.filter(func(x): return not GameData.bone(x).get("boss_drop", false))
 					if pool.is_empty():
 						continue

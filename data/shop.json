@@ -47,17 +47,22 @@
 			"price_brl": 9.9,
 			"name": "iap_gravedigger_card_name",
 			"days": 30,
+			"_doc": "1.4: sem anúncios (ad_free: sem intersticial e os recompensados entregam o prêmio na hora, com os mesmos limites), 1500 de pó, 50 diamantes e 1 ficha de osso raro (começar a partida com um osso raro descoberto) por dia, 2 reviver grátis por dia e o baú raro semanal.",
+			"ad_free": true,
 			"daily": [
 				{
 					"type": "diamonds",
-					"amount": 30
+					"amount": 50
 				},
 				{
 					"type": "dust",
-					"amount": 300
+					"amount": 1500
+				},
+				{
+					"type": "rare_start_token"
 				}
 			],
-			"daily_free_revive": 1,
+			"daily_free_revive": 2,
 			"weekly": [
 				{
 					"type": "bone_chest_rare"

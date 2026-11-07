@@ -713,7 +713,7 @@ levelup_thick_bones_desc,+20 de vida máxima
 btn_reroll_ad,"Trocar opções (anúncio, %d)"
 ad_place_reroll_levelup,Trocar as 3 opções de habilidade
 ad_place_shop_diamonds,5 diamantes
-btn_revive_free,Reviver grátis (Cartão do Coveiro)
+btn_revive_free,"Reviver grátis (Cartão do Coveiro, %d hoje)"
 btn_revive_extra,Usar Reviver extra (%d)
 btn_revive_diamonds,Reviver por %d
 btn_not_now,Agora não
@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Baú
 iap_diamonds_vault_name,Cofre
 shop_ad_diamonds,Assistir anúncio: +%d (%d hoje)
 iap_gravedigger_card_name,Cartão do Coveiro
-iap_gravedigger_card_desc,"30 dias: 30 diamantes e 300 de pó por dia, 1 reviver grátis por dia e 1 baú raro por semana."
+iap_gravedigger_card_desc,"30 dias sem anúncios. Por dia: 1.500 de pó, 50 diamantes, 1 osso raro para começar e 2 reviver grátis. E 1 baú raro por semana."
 subscription_active,Ativo: %d dia(s) restantes
 subscription_daily,Cartão do Coveiro
 per_month,30 dias

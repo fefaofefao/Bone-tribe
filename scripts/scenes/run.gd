@@ -1739,7 +1739,7 @@ func _combat_rewards(killed: Array, is_boss: bool) -> void:
 			pool.append_array(GameData.monster(f.id).get("drops", []))
 		pool = pool.filter(func(x): return not GameData.bone(x).get("boss_drop", false))
 		if pool.is_empty():
-			pool = GameData.bones_by({"rarity": "common", "tower": state.tower}).filter(func(x): return not GameData.bone(x).get("boss_drop", false))
+			pool = GameData.bones_by({"rarity": "common", "tower": state.content_tower()}).filter(func(x): return not GameData.bone(x).get("boss_drop", false))
 		_companion_pop(tr("ossudo_fetch"))
 		await _wait(0.5)
 		await _offer_bone({"id": pool[state.rng.randi() % pool.size()], "level": 1}, companion_view.global_position + Vector2(0, -60) if companion_view else hero_view.body_center_global())
@@ -2157,7 +2157,7 @@ func _death_dialog() -> bool:
 	var res := [false]
 	v.add_child(Style.label(tr("death_sub"), 24, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 	if Store.free_revive_available():
-		var fb := Style.button(tr("btn_revive_free"), "CandleButton", 80)
+		var fb := Style.button(tr("btn_revive_free") % Store.free_revives_left(), "CandleButton", 80)
 		fb.pressed.connect(func():
 			Store.use_free_revive()
 			res[0] = true
@@ -2467,7 +2467,7 @@ func _demo_slot_for(bid: String) -> String:
 ## Sorteio de ossos dos eventos: só ossos que já caem na torre em jogo.
 func _pool_filter(f: Dictionary) -> Dictionary:
 	var out := f.duplicate()
-	out["tower"] = state.tower
+	out["tower"] = state.content_tower()
 	return out
 
 

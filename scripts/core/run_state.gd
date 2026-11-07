@@ -34,6 +34,9 @@ var segment_chest: Dictionary = {}
 var tower := 1
 ## Modo Infinito: andares sem fim, cada um mais difícil (data/balance.json → endless).
 var endless := false
+## Infinito: torre mais alta liberada quando a partida começou. Os ossos e
+## monstros vêm dela, para quem é mais forte poder ir mais longe.
+var endless_tier := 1
 
 
 func _init(opts: Dictionary = {}) -> void:
@@ -51,6 +54,7 @@ func _init(opts: Dictionary = {}) -> void:
 	total_floors = int(GameData.bal("run/prototype_floors", 10)) if prototype else int(GameData.bal("run/floors", 30))
 	if endless:
 		total_floors = ENDLESS_FLOORS
+		endless_tier = clampi(int(opts.get("endless_tier", Meta.tower_unlocked())), 1, maxi(1, GameData.towers.size()))
 	_sync_factory()
 	companion_id = String(opts.get("companion", ""))
 	if not demo and companion_id != "" and not Meta.companion_unlocked(companion_id):
@@ -71,7 +75,7 @@ func _init(opts: Dictionary = {}) -> void:
 
 const SAVE_FIELDS := ["floor_n", "total_floors", "prototype", "hp", "max_hp", "equipped", "dust", "xp", "level",
 	"picks", "bonus_stats", "allies", "companion_id", "seen_events", "bosses_beaten", "kills", "bones_found",
-	"forms_announced", "flags", "pending_skip", "hunter_met", "bigorna_left", "tower", "endless"]
+	"forms_announced", "flags", "pending_skip", "hunter_met", "bigorna_left", "tower", "endless", "endless_tier"]
 
 ## "Sem fim" na prática: o laço da partida para no andar ENDLESS_FLOORS.
 const ENDLESS_FLOORS := 99999
@@ -106,7 +110,7 @@ static func from_dict(d: Dictionary) -> RunState:
 	for id in d.get("picks", []):
 		if not GameData.levelups.has(String(id)):
 			return null
-	var st := RunState.new({"seed": 1, "tower": tower_n, "companion": String(d.get("companion_id", "")), "endless": bool(d.get("endless", false))})
+	var st := RunState.new({"seed": 1, "tower": tower_n, "companion": String(d.get("companion_id", "")), "endless": bool(d.get("endless", false)), "endless_tier": int(d.get("endless_tier", 1))})
 	for k in SAVE_FIELDS:
 		if not d.has(k):
 			continue
@@ -364,7 +368,16 @@ func _sync_factory() -> void:
 	MonsterFactory.endless = endless
 	MonsterFactory.pool_tower = 0
 	if endless:
-		MonsterFactory.pool_tower = clampi(1 + lap_of() * int(GameData.bal("endless/pool_tower_per_lap", 3)), 1, maxi(1, GameData.towers.size()))
+		MonsterFactory.pool_tower = content_tower()
+
+
+## Torre de onde vêm ossos e monstros: no Infinito, a maior entre a torre do
+## jogador e a da volta atual (cada volta sobe pool_tower_per_lap torres).
+func content_tower() -> int:
+	if not endless:
+		return tower
+	var by_lap := 1 + lap_of() * int(GameData.bal("endless/pool_tower_per_lap", 3))
+	return clampi(maxi(endless_tier, by_lap), 1, maxi(1, GameData.towers.size()))
 
 
 ## Chama no começo de cada andar (o Infinito troca de volta a cada 30).

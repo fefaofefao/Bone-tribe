@@ -112,9 +112,11 @@ Ao morrer, o jogador pode reviver uma vez com um anúncio recompensado. Se não 
 Modalidade à parte das torres: os andares não acabam e cada um é mais difícil que o anterior. O jogador testa até onde consegue ir e tenta bater o próprio recorde.
 
 - **Libera** depois de vencer o Rei Rato uma vez. Fica num botão abaixo do Jogar, com o recorde ("Modo Infinito · Recorde: andar 47").
-- **Dificuldade:** vida e ataque dos inimigos seguem a fórmula normal com o andar real (cada andar ~5% mais forte, sem limite). Sem maldição de torre. Chefes do Infinito têm 70% da vida e 90% do ataque, para o recorde não ficar só nos andares de chefe.
-- **Voltas de 30 andares:** eventos e monstros seguem o andar dentro da volta (1 a 30), então todo o conteúdo continua aparecendo. A cada volta entram monstros de 3 torres acima e um trio novo de chefes: Rei Rato/Golem/Dragão; Matriarca Carniçal/Titã de Gelo/Serpe de Magma; Beemote/Lich do Sino/Dragão de Obsidiana; Rainha Aranha/Kraken/Cavaleiro da Morte; depois recomeça.
+- **Dificuldade (nunca mais fácil que a torre normal):** cada andar é ~5% mais forte, como nas torres, e a cada dezena há um salto: andares 11–20 têm +30% de vida e +20% de ataque, 21–30 mais 30%/20% sobre isso, e assim por diante, sem limite. Chefes com a força normal. Sem maldição de torre. Assim o jogador sempre perde em algum momento e a partida não fica longa.
+- **Mais forte, mais longe:** ossos e monstros vêm da torre mais alta que o jogador já liberou (gravada no começo da partida). Quem está mais avançado monta corpos melhores e vai mais longe.
+- **Voltas de 30 andares:** eventos e monstros seguem o andar dentro da volta (1 a 30), então todo o conteúdo continua aparecendo. A cada volta entram monstros de 3 torres acima (se for mais que a do jogador) e um trio novo de chefes: Rei Rato/Golem/Dragão; Matriarca Carniçal/Titã de Gelo/Serpe de Magma; Beemote/Lich do Sino/Dragão de Obsidiana; Rainha Aranha/Kraken/Cavaleiro da Morte; depois recomeça.
 - **Recorde:** o andar alcançado. Aparece na tela inicial, no topo da partida ("Infinito · Andar 12 · Recorde 47", em dourado depois de passar), num aviso ao passar do recorde e no fim da partida ("Novo recorde!").
+- **Anúncios:** iguais aos da partida normal (reviver com anúncio, dobrar o pó no fim, x2 por anúncio).
 - **Recompensas:** pó como na Torre 1 (por andar, por chefe e coletado), sem multiplicador de torre. Não libera torres nem conta para o recorde das torres. Chefe que o jogador ainda não venceu nas torres não usa a "1ª vitória" no Infinito (osso lendário garantido, diamantes e curiosidade ficam para a torre dele).
 - Valores em `data/balance.json → endless`. Simulação: `res://tests/BalanceSim.tscn -- mode=endless`.
 
@@ -329,7 +331,7 @@ Anúncios intersticiais (forçados) só aparecem a partir da 3ª partida, no má
 | --- | --- | --- | --- | --- |
 | Kit das primeiras 24 horas | 300 diamantes, a relíquia Lanterna do Coveiro, a skin Ossinho Lua de Âmbar e 1.000 de pó de osso | US$ 1,99 | R$ 4,90 | Ao fim da 1ª partida, só nas primeiras 24 horas |
 | Remover anúncios | Fim dos intersticiais e +10% de pó de osso permanente | US$ 4,99 | R$ 9,90 | Após o 10º intersticial visto |
-| Cartão do Coveiro (mensal) | 30 diamantes e pó de osso por dia, 1 reviver grátis por dia e 1 baú raro por semana, por 30 dias | US$ 4,99 | R$ 9,90 | Na loja, sempre visível |
+| Cartão do Coveiro (mensal) | 30 dias sem anúncios (sem intersticial; os recompensados entregam o prêmio na hora, com os mesmos limites); por dia 1.500 de pó, 50 diamantes, 1 osso raro para começar a partida e 2 reviver grátis; 1 baú raro por semana | US$ 4,99 | R$ 9,90 | Na loja, sempre visível |
 | Skins | Estilos visuais aplicados a todos os ossos: dourado, neon, pirata, cristal | US$ 1,99 a 3,99 | R$ 4,90 a 9,90 | Na loja e no Cartão da Criatura |
 | Pacote apoiador | Skin exclusiva Ossinho Fundador e nome nos créditos | US$ 9,99 | R$ 24,90 | Na loja, após o capítulo 1 |
 

@@ -111,7 +111,7 @@ func _endless(players: int, runs: int) -> void:
 				var d: Dictionary = res[r + 1]
 				d.tower += mini(unlocked, n_towers)
 				for k in 3:
-					var es := AutoRunner.new({"seed": p * 104729 + r * 7 + k, "endless": true}).play()
+					var es := AutoRunner.new({"seed": p * 104729 + r * 7 + k, "endless": true, "endless_tier": mini(unlocked, n_towers)}).play()
 					d.floors.append(es.floor_n)
 					bank += int(es.end_rewards().total)
 				bank = _spend(bank)

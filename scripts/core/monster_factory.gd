@@ -29,7 +29,10 @@ static func _endless_mult(floor_n: int, stat: String) -> float:
 	if not endless:
 		return 1.0
 	var extra := maxi(0, floor_n - int(GameData.bal("endless/after_floor", 30)))
-	return pow(float(GameData.bal("endless/%s_growth_after" % stat, 1.0)), extra)
+	# salto a cada dezena: andares 11-20 valem decade_mult, 21-30 decade_mult², ...
+	var decade := maxi(0, floor_n - 1) / 10
+	return pow(float(GameData.bal("endless/%s_growth_after" % stat, 1.0)), extra) \
+		* pow(float(GameData.bal("endless/decade_%s_mult" % stat, 1.0)), decade)
 
 
 static func make(monster_id: String, floor_n: int, cursed := true) -> Fighter:

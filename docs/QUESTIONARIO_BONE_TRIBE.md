@@ -33,7 +33,7 @@ Máximo: 5 por partida + 6 por dia.
 |---|---|---|
 | Sem anúncios | R$ 9,90 | Remove os intersticiais (oferta aparece após 10 intersticiais) |
 | Kit das primeiras 24h | R$ 4,90 | 300 diamantes, relíquia, skin e 1.000 de pó |
-| Cartão do Coveiro (assinatura 30 dias) | R$ 9,90 | 30 diamantes + 300 de pó por dia, 1 reviver grátis por dia, 1 baú raro por semana |
+| Cartão do Coveiro (assinatura 30 dias) | R$ 9,90 | sem anúncios; por dia 50 diamantes, 1.500 de pó, 1 osso raro para começar e 2 reviver grátis; 1 baú raro por semana |
 | Apoiador | R$ 24,90 | Skin e nome nos créditos (só após vencer o Dragão) |
 | 100 diamantes | R$ 2,90 | |
 | 550 diamantes | R$ 9,90 | |

@@ -1461,7 +1461,7 @@ func test_25_endless_mode() -> void:
 	Profile.data.bosses_defeated["boss_rat_king"] = 1
 	check(Meta.endless_unlocked(), "Infinito libera depois do Rei Rato")
 	# --- regras da partida
-	var st := RunState.new({"seed": 9, "endless": true, "tower": 7})
+	var st := RunState.new({"seed": 9, "endless": true, "tower": 7, "endless_tier": 1})
 	check(st.endless and st.tower == 1 and st.total_floors >= 10000, "Infinito: torre 1 (sem maldição) e andares sem fim")
 	check(MonsterFactory.endless and MonsterFactory.tower == 1, "MonsterFactory entra no modo Infinito")
 	check(st.boss_for_floor(10) == "boss_rat_king" and st.boss_for_floor(30) == "boss_ancient_dragon", "volta 1: chefes da Torre 1")
@@ -1471,6 +1471,13 @@ func test_25_endless_mode() -> void:
 	st.on_new_floor()
 	check(st.content_floor() == 15 and st.lap_of() == 1, "andar 45 = andar 15 da 2ª volta")
 	check(MonsterFactory.pool_tower == 4, "2ª volta traz monstros da Torre 4")
+	var st_hi := RunState.new({"seed": 9, "endless": true, "endless_tier": 12})
+	check(st_hi.content_tower() == 12 and MonsterFactory.pool_tower == 12 and st_hi.tower == 1, "jogador da Torre 12: ossos e monstros da Torre 12, dificuldade do Infinito")
+	var bk_tw: Dictionary = Profile.data.towers.duplicate(true)
+	Profile.data.towers.unlocked = 6
+	check(RunState.new({"seed": 1, "endless": true}).endless_tier == 6, "Infinito usa a torre mais alta liberada")
+	Profile.data.towers = bk_tw
+	st.on_new_floor()
 	var ev_late: Dictionary = GameData.events["event_scorpion_sand"]
 	st.floor_n = 52
 	check(st.event_available(ev_late), "eventos das torres continuam aparecendo depois do andar 30")
@@ -1495,18 +1502,29 @@ func test_25_endless_mode() -> void:
 		prev_hp = h
 		prev_atk = a
 	check(mono, "no Infinito cada andar é mais difícil que o anterior (1 a 300)")
-	var be := MonsterFactory.make("boss_rat_king", 40)
-	MonsterFactory.endless = false
-	var bn := MonsterFactory.make("boss_rat_king", 40)
+	# nunca mais fácil que a torre normal: em todo andar, igual ou mais forte que a Torre 1
+	var not_easier := true
+	for n in range(1, 61):
+		MonsterFactory.endless = true
+		var eh := MonsterFactory.enemy_hp(n)
+		var ea := MonsterFactory.enemy_atk(n)
+		var ebh := MonsterFactory.make("boss_rat_king", n).max_hp
+		MonsterFactory.endless = false
+		if eh < MonsterFactory.enemy_hp(n) or ea < MonsterFactory.enemy_atk(n) or ebh < MonsterFactory.make("boss_rat_king", n).max_hp:
+			not_easier = false
 	MonsterFactory.endless = true
-	check(be.max_hp < bn.max_hp and be.max_hp > bn.max_hp * 0.5, "chefe do Infinito com menos vida (endless/boss_hp_mult)")
+	check(not_easier, "Infinito nunca mais fácil que a Torre 1 (monstros e chefes, andares 1 a 60)")
+	var jump := MonsterFactory.enemy_hp(11) / MonsterFactory.enemy_hp(10)
+	var step := MonsterFactory.enemy_hp(12) / MonsterFactory.enemy_hp(11)
+	check(jump > step * 1.2, "salto de dificuldade a cada dezena (andar 11 vs 10: x%.2f)" % jump)
+	check(MonsterFactory.enemy_hp(41) > MonsterFactory.enemy_hp(1) * 5.0, "andar 41 bem mais forte que o 1")
 	check(st.final_boss() == "" and not st.beat_final_boss(), "Infinito não libera torre")
 	check(int(st.end_rewards().tower_mult) == 1, "pó do Infinito sem multiplicador de torre")
 	# --- continuar a partida
 	st.floor_n = 63
 	st.hp = st.max_hp * 0.5
 	var back := RunState.from_dict(JSON.parse_string(JSON.stringify(st.to_dict())))
-	check(back != null and back.endless and back.floor_n == 63 and back.total_floors == st.total_floors, "Continuar mantém o Infinito e o andar")
+	check(back != null and back.endless and back.floor_n == 63 and back.total_floors == st.total_floors and back.endless_tier == st.endless_tier, "Continuar mantém o Infinito, o andar e a torre dos ossos")
 	RunSave.save(st)
 	check(bool(RunSave.info().get("endless", false)) and int(RunSave.info().floor) == 64, "botão Continuar sabe que é Infinito")
 	RunSave.clear()
@@ -1546,5 +1564,46 @@ func test_25_endless_mode() -> void:
 	MonsterFactory.endless = false
 	MonsterFactory.pool_tower = 0
 	MonsterFactory.tower = 1
+	Profile.data = backup
+	Profile.save()
+
+
+func test_26_gravedigger_card_1_4() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 11
+	# perfil antigo do Cartão (sem o contador de revivers) continua valendo
+	Profile.data.subscription = {"until": Backend.now() + 5 * 86400, "last_daily_day": -1, "last_chest_week": -1, "free_revive_day": Store.today()}
+	check(Store.subscription_active() and Store.free_revives_left() == 1, "Cartão antigo que já usou o reviver de hoje ainda tem 1")
+	Profile.data.subscription.free_revive_day = -1
+	check(Store.free_revives_left() == 2, "Cartão: 2 reviver grátis por dia")
+	Store.use_free_revive()
+	check(Store.free_revive_available() and Store.free_revives_left() == 1, "depois de 1 reviver sobra 1")
+	Store.use_free_revive()
+	check(not Store.free_revive_available(), "depois de 2 acabou por hoje")
+	Profile.data.subscription.free_revive_day = Store.today() - 1
+	check(Store.free_revives_left() == 2, "no dia seguinte volta a 2")
+	# prêmios do dia
+	var d0 := Profile.dust()
+	var dia0 := Profile.diamonds()
+	var tok0 := int(Profile.data.rare_start_tokens)
+	var got := Store.claim_subscription(rng)
+	check(Profile.dust() == d0 + 1500 and Profile.diamonds() == dia0 + 50 and int(Profile.data.rare_start_tokens) == tok0 + 1, "Cartão por dia: 1500 de pó, 50 diamantes e 1 osso raro")
+	check(Store.claim_subscription(rng).is_empty() and Profile.dust() == d0 + 1500, "prêmio do dia só uma vez")
+	var kinds := got.map(func(x): return String(x.type))
+	check(kinds.has("rare_start_token") and kinds.has("dust") and kinds.has("diamonds"), "tela de prêmios mostra o osso raro")
+	# sem anúncios
+	Profile.data.ads.removed = false
+	check(Store.ad_free(), "Cartão ativo = sem anúncios")
+	var t0 := Time.get_ticks_msec()
+	var ok: bool = await Ads.show_rewarded("double_dust")
+	check(ok and Time.get_ticks_msec() - t0 < 500, "anúncio recompensado entrega o prêmio na hora com o Cartão")
+	Profile.data.runs_played = 99
+	Profile.data.ads.last_interstitial = 0
+	check(not await Ads.maybe_show_interstitial(), "sem intersticial com o Cartão")
+	Profile.data.subscription.until = 0
+	check(not Store.ad_free() and not Store.free_revive_available(), "Cartão vencido: anúncios e revivers voltam ao normal")
+	var src: String = load("res://scripts/scenes/run.gd").source_code
+	check(src.contains('tr("btn_revive_free") % Store.free_revives_left()'), "botão de reviver grátis mostra quantos restam")
 	Profile.data = backup
 	Profile.save()

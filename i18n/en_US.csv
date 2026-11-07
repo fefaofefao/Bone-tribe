@@ -713,7 +713,7 @@ levelup_thick_bones_desc,+20 max HP
 btn_reroll_ad,"Reroll options (ad, %d)"
 ad_place_reroll_levelup,Reroll the 3 skill options
 ad_place_shop_diamonds,5 diamonds
-btn_revive_free,Free revive (Gravedigger's Card)
+btn_revive_free,"Free revive (Gravedigger's Card, %d today)"
 btn_revive_extra,Use Extra revive (%d)
 btn_revive_diamonds,Revive for %d
 btn_not_now,Not now
@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Chest
 iap_diamonds_vault_name,Vault
 shop_ad_diamonds,Watch ad: +%d (%d today)
 iap_gravedigger_card_name,Gravedigger's Card
-iap_gravedigger_card_desc,"30 days: 30 diamonds and 300 dust per day, 1 free revive per day and 1 rare chest per week."
+iap_gravedigger_card_desc,"30 days with no ads. Every day: 1,500 dust, 50 diamonds, 1 rare starting bone and 2 free revives. Plus 1 rare chest per week."
 subscription_active,Active: %d day(s) left
 subscription_daily,Gravedigger's Card
 per_month,30 days

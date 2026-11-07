@@ -56,7 +56,7 @@ func defaults() -> Dictionary:
 		"kit24": {"offered": false, "bought": false},
 		"skins": {"owned": [], "equipped": ""},
 		"ads": {"interstitials_seen": 0, "last_interstitial": 0, "removed": false},
-		"subscription": {"until": 0, "last_daily_day": -1, "last_chest_week": -1, "free_revive_day": -1},
+		"subscription": {"until": 0, "last_daily_day": -1, "last_chest_week": -1, "free_revive_day": -1, "free_revives_used": 0},
 		"supporter": false,
 		"supporter_name": "",
 		"bigorna_used_run": false,
