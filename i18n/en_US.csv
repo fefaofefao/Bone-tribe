@@ -1571,7 +1571,7 @@ bone_tail_imp_name,Imp Tail
 bone_tail_imp_desc,+12 HP. Hits may stun (12%).
 bone_tail_imp_part,Imp
 bone_tail_imp_adj,Frozen
-bone_spine_serpent_name,Serpent Spine
+bone_spine_serpent_name,Serpent Tail
 bone_spine_serpent_desc,+20 HP and 8% lifesteal.
 bone_spine_serpent_part,Serpent
 bone_spine_serpent_adj,Shadowy
@@ -1594,3 +1594,7 @@ bone_blade_death_knight_adj,Relentless
 event_boss_spider_queen_text,"Webs glitter on the ceiling. The Spider Queen slowly descends, crown askew, eight legs ready to wrap you up."
 event_boss_bone_kraken_text,The black water bubbles. Bone tentacles rise from the depths and an eye as big as a shield opens: the Bone Kraken is awake.
 event_boss_death_knight_text,"An empty suit of armor rises from the throne and its blade ignites. The Death Knight points at you: ""Only one of us leaves."""
+speed_ad_title,Combat x2
+speed_ad_text,Watch an ad and fight at double speed until the end of this run.
+btn_speed_ad,Watch (ad)
+btn_speed_locked,x2 AD

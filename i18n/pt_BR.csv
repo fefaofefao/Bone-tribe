@@ -1571,7 +1571,7 @@ bone_tail_imp_name,Cauda de Diabrete
 bone_tail_imp_desc,+12 de vida. Golpes podem atordoar (12%).
 bone_tail_imp_part,Diabrete
 bone_tail_imp_adj,Gelado
-bone_spine_serpent_name,Espinha de Serpente
+bone_spine_serpent_name,Cauda de Serpente
 bone_spine_serpent_desc,+20 de vida e 8% de roubo de vida.
 bone_spine_serpent_part,Serpente
 bone_spine_serpent_adj,Sombrio
@@ -1594,3 +1594,7 @@ bone_blade_death_knight_adj,Implacável
 event_boss_spider_queen_text,"Fios de teia brilham no teto. A Rainha Aranha desce devagar, com a coroa torta e oito patas prontas para te embrulhar."
 event_boss_bone_kraken_text,A água preta borbulha. Tentáculos de osso sobem do fundo e um olho do tamanho de um escudo se abre: o Kraken Ósseo acordou.
 event_boss_death_knight_text,Uma armadura vazia se levanta do trono e a lâmina acende. O Cavaleiro da Morte aponta para você: — Só um de nós sai daqui.
+speed_ad_title,Combate x2
+speed_ad_text,Assista a um anúncio e lute em velocidade dobrada até o fim desta partida.
+btn_speed_ad,Assistir (anúncio)
+btn_speed_locked,x2 AD

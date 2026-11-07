@@ -308,6 +308,7 @@ A receita vem de anúncios recompensados e de compras no app, sem sistema de ene
 | Dobrar o pó de osso | 1 por partida | Na tela de fim de partida |
 | Trocar as 3 opções de habilidade | 3 por partida | Na escolha ao subir de nível |
 | Abrir baú extra | 3 por dia | No Ossuário |
+| Combate em velocidade x2 até o fim da partida | 1 por partida (grátis para quem comprou "sem anúncios" ou assina) | Botão x2 no topo da partida |
 
 Anúncios intersticiais (forçados) só aparecem a partir da 3ª partida, no máximo um a cada 3 minutos, sempre entre partidas e nunca no meio de um combate.
 

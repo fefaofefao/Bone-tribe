@@ -8,7 +8,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • 6 monstros, 15 ossos e 7 formas secretas novas.
 • Melhorias avançadas no Ossuário (após a Torre 1).
 • Mais usos para diamantes: trocar opções, outro evento, trocar missão e dobrar pó.
-• Botão Desistir na partida e velocidade do combate de volta à tela.
+• Botão Desistir e combate x2 (com anúncio, grátis sem anúncios).
 • Status e relíquias mostram o que você ganha.
 • Correções: raio dos inimigos, cartão compartilhado e estabilidade.
 </pt-BR>
@@ -17,7 +17,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • 6 monsters, 15 bones and 7 new secret forms.
 • Advanced Ossuary upgrades (after Tower 1).
 • More ways to use diamonds: reroll choices, another event, swap a mission and double dust.
-• Give Up button in runs, and the combat speed button is back on screen.
+• Give Up button and x2 combat speed (via ad, free with No Ads).
 • Status and relics now show what you gain.
 • Fixes: enemy eye beams, shared card and stability.
 </en-US>
@@ -26,7 +26,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • 6 monstruos, 15 huesos y 7 formas secretas nuevas.
 • Mejoras avanzadas en el Osario (tras la Torre 1).
 • Más usos para diamantes: cambiar opciones, otro evento, cambiar misión y duplicar polvo.
-• Botón Rendirse en la partida y la velocidad del combate de vuelta.
+• Botón Rendirse y combate x2 (con anuncio, gratis sin anuncios).
 • Estado y reliquias muestran lo que ganas.
 • Correcciones: rayo de enemigos, tarjeta compartida y estabilidad.
 </es-419>

@@ -1284,6 +1284,69 @@ func test_24_update_1_4() -> void:
 				if absf(float(shown[f]) - f.hp) > 0.001:
 					ok_small = false
 	check(ok_small, "curas pequenas atualizam a vida mostrada")
+	# --- ossos de cauda ficam no chão: o nome tem que dizer que é cauda (não "espinha"/"coluna")
+	var tail_names_ok := true
+	for bid in GameData.bones:
+		var bd: Dictionary = GameData.bones[bid]
+		if String(bd.get("slot", "")) == "slot_tail":
+			for loc in ["pt_BR", "en_US", "es_419"]:
+				var tro := TranslationServer.get_translation_object(loc)
+				var nm := String(tro.get_message(String(bd.get("name", "")))) if tro else ""
+				for w in ["Espinha", "Coluna", "Spine", "Espina", "Columna"]:
+					if nm.contains(w):
+						tail_names_ok = false
+	check(tail_names_ok, "osso de cauda (fica no chão) não se chama espinha ou coluna")
+	# --- x2 do combate: anúncio libera na partida; quem tirou anúncios usa direto
+	var bk_sp: Dictionary = Profile.data.duplicate(true)
+	Profile.data.ads.removed = false
+	Profile.set_setting("fast_combat", true)
+	var run_sp: Node = load("res://scenes/Run.tscn").instantiate()
+	get_tree().root.add_child(run_sp)
+	for k in 3:
+		await get_tree().process_frame
+	check(run_sp.speed == 1.0 and run_sp.speed_btn.text == tr("btn_speed_locked"), "x2 começa bloqueado sem o anúncio (mesmo com a opção salva)")
+	run_sp._toggle_speed()
+	await get_tree().process_frame
+	var spb: Array = run_sp.overlay_root.find_children("*", "Button", true, false)
+	var watch: Button = null
+	var not_now: Button = null
+	for b2 in spb:
+		if b2.text == tr("btn_speed_ad"):
+			watch = b2
+		elif b2.text == tr("btn_not_now"):
+			not_now = b2
+	check(watch != null and not_now != null and get_tree().paused, "toque no x2 abre o pedido de anúncio e pausa")
+	if not_now:
+		not_now.pressed.emit()
+	check(not get_tree().paused and run_sp.speed == 1.0, "\"Agora não\" volta ao jogo em x1")
+	run_sp._toggle_speed()
+	await get_tree().process_frame
+	for b2 in run_sp.overlay_root.find_children("*", "Button", true, false):
+		if b2.text == tr("btn_speed_ad"):
+			b2.pressed.emit()
+	var waited := 0.0
+	while run_sp.speed < 1.5 and waited < 6.0:
+		await get_tree().create_timer(0.25, true, false, true).timeout
+		waited += 0.25
+	check(run_sp.speed == 2.0 and bool(run_sp.state.flags.get("speed_x2", false)), "anúncio assistido libera o x2 na partida")
+	check(bool(RunState.from_dict(JSON.parse_string(JSON.stringify(run_sp.state.to_dict()))).flags.get("speed_x2", false)), "x2 liberado continua ao retomar a partida")
+	run_sp._toggle_speed()
+	run_sp._toggle_speed()
+	check(run_sp.speed == 2.0 and not get_tree().paused, "depois de liberado, x1/x2 troca sem novo anúncio")
+	run_sp.queue_free()
+	await get_tree().process_frame
+	Profile.data.ads.removed = true
+	var run_sp2: Node = load("res://scenes/Run.tscn").instantiate()
+	get_tree().root.add_child(run_sp2)
+	for k in 3:
+		await get_tree().process_frame
+	check(run_sp2.speed == 2.0, "quem comprou sem anúncios usa o x2 direto")
+	run_sp2.queue_free()
+	await get_tree().process_frame
+	get_tree().paused = false
+	Profile.data = bk_sp
+	Profile.save()
+	RunSave.clear()
 	var backup: Dictionary = Profile.data.duplicate(true)
 	# --- save de quem já joga (formato da 1.3): carrega sem perder nada
 	var old := Profile.defaults()

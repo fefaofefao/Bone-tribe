@@ -63,7 +63,7 @@ func _ready() -> void:
 	# ferramenta de desenvolvimento (BT_FLOOR=n): começa a partida no andar n
 	if Dev.env("BT_FLOOR") != "":
 		state.floor_n = maxi(0, int(Dev.env("BT_FLOOR")) - 1)
-	speed = 2.0 if Profile.setting("fast_combat") else 1.0
+	speed = 2.0 if Profile.setting("fast_combat") and _speed_unlocked() else 1.0
 	if demo:
 		speed = 1.6
 		_demo_plan = GameData.bal("demo/plan", []).duplicate()
@@ -410,14 +410,73 @@ func open_status() -> Control:
 	return StatusPopup.open(overlay_root, state)
 
 
+## Combate x2 (1.4): liberado nesta partida por um anúncio recompensado.
+## Quem comprou "sem anúncios" ou tem assinatura ativa usa sem anúncio.
+func _speed_unlocked() -> bool:
+	if demo:
+		return true
+	if bool(Profile.data.get("ads", {}).get("removed", false)) or Store.subscription_active():
+		return true
+	return state != null and bool(state.flags.get("speed_x2", false))
+
+
 func _toggle_speed() -> void:
-	speed = 1.0 if speed > 1.0 else 2.0
+	if speed > 1.0:
+		speed = 1.0
+	elif _speed_unlocked():
+		speed = 2.0
+	else:
+		_offer_speed_ad()
+		return
 	Profile.set_setting("fast_combat", speed > 1.0)
 	_update_speed_btn()
 
 
+func _offer_speed_ad() -> void:
+	if state.dead or _run_recorded or overlay_root == null:
+		return
+	var tree := get_tree()
+	var was_paused := tree.paused
+	tree.paused = true
+	var bg := Widgets.dim_overlay(overlay_root, 0.85)
+	bg.process_mode = Node.PROCESS_MODE_ALWAYS
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.add_child(center)
+	var p := Style.panel(Style.C_PANEL)
+	p.custom_minimum_size = Vector2(620, 0)
+	center.add_child(p)
+	var v := Style.vbox(16)
+	p.add_child(v)
+	v.add_child(Style.title(tr("speed_ad_title"), 46))
+	v.add_child(Style.label(tr("speed_ad_text"), 23, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	var yes := Style.button(tr("btn_speed_ad"), "CandleButton", 78)
+	var no := Style.button(tr("btn_not_now"), "DarkButton", 70)
+	yes.pressed.connect(func():
+		yes.disabled = true
+		no.disabled = true
+		tree.paused = was_paused
+		var ok: bool = await Ads.show_rewarded("speed_x2")
+		if is_instance_valid(bg):
+			bg.queue_free()
+		if ok and is_instance_valid(self) and state != null and not state.dead:
+			state.flags["speed_x2"] = true
+			speed = 2.0
+			Profile.set_setting("fast_combat", true)
+			_update_speed_btn()
+			Backend.log_event("speed_x2_unlocked", {"floor": state.floor_n, "tower": state.tower}))
+	v.add_child(yes)
+	no.pressed.connect(func():
+		tree.paused = was_paused
+		bg.queue_free())
+	v.add_child(no)
+	Widgets.pop_in(p)
+
+
 func _update_speed_btn() -> void:
 	speed_btn.text = "x%d" % int(round(speed)) if speed >= 1.5 else "x1"
+	if speed < 1.5 and not _speed_unlocked():
+		speed_btn.text = tr("btn_speed_locked")
 
 
 func _refresh_hud() -> void:

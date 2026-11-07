@@ -1571,7 +1571,7 @@ bone_tail_imp_name,Cola de Diablillo
 bone_tail_imp_desc,+12 de vida. Los golpes pueden aturdir (12%).
 bone_tail_imp_part,Diablillo
 bone_tail_imp_adj,Helado
-bone_spine_serpent_name,Espina de Serpiente
+bone_spine_serpent_name,Cola de Serpiente
 bone_spine_serpent_desc,+20 de vida y 8% de robo de vida.
 bone_spine_serpent_part,Serpiente
 bone_spine_serpent_adj,Sombrío
@@ -1594,3 +1594,7 @@ bone_blade_death_knight_adj,Implacable
 event_boss_spider_queen_text,"Hilos de telaraña brillan en el techo. La Reina Araña baja despacio, con la corona torcida y ocho patas listas para envolverte."
 event_boss_bone_kraken_text,El agua negra burbujea. Tentáculos de hueso suben del fondo y se abre un ojo del tamaño de un escudo: el Kraken Óseo despertó.
 event_boss_death_knight_text,Una armadura vacía se levanta del trono y la hoja se enciende. El Caballero de la Muerte te señala: —Solo uno de nosotros sale de aquí.
+speed_ad_title,Combate x2
+speed_ad_text,Mira un anuncio y lucha a doble velocidad hasta el final de esta partida.
+btn_speed_ad,Mirar (anuncio)
+btn_speed_locked,x2 AD
