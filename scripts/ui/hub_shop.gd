@@ -10,13 +10,14 @@ var _daily_timer: Label
 
 func build() -> void:
 	rng.randomize()
+	# Cartão do Coveiro é o carro-chefe: sempre o primeiro da loja
+	_subscription()
 	if Store.kit_available():
 		_kit()
 	_daily()
 	_items()
 	_skins()
 	_diamonds()
-	_subscription()
 	_specials()
 
 
@@ -184,7 +185,8 @@ func _skins() -> void:
 	for id in GameData.skins:
 		var s: Dictionary = GameData.skins[id]
 		var owns := Store.owns_skin(id)
-		if not owns and String(s.get("source", "")) != "shop":
+		var sub_skin := String(s.get("source", "")) == "subscription"
+		if not owns and String(s.get("source", "")) != "shop" and not sub_skin:
 			continue
 		var tint := Color(String(s.get("glow", "#ffffff")))
 		var c := card(Color(tint.darkened(0.82), 0.96), Style.C_CANDLE if equipped == id else Color(tint, 0.55))
@@ -208,6 +210,9 @@ func _skins() -> void:
 				Haptics.light()
 				rebuild())
 			v.add_child(eb)
+		elif sub_skin:
+			# exclusiva do Cartão do Coveiro: não se compra avulsa
+			v.add_child(Style.bold(tr("skin_card_only"), 18, Color("d8c4ff"), HORIZONTAL_ALIGNMENT_CENTER))
 		else:
 			var row := Style.hbox(6)
 			var price := int(s.get("diamonds", 0))
@@ -282,26 +287,90 @@ func _diamonds() -> void:
 
 func _subscription() -> void:
 	var p := Store.iap("iap_gravedigger_card")
-	var c := card(Color(0.12, 0.1, 0.16, 0.97), Color("b48cff"))
-	var v := Style.vbox(8)
+	var active := Store.subscription_active()
+	var c := card(Color(0.13, 0.09, 0.19, 0.98), Color("b48cff"))
+	var sb: StyleBoxFlat = c.get_theme_stylebox("panel").duplicate()
+	sb.border_width_left = 4
+	sb.border_width_top = 4
+	sb.border_width_right = 4
+	sb.border_width_bottom = 4
+	sb.shadow_color = Color(0.7, 0.45, 1.0, 0.35)
+	sb.shadow_size = 14
+	c.add_theme_stylebox_override("panel", sb)
+	var v := Style.vbox(10)
 	c.add_child(v)
-	var h := Style.hbox(12)
-	h.add_child(Widgets.icon("res://art/props/prop_gravedigger.png", 96))
-	var tv := Style.vbox(4)
+	# selo + nome + valor
+	var badge := PanelContainer.new()
+	badge.add_theme_stylebox_override("panel", Style.flat_box(Style.C_CANDLE, Color(1, 1, 1, 0.0), 12, 0, 6))
+	badge.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	badge.add_child(Style.nowrap(Style.bold(tr("card_badge"), 20, Style.C_INK, HORIZONTAL_ALIGNMENT_CENTER)))
+	v.add_child(badge)
+	var top := Style.hbox(10)
+	v.add_child(top)
+	var skin := String(p.get("skin", ""))
+	if skin != "" and GameData.skins.has(skin):
+		var prev := SkinPreview.new()
+		prev.skin_id = skin
+		prev.custom_minimum_size = Vector2(190, 230)
+		top.add_child(prev)
+	var tv := Style.vbox(6)
 	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	tv.add_child(Style.bold(tr("iap_gravedigger_card_name"), 26, Color("d8c4ff")))
-	tv.add_child(Style.label(tr("iap_gravedigger_card_desc"), 18, Style.C_MUTED))
-	h.add_child(tv)
-	v.add_child(h)
-	if Store.subscription_active():
-		v.add_child(Style.bold(tr("subscription_active") % Store.subscription_days_left(), 20, Style.C_HEAL, HORIZONTAL_ALIGNMENT_CENTER))
-	var b := Style.button(Billing.price_text("iap_gravedigger_card") + "  ·  " + tr("per_month"), "CandleButton", 72)
+	tv.alignment = BoxContainer.ALIGNMENT_CENTER
+	tv.add_child(Style.title(tr("iap_gravedigger_card_name"), 42, Color("d8c4ff")))
+	tv.add_child(Style.bold(tr("card_value") % int(p.get("value_x", 5)), 24, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER))
+	tv.add_child(Style.label(tr("card_skin_line"), 18, Color("9dffc4"), HORIZONTAL_ALIGNMENT_CENTER))
+	top.add_child(tv)
+	# benefícios em duas colunas, com ícone
+	var g := GridContainer.new()
+	g.columns = 2
+	g.add_theme_constant_override("h_separation", 10)
+	g.add_theme_constant_override("v_separation", 6)
+	v.add_child(g)
+	var daily: Array = p.get("daily", [])
+	var dust_day := 0
+	var dia_day := 0
+	for r in daily:
+		if String(r.type) == "dust":
+			dust_day = int(r.amount)
+		elif String(r.type) == "diamonds":
+			dia_day = int(r.amount)
+	var welcome := 0
+	for r in p.get("welcome", []):
+		if String(r.type) == "diamonds":
+			welcome += int(r.amount)
+	var benefits := [
+		["res://art/ui/ui_icon_shield.png", tr("card_b_noads")],
+		["res://art/ui/ui_levelup_quick_knees.png", tr("card_b_x2")],
+		["res://art/ui/ui_icon_dust.png", tr("card_b_rundust") % int(roundf(float(p.get("run_dust_bonus", 0.0)) * 100.0))],
+		["res://art/ui/ui_icon_dust.png", tr("card_b_dust_day") % Style.num(dust_day)],
+		["res://art/ui/ui_icon_diamond.png", tr("card_b_dia_day") % dia_day],
+		["res://art/ui/ui_icon_diamond.png", tr("card_b_welcome") % welcome],
+		[GameData.bone_texture_path("bone_skull_cyclops"), tr("card_b_rare")],
+		["res://art/ui/ui_icon_heart.png", tr("card_b_revive") % int(p.get("daily_free_revive", 2))],
+		["res://art/skins/acc_gravedigger_hat.png", tr("card_b_skin")],
+		["res://art/ui/ui_bone_chest.png", tr("card_b_chest")],
+	]
+	for bf in benefits:
+		var row := Style.hbox(8)
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(Widgets.icon(String(bf[0]), 38))
+		var l := Style.label(String(bf[1]), 18, Style.C_TEXT)
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(l)
+		g.add_child(row)
+	if active:
+		v.add_child(Style.bold(tr("subscription_active") % Store.subscription_days_left(), 22, Style.C_HEAL, HORIZONTAL_ALIGNMENT_CENTER))
+	var price := Billing.price_text("iap_gravedigger_card")
+	var b := Style.button(tr("btn_card_renew") % price if active else price + "  ·  " + tr("per_month"), "CandleButton", 90)
+	b.add_theme_font_size_override("font_size", 32 if not active else 26)
 	b.pressed.connect(func():
 		var res: Array = await Store.buy_iap("iap_gravedigger_card", rng)
 		if not res.is_empty():
-			var daily := Store.claim_subscription(rng)
-			_show(daily if not daily.is_empty() else res))
+			var daily_res := Store.claim_subscription(rng)
+			res.append_array(daily_res)
+			_show(res))
 	v.add_child(b)
+	v.add_child(Style.label(tr("card_no_autorenew"), 16, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 	body.add_child(c)
 
 

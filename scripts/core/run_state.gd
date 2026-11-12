@@ -520,9 +520,14 @@ func end_rewards() -> Dictionary:
 	var base := floor_n * per_floor + bosses_beaten.size() * per_boss + dust
 	var bonus := stat("dust_bonus")
 	var tower_mult := float(GameData.bal("endless/dust_mult", 1.0)) if endless else float(GameData.tower(tower).get("dust_mult", 1.0))
-	var total := int(roundf(base * (1.0 + bonus) * tower_mult))
+	# Cartão do Coveiro: +50% de pó (soma com os outros bônus); "card_extra"
+	# é quanto o Cartão deu ou daria nesta partida (lembrete para quem não tem)
+	var card := Store.subscription_dust_bonus() if not demo else 0.0
+	var total := int(roundf(base * (1.0 + bonus + card) * tower_mult))
+	var card_pct := float(Store.iap("iap_gravedigger_card").get("run_dust_bonus", 0.0))
+	var card_extra := int(roundf(base * card_pct * tower_mult))
 	return {"floors": floor_n * per_floor, "bosses": bosses_beaten.size() * per_boss, "collected": dust, "bonus_pct": bonus,
-		"tower_mult": tower_mult, "total": total}
+		"tower_mult": tower_mult, "total": total, "card_bonus": card, "card_extra": card_extra}
 
 
 ## Chefe do último andar normal da torre: vencê-lo libera a próxima torre.

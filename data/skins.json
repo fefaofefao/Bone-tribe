@@ -15,5 +15,8 @@
 		"accessories": ["acc_moon_charm"]},
 	{"id": "skin_founder", "name": "skin_founder_name", "desc": "skin_founder_desc", "tint": "#ffffff", "glow": "#c070ff", "source": "supporter",
 		"style": {"remap": 0.85, "pal_dark": "#341552", "pal_light": "#f3e2ff", "rim": 0.9, "rim_color": "#d18cff", "rim_width": 2.5, "sheen": 0.4, "sheen_color": "#ffe9a8", "sparkle": 0.5},
-		"accessories": ["acc_founder_crown"]}
+		"accessories": ["acc_founder_crown"]},
+	{"id": "skin_gravedigger", "name": "skin_gravedigger_name", "desc": "skin_gravedigger_desc", "tint": "#ffffff", "glow": "#7dffb0", "source": "subscription",
+		"style": {"remap": 0.85, "pal_dark": "#1c2a22", "pal_light": "#d8f2df", "rim": 1.2, "rim_color": "#7dffb0", "rim_width": 3.0, "pulse": 1.0, "sheen": 0.3, "sheen_color": "#c8ffd8"},
+		"accessories": ["acc_gravedigger_hat"]}
 ]

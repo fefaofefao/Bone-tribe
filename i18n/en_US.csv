@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Chest
 iap_diamonds_vault_name,Vault
 shop_ad_diamonds,Watch ad: +%d (%d today)
 iap_gravedigger_card_name,Gravedigger's Card
-iap_gravedigger_card_desc,"30 days with no ads. Every day: 1,500 dust, 50 diamonds, 1 rare starting bone and 2 free revives. Plus 1 rare chest per week."
+iap_gravedigger_card_desc,"30 days with no ads and x2 unlocked. Right away: 300 diamonds and the exclusive Gravedigger skin. Every day: 1,500 dust, 50 diamonds, 1 rare bone and 2 free revives. +50% dust every run and 1 rare chest per week."
 subscription_active,Active: %d day(s) left
 subscription_daily,Gravedigger's Card
 per_month,30 days
@@ -1626,3 +1626,24 @@ btn_swap_this,Swap this one
 auto_attach,%s attached
 auto_swap_better,%s → %s
 auto_crush_same,You already have %s (same or better). %s crushed.
+card_badge,BEST VALUE IN THE SHOP
+card_value,Worth over %dx the price
+card_skin_line,Includes the exclusive Gravedigger skin
+card_b_noads,No ads
+card_b_x2,x2 combat unlocked
+card_b_rundust,+%d%% dust every run
+card_b_dust_day,%s dust per day
+card_b_dia_day,%d diamonds per day
+card_b_welcome,%d diamonds right away
+card_b_rare,1 rare bone per day
+card_b_revive,%d free revives per day
+card_b_skin,Exclusive Gravedigger skin
+card_b_chest,Rare chest every week
+card_no_autorenew,No automatic charge: lasts 30 days and you renew whenever you want.
+btn_card_renew,Renew +30 days · %s
+skin_card_only,Gravedigger's Card only
+skin_gravedigger_name,Gravedigger
+skin_gravedigger_desc,Gravedigger hat and a ghost-lantern glow. Only for Gravedigger's Card holders.
+card_run_bonus,Gravedigger's Card: +%s dust this run
+card_run_hint,With the Gravedigger's Card: +%s dust this run
+card_death_hint,Gravedigger's Card: %d free revives per day

@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Cofre
 iap_diamonds_vault_name,Bóveda
 shop_ad_diamonds,Ver anuncio: +%d (%d hoy)
 iap_gravedigger_card_name,Tarjeta del Sepulturero
-iap_gravedigger_card_desc,"30 días sin anuncios. Cada día: 1.500 de polvo, 50 diamantes, 1 hueso raro para empezar y 2 revivir gratis. Y 1 cofre raro por semana."
+iap_gravedigger_card_desc,"30 días sin anuncios y con x2 desbloqueado. Al instante: 300 diamantes y el aspecto exclusivo del Sepulturero. Cada día: 1.500 de polvo, 50 diamantes, 1 hueso raro y 2 revivir gratis. +50% de polvo en cada partida y 1 cofre raro por semana."
 subscription_active,Activa: %d día(s) restantes
 subscription_daily,Tarjeta del Sepulturero
 per_month,30 días
@@ -1626,3 +1626,24 @@ btn_swap_this,Cambiar este
 auto_attach,%s encajado
 auto_swap_better,%s → %s
 auto_crush_same,Ya tienes %s (igual o mejor). %s triturado.
+card_badge,MEJOR VALOR DE LA TIENDA
+card_value,Vale más de %dx el precio
+card_skin_line,Incluye el aspecto exclusivo del Sepulturero
+card_b_noads,Sin anuncios
+card_b_x2,Combate x2 desbloqueado
+card_b_rundust,+%d%% de polvo en cada partida
+card_b_dust_day,%s de polvo por día
+card_b_dia_day,%d diamantes por día
+card_b_welcome,%d diamantes al instante
+card_b_rare,1 hueso raro por día
+card_b_revive,%d revivir gratis por día
+card_b_skin,Aspecto exclusivo del Sepulturero
+card_b_chest,Cofre raro cada semana
+card_no_autorenew,Sin cobro automático: dura 30 días y renuevas cuando quieras.
+btn_card_renew,Renovar +30 días · %s
+skin_card_only,Solo con la Tarjeta del Sepulturero
+skin_gravedigger_name,Sepulturero
+skin_gravedigger_desc,Sombrero de sepulturero y brillo de linterna fantasma. Solo con la Tarjeta del Sepulturero.
+card_run_bonus,Tarjeta del Sepulturero: +%s de polvo en esta partida
+card_run_hint,Con la Tarjeta del Sepulturero: +%s de polvo en esta partida
+card_death_hint,Tarjeta del Sepulturero: %d revivir gratis por día

@@ -87,6 +87,9 @@ static func _curiosity(rng: RandomNumberGenerator, rare: bool) -> Dictionary:
 # ------------------------------------------------------------------- skins
 
 static func owns_skin(id: String) -> bool:
+	# skin do Cartão do Coveiro: só enquanto a assinatura está ativa
+	if String(GameData.skins.get(id, {}).get("source", "")) == "subscription":
+		return subscription_active()
 	return (Profile.data.skins.owned as Array).has(id)
 
 
@@ -105,7 +108,8 @@ static func equip_skin(id: String) -> void:
 
 static func equipped_skin() -> String:
 	var id := String(Profile.data.skins.get("equipped", ""))
-	return id if GameData.skins.has(id) else ""
+	# skin do Cartão vencido volta ao visual normal (a escolha fica guardada)
+	return id if GameData.skins.has(id) and owns_skin(id) else ""
 
 
 static func skin_tint() -> Color:
@@ -327,6 +331,12 @@ static func deliver_iap(id: String, rng: RandomNumberGenerator) -> Array:
 			sub.until = maxi(int(sub.until), Backend.now()) + int(p.get("days", 30)) * 86400
 			Profile.save()
 			out = [{"type": "subscription"}]
+			# boas-vindas na hora e a skin exclusiva já vestida
+			out.append_array(grant(p.get("welcome", []), rng, "subscription_welcome"))
+			var skin := String(p.get("skin", ""))
+			if skin != "" and GameData.skins.has(skin):
+				Profile.data.skins.equipped = skin
+				out.append({"type": "skin", "id": skin})
 		_:
 			out = grant(p.get("content", []), rng, "iap")
 	Profile.save()
@@ -384,6 +394,11 @@ static func use_free_revive() -> void:
 		sub["free_revives_used"] = 0
 	sub["free_revives_used"] = int(sub.get("free_revives_used", 0)) + 1
 	Profile.save()
+
+
+## +50% de pó no fim das partidas com o Cartão ativo (0 sem ele).
+static func subscription_dust_bonus() -> float:
+	return float(iap("iap_gravedigger_card").get("run_dust_bonus", 0.0)) if subscription_active() else 0.0
 
 
 ## Cartão do Coveiro ativo com "sem anúncios": nada de intersticial e os

@@ -2,7 +2,7 @@
 """Acessórios das skins (placeholders no estilo do jogo, no tamanho final).
 
 Gera em art/skins/: chapéu e tapa-olho da skin Pirata, coroa do Fundador e o
-amuleto da Lua de Âmbar. As posições ficam em data/accessories.json.
+amuleto da Lua de Âmbar e o chapéu do Coveiro (skin do Cartão do Coveiro). As posições ficam em data/accessories.json.
 Uso: python3 tools/gen_skin_accessories.py
 """
 import os
@@ -90,8 +90,33 @@ def moon_charm():
     return finish(c, w, h, os.path.join(OUT, "acc_moon_charm.png"))
 
 
+def gravedigger_hat():
+    """Chapéu de abas largas do Coveiro (skin exclusiva do Cartão do Coveiro)."""
+    w, h = 250, 130
+    c = new_canvas(w, h)
+    brim = Layer(w, h)
+    # aba larga e um pouco caída nas pontas
+    brim.poly([(4, 96), (40, 84), (125, 80), (210, 84), (246, 96), (214, 110), (125, 104), (36, 110)])
+    crown = Layer(w, h)
+    crown.poly([(70, 90), (76, 34), (96, 16), (125, 12), (154, 16), (174, 34), (180, 90)])
+    dent = Layer(w, h)
+    dent.curve([(100, 22), (125, 30), (150, 22)], 4)
+    paint(c, brim, base=(46, 40, 34), shadow=(24, 20, 18), light=(84, 74, 62), outline=INK, outline_w=3)
+    paint(c, crown, base=(56, 48, 40), shadow=(30, 26, 22), light=(98, 86, 72), outline=INK, outline_w=3)
+    paint(c, dent, base=(30, 26, 22), shadow=(20, 16, 14), light=(60, 52, 44), outline=INK, outline_w=0, grain=False)
+    band = Layer(w, h)
+    band.poly([(72, 72), (178, 72), (179, 86), (71, 86)])
+    paint(c, band, base=(58, 120, 84), shadow=(30, 70, 46), light=(120, 200, 150), outline=INK, outline_w=1.5, grain=False)
+    # lanterninha fantasma presa na fita
+    lamp = Layer(w, h)
+    lamp.circle(160, 79, 8)
+    glow(c, lamp, (125, 255, 176), radius=10, strength=1.0)
+    paint(c, lamp, base=(150, 255, 190), shadow=(70, 190, 120), light=(230, 255, 240), outline=INK, outline_w=1.5, grain=False)
+    return finish(c, w, h, os.path.join(OUT, "acc_gravedigger_hat.png"))
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
-    for f in (pirate_hat, eyepatch, founder_crown, moon_charm):
+    for f in (pirate_hat, eyepatch, founder_crown, moon_charm, gravedigger_hat):
         img = f()
         print(f.__name__, img.size)

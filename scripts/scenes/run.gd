@@ -2248,6 +2248,8 @@ func _death_dialog() -> bool:
 	var v: VBoxContainer = parts[1]
 	var res := [false]
 	v.add_child(Style.label(tr("death_sub"), 24, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	if not Store.subscription_active():
+		v.add_child(Style.label(tr("card_death_hint") % int(Store.iap("iap_gravedigger_card").get("daily_free_revive", 2)), 18, Color("c9b3ff"), HORIZONTAL_ALIGNMENT_CENTER))
 	if Store.free_revive_available():
 		var fb := Style.button(tr("btn_revive_free") % Store.free_revives_left(), "CandleButton", 80)
 		fb.pressed.connect(func():
@@ -2484,6 +2486,12 @@ func _end_run() -> void:
 			v.add_child(Style.bold(tr("tower_clear_diamonds") % int(tower_rew.diamonds), 24, Style.C_DIAMOND, HORIZONTAL_ALIGNMENT_CENTER))
 	var dust_l := Style.bold(tr("run_end_dust") % Style.num(int(rewards.total)), 30, Style.C_DUST, HORIZONTAL_ALIGNMENT_CENTER)
 	v.add_child(dust_l)
+	# Cartão do Coveiro: quanto deu (assinante) ou quanto daria (lembrete discreto)
+	if not demo and int(rewards.get("card_extra", 0)) > 0:
+		if float(rewards.get("card_bonus", 0.0)) > 0.0:
+			v.add_child(Style.label(tr("card_run_bonus") % Style.num(int(rewards.card_extra)), 20, Color("9dffc4"), HORIZONTAL_ALIGNMENT_CENTER))
+		else:
+			v.add_child(Style.label(tr("card_run_hint") % Style.num(int(rewards.card_extra)), 19, Color("c9b3ff"), HORIZONTAL_ALIGNMENT_CENTER))
 	var total := [int(rewards.total)]
 	if not demo:
 		var dbl := Style.button(tr("btn_double_dust_ad"), "CandleButton", 80)

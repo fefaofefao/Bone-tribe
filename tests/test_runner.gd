@@ -1712,3 +1712,47 @@ func test_27_bone_compare() -> void:
 	MonsterFactory.tower = 1
 	Profile.data = backup
 	Profile.save()
+
+
+func test_28_gravedigger_flagship() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	Profile.data.subscription = {"until": 0, "last_daily_day": -1, "last_chest_week": -1, "free_revive_day": -1, "free_revives_used": 0}
+	Profile.data.skins = {"owned": [], "equipped": ""}
+	# skin exclusiva: só com o Cartão ativo
+	check(GameData.skins.has("skin_gravedigger") and not Store.owns_skin("skin_gravedigger"), "skin do Coveiro não vem sem o Cartão")
+	Store.equip_skin("skin_gravedigger")
+	check(Store.equipped_skin() == "", "sem o Cartão não dá para vestir a skin do Coveiro")
+	# compra: boas-vindas na hora e skin vestida
+	var dia0 := Profile.diamonds()
+	var res: Array = await Store.buy_iap("iap_gravedigger_card", rng)
+	var kinds: Array = res.map(func(x): return String(x.type))
+	check(Store.subscription_active() and kinds.has("subscription") and kinds.has("skin"), "compra do Cartão entrega assinatura e skin")
+	check(Profile.diamonds() == dia0 + 300, "300 diamantes na hora da compra")
+	check(Store.owns_skin("skin_gravedigger") and Store.equipped_skin() == "skin_gravedigger", "skin do Coveiro vestida na compra")
+	check(not (Profile.data.skins.owned as Array).has("skin_gravedigger"), "skin do Cartão não fica para sempre na lista de compradas")
+	# +50% de pó nas partidas
+	var st := RunState.new({"seed": 3})
+	st.floor_n = 12
+	st.dust = 40
+	var with_card := st.end_rewards()
+	Profile.data.subscription.until = 0
+	var without := st.end_rewards()
+	check(int(with_card.total) == int(roundf(int(without.total) * 1.5)) or abs(int(with_card.total) - int(without.total) - int(without.card_extra)) <= 1, "Cartão dá +50%% de pó no fim da partida (%d x %d)" % [with_card.total, without.total])
+	check(int(without.card_extra) > 0 and float(without.card_bonus) == 0.0, "sem o Cartão: mostra quanto ganharia, sem pagar")
+	# Cartão vencido: skin volta ao normal sem apagar nada
+	check(Store.equipped_skin() == "" and String(Profile.data.skins.equipped) == "skin_gravedigger", "Cartão vencido: visual normal, escolha guardada para quando renovar")
+	Profile.data.subscription.until = Backend.now() + 86400
+	check(Store.equipped_skin() == "skin_gravedigger", "renovou: skin volta")
+	# loja: Cartão é o primeiro
+	var shop: Node = load("res://scripts/ui/hub_shop.gd").new()
+	get_tree().root.add_child(shop)
+	await get_tree().process_frame
+	var first: Node = shop.body.get_child(0) if shop.body.get_child_count() > 0 else null
+	var first_texts: Array = first.find_children("*", "Label", true, false).map(func(l): return l.text) if first else []
+	check(first_texts.has(tr("iap_gravedigger_card_name")) and first_texts.has(tr("card_badge")), "Cartão do Coveiro é o primeiro da loja, com selo")
+	shop.queue_free()
+	await get_tree().process_frame
+	Profile.data = backup
+	Profile.save()

@@ -331,7 +331,7 @@ Anúncios intersticiais (forçados) só aparecem a partir da 3ª partida, no má
 | --- | --- | --- | --- | --- |
 | Kit das primeiras 24 horas | 300 diamantes, a relíquia Lanterna do Coveiro, a skin Ossinho Lua de Âmbar e 1.000 de pó de osso | US$ 1,99 | R$ 4,90 | Ao fim da 1ª partida, só nas primeiras 24 horas |
 | Remover anúncios | Fim dos intersticiais e +10% de pó de osso permanente | US$ 4,99 | R$ 9,90 | Após o 10º intersticial visto |
-| Cartão do Coveiro (mensal) | 30 dias sem anúncios (sem intersticial; os recompensados entregam o prêmio na hora, com os mesmos limites); por dia 1.500 de pó, 50 diamantes, 1 osso raro para começar a partida e 2 reviver grátis; 1 baú raro por semana | US$ 4,99 | R$ 9,90 | Na loja, sempre visível |
+| Cartão do Coveiro (mensal, carro-chefe) | 30 dias sem anúncios (sem intersticial; os recompensados entregam o prêmio na hora, com os mesmos limites) e x2 liberado; na hora 300 diamantes e a skin exclusiva do Coveiro (vale enquanto o Cartão está ativo); +50% de pó em toda partida; por dia 1.500 de pó, 50 diamantes, 1 osso raro para começar a partida e 2 reviver grátis; 1 baú raro por semana | US$ 4,99 | R$ 9,90 | Na loja, sempre visível |
 | Skins | Estilos visuais aplicados a todos os ossos: dourado, neon, pirata, cristal | US$ 1,99 a 3,99 | R$ 4,90 a 9,90 | Na loja e no Cartão da Criatura |
 | Pacote apoiador | Skin exclusiva Ossinho Fundador e nome nos créditos | US$ 9,99 | R$ 24,90 | Na loja, após o capítulo 1 |
 
