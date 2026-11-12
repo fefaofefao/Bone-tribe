@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Baú
 iap_diamonds_vault_name,Cofre
 shop_ad_diamonds,Assistir anúncio: +%d (%d hoje)
 iap_gravedigger_card_name,Cartão do Coveiro
-iap_gravedigger_card_desc,"30 dias sem anúncios e com x2 liberado. Na hora: 300 diamantes e a skin exclusiva do Coveiro. Por dia: 1.500 de pó, 50 diamantes, 1 osso raro e 2 reviver grátis. +50% de pó em toda partida e 1 baú raro por semana."
+iap_gravedigger_card_desc,"30 dias sem anúncios e com x2 liberado. Na hora: 500 diamantes, 3.000 de pó, relíquia rara, baú raro e a skin exclusiva do Coveiro. Por dia: 1.500 de pó, 50 diamantes, 1 osso raro e 2 reviver grátis. +50% de pó em toda partida."
 subscription_active,Ativo: %d dia(s) restantes
 subscription_daily,Cartão do Coveiro
 per_month,30 dias
@@ -1647,3 +1647,22 @@ skin_gravedigger_desc,Chapéu de coveiro e brilho de lanterna fantasma. Só para
 card_run_bonus,Cartão do Coveiro: +%s de pó nesta partida
 card_run_hint,Com o Cartão do Coveiro: +%s de pó nesta partida
 card_death_hint,Cartão do Coveiro: %d reviver grátis por dia
+card_now_title,"Na hora, ao comprar"
+card_month_title,Nos 30 dias
+card_value_upto,Vale até %dx o preço
+card_v_diamonds,%s diamantes
+card_v_dust,%s de pó
+card_v_relic,Relíquia rara
+card_v_chest,%d baús raros
+card_v_rare_bones,%d ossos raros
+card_v_revives,%d reviver grátis
+card_v_ads_skipped,%d anúncios pulados
+card_you_pay,Você paga
+card_you_get,Você recebe
+card_get_diamonds,≈ %s diamantes em itens
+card_value_note,"Pelos preços da própria loja, usando tudo nos 30 dias."
+card_earned_title,Seu Cartão já rendeu
+card_earned_empty,Volte amanhã para o primeiro prêmio do dia.
+card_offer_text,"Sem anúncios, x2 liberado, skin exclusiva e +50% de pó em toda partida. Na hora: 500 diamantes, 3.000 de pó, relíquia rara e baú raro."
+btn_card_see,Ver o Cartão do Coveiro
+card_v_chest_one,Baú raro

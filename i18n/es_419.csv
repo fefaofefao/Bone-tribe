@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Cofre
 iap_diamonds_vault_name,Bóveda
 shop_ad_diamonds,Ver anuncio: +%d (%d hoy)
 iap_gravedigger_card_name,Tarjeta del Sepulturero
-iap_gravedigger_card_desc,"30 días sin anuncios y con x2 desbloqueado. Al instante: 300 diamantes y el aspecto exclusivo del Sepulturero. Cada día: 1.500 de polvo, 50 diamantes, 1 hueso raro y 2 revivir gratis. +50% de polvo en cada partida y 1 cofre raro por semana."
+iap_gravedigger_card_desc,"30 días sin anuncios y con x2 desbloqueado. Al instante: 500 diamantes, 3.000 de polvo, reliquia rara, cofre raro y el aspecto exclusivo del Sepulturero. Cada día: 1.500 de polvo, 50 diamantes, 1 hueso raro y 2 revivir gratis. +50% de polvo en cada partida."
 subscription_active,Activa: %d día(s) restantes
 subscription_daily,Tarjeta del Sepulturero
 per_month,30 días
@@ -1647,3 +1647,22 @@ skin_gravedigger_desc,Sombrero de sepulturero y brillo de linterna fantasma. Sol
 card_run_bonus,Tarjeta del Sepulturero: +%s de polvo en esta partida
 card_run_hint,Con la Tarjeta del Sepulturero: +%s de polvo en esta partida
 card_death_hint,Tarjeta del Sepulturero: %d revivir gratis por día
+card_now_title,"Al instante, al comprar"
+card_month_title,En los 30 días
+card_value_upto,Vale hasta %dx el precio
+card_v_diamonds,%s diamantes
+card_v_dust,%s de polvo
+card_v_relic,Reliquia rara
+card_v_chest,%d cofres raros
+card_v_rare_bones,%d huesos raros
+card_v_revives,%d revivir gratis
+card_v_ads_skipped,%d anuncios saltados
+card_you_pay,Pagas
+card_you_get,Recibes
+card_get_diamonds,≈ %s diamantes en ítems
+card_value_note,"Según los precios de la tienda, usando todo en los 30 días."
+card_earned_title,Tu Tarjeta ya te dio
+card_earned_empty,Vuelve mañana por tu primer premio del día.
+card_offer_text,"Sin anuncios, x2 desbloqueado, aspecto exclusivo y +50% de polvo en cada partida. Al instante: 500 diamantes, 3.000 de polvo, reliquia rara y cofre raro."
+btn_card_see,Ver la Tarjeta del Sepulturero
+card_v_chest_one,Cofre raro

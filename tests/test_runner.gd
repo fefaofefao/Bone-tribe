@@ -1729,7 +1729,14 @@ func test_28_gravedigger_flagship() -> void:
 	var res: Array = await Store.buy_iap("iap_gravedigger_card", rng)
 	var kinds: Array = res.map(func(x): return String(x.type))
 	check(Store.subscription_active() and kinds.has("subscription") and kinds.has("skin"), "compra do Cartão entrega assinatura e skin")
-	check(Profile.diamonds() == dia0 + 300, "300 diamantes na hora da compra")
+	var welcome_dia := 0
+	for r in Store.iap("iap_gravedigger_card").get("welcome", []):
+		if String(r.type) == "diamonds":
+			welcome_dia += int(r.amount)
+	check(welcome_dia >= 500 and Profile.diamonds() == dia0 + welcome_dia, "diamantes de boas-vindas na hora da compra")
+	check(kinds.has("relic") and kinds.has("curiosity") and kinds.has("dust"), "na hora: relíquia, baú raro e pó também")
+	var earned := Store.card_earned()
+	check(int(earned.get("diamonds", 0)) == welcome_dia and int(earned.get("dust", 0)) >= 3000, "contador do que o Cartão já rendeu")
 	check(Store.owns_skin("skin_gravedigger") and Store.equipped_skin() == "skin_gravedigger", "skin do Coveiro vestida na compra")
 	check(not (Profile.data.skins.owned as Array).has("skin_gravedigger"), "skin do Cartão não fica para sempre na lista de compradas")
 	# +50% de pó nas partidas
@@ -1745,6 +1752,29 @@ func test_28_gravedigger_flagship() -> void:
 	check(Store.equipped_skin() == "" and String(Profile.data.skins.equipped) == "skin_gravedigger", "Cartão vencido: visual normal, escolha guardada para quando renovar")
 	Profile.data.subscription.until = Backend.now() + 86400
 	check(Store.equipped_skin() == "skin_gravedigger", "renovou: skin volta")
+	# valor mostrado: calculado pelos preços da loja, sem número inventado
+	var val := Store.card_value()
+	var vtypes: Array = (val.now + val.month).map(func(x): return String(x.type))
+	check(int(val.total) > 0 and int(val.x) >= 5 and vtypes.has("skin") and vtypes.has("no_ads") and vtypes.has("extra_revive"), "valor do Cartão calculado (%d diamantes, %dx)" % [val.total, val.x])
+	var sum := 0
+	for r in val.now + val.month:
+		sum += int(r.value)
+	check(sum == int(val.total), "total do valor = soma dos itens")
+	# oferta na tela inicial: só para quem não tem, depois de 5 partidas, 1 vez por semana
+	Profile.data.subscription.until = 0
+	Profile.data.subscription.offer_day = -1
+	Profile.data.runs_played = 2
+	check(not Store.card_offer_due(), "oferta não aparece para quem jogou pouco")
+	Profile.data.runs_played = 8
+	check(Store.card_offer_due(), "oferta aparece depois de algumas partidas")
+	Store.mark_card_offer()
+	check(not Store.card_offer_due(), "oferta não repete no mesmo dia")
+	Profile.data.subscription.offer_day = Store.today() - 7
+	check(Store.card_offer_due(), "oferta volta depois de 7 dias")
+	Profile.data.subscription.until = Backend.now() + 86400
+	check(not Store.card_offer_due(), "quem tem o Cartão não vê a oferta")
+	var tsrc: String = load("res://scripts/scenes/title_screen.gd").source_code
+	check(tsrc.contains("if not offered and Store.card_offer_due():"), "oferta do Cartão nunca junto de outra oferta")
 	# loja: Cartão é o primeiro
 	var shop: Node = load("res://scripts/ui/hub_shop.gd").new()
 	get_tree().root.add_child(shop)

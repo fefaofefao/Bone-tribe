@@ -783,7 +783,7 @@ iap_diamonds_chest_name,Chest
 iap_diamonds_vault_name,Vault
 shop_ad_diamonds,Watch ad: +%d (%d today)
 iap_gravedigger_card_name,Gravedigger's Card
-iap_gravedigger_card_desc,"30 days with no ads and x2 unlocked. Right away: 300 diamonds and the exclusive Gravedigger skin. Every day: 1,500 dust, 50 diamonds, 1 rare bone and 2 free revives. +50% dust every run and 1 rare chest per week."
+iap_gravedigger_card_desc,"30 days with no ads and x2 unlocked. Right away: 500 diamonds, 3,000 dust, a rare relic, a rare chest and the exclusive Gravedigger skin. Every day: 1,500 dust, 50 diamonds, 1 rare bone and 2 free revives. +50% dust every run."
 subscription_active,Active: %d day(s) left
 subscription_daily,Gravedigger's Card
 per_month,30 days
@@ -1647,3 +1647,22 @@ skin_gravedigger_desc,Gravedigger hat and a ghost-lantern glow. Only for Gravedi
 card_run_bonus,Gravedigger's Card: +%s dust this run
 card_run_hint,With the Gravedigger's Card: +%s dust this run
 card_death_hint,Gravedigger's Card: %d free revives per day
+card_now_title,"Right away, when you buy"
+card_month_title,Over the 30 days
+card_value_upto,Worth up to %dx the price
+card_v_diamonds,%s diamonds
+card_v_dust,%s dust
+card_v_relic,Rare relic
+card_v_chest,%d rare chests
+card_v_rare_bones,%d rare bones
+card_v_revives,%d free revives
+card_v_ads_skipped,%d ads skipped
+card_you_pay,You pay
+card_you_get,You get
+card_get_diamonds,≈ %s diamonds in items
+card_value_note,"At the shop's own prices, using everything over the 30 days."
+card_earned_title,Your Card has already given you
+card_earned_empty,Come back tomorrow for your first daily reward.
+card_offer_text,"No ads, x2 unlocked, an exclusive skin and +50% dust every run. Right away: 500 diamonds, 3,000 dust, a rare relic and a rare chest."
+btn_card_see,See the Gravedigger's Card
+card_v_chest_one,Rare chest

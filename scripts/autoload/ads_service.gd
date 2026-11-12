@@ -47,6 +47,7 @@ func show_rewarded(placement: String) -> bool:
 	# Cartão do Coveiro: sem anúncios, o prêmio vem direto (limites continuam)
 	if Store.ad_free():
 		Backend.log_event("ad_rewarded_skipped", {"placement": placement, "reason": "subscription"})
+		Store.card_earn("ads", 1)
 		rewarded_finished.emit(placement, true)
 		return true
 	_showing = true

@@ -57,6 +57,15 @@ static func grant(rewards: Array, rng: RandomNumberGenerator, source: String = "
 			"supporter":
 				Profile.data.supporter = true
 				out.append({"type": "supporter"})
+	if source.begins_with("subscription"):
+		for r in out:
+			match String(r.get("type", "")):
+				"diamonds":
+					card_earn("diamonds", int(r.amount))
+				"dust":
+					card_earn("dust", int(r.amount))
+				"rare_start_token":
+					card_earn("tokens", 1)
 	Profile.save()
 	return out
 
@@ -388,11 +397,96 @@ static func free_revive_available() -> bool:
 
 
 static func use_free_revive() -> void:
+	card_earn("revives", 1)
 	var sub: Dictionary = Profile.data.subscription
 	if int(sub.get("free_revive_day", -1)) != today():
 		sub["free_revive_day"] = today()
 		sub["free_revives_used"] = 0
 	sub["free_revives_used"] = int(sub.get("free_revives_used", 0)) + 1
+	Profile.save()
+
+
+## Quanto o Cartão já rendeu para o jogador (desde a 1ª compra): diamantes,
+## pó, ossos raros, revivers, pó extra das partidas e anúncios pulados.
+static func card_earn(key: String, n: int) -> void:
+	var sub: Dictionary = Profile.data.subscription
+	if not (sub.get("earned") is Dictionary):
+		sub["earned"] = {}
+	sub.earned[key] = int(sub.earned.get(key, 0)) + n
+
+
+static func card_earned() -> Dictionary:
+	var e: Variant = Profile.data.subscription.get("earned", {})
+	return e if e is Dictionary else {}
+
+
+## Valor do Cartão pelos preços da própria loja, em diamantes (o melhor
+## pacote define quanto vale um diamante). "now" = na hora; "month" = em 30
+## dias usando tudo. "x" = quantas vezes o preço (arredondado para baixo).
+static func card_value() -> Dictionary:
+	var p := iap("iap_gravedigger_card")
+	var price_of := func(item_id: String) -> int: return int(diamond_item(item_id).get("price", 0))
+	var dust_rate := float(price_of.call("item_dust_1000")) / 1000.0
+	var now := []
+	for r in p.get("welcome", []):
+		match String(r.type):
+			"diamonds":
+				now.append({"type": "diamonds", "amount": int(r.amount), "value": int(r.amount)})
+			"dust":
+				now.append({"type": "dust", "amount": int(r.amount), "value": int(roundf(int(r.amount) * dust_rate))})
+			"relic":
+				now.append({"type": "relic_rare", "amount": 1, "value": price_of.call("item_relic_rare")})
+			"curiosity_chest_rare":
+				now.append({"type": "chest_rare", "amount": 1, "value": price_of.call("item_curiosity_chest_rare")})
+	if String(p.get("skin", "")) != "":
+		now.append({"type": "skin", "amount": 1, "value": int(p.get("skin_value_diamonds", 500))})
+	var days := int(p.get("days", 30))
+	var month := []
+	for r in p.get("daily", []):
+		match String(r.type):
+			"diamonds":
+				month.append({"type": "diamonds", "amount": int(r.amount) * days, "value": int(r.amount) * days})
+			"dust":
+				month.append({"type": "dust", "amount": int(r.amount) * days, "value": int(roundf(int(r.amount) * days * dust_rate))})
+			"rare_start_token":
+				month.append({"type": "rare_start_token", "amount": days, "value": days * price_of.call("item_rare_start_bone")})
+	var revives := int(p.get("daily_free_revive", 0)) * days
+	month.append({"type": "extra_revive", "amount": revives, "value": revives * price_of.call("item_extra_revive")})
+	var weeks := days / 7
+	month.append({"type": "chest_rare", "amount": weeks, "value": weeks * price_of.call("item_curiosity_chest_rare")})
+	# 1 diamante vale o que custa no melhor pacote
+	var best := 0.0
+	for q in GameData.shop.get("iap", []):
+		if String(q.get("kind", "")) == "diamonds":
+			var amt := 0
+			for c in q.get("content", []):
+				amt += int(c.get("amount", 0))
+			if amt > 0:
+				best = maxf(best, amt / float(q.get("price_usd", 1.0)))
+	var ads := iap("iap_remove_ads")
+	var ads_value := int(roundf(float(ads.get("price_usd", 0.0)) * best)) if bool(p.get("ad_free", false)) else 0
+	month.append({"type": "no_ads", "amount": 1, "value": ads_value})
+	var total := 0
+	for r in now + month:
+		total += int(r.value)
+	var x := int(floorf(total / maxf(1.0, best * float(p.get("price_usd", 4.99))))) if best > 0.0 else 0
+	return {"now": now, "month": month, "total": total, "x": x}
+
+
+## Oferta do Cartão na tela inicial: depois de algumas partidas, no máximo a
+## cada offer_every_days dias e nunca para quem já tem.
+static func card_offer_due() -> bool:
+	var p := iap("iap_gravedigger_card")
+	if subscription_active() or p.is_empty():
+		return false
+	if int(Profile.data.runs_played) < int(p.get("offer_min_runs", 5)):
+		return false
+	var last := int(Profile.data.subscription.get("offer_day", -1))
+	return last < 0 or today() - last >= int(p.get("offer_every_days", 7))
+
+
+static func mark_card_offer() -> void:
+	Profile.data.subscription["offer_day"] = today()
 	Profile.save()
 
 

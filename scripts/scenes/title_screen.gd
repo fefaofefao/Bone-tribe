@@ -107,13 +107,21 @@ func _after_open() -> void:
 		var before := int(Profile.data.ads.interstitials_seen)
 		await Ads.maybe_show_interstitial()
 		var p := Store.iap("iap_remove_ads")
+		var offered := false
 		if before < int(p.get("show_after_interstitials", 10)) and Store.remove_ads_offer_visible():
 			await _offer_popup("iap_remove_ads", "iap_remove_ads_desc")
+			offered = true
 		if Store.kit_available() and not bool(Profile.data.kit24.offered):
 			Profile.data.kit24.offered = true
 			Profile.save()
 			_open_tab("shop")
 			return
+		# Cartão do Coveiro: no máximo uma vez por semana, nunca junto de outra oferta
+		if not offered and Store.card_offer_due():
+			Store.mark_card_offer()
+			Backend.log_event("card_offer_shown", {"runs": Profile.data.runs_played})
+			if await _card_offer_popup():
+				return
 	var sub := Store.claim_subscription(rng)
 	if not sub.is_empty():
 		await RewardPopup.show_on(_ui, "subscription_daily", sub).closed
@@ -172,6 +180,50 @@ func _offer_popup(pid: String, desc_key: String) -> void:
 	Widgets.pop_in(p)
 	while not done[0]:
 		await get_tree().process_frame
+
+
+## Oferta do Cartão do Coveiro: capa, o que vem na hora e "Ver o Cartão"
+## (abre a loja no Cartão). Devolve true se o jogador foi para a loja.
+func _card_offer_popup() -> bool:
+	var bg := Widgets.dim_overlay(_ui, 0.82)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.add_child(center)
+	var p := Style.panel(Color(0.13, 0.09, 0.19, 0.98), Color("b48cff"), 24)
+	p.custom_minimum_size = Vector2(620, 0)
+	center.add_child(p)
+	var v := Style.vbox(12)
+	p.add_child(v)
+	var cover := TextureRect.new()
+	cover.texture = load("res://art/ui/ui_card_cover.png")
+	cover.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	cover.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	cover.custom_minimum_size = Vector2(0, 220)
+	v.add_child(cover)
+	v.add_child(Style.title(tr("iap_gravedigger_card_name"), 46, Color("e6d8ff")))
+	var val := Store.card_value()
+	if int(val.x) >= 2:
+		v.add_child(Style.bold(tr("card_value_upto") % int(val.x), 28, Style.C_CANDLE, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(Style.label(tr("card_offer_text"), 22, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER))
+	var res := [false]
+	var done := [false]
+	var go := Style.button(tr("btn_card_see"), "CandleButton", 84)
+	go.pressed.connect(func():
+		Backend.log_event("card_offer_open", {})
+		res[0] = true
+		done[0] = true)
+	v.add_child(go)
+	var no := Style.button(tr("btn_not_now"), "DarkButton", 66)
+	no.pressed.connect(func(): done[0] = true)
+	v.add_child(no)
+	Widgets.pop_in(p)
+	while not done[0]:
+		await get_tree().process_frame
+	if is_instance_valid(bg):
+		bg.queue_free()
+	if res[0]:
+		_open_tab("shop")
+	return res[0]
 
 
 ## Corpo da partida recorde, só com ossos que existem nesta versão.

@@ -2416,6 +2416,8 @@ func _record_run_end() -> Dictionary:
 	var rewards := state.end_rewards()
 	if not demo:
 		Profile.add_dust(int(rewards.total), "run_end")
+		if float(rewards.get("card_bonus", 0.0)) > 0.0:
+			Store.card_earn("run_dust", int(rewards.get("card_extra", 0)))
 		Profile.data.runs_played = int(Profile.data.runs_played) + 1
 		Profile.stat_add("runs")
 		Profile.stat_add("floors", state.floor_n)

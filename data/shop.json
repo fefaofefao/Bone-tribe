@@ -49,13 +49,27 @@
 			"days": 30,
 			"_doc": "1.4.1: + skin exclusiva, 300 diamantes na hora e +50% de pó nas partidas. 1.4: sem anúncios (ad_free: sem intersticial e os recompensados entregam o prêmio na hora, com os mesmos limites), 1500 de pó, 50 diamantes e 1 ficha de osso raro (começar a partida com um osso raro descoberto) por dia, 2 reviver grátis por dia e o baú raro semanal.",
 			"ad_free": true,
-			"_doc_flagship": "Carro-chefe: welcome = entregue na hora a cada compra; skin = só vale enquanto o Cartão está ativo (equipada na compra); run_dust_bonus = +50% de pó no fim de cada partida; value_x = 'vale mais de N vezes o preço' (conta em docs/DECISOES.md).",
+			"_doc_flagship": "Carro-chefe: welcome = entregue na hora a cada compra (1.4.1: 500 diamantes, 3.000 de pó, relíquia rara e baú de curiosidades raro); valor mostrado na loja = Store.card_value() pelos preços da própria loja; oferta na tela inicial depois de offer_min_runs partidas, no máximo a cada offer_every_days dias, só para quem não tem; skin = só vale enquanto o Cartão está ativo (equipada na compra); run_dust_bonus = +50% de pó no fim de cada partida; value_x = 'vale mais de N vezes o preço' (conta em docs/DECISOES.md).",
 			"welcome": [
 				{
 					"type": "diamonds",
-					"amount": 300
+					"amount": 500
+				},
+				{
+					"type": "dust",
+					"amount": 3000
+				},
+				{
+					"type": "relic",
+					"rarity": "rare"
+				},
+				{
+					"type": "curiosity_chest_rare"
 				}
 			],
+			"offer_min_runs": 5,
+			"offer_every_days": 7,
+			"skin_value_diamonds": 500,
 			"skin": "skin_gravedigger",
 			"run_dust_bonus": 0.5,
 			"value_x": 5,
