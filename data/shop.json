@@ -43,7 +43,7 @@
 		{
 			"id": "iap_gravedigger_card",
 			"kind": "subscription",
-			"price_usd": 4.99,
+			"price_usd": 1.79,
 			"price_brl": 9.99,
 			"name": "iap_gravedigger_card_name",
 			"days": 30,
