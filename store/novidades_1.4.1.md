@@ -9,6 +9,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • Braços: compare com cada braço antes de escolher qual trocar.
 • Mercador mostra se o osso é melhor ou pior que o seu antes de comprar.
 • Trocas automáticas agora avisam o que mudou.
+• Loja e menus mais leves e fluidos.
 </pt-BR>
 <en-US>
 • Gravedigger's Card boosted: exclusive skin, more items right away and +50% dust every run.
@@ -16,6 +17,7 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • Arms: compare with each arm before choosing which one to swap.
 • The Merchant shows if a bone is better or worse than yours before you buy.
 • Automatic swaps now tell you what changed.
+• Lighter, smoother shop and menus.
 </en-US>
 <es-419>
 • Tarjeta del Sepulturero mejorada: aspecto exclusivo, más ítems al instante y +50% de polvo en cada partida.
@@ -23,5 +25,6 @@ Cole o bloco abaixo inteiro no campo de notas da versão; a Play Console separa 
 • Brazos: compara con cada brazo antes de elegir cuál cambiar.
 • El Mercader muestra si el hueso es mejor o peor que el tuyo antes de comprar.
 • Los cambios automáticos ahora avisan qué cambió.
+• Tienda y menús más ligeros y fluidos.
 </es-419>
 ```
