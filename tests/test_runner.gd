@@ -1671,6 +1671,25 @@ func test_27_bone_compare() -> void:
 	for c in run_c.overlay_root.get_children():
 		c.queue_free()
 	await get_tree().process_frame
+	# telas baixas: a pior troca (3 braços, osso +4, espanhol) cabe na tela 720x1280 com folga
+	var loc0 := TranslationServer.get_locale()
+	TranslationServer.set_locale("es_419")
+	st.equip("slot_extra", {"id": "bone_spine_hydra", "level": 1})
+	for sl in st.slots_for("bone_claw_bat"):
+		st.equip(sl, {"id": "bone_mandible_locust", "level": 5})
+	run_c._bone_choice_dialog({"id": "bone_claw_bat", "level": 5})
+	await get_tree().process_frame
+	var tallest := 0.0
+	for pc in run_c.overlay_root.find_children("*", "PanelContainer", true, false):
+		if pc.get_parent() is CenterContainer:
+			tallest = maxf(tallest, pc.get_combined_minimum_size().y)
+	check(st.slots_for("bone_claw_bat").size() == 3 and tallest > 0.0 and tallest < 1100.0, "troca com 3 braços cabe na tela (%.0f de 1280)" % tallest)
+	run_c.dialog_closed.emit({})
+	TranslationServer.set_locale(loc0)
+	for c in run_c.overlay_root.get_children():
+		c.queue_free()
+	await get_tree().process_frame
+	st.unequip("slot_extra")
 	# mercador: compara com o equipado antes de pagar
 	check(run_c._compare_target({"id": "bone_legs_bear", "level": 1}).is_empty(), "mercador: encaixe vazio não compara")
 	check(String(run_c._compare_target({"id": "bone_skull_cyclops", "level": 1}).get("id", "")) == "bone_skull_wolf", "mercador compara com o crânio equipado")

@@ -1143,10 +1143,9 @@ func _merchant_compare(inst: Dictionary) -> Control:
 	var v := Style.vbox(2)
 	var cur := _compare_target(inst)
 	var verdict := Body.compare_verdict(cur, inst)
-	var col: Color = {"better": Style.C_HEAL, "worse": Style.C_DANGER, "mixed": Style.C_CANDLE, "same": Style.C_MUTED, "empty": Style.C_HEAL}[verdict]
-	v.add_child(Style.bold(tr("cmp_verdict_" + verdict), 18, col, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(Style.bold(tr("cmp_verdict_" + verdict), 19, Widgets.verdict_color(verdict), HORIZONTAL_ALIGNMENT_CENTER))
 	if not cur.is_empty():
-		v.add_child(Widgets.rich_line(Body.compare_short(cur, inst, true), 16))
+		v.add_child(Widgets.rich_line(Body.compare_short(cur, inst, true), 17))
 	return v
 
 
@@ -2114,24 +2113,29 @@ func _bone_choice_dialog(inst: Dictionary) -> Dictionary:
 		b.pressed.connect(func(): done.call({"action": "swap", "slot": slots[0]}))
 		v.add_child(b)
 	else:
-		# braços: o osso novo e, para cada braço, o que muda se trocar aquele
-		var nc2 := Widgets.bone_card(inst, tr("bone_new"), true)
-		v.add_child(nc2)
+		# braços: o osso novo (cartão deitado, mais baixo) e, para cada braço,
+		# uma linha com o que muda e o botão ao lado
+		v.add_child(Widgets.bone_card_row(inst, tr("bone_new")))
 		v.add_child(Style.label(tr("choose_arm"), 22, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 		for s in slots:
 			var cur2: Dictionary = state.equipped.get(s, {})
 			var box := Style.panel(Color(0, 0, 0, 0.28), Color(Style.C_EDGE, 0.8), 16)
-			var bv := Style.vbox(4)
-			box.add_child(bv)
-			var nm := tr(String(GameData.bone(String(cur2.get("id", ""))).get("name", "")))
-			if int(cur2.get("level", 1)) > 1:
-				nm += " +" + str(int(cur2.get("level", 1)) - 1)
-			bv.add_child(Style.bold(tr(String(s)) + " · " + nm, 20, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER))
-			bv.add_child(Widgets.rich_line(Body.compare_short(cur2, inst, true), 19))
-			var b2 := Style.button(tr("btn_swap_this"), "", 62)
-			b2.add_theme_font_size_override("font_size", 24)
+			var hb := Style.hbox(10)
+			box.add_child(hb)
+			var bv := Style.vbox(2)
+			bv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			bv.alignment = BoxContainer.ALIGNMENT_CENTER
+			hb.add_child(bv)
+			bv.add_child(Style.bold(tr(String(s)) + " · " + _bone_label(cur2), 20, Style.C_BONE))
+			var verdict := Body.compare_verdict(cur2, inst)
+			bv.add_child(Style.bold(tr("cmp_verdict_" + verdict), 18, Widgets.verdict_color(verdict)))
+			bv.add_child(Widgets.rich_line(Body.compare_short(cur2, inst, true), 18, HORIZONTAL_ALIGNMENT_LEFT))
+			var b2 := Style.button(tr("btn_swap_this"), "", 64)
+			b2.custom_minimum_size.x = 170
+			b2.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			b2.add_theme_font_size_override("font_size", 22)
 			b2.pressed.connect(func(): done.call({"action": "swap", "slot": s}))
-			bv.add_child(b2)
+			hb.add_child(b2)
 			v.add_child(box)
 	_tip("swap")
 	var cb := Style.button(tr("btn_crush") + "  (+" + str(state.crush_value(inst)) + ")", "DarkButton", 74)

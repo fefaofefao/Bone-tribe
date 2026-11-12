@@ -57,7 +57,14 @@ static func bone_compare(cur: Dictionary, new: Dictionary, font := 20) -> PanelC
 	var p := Style.panel(Color(0, 0, 0, 0.28), Color(Style.C_EDGE, 0.8), 16)
 	var v := Style.vbox(6)
 	p.add_child(v)
-	v.add_child(Style.bold(TranslationServer.translate("cmp_title"), font, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	# título com o veredito: "O que muda · Melhor que o seu"
+	var head := Style.hbox(8)
+	head.alignment = BoxContainer.ALIGNMENT_CENTER
+	head.add_child(Style.nowrap(Style.bold(TranslationServer.translate("cmp_title"), font, Style.C_MUTED)))
+	var verdict := Body.compare_verdict(cur, new)
+	if verdict != "empty":
+		head.add_child(Style.nowrap(Style.bold("· " + TranslationServer.translate("cmp_verdict_" + verdict), font, verdict_color(verdict))))
+	v.add_child(head)
 	var g := GridContainer.new()
 	g.columns = 4
 	g.add_theme_constant_override("h_separation", 14)
@@ -78,6 +85,56 @@ static func bone_compare(cur: Dictionary, new: Dictionary, font := 20) -> PanelC
 		v.add_child(Style.bold(TranslationServer.translate(key), font, c, HORIZONTAL_ALIGNMENT_CENTER))
 	if rows.is_empty() and sc == 0:
 		v.add_child(Style.label(TranslationServer.translate("cmp_no_change"), font, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	return p
+
+
+static func verdict_color(verdict: String) -> Color:
+	match verdict:
+		"better", "empty":
+			return Style.C_HEAL
+		"worse":
+			return Style.C_DANGER
+		"mixed":
+			return Style.C_CANDLE
+	return Style.C_MUTED
+
+
+## Cartão de osso deitado (imagem à esquerda, textos à direita): ocupa menos
+## altura, para a troca de braços caber em telas baixas.
+static func bone_card_row(inst: Dictionary, header: String = "") -> PanelContainer:
+	var bone_id := String(inst.get("id", ""))
+	var b := GameData.bone(bone_id)
+	var rarity := Body.instance_rarity(inst)
+	var rc := Style.rarity_color(rarity)
+	var fam := String(b.get("family", ""))
+	var fc := GameData.family_color(fam) if fam != "" else Style.C_BONE
+	var p := Style.panel(Color(Style.C_PANEL_2, 0.98), rc.darkened(0.2), 20)
+	var h := Style.hbox(12)
+	p.add_child(h)
+	var art := PanelContainer.new()
+	art.add_theme_stylebox_override("panel", Style.flat_box(Color(0, 0, 0, 0.35), Color(fc, 0.6), 14, 2, 4))
+	art.add_child(icon(GameData.bone_texture_path(bone_id), 84.0))
+	art.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(art)
+	var v := Style.vbox(2)
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_child(v)
+	var lvl := int(inst.get("level", 1))
+	var name_text := String(TranslationServer.translate(String(b.get("name", bone_id))))
+	if lvl > 1:
+		name_text += " +" + str(lvl - 1)
+	if header != "":
+		name_text = header + ": " + name_text
+	v.add_child(Style.bold(name_text, 22, rc))
+	var tags := String(TranslationServer.translate("rarity_" + rarity))
+	if fam != "":
+		tags += " · " + TranslationServer.translate(String(GameData.families[fam].get("name", fam)))
+	v.add_child(Style.label(tags, 17, fc if fam != "" else Style.C_MUTED))
+	v.add_child(Style.label(TranslationServer.translate(String(b.get("desc", ""))), 18, Style.C_TEXT))
+	var now := Body.stats_compare_text({}, Body.instance_stats(inst))
+	if Body.instance_power(inst) > 1.0 and now != "":
+		v.add_child(Style.label(now, 17, Style.C_HEAL))
 	return p
 
 
