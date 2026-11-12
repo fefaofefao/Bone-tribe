@@ -14,6 +14,9 @@ const SAMPLE_BODY := {
 }
 
 var skin_id := ""
+var _vp: SubViewport
+var _o: Node
+var _on := true
 
 
 func _ready() -> void:
@@ -21,6 +24,7 @@ func _ready() -> void:
 	expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	var vp := SubViewport.new()
+	_vp = vp
 	vp.transparent_bg = true
 	vp.size = Vector2i(320, 380)
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -39,6 +43,22 @@ func _ready() -> void:
 	o.position = Vector2(160, 352)
 	o.scale = Vector2.ONE * 0.86
 	vp.add_child(o)
+	_o = o
 	o.set_equipped(SAMPLE_BODY.duplicate())
 	o.set_skin(skin_id)
 	texture = vp.get_texture()
+
+
+## Só anima e desenha enquanto aparece na tela: a loja tem várias prévias e as
+## que estão fora da rolagem não gastam FPS. Desenha uma vez ao sair, para a
+## imagem continuar certa quando voltar.
+func _process(_delta: float) -> void:
+	if _vp == null:
+		return
+	var on := is_visible_in_tree() and get_global_rect().intersects(get_viewport().get_visible_rect())
+	if on == _on:
+		return
+	_on = on
+	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if on else SubViewport.UPDATE_DISABLED
+	if _o:
+		_o.process_mode = Node.PROCESS_MODE_INHERIT if on else Node.PROCESS_MODE_DISABLED

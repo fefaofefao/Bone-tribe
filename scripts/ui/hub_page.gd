@@ -15,7 +15,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	var bg := ColorRect.new()
-	bg.color = Color(0.04, 0.03, 0.05, 0.94)
+	bg.color = Color(0.04, 0.03, 0.05, 1.0)
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	scroll = TouchScroll.new()

@@ -44,7 +44,7 @@
 			"id": "iap_gravedigger_card",
 			"kind": "subscription",
 			"price_usd": 4.99,
-			"price_brl": 9.9,
+			"price_brl": 9.99,
 			"name": "iap_gravedigger_card_name",
 			"days": 30,
 			"_doc": "1.4.1: + skin exclusiva, 300 diamantes na hora e +50% de pó nas partidas. 1.4: sem anúncios (ad_free: sem intersticial e os recompensados entregam o prêmio na hora, com os mesmos limites), 1500 de pó, 50 diamantes e 1 ficha de osso raro (começar a partida com um osso raro descoberto) por dia, 2 reviver grátis por dia e o baú raro semanal.",

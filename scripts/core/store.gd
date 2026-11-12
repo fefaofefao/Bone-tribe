@@ -454,7 +454,8 @@ static func card_value() -> Dictionary:
 	month.append({"type": "extra_revive", "amount": revives, "value": revives * price_of.call("item_extra_revive")})
 	var weeks := days / 7
 	month.append({"type": "chest_rare", "amount": weeks, "value": weeks * price_of.call("item_curiosity_chest_rare")})
-	# 1 diamante vale o que custa no melhor pacote
+	# 1 diamante vale o que custa no melhor pacote (em reais: o preço do Cartão
+	# é definido em BRL na Play Console e convertido para os outros países)
 	var best := 0.0
 	for q in GameData.shop.get("iap", []):
 		if String(q.get("kind", "")) == "diamonds":
@@ -462,14 +463,14 @@ static func card_value() -> Dictionary:
 			for c in q.get("content", []):
 				amt += int(c.get("amount", 0))
 			if amt > 0:
-				best = maxf(best, amt / float(q.get("price_usd", 1.0)))
+				best = maxf(best, amt / float(q.get("price_brl", 1.0)))
 	var ads := iap("iap_remove_ads")
-	var ads_value := int(roundf(float(ads.get("price_usd", 0.0)) * best)) if bool(p.get("ad_free", false)) else 0
+	var ads_value := int(roundf(float(ads.get("price_brl", 0.0)) * best)) if bool(p.get("ad_free", false)) else 0
 	month.append({"type": "no_ads", "amount": 1, "value": ads_value})
 	var total := 0
 	for r in now + month:
 		total += int(r.value)
-	var x := int(floorf(total / maxf(1.0, best * float(p.get("price_usd", 4.99))))) if best > 0.0 else 0
+	var x := int(floorf(total / maxf(1.0, best * float(p.get("price_brl", 9.99))))) if best > 0.0 else 0
 	return {"now": now, "month": month, "total": total, "x": x}
 
 

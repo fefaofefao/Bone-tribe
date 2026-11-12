@@ -674,6 +674,9 @@ func _open_tab(id: String) -> void:
 		_page.queue_free()
 		_page = null
 	_home.visible = id == "home"
+	# cenário da cripta e o Ossinho só existem na aba Início: nas outras abas
+	# não são desenhados nem atualizados (não aparecem ao fundo e não gastam FPS)
+	_set_world_active(id == "home")
 	if id == "home":
 		_refresh_hero()
 		_refresh_chips()
@@ -683,6 +686,13 @@ func _open_tab(id: String) -> void:
 	_page.modulate.a = 0.0
 	var tw := _page.create_tween()
 	tw.tween_property(_page, "modulate:a", 1.0, 0.18)
+
+
+func _set_world_active(on: bool) -> void:
+	if _world == null:
+		return
+	_world.visible = on
+	_world.process_mode = Node.PROCESS_MODE_INHERIT if on else Node.PROCESS_MODE_DISABLED
 
 
 # ------------------------------------------------------------------ demo

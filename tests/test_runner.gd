@@ -1786,3 +1786,44 @@ func test_28_gravedigger_flagship() -> void:
 	await get_tree().process_frame
 	Profile.data = backup
 	Profile.save()
+
+
+func test_29_hub_tabs_perf() -> void:
+	# abas do hub: o cenário da tela inicial some e para enquanto outra aba está aberta
+	var backup: Dictionary = Profile.data.duplicate(true)
+	Router.params = {"tab": "shop"}
+	var t: Node = load("res://scenes/TitleScreen.tscn").instantiate()
+	get_tree().root.add_child(t)
+	for k in 4:
+		await get_tree().process_frame
+	t._open_tab("shop")
+	await get_tree().process_frame
+	check(not t._world.visible and t._world.process_mode == Node.PROCESS_MODE_DISABLED, "loja aberta: cenário do início não é desenhado nem atualizado")
+	t._open_tab("home")
+	await get_tree().process_frame
+	check(t._world.visible and t._world.process_mode == Node.PROCESS_MODE_INHERIT, "volta ao início: cenário volta")
+	t._open_tab("ossuary")
+	await get_tree().process_frame
+	check(not t._world.visible, "Ossuário também esconde o cenário")
+	t.queue_free()
+	await get_tree().process_frame
+	# prévia de skin fora da tela para de animar e desenhar
+	var holder := Control.new()
+	get_tree().root.add_child(holder)
+	var prev := SkinPreview.new()
+	prev.skin_id = "skin_golden"
+	prev.custom_minimum_size = Vector2(200, 240)
+	holder.add_child(prev)
+	prev.position = Vector2(0, 50000)
+	for k in 3:
+		await get_tree().process_frame
+	check(prev._vp.render_target_update_mode == SubViewport.UPDATE_DISABLED, "prévia de skin fora da tela não é desenhada")
+	prev.position = Vector2(10, 10)
+	for k in 3:
+		await get_tree().process_frame
+	check(prev._vp.render_target_update_mode == SubViewport.UPDATE_ALWAYS, "prévia de skin na tela volta a animar")
+	holder.queue_free()
+	await get_tree().process_frame
+	Router.params = {}
+	Profile.data = backup
+	Profile.save()
