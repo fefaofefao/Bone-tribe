@@ -117,7 +117,7 @@ event_type_chest,Chest
 event_type_boss,Boss
 bone_found_title,Bone found!
 bone_found_occupied,The %s slot is already taken.
-bone_current,Current
+bone_current,Equipped
 bone_new,New
 bone_crush_value,Crushing gives %d bone dust
 bone_equipped,%s attached!
@@ -1612,3 +1612,17 @@ btn_endless,Endless Mode
 btn_endless_record,Endless Mode · Best: floor %d
 btn_endless_locked,Endless Mode · beat the Rat King
 tip_endless,"Endless Mode unlocked! Endless floors, each one harder. How far can you go?"
+cmp_title,What changes
+cmp_special_gain,Gains a special effect
+cmp_special_lose,Loses the special effect
+cmp_special_swap,Different special effect (see the cards)
+cmp_no_change,No stat difference
+cmp_verdict_better,Better than yours
+cmp_verdict_worse,Worse than yours
+cmp_verdict_mixed,Trades stats
+cmp_verdict_same,Same as yours
+cmp_verdict_empty,Empty slot
+btn_swap_this,Swap this one
+auto_attach,%s attached
+auto_swap_better,%s → %s
+auto_crush_same,You already have %s (same or better). %s crushed.

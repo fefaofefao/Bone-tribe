@@ -117,7 +117,7 @@ event_type_chest,Cofre
 event_type_boss,Jefe
 bone_found_title,¡Hueso encontrado!
 bone_found_occupied,La ranura %s ya está ocupada.
-bone_current,Actual
+bone_current,Equipado
 bone_new,Nuevo
 bone_crush_value,Triturar da %d de polvo de hueso
 bone_equipped,¡%s encajado!
@@ -1612,3 +1612,17 @@ btn_endless,Modo Infinito
 btn_endless_record,Modo Infinito · Récord: piso %d
 btn_endless_locked,Modo Infinito · vence al Rey Rata
 tip_endless,"¡Modo Infinito desbloqueado! Pisos sin fin, cada uno más difícil. ¿Hasta dónde llegas?"
+cmp_title,Qué cambia
+cmp_special_gain,Gana efecto especial
+cmp_special_lose,Pierde el efecto especial
+cmp_special_swap,Cambia el efecto especial (mira las cartas)
+cmp_no_change,Sin diferencia en atributos
+cmp_verdict_better,Mejor que el tuyo
+cmp_verdict_worse,Peor que el tuyo
+cmp_verdict_mixed,Cambia atributos
+cmp_verdict_same,Igual al tuyo
+cmp_verdict_empty,Encaje vacío
+btn_swap_this,Cambiar este
+auto_attach,%s encajado
+auto_swap_better,%s → %s
+auto_crush_same,Ya tienes %s (igual o mejor). %s triturado.

@@ -51,6 +51,50 @@ static func bone_card(inst: Dictionary, header: String = "", compact := false) -
 	return p
 
 
+## Quadro "O que muda": cada atributo do osso equipado → novo, com a diferença
+## em verde (melhora) ou vermelho (piora), e o efeito especial ganho/perdido.
+static func bone_compare(cur: Dictionary, new: Dictionary, font := 20) -> PanelContainer:
+	var p := Style.panel(Color(0, 0, 0, 0.28), Color(Style.C_EDGE, 0.8), 16)
+	var v := Style.vbox(6)
+	p.add_child(v)
+	v.add_child(Style.bold(TranslationServer.translate("cmp_title"), font, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	var g := GridContainer.new()
+	g.columns = 4
+	g.add_theme_constant_override("h_separation", 14)
+	g.add_theme_constant_override("v_separation", 4)
+	g.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(g)
+	var rows := Body.compare_rows(cur, new)
+	for r in rows:
+		var col := Style.C_HEAL if int(r.sign) > 0 else (Style.C_DANGER if int(r.sign) < 0 else Style.C_MUTED)
+		g.add_child(Style.nowrap(Style.label(String(r.name), font, Style.C_TEXT)))
+		g.add_child(Style.nowrap(Style.label(String(r.cur), font, Style.C_MUTED, HORIZONTAL_ALIGNMENT_RIGHT)))
+		g.add_child(Style.nowrap(Style.bold("→ " + String(r.new), font, col)))
+		g.add_child(Style.nowrap(Style.bold(String(r.delta), font, col, HORIZONTAL_ALIGNMENT_RIGHT)))
+	var sc := Body.special_change(cur, new)
+	if sc != 0:
+		var key: String = {1: "cmp_special_gain", -1: "cmp_special_lose", 2: "cmp_special_swap"}[sc]
+		var c := Style.C_HEAL if sc == 1 else (Style.C_DANGER if sc == -1 else Style.C_CANDLE)
+		v.add_child(Style.bold(TranslationServer.translate(key), font, c, HORIZONTAL_ALIGNMENT_CENTER))
+	if rows.is_empty() and sc == 0:
+		v.add_child(Style.label(TranslationServer.translate("cmp_no_change"), font, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	return p
+
+
+## Linha colorida curta (BBCode), para mercador e braços.
+static func rich_line(text: String, font := 19, align := HORIZONTAL_ALIGNMENT_CENTER) -> RichTextLabel:
+	var r := RichTextLabel.new()
+	r.bbcode_enabled = true
+	r.fit_content = true
+	r.scroll_active = false
+	r.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	r.text = "[center]%s[/center]" % text if align == HORIZONTAL_ALIGNMENT_CENTER else text
+	r.add_theme_font_size_override("normal_font_size", font)
+	r.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return r
+
+
 ## Fundo escuro de diálogo que bloqueia toques.
 static func dim_overlay(parent: Node, alpha := 0.72) -> ColorRect:
 	var bg := ColorRect.new()

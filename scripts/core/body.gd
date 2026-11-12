@@ -231,6 +231,95 @@ static func stats_compare_text(before: Dictionary, after: Dictionary) -> String:
 	return " · ".join(parts)
 
 
+# ------------------------------------------------- comparar dois ossos
+
+## Linhas da comparação osso equipado x osso novo (só os dois ossos, sem
+## contar família nem forma: a build é escolha do jogador). Cada linha:
+## {"key", "name", "cur", "new", "delta"} com os valores já em texto e
+## "sign" = 1 (melhora), -1 (piora) ou 0.
+static func compare_rows(cur: Dictionary, new: Dictionary) -> Array:
+	var a := instance_stats(cur) if not cur.is_empty() else {}
+	var b := instance_stats(new) if not new.is_empty() else {}
+	var rows := []
+	for k in STAT_KEYS:
+		if not a.has(k) and not b.has(k):
+			continue
+		var va := float(a.get(k, 0.0))
+		var vb := float(b.get(k, 0.0))
+		var d := vb - va
+		var sign := 0
+		if absf(d) > 0.0001:
+			sign = 1 if d > 0.0 else -1
+		rows.append({"key": k, "name": String(TranslationServer.translate("stat_" + k)),
+			"cur": stat_value_text(k, va), "new": stat_value_text(k, vb),
+			"delta": ("+" if d > 0.0 else "−") + stat_value_text(k, absf(d)) if sign != 0 else "=", "sign": sign})
+	return rows
+
+
+static func has_special(inst: Dictionary) -> bool:
+	return not (GameData.bone(String(inst.get("id", ""))).get("effects", []) as Array).is_empty()
+
+
+## Efeito especial: 1 = o novo tem e o equipado não, -1 = perde, 0 = igual,
+## 2 = os dois têm efeitos diferentes (ver os cartões).
+static func special_change(cur: Dictionary, new: Dictionary) -> int:
+	var a := has_special(cur)
+	var b := has_special(new)
+	if a == b:
+		return 2 if a and String(cur.get("id", "")) != String(new.get("id", "")) else 0
+	return 1 if b else -1
+
+
+## Veredito curto: "better", "worse", "mixed", "same" ou "empty" (encaixe vazio).
+static func compare_verdict(cur: Dictionary, new: Dictionary) -> String:
+	if cur.is_empty():
+		return "empty"
+	var up := false
+	var down := false
+	for r in compare_rows(cur, new):
+		if int(r.sign) > 0:
+			up = true
+		elif int(r.sign) < 0:
+			down = true
+	match special_change(cur, new):
+		1:
+			up = true
+		-1:
+			down = true
+		2:
+			up = true
+			down = true
+	if up and down:
+		return "mixed"
+	if up:
+		return "better"
+	if down:
+		return "worse"
+	return "same"
+
+
+## "Ataque +3 · Vida −10" (BBCode colorido quando rich = true).
+static func compare_short(cur: Dictionary, new: Dictionary, rich := false) -> String:
+	var parts := []
+	for r in compare_rows(cur, new):
+		if int(r.sign) == 0:
+			continue
+		var t := "%s %s" % [r.name, r.delta]
+		if rich:
+			t = "[color=#%s]%s[/color]" % [("74d68f" if int(r.sign) > 0 else "e2554b"), t]
+		parts.append(t)
+	match special_change(cur, new):
+		1:
+			var g := String(TranslationServer.translate("cmp_special_gain"))
+			parts.append("[color=#74d68f]%s[/color]" % g if rich else g)
+		-1:
+			var l := String(TranslationServer.translate("cmp_special_lose"))
+			parts.append("[color=#e2554b]%s[/color]" % l if rich else l)
+	if parts.is_empty():
+		return String(TranslationServer.translate("cmp_no_change"))
+	return " · ".join(parts)
+
+
 ## Texto do ganho ao subir um osso de nível: atributos antes → depois e peças.
 static func level_gain_text(before_inst: Dictionary, after_inst: Dictionary) -> String:
 	var b := GameData.bone(String(after_inst.get("id", "")))

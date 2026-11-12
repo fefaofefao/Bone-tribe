@@ -1120,6 +1120,36 @@ func _choose_bone_dialog(title_key: String, show_value: bool) -> String:
 	return picked[0]
 
 
+## Osso equipado com que o novo seria comparado: o do mesmo osso, o do
+## encaixe (ou o braço mais fraco). {} quando há encaixe vazio para ele.
+func _compare_target(inst: Dictionary) -> Dictionary:
+	var bid := String(inst.get("id", ""))
+	if state.free_slot_for(bid) != "":
+		return {}
+	var same := state.same_bone_slot(inst)
+	if same != "":
+		return state.equipped[same]
+	var best := {}
+	for sl in state.slots_for(bid):
+		var e: Dictionary = state.equipped.get(sl, {})
+		if best.is_empty() or Body.instance_power(e) < Body.instance_power(best):
+			best = e
+	return best
+
+
+## Mercador: "Melhor que o seu" / "Pior" / "Troca atributos" / "Encaixe vazio"
+## e a diferença, antes de pagar.
+func _merchant_compare(inst: Dictionary) -> Control:
+	var v := Style.vbox(2)
+	var cur := _compare_target(inst)
+	var verdict := Body.compare_verdict(cur, inst)
+	var col: Color = {"better": Style.C_HEAL, "worse": Style.C_DANGER, "mixed": Style.C_CANDLE, "same": Style.C_MUTED, "empty": Style.C_HEAL}[verdict]
+	v.add_child(Style.bold(tr("cmp_verdict_" + verdict), 18, col, HORIZONTAL_ALIGNMENT_CENTER))
+	if not cur.is_empty():
+		v.add_child(Widgets.rich_line(Body.compare_short(cur, inst, true), 16))
+	return v
+
+
 func _merchant(count: int, rarities: Array) -> void:
 	var stock := MonsterFactory.merchant_stock(count, rarities, state.rng)
 	while true:
@@ -1146,6 +1176,7 @@ func _merchant(count: int, rarities: Array) -> void:
 			var card := Widgets.bone_card({"id": o.id, "level": 1}, "", true)
 			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			col.add_child(card)
+			col.add_child(_merchant_compare({"id": o.id, "level": 1}))
 			var buy := Style.button(str(o.price), "CandleButton", 64)
 			buy.icon = load("res://art/ui/ui_icon_dust.png")
 			buy.expand_icon = true
@@ -1843,6 +1874,8 @@ func _offer_bone(inst: Dictionary, from: Vector2) -> void:
 			return
 	if free != "":
 		await _attach(free, inst, from)
+		# encaixe vazio: troca automática, com aviso do que o osso dá
+		_auto_notice(tr("auto_attach") % _bone_label(inst) + "\n" + Body.compare_short({}, inst, true), Style.C_HEAL)
 		return
 	var same := state.same_bone_slot(inst)
 	if same != "":
@@ -1851,10 +1884,11 @@ func _offer_bone(inst: Dictionary, from: Vector2) -> void:
 		if Body.instance_power(inst) > Body.instance_power(cur):
 			# mesmo osso, mais forte: troca direto e tritura o antigo
 			_show_banner(tr("same_bone_better") % [nm, int(inst.get("level", 1)) - 1], Style.C_CANDLE, 1.3)
-			fx.float_text(hero_view.slot_global_position(same) + Vector2(0, -90), Body.stats_compare_text(Body.instance_stats(cur), Body.instance_stats(inst)), Style.C_HEAL, 22)
+			_auto_notice(tr("auto_swap_better") % [_bone_label(cur), _bone_label(inst)] + "\n" + Body.compare_short(cur, inst, true), Style.C_HEAL)
 			await _swap(same, inst, from)
 		else:
 			_show_banner(tr("same_bone_crush") % nm, Style.C_DUST, 1.3)
+			_auto_notice(tr("auto_crush_same") % [_bone_label(cur), _bone_label(inst)], Style.C_DUST)
 			await _wait(0.35)
 			await _crush(inst, from)
 		return
@@ -1871,6 +1905,21 @@ func _offer_bone(inst: Dictionary, from: Vector2) -> void:
 		await _swap(String(choice.slot), inst, from)
 	else:
 		await _crush(inst, from)
+
+
+## "Crânio de Lobo +1" (nome traduzido e nível).
+func _bone_label(inst: Dictionary) -> String:
+	var t := tr(String(GameData.bone(String(inst.get("id", ""))).get("name", "")))
+	if int(inst.get("level", 1)) > 1:
+		t += " +" + str(int(inst.get("level", 1)) - 1)
+	return t
+
+
+## Aviso das trocas automáticas (texto com cores, ~2,4 s, não pausa).
+func _auto_notice(text: String, color: Color) -> void:
+	if demo or overlay_root == null:
+		return
+	_top_notice(text, color, "", 2.4, true)
 
 
 func _swap(slot: String, inst: Dictionary, from: Vector2) -> void:
@@ -2044,34 +2093,48 @@ func _bone_choice_dialog(inst: Dictionary) -> Dictionary:
 	var bg: Control = parts[0]
 	var v: VBoxContainer = parts[1]
 	var slots: Array = state.slots_for(String(inst.id))
-	var row := Style.hbox(12)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	v.add_child(row)
-	var nc := Widgets.bone_card(inst, tr("bone_new"), true)
-	nc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(nc)
-	if slots.size() == 1:
-		var cur: Dictionary = state.equipped.get(slots[0], {})
-		var cc := Widgets.bone_card(cur, tr("bone_current"), true)
-		cc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(cc)
-		v.add_child(Style.label(tr("bone_found_occupied") % tr(String(slots[0])), 22, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
-	else:
-		v.add_child(Style.label(tr("choose_arm"), 22, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
 	var result := {}
 	var done := func(r: Dictionary):
 		result.merge(r)
 		dialog_closed.emit(r)
-	for s in slots:
-		var cur2: Dictionary = state.equipped.get(s, {})
-		var label := tr("btn_swap")
-		if slots.size() > 1:
-			label += " · " + tr(String(s)) + " (" + tr(String(GameData.bone(String(cur2.get("id", ""))).get("name", ""))) + ")"
-		var b := Style.button(label, "", 78)
-		b.pressed.connect(func(): done.call({"action": "swap", "slot": s}))
+	if slots.size() == 1:
+		# equipado à esquerda, novo à direita e o que muda embaixo
+		var cur: Dictionary = state.equipped.get(slots[0], {})
+		var row := Style.hbox(12)
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		v.add_child(row)
+		var cc := Widgets.bone_card(cur, tr("bone_current"), true)
+		cc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(cc)
+		var nc := Widgets.bone_card(inst, tr("bone_new"), true)
+		nc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(nc)
+		v.add_child(Widgets.bone_compare(cur, inst))
+		var b := Style.button(tr("btn_swap"), "", 78)
+		b.pressed.connect(func(): done.call({"action": "swap", "slot": slots[0]}))
 		v.add_child(b)
+	else:
+		# braços: o osso novo e, para cada braço, o que muda se trocar aquele
+		var nc2 := Widgets.bone_card(inst, tr("bone_new"), true)
+		v.add_child(nc2)
+		v.add_child(Style.label(tr("choose_arm"), 22, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+		for s in slots:
+			var cur2: Dictionary = state.equipped.get(s, {})
+			var box := Style.panel(Color(0, 0, 0, 0.28), Color(Style.C_EDGE, 0.8), 16)
+			var bv := Style.vbox(4)
+			box.add_child(bv)
+			var nm := tr(String(GameData.bone(String(cur2.get("id", ""))).get("name", "")))
+			if int(cur2.get("level", 1)) > 1:
+				nm += " +" + str(int(cur2.get("level", 1)) - 1)
+			bv.add_child(Style.bold(tr(String(s)) + " · " + nm, 20, Style.C_BONE, HORIZONTAL_ALIGNMENT_CENTER))
+			bv.add_child(Widgets.rich_line(Body.compare_short(cur2, inst, true), 19))
+			var b2 := Style.button(tr("btn_swap_this"), "", 62)
+			b2.add_theme_font_size_override("font_size", 24)
+			b2.pressed.connect(func(): done.call({"action": "swap", "slot": s}))
+			bv.add_child(b2)
+			v.add_child(box)
 	_tip("swap")
-	var cb := Style.button(tr("btn_crush") + "  (+" + str(state.crush_value(inst)) + ")", "DarkButton", 78)
+	var cb := Style.button(tr("btn_crush") + "  (+" + str(state.crush_value(inst)) + ")", "DarkButton", 74)
 	cb.icon = load("res://art/ui/ui_icon_dust.png")
 	cb.expand_icon = true
 	cb.add_theme_constant_override("icon_max_width", 40)
@@ -2524,19 +2587,25 @@ func _on_mission_done(id: String) -> void:
 
 
 ## Aviso no topo da tela que some sozinho (missão concluída, maldição da torre).
-func _top_notice(text: String, color: Color, sfx: String, secs: float) -> void:
+func _top_notice(text: String, color: Color, sfx: String, secs: float, rich := false) -> void:
 	var p := PanelContainer.new()
 	p.add_theme_stylebox_override("panel", Style.flat_box(Color(Style.C_PANEL, 0.95), color, 16, 2, 10))
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var l := Style.bold(text, 22, color, HORIZONTAL_ALIGNMENT_CENTER)
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	p.add_child(l)
+	if rich:
+		var r := Widgets.rich_line(text, 21)
+		r.add_theme_color_override("default_color", color)
+		p.add_child(r)
+	else:
+		var l := Style.bold(text, 22, color, HORIZONTAL_ALIGNMENT_CENTER)
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p.add_child(l)
 	p.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	p.offset_left = 60
 	p.offset_right = -60
-	p.offset_top = 270
+	# avisos ao mesmo tempo ficam um embaixo do outro, não sobrepostos
+	_notices = _notices.filter(func(x): return is_instance_valid(x) and not x.is_queued_for_deletion())
+	p.offset_top = 270 + 96 * _notices.size()
 	overlay_root.add_child(p)
-	_notices = _notices.filter(func(x): return is_instance_valid(x))
 	_notices.append(p)
 	if sfx != "":
 		Audio.play(sfx)

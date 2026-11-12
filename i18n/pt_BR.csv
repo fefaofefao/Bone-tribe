@@ -117,7 +117,7 @@ event_type_chest,Baú
 event_type_boss,Chefe
 bone_found_title,Osso encontrado!
 bone_found_occupied,O encaixe %s já está ocupado.
-bone_current,Atual
+bone_current,Equipado
 bone_new,Novo
 bone_crush_value,Triturar dá %d de pó de osso
 bone_equipped,%s encaixado!
@@ -1612,3 +1612,17 @@ btn_endless,Modo Infinito
 btn_endless_record,Modo Infinito · Recorde: andar %d
 btn_endless_locked,Modo Infinito · vença o Rei Rato
 tip_endless,"Modo Infinito liberado! Andares sem fim, cada um mais difícil. Até onde você chega?"
+cmp_title,O que muda
+cmp_special_gain,Ganha efeito especial
+cmp_special_lose,Perde o efeito especial
+cmp_special_swap,Troca de efeito especial (veja os cartões)
+cmp_no_change,Sem diferença nos atributos
+cmp_verdict_better,Melhor que o seu
+cmp_verdict_worse,Pior que o seu
+cmp_verdict_mixed,Troca atributos
+cmp_verdict_same,Igual ao seu
+cmp_verdict_empty,Encaixe vazio
+btn_swap_this,Trocar este
+auto_attach,%s encaixado
+auto_swap_better,%s → %s
+auto_crush_same,Você já tem %s (igual ou melhor). %s triturado.

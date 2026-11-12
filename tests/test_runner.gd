@@ -1618,3 +1618,78 @@ func test_26_gravedigger_card_1_4() -> void:
 	check(src.contains('tr("btn_revive_free") % Store.free_revives_left()'), "botão de reviver grátis mostra quantos restam")
 	Profile.data = backup
 	Profile.save()
+
+
+func test_27_bone_compare() -> void:
+	var wolf1 := {"id": "bone_skull_wolf", "level": 1}
+	var wolf2 := {"id": "bone_skull_wolf", "level": 2}
+	var cyc := {"id": "bone_skull_cyclops", "level": 1}
+	# contas da comparação (só os dois ossos)
+	var rows := Body.compare_rows(wolf1, wolf2)
+	check(rows.size() == 1 and String(rows[0].key) == "crit" and int(rows[0].sign) == 1, "mesmo osso +1: crítico sobe")
+	check(Body.compare_verdict(wolf1, wolf2) == "better" and Body.compare_verdict(wolf2, wolf1) == "worse", "veredito melhor/pior")
+	check(Body.compare_verdict(wolf1, cyc) == "mixed" and Body.special_change(wolf1, cyc) == 1 and Body.special_change(cyc, wolf1) == -1, "efeito especial ganho/perdido conta no veredito")
+	check(Body.compare_verdict({}, cyc) == "empty" and Body.compare_verdict(wolf1, wolf1) == "same", "encaixe vazio e osso igual")
+	var legs_a := {"id": "bone_legs_spider", "level": 1}
+	var legs_b := {"id": "bone_legs_bear", "level": 1}
+	var keys := Body.compare_rows(legs_a, legs_b).map(func(r): return String(r.key))
+	check(keys.has("dodge") and keys.has("hp") and keys.has("def"), "comparação junta os atributos dos dois ossos")
+	var short := Body.compare_short(legs_a, legs_b, true)
+	check(short.contains("[color=#74d68f]") and short.contains("[color=#e2554b]"), "linha curta: verde no que sobe, vermelho no que cai")
+	check(Body.compare_short(wolf1, wolf1) == tr("cmp_no_change"), "sem diferença tem texto próprio")
+	# janela de troca na partida
+	var backup: Dictionary = Profile.data.duplicate(true)
+	Profile.data.tutorial["swap"] = true
+	Router.params = {"tower": 1}
+	var run_c: Node = load("res://scenes/Run.tscn").instantiate()
+	get_tree().root.add_child(run_c)
+	for k in 3:
+		await get_tree().process_frame
+	var st: RunState = run_c.state
+	st.equip("slot_skull", wolf2.duplicate())
+	st.equip("slot_arm_left", {"id": "bone_claw_bear", "level": 1})
+	st.equip("slot_arm_right", {"id": "bone_pincer_crab", "level": 1})
+	run_c._bone_choice_dialog(cyc)
+	await get_tree().process_frame
+	var heads: Array = run_c.overlay_root.find_children("*", "Label", true, false).map(func(l): return l.text)
+	check(heads.has(tr("bone_current")) and heads.has(tr("bone_new")) and heads.has(tr("cmp_title")), "troca de crânio: cartão Equipado, cartão Novo e O que muda")
+	check(heads.has(tr("cmp_special_gain")), "janela mostra o efeito especial ganho")
+	run_c.dialog_closed.emit({})
+	await get_tree().process_frame
+	for c in run_c.overlay_root.get_children():
+		c.queue_free()
+	await get_tree().process_frame
+	run_c._bone_choice_dialog({"id": "bone_blade_mantis", "level": 1})
+	await get_tree().process_frame
+	var arm_btns: Array = run_c.overlay_root.find_children("*", "Button", true, false).filter(func(b): return b.text == tr("btn_swap_this"))
+	check(arm_btns.size() == st.slots_for("bone_blade_mantis").size() and arm_btns.size() >= 2, "braços: um bloco com 'Trocar este' para cada braço")
+	var picked := [{}]
+	run_c.dialog_closed.connect(func(r): picked[0] = r, CONNECT_ONE_SHOT)
+	arm_btns[1].pressed.emit()
+	await get_tree().process_frame
+	check(String(picked[0].get("slot", "")) == String(st.slots_for("bone_blade_mantis")[1]), "botão de cada braço troca o braço certo")
+	for c in run_c.overlay_root.get_children():
+		c.queue_free()
+	await get_tree().process_frame
+	# mercador: compara com o equipado antes de pagar
+	check(run_c._compare_target({"id": "bone_legs_bear", "level": 1}).is_empty(), "mercador: encaixe vazio não compara")
+	check(String(run_c._compare_target({"id": "bone_skull_cyclops", "level": 1}).get("id", "")) == "bone_skull_wolf", "mercador compara com o crânio equipado")
+	var mc: Control = run_c._merchant_compare({"id": "bone_skull_cyclops", "level": 1})
+	var mtexts: Array = mc.find_children("*", "Label", true, false).map(func(l): return l.text)
+	check(mtexts.has(tr("cmp_verdict_mixed")), "mercador mostra o veredito")
+	mc.free()
+	# trocas automáticas: aviso com o que mudou
+	var n0: int = run_c._notices.size()
+	run_c._auto_notice("teste", Style.C_HEAL)
+	run_c._auto_notice("teste 2", Style.C_HEAL)
+	check(run_c._notices.size() == n0 + 2 and run_c._notices[-1].offset_top > run_c._notices[-2].offset_top, "avisos automáticos ficam um embaixo do outro")
+	var src: String = load("res://scripts/scenes/run.gd").source_code
+	check(src.contains('_auto_notice(tr("auto_attach")') and src.contains('_auto_notice(tr("auto_swap_better")') and src.contains('_auto_notice(tr("auto_crush_same")'), "encaixe vazio, mesmo osso melhor e pior avisam")
+	run_c.queue_free()
+	await get_tree().process_frame
+	get_tree().paused = false
+	Router.params = {}
+	RunSave.clear()
+	MonsterFactory.tower = 1
+	Profile.data = backup
+	Profile.save()
