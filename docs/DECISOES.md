@@ -337,3 +337,9 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
   - Aviso do fim da partida continua discreto (uma linha).
 - **Abas do hub sem a tela inicial ao fundo + FPS (1.4.1):** as páginas (Loja, Ossuário, Coleção) tinham fundo 94% opaco e o cenário da cripta (velas, partículas, luzes) e o Ossinho continuavam sendo desenhados e atualizados por baixo. Agora o cenário fica invisível e parado fora da aba Início (`_set_world_active`) e o fundo das páginas é opaco. Na loja, cada prévia de skin era um Ossinho animado num SubViewport atualizado todo quadro (8 de uma vez, mesmo fora da tela); agora só anima e desenha enquanto aparece na tela. Medido em software (xvfb, só para comparar): loja 47 → 14 ms por quadro, Ossuário 24 → 8,5 ms. Teste `test_29`.
 - **Preço do Cartão:** R$ 9,99 definido na Play Console para todos os países (a Play converte). `shop.json` passou a 9,99 e o "vale até Nx" agora é calculado em reais (Cartão x melhor pacote de diamantes em reais). O `price_usd` da tabela é 1,79 (o preço que a Play mostra em dólar depois de converter R$ 9,99); serve de reserva no computador e no evento `iap_revenue` (`usd`).
+
+## Versão 1.4.2: ícone novo
+- Ícone do app trocado pelo Ossinho de dragão (crânio, asas e cauda de dragão) sobre fundo de fogo com raios — opção escolhida entre 8 testadas (prévias na loja, na lista da Play e pequeno no celular). O personagem é um render do próprio jogo (`tools/icon_src/icon_dragon_render.png`) e o ícone sai de `tools/art_app_icon.py` (`gen_art.py icon` chama o mesmo script).
+- Ícone adaptável: fundo cheio + personagem reduzido a 68% na camada da frente, para a cabeça inteira caber na área que o Android mostra (círculo ou quadrado arredondado).
+- O crânio antigo continua dentro do jogo (aba Início e recompensa de skin) como `art/ui/ui_icon_skull.png`, para não mudar o visual do jogo.
+- O ícone da página da loja (512x512) é enviado à mão na Play Console: `art/ui/ui_app_icon_512.png`.

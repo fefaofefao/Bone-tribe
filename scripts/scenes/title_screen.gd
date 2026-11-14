@@ -5,7 +5,7 @@ extends Control
 
 const DEMO_HOLD := 3.0
 const TABS := [
-	{"id": "home", "label": "tab_home", "icon": "res://art/ui/ui_app_icon.png"},
+	{"id": "home", "label": "tab_home", "icon": "res://art/ui/ui_icon_skull.png"},
 	{"id": "ossuary", "label": "tab_ossuary", "icon": "res://art/ui/ui_bone_chest.png"},
 	{"id": "collection", "label": "tab_collection", "icon": "res://art/ui/cur_endless_book.png"},
 	{"id": "shop", "label": "tab_shop", "icon": "res://art/ui/ui_icon_diamond.png"},

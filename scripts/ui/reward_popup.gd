@@ -25,7 +25,7 @@ static func result_icon(r: Dictionary) -> String:
 		"relic", "curiosity", "companion":
 			return "res://art/ui/%s.png" % String(r.id)
 		"skin":
-			return "res://art/ui/ui_app_icon.png"
+			return "res://art/ui/ui_icon_skull.png"
 		"extra_revive":
 			return "res://art/ui/ui_icon_heart.png"
 		"rare_start_token":

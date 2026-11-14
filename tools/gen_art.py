@@ -2235,25 +2235,10 @@ def gen_ui():
 # ------------------------------------------------------------------ ícone
 
 def gen_icon():
-    for name, size in (("ui_app_icon", 192), ("ui_app_icon_foreground", 432), ("ui_app_icon_background", 432), ("ui_app_icon_512", 512)):
-        W = H = size
-        cv = new_canvas(W, H)
-        if name != "ui_app_icon_foreground":
-            bg = Image.new("RGBA", (W * SS, H * SS))
-            d = ImageDraw.Draw(bg)
-            for i in range(H * SS):
-                t = i / (H * SS)
-                c = (int(28 + 30 * (1 - t)), int(18 + 14 * (1 - t)), int(34 + 20 * (1 - t)), 255)
-                d.line([(0, i), (W * SS, i)], fill=c)
-            cv.alpha_composite(bg)
-            halo = Layer(W, H)
-            halo.circle(W * 0.5, H * 0.55, W * 0.36)
-            glow(cv, halo, (255, 170, 70), radius=W * 0.12, strength=0.55)
-        if name != "ui_app_icon_background":
-            sc = 0.62 if name == "ui_app_icon_foreground" else 1.0
-            r = W * 0.27 * sc
-            draw_skull(cv, W, H, W * 0.47, H * 0.46, r, eye_color=(255, 180, 60))
-        finish(cv, W, H, out("ui", name + ".png"))
+    # 1.4.2: o ícone passou a ser o Ossinho de dragão (render do próprio jogo);
+    # o crânio antigo continua em art/ui/ui_icon_skull.png (aba Início e skins)
+    import art_app_icon
+    art_app_icon.main()
     print("icon ok")
 
 
