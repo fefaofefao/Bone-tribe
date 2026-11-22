@@ -1827,3 +1827,120 @@ func test_29_hub_tabs_perf() -> void:
 	Router.params = {}
 	Profile.data = backup
 	Profile.save()
+
+
+func test_30_update_1_4_3() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	# --- Forja das Relíquias
+	Profile.data.relics = {"owned": [], "equipped": {}, "next_uid": 1}
+	Profile.data.dust = 0
+	var eq := Meta.add_relic("relic_vertebra_amulet")
+	var c1 := Meta.add_relic("relic_vertebra_amulet")
+	check(Meta.relic_is_equipped(int(eq.uid)) and not Meta.relic_is_equipped(int(c1.uid)), "primeira relíquia equipa, cópia fica livre")
+	check(not Meta.relic_can_fuse(int(c1.uid), int(eq.uid)), "a equipada nunca é consumida na fusão")
+	check(Meta.relic_fuse(int(eq.uid), int(c1.uid)) and int(Meta.relic_by_uid(int(eq.uid)).level) == 2 and Meta.relic_by_uid(int(c1.uid)).is_empty(), "fundir repetida: +1 nível e a cópia some")
+	var hi := Meta.add_relic("relic_vertebra_amulet")
+	Meta.relic_by_uid(int(hi.uid)).level = 5
+	Meta.relic_fuse(int(eq.uid), int(hi.uid))
+	check(int(Meta.relic_by_uid(int(eq.uid)).level) == 6, "fundir fica com o maior nível das duas +1")
+	Meta.relic_by_uid(int(eq.uid)).level = Meta.relic_max_level()
+	var c2 := Meta.add_relic("relic_vertebra_amulet")
+	check(not Meta.relic_fuse(int(eq.uid), int(c2.uid)), "não passa do nível máximo")
+	Meta.add_relic("relic_vertebra_amulet")
+	check(not Meta.relic_can_forge("relic_vertebra_amulet"), "forjar precisa de 3 cópias livres")
+	Meta.add_relic("relic_vertebra_amulet")
+	var n_before := Meta.relics_owned().size()
+	var nr := Meta.relic_forge("relic_vertebra_amulet")
+	check(String(nr.get("id", "")) == "relic_moon_amulet" and Meta.relics_owned().size() == n_before - 2, "3 comuns viram 1 rara do mesmo tipo")
+	check(not Meta.relic_by_uid(int(eq.uid)).is_empty(), "forjar não consome a equipada")
+	check(Meta.relic_next_rarity_id("relic_ancestor_amulet") == "", "lendária não forja")
+	var spare: Dictionary = Meta.relic_spares("relic_moon_amulet")[0] if not Meta.relic_spares("relic_moon_amulet").is_empty() else {}
+	if spare.is_empty():
+		spare = Meta.add_relic("relic_moon_amulet")
+		Meta.equip_relic(int(eq.uid))
+	var mv := Meta.relic_melt_value(spare)
+	var d0 := Profile.dust()
+	check(Meta.relic_melt(int(spare.uid)) == mv and Profile.dust() == d0 + mv and mv == int(roundf(300 * 0.5)), "derreter rara nível 1 dá metade do valor (150)")
+	check(Meta.relic_melt(int(eq.uid)) == 0, "não derrete a equipada")
+	var lv5 := {"id": "relic_knuckle_ring", "level": 5}
+	check(Meta.relic_melt_value(lv5) > Meta.relic_melt_value({"id": "relic_knuckle_ring", "level": 1}), "relíquia com nível derrete por mais")
+	# forjar tudo: muitas repetidas
+	Profile.data.relics = {"owned": [], "equipped": {}, "next_uid": 1}
+	for i in 10:
+		Meta.add_relic("relic_knuckle_ring")
+	for i in 7:
+		Meta.add_relic("relic_tin_lantern")
+	check(Meta.relic_forge_available(), "Forjar tudo disponível com repetidas")
+	var res := Meta.relic_forge_all()
+	var ring := Meta.relic_equipped("relic_ring")
+	check(int(res.fused) == 15 and int(ring.level) == 10, "Forjar tudo funde as cópias na equipada até o máximo (9 anéis + 6 lanternas)")
+	var lantern := Meta.relic_equipped("relic_lantern")
+	check(String(lantern.id) == "relic_tin_lantern" and int(lantern.level) == 7, "lanterna: 6 cópias fundidas na equipada")
+	check(not Meta.relic_forge_available(), "depois do Forjar tudo não sobra nada vantajoso")
+	var uids := {}
+	var ok_uids := true
+	for r in Meta.relics_owned():
+		if uids.has(int(r.uid)):
+			ok_uids = false
+		uids[int(r.uid)] = true
+	for slot in Meta.RELIC_SLOTS:
+		var u := int(Profile.data.relics.equipped.get(slot, 0))
+		if u > 0 and not uids.has(u):
+			ok_uids = false
+	check(ok_uids, "save das relíquias consistente (uids únicos, equipadas existem)")
+	# janela da Forja com muitas relíquias cabe na tela (antes prendia o jogador)
+	Profile.data.relics = {"owned": [], "equipped": {}, "next_uid": 1}
+	for i in 25:
+		Meta.add_relic("relic_vertebra_amulet")
+		Meta.add_relic("relic_moon_amulet")
+	for r in Meta.relics_owned():
+		r.level = 1 + (int(r.uid) % 6)
+	var page: Node = load("res://scripts/ui/hub_ossuary.gd").new()
+	get_tree().root.add_child(page)
+	await get_tree().process_frame
+	page._relic_forge_dialog("relic_amulet")
+	for k in 4:
+		await get_tree().process_frame
+	var dlg: Node = page.get_node_or_null("RelicForge")
+	var back: Button = null
+	if dlg:
+		for b in dlg.find_children("*", "Button", true, false):
+			if b.text == tr("btn_back"):
+				back = b
+	var vh: float = page.get_viewport_rect().size.y
+	var panel_h := 0.0
+	if dlg:
+		for pc in dlg.find_children("*", "PanelContainer", false, false):
+			panel_h = maxf(panel_h, pc.get_combined_minimum_size().y)
+		var cc: Node = dlg.get_child(0)
+		if cc and cc.get_child_count() > 0:
+			panel_h = (cc.get_child(0) as Control).get_combined_minimum_size().y
+	check(dlg != null and back != null and panel_h > 0.0 and panel_h < vh, "janela da Forja com 50 relíquias cabe na tela (%.0f de %.0f) e tem Voltar" % [panel_h, vh])
+	page.queue_free()
+	await get_tree().process_frame
+	# --- tela inicial: objetivo e formas secretas
+	Profile.data.towers = {"unlocked": 1, "selected": 1, "cleared": {}, "best": {"1": 7}, "wins": {}}
+	var g := Meta.next_objective(1)
+	check(String(g.key) == "goal_boss" and int(g.args[1]) == 10, "objetivo: Rei Rato no andar 10")
+	Profile.data.towers.best["1"] = 14
+	check(int(Meta.next_objective(1).args[1]) == 20, "passou do Rei Rato: objetivo vira o andar 20")
+	Profile.data.towers.best["1"] = 25
+	check(String(Meta.next_objective(1).key) == "goal_tower_unlock", "último chefe abre a próxima torre")
+	Profile.data.towers.cleared["1"] = true
+	Profile.data.towers.unlocked = 2
+	check(String(Meta.next_objective(1).key) == "goal_next_tower", "torre vencida: próxima torre")
+	var fp := Meta.secret_forms_progress()
+	check(fp.y >= 10 and fp.x <= fp.y, "progresso das formas secretas (%d/%d)" % [fp.x, fp.y])
+	# --- primeira abertura, Kit 24h e lembretes
+	var tsrc: String = load("res://scripts/scenes/title_screen.gd").source_code
+	check(tsrc.contains("if int(Profile.data.runs_played) == 0:\n\t\t_hub_tips()"), "primeira abertura: nenhuma janela antes de jogar")
+	check(tsrc.contains("var kit_ready := int(Profile.data.runs_played) >= 3 or not (Profile.data.bosses_defeated as Dictionary).is_empty()"), "Kit 24h só depois da 3ª partida ou de um chefe vencido")
+	Profile.data.runs_played = 5
+	Profile.data.settings.notifications = true
+	Notify.reschedule()
+	check(Notify.scheduled.has(4) and Notify.scheduled.has(5) and Notify.scheduled.has(6), "lembretes de 2, 3 e 7 dias agendados")
+	check(int(Notify.scheduled[4].delay) == 2 * 86400 and int(Notify.scheduled[6].delay) == 7 * 86400, "lembretes nos dias certos")
+	Notify.cancel_all()
+	check(Notify.scheduled.is_empty(), "voltar ao jogo cancela os lembretes")
+	Profile.data = backup
+	Profile.save()

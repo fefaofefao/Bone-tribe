@@ -229,6 +229,170 @@ static func relic_upgrade(uid: int) -> bool:
 	return true
 
 
+# ------------------------------------------------------ Forja das Relíquias
+
+## A relíquia está equipada em algum encaixe?
+static func relic_is_equipped(uid: int) -> bool:
+	for slot in RELIC_SLOTS:
+		if int(Profile.data.relics.equipped.get(slot, 0)) == uid:
+			return true
+	return false
+
+
+static func relic_max_level() -> int:
+	return int(GameData.bal("relics/max_level", 10))
+
+
+## Relíquias de um tipo (amuleto, anel...), equipada primeiro, depois raridade e nível.
+static func relics_of_slot(slot: String) -> Array:
+	var out := relics_owned().filter(func(x): return String(GameData.relics.get(String(x.id), {}).get("slot", "")) == slot)
+	out.sort_custom(func(a, b):
+		var ea := relic_is_equipped(int(a.uid))
+		var eb := relic_is_equipped(int(b.uid))
+		if ea != eb:
+			return ea
+		if _relic_rank(String(a.id)) != _relic_rank(String(b.id)):
+			return _relic_rank(String(a.id)) > _relic_rank(String(b.id))
+		return int(a.level) > int(b.level))
+	return out
+
+
+## Cópias livres (não equipadas) de uma relíquia, do menor nível para o maior.
+static func relic_spares(relic_id: String) -> Array:
+	var out := relics_owned().filter(func(x): return String(x.id) == relic_id and not relic_is_equipped(int(x.uid)))
+	out.sort_custom(func(a, b): return int(a.level) < int(b.level))
+	return out
+
+
+## Fundir: uma cópia igual (source) entra na relíquia alvo, que fica com o
+## maior nível das duas +1. A cópia some; a equipada nunca é consumida.
+static func relic_can_fuse(target_uid: int, source_uid: int) -> bool:
+	var t := relic_by_uid(target_uid)
+	var s := relic_by_uid(source_uid)
+	if t.is_empty() or s.is_empty() or target_uid == source_uid:
+		return false
+	if String(t.id) != String(s.id) or relic_is_equipped(source_uid):
+		return false
+	return int(t.level) < relic_max_level()
+
+
+static func relic_fuse(target_uid: int, source_uid: int) -> bool:
+	if not relic_can_fuse(target_uid, source_uid):
+		return false
+	var t := relic_by_uid(target_uid)
+	var s := relic_by_uid(source_uid)
+	t.level = mini(relic_max_level(), maxi(int(t.level), int(s.level)) + 1)
+	_remove_relic(source_uid)
+	Profile.save()
+	Backend.log_event("relic_fuse", {"relic": String(t.id), "level": int(t.level)})
+	return true
+
+
+## Raridade seguinte do mesmo tipo ("" se já é lendária).
+static func relic_next_rarity_id(relic_id: String) -> String:
+	var rd: Dictionary = GameData.relics.get(relic_id, {})
+	var next: String = {"common": "rare", "rare": "legendary"}.get(String(rd.get("rarity", "")), "")
+	if next == "":
+		return ""
+	for id in GameData.relics:
+		if String(GameData.relics[id].slot) == String(rd.slot) and String(GameData.relics[id].rarity) == next:
+			return id
+	return ""
+
+
+static func relic_can_forge(relic_id: String) -> bool:
+	return relic_next_rarity_id(relic_id) != "" and relic_spares(relic_id).size() >= int(GameData.bal("relics/forge_count", 3))
+
+
+## Forjar: 3 cópias livres iguais (as de menor nível) viram 1 da raridade seguinte.
+static func relic_forge(relic_id: String) -> Dictionary:
+	if not relic_can_forge(relic_id):
+		return {}
+	var spares := relic_spares(relic_id)
+	for i in int(GameData.bal("relics/forge_count", 3)):
+		_remove_relic(int(spares[i].uid))
+	var r := add_relic(relic_next_rarity_id(relic_id))
+	Backend.log_event("relic_forge", {"from": relic_id, "to": String(r.id)})
+	return r
+
+
+## Pó ao derreter: metade do valor (base da raridade + pó gasto nos níveis).
+static func relic_melt_value(r: Dictionary) -> int:
+	var base := float(GameData.bal("relics/melt_base", {}).get(String(GameData.relics.get(String(r.id), {}).get("rarity", "common")), 120))
+	var spent := 0
+	for lv in range(1, int(r.get("level", 1))):
+		spent += cost(float(GameData.bal("relics/upgrade_cost_base", 80)), float(GameData.bal("relics/upgrade_cost_growth", 1.4)), lv - 1)
+	return int(roundf((base + spent) * float(GameData.bal("relics/melt_ratio", 0.5))))
+
+
+static func relic_melt(uid: int) -> int:
+	var r := relic_by_uid(uid)
+	if r.is_empty() or relic_is_equipped(uid):
+		return 0
+	var v := relic_melt_value(r)
+	_remove_relic(uid)
+	Profile.add_dust(v, "relic_melt")
+	Profile.save()
+	Backend.log_event("relic_melt", {"relic": String(r.id), "dust": v})
+	return v
+
+
+## Forjar tudo: em cada tipo, funde as cópias da equipada (até o nível máximo)
+## e forja de 3 em 3 as que sobram (comuns primeiro, depois raras), repetindo
+## enquanto der. Nunca derrete nada. Devolve {"fused", "forged": [ids novos]}.
+static func relic_forge_all() -> Dictionary:
+	var res := {"fused": 0, "forged": []}
+	var changed := true
+	var guard := 0
+	while changed and guard < 200:
+		changed = false
+		guard += 1
+		for slot in RELIC_SLOTS:
+			var eq := relic_equipped(slot)
+			if not eq.is_empty():
+				for sp in relic_spares(String(eq.id)):
+					if relic_fuse(int(eq.uid), int(sp.uid)):
+						res.fused += 1
+						changed = true
+			for rarity in ["common", "rare"]:
+				for id in GameData.relics:
+					var rd: Dictionary = GameData.relics[id]
+					if String(rd.slot) != slot or String(rd.rarity) != rarity:
+						continue
+					while relic_can_forge(id):
+						# não forja cópias que ainda podem subir a equipada
+						if not eq.is_empty() and String(eq.id) == id and int(eq.level) < relic_max_level():
+							break
+						var nr := relic_forge(id)
+						if nr.is_empty():
+							break
+						res.forged.append(String(nr.id))
+						changed = true
+	Profile.save()
+	return res
+
+
+## Há algo que o "Forjar tudo" faria?
+static func relic_forge_available() -> bool:
+	for slot in RELIC_SLOTS:
+		var eq := relic_equipped(slot)
+		if not eq.is_empty() and int(eq.level) < relic_max_level() and not relic_spares(String(eq.id)).is_empty():
+			return true
+		for id in GameData.relics:
+			if String(GameData.relics[id].slot) == slot and relic_can_forge(id):
+				if eq.is_empty() or String(eq.id) != id or int(eq.level) >= relic_max_level():
+					return true
+	return false
+
+
+static func _remove_relic(uid: int) -> void:
+	var owned: Array = Profile.data.relics.owned
+	for i in owned.size():
+		if int(owned[i].uid) == uid:
+			owned.remove_at(i)
+			return
+
+
 static func relic_stats() -> Dictionary:
 	var out := {}
 	for slot in RELIC_SLOTS:
@@ -515,6 +679,42 @@ static func tower_select(n: int) -> void:
 
 static func tower_cleared(n: int) -> bool:
 	return Profile.data.towers.cleared.has(str(n))
+
+
+## Próximo objetivo na torre n (tela inicial). Usa o andar mais alto
+## alcançado: o próximo chefe ainda não passado, ou a torre seguinte.
+## Devolve {"key": chave de texto, "args": [...]}.
+static func next_objective(n: int) -> Dictionary:
+	if tower_cleared(n):
+		if n < tower_count() and n + 1 <= tower_unlocked():
+			return {"key": "goal_next_tower", "args": [n + 1]}
+		if endless_unlocked():
+			return {"key": "goal_endless", "args": [maxi(1, endless_best() + 1)]}
+		return {"key": "goal_tower_cleared", "args": []}
+	var best := maxi(1, tower_best(n))
+	var bosses: Dictionary = GameData.tower(n).get("bosses", {})
+	var floors := []
+	for f in bosses:
+		floors.append(int(f))
+	floors.sort()
+	for f in floors:
+		if f >= best:
+			var boss := String(bosses[str(f)])
+			var key := "goal_tower_unlock" if f == floors[-1] else "goal_boss"
+			return {"key": key, "args": [TranslationServer.translate(String(GameData.monster(boss).get("name", boss))), f]}
+	return {"key": "goal_tower_unlock", "args": ["", 30]}
+
+
+## Formas secretas descobertas / total (tela inicial).
+static func secret_forms_progress() -> Vector2i:
+	var total := 0
+	var found := 0
+	for id in GameData.forms:
+		if bool(GameData.forms[id].get("secret", false)):
+			total += 1
+			if Profile.is_form_discovered(id):
+				found += 1
+	return Vector2i(found, total)
 
 
 static func tower_best(n: int) -> int:

@@ -343,3 +343,14 @@ Resultado da simulação (60 jogadores novos, gastando o pó no Ossuário entre 
 - Ícone adaptável: fundo cheio + personagem reduzido a 68% na camada da frente, para a cabeça inteira caber na área que o Android mostra (círculo ou quadrado arredondado).
 - O crânio antigo continua dentro do jogo (aba Início e recompensa de skin) como `art/ui/ui_icon_skull.png`, para não mudar o visual do jogo.
 - O ícone da página da loja (512x512) é enviado à mão na Play Console: `art/ui/ui_app_icon_512.png`.
+
+## Versão 1.4.3: Forja das Relíquias e retenção
+- **Bug relatado pelos jogadores ("trava com muitas relíquias"):** a janela "Trocar" listava um botão por relíquia, sem rolagem; com muitas repetidas passava da tela e o "Voltar" sumia, prendendo o jogador. Agora é a janela da **Forja**: iguais agrupadas ("×8"), atributos de cada uma, a equipada marcada, lista com rolagem limitada à altura da tela e "Forjar tudo"/"Voltar" sempre visíveis. Teste com 50 relíquias garante que cabe na tela.
+- **Por que acumulavam:** só 12 relíquias (4 tipos × 3 raridades), baú dá relíquia em 70% e só 1 equipada por tipo — as repetidas não serviam para nada. **Forja** (`data/balance.json → relics`): fundir repetida igual na equipada = maior nível das duas +1 (até 10); 3 cópias livres iguais = 1 da raridade seguinte do mesmo tipo; derreter = metade do valor (base 120/300/900 por raridade + pó gasto nos níveis); "Forjar tudo" funde na equipada e forja de 3 em 3 o que sobra, sem nunca derreter. A equipada nunca é consumida. Save: as relíquias continuam na mesma lista (`relics.owned`), só saem as que o jogador usa na forja.
+- **Retenção (análise de 22/11):**
+  - Primeira abertura sem janelas: o calendário só aparece depois da 1ª partida.
+  - Kit das 24 horas não abre a loja sozinho depois da 1ª partida: só a partir da 3ª partida ou do primeiro chefe vencido.
+  - Tela inicial com **objetivo** no lugar da dica ("Objetivo: vencer o Golem Esquecido (andar 20)", próxima torre ou recorde do Infinito) — `Meta.next_objective`.
+  - **Formas secretas: X/Y descobertas** logo abaixo do subtítulo (toque abre a Coleção) — os jogadores gostam de descobrir as formas.
+  - **Lembretes** para quem some: 2 dias (formas secretas que faltam), 3 dias (prêmios guardados) e 7 dias (recorde do Infinito ou torre atual), cancelados ao voltar como os outros.
+- Ficaram de fora por decisão do dono do jogo: pistas das formas secretas, primeiras partidas mais fáceis, uma janela por volta ao menu, anúncio entre partidas mais tarde, virada do dia no horário local e testes A/B.

@@ -4,8 +4,9 @@ extends Node
 ##   1 = prêmio diário, missões e ofertas novas (depois da virada do dia)
 ##   2 = Ossudo encheu o saco de pó (tempo máximo offline)
 ##   3 = o Caçador está com um osso seu
+##   4, 5, 6 = quem não volta: 2, 3 e 7 dias sem jogar (textos com o progresso)
 
-const IDS := [1, 2, 3]
+const IDS := [1, 2, 3, 4, 5, 6]
 
 var plugin: Object = null
 ## Agendadas (id -> {delay, title, body}); também usado pelos testes.
@@ -51,6 +52,17 @@ func reschedule() -> void:
 	if not stolen.is_empty():
 		var bone := tr(String(GameData.bone(String(stolen[-1].id)).get("name", "")))
 		_add(3, "notif_hunter_title", tr("notif_hunter_body") % bone, 20 * 3600, true)
+	# lembretes para quem some (cancelados ao voltar, como os outros)
+	var fp := Meta.secret_forms_progress()
+	if fp.y > fp.x:
+		_add(4, "notif_away2_title", tr("notif_away2_forms") % (fp.y - fp.x), 2 * 86400, true)
+	else:
+		_add(4, "notif_away2_title", "notif_away2_body", 2 * 86400)
+	_add(5, "notif_away3_title", "notif_away3_body", 3 * 86400)
+	if Meta.endless_best() > 0:
+		_add(6, "notif_away7_title", tr("notif_away7_endless") % Meta.endless_best(), 7 * 86400, true)
+	else:
+		_add(6, "notif_away7_title", tr("notif_away7_tower") % Meta.tower_unlocked(), 7 * 86400, true)
 
 
 func _add(id: int, title_key: String, body: String, delay: int, body_ready := false) -> void:

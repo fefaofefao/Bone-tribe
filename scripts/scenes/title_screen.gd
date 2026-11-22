@@ -111,7 +111,8 @@ func _after_open() -> void:
 		if before < int(p.get("show_after_interstitials", 10)) and Store.remove_ads_offer_visible():
 			await _offer_popup("iap_remove_ads", "iap_remove_ads_desc")
 			offered = true
-		if Store.kit_available() and not bool(Profile.data.kit24.offered):
+		var kit_ready := int(Profile.data.runs_played) >= 3 or not (Profile.data.bosses_defeated as Dictionary).is_empty()
+		if Store.kit_available() and not bool(Profile.data.kit24.offered) and kit_ready:
 			Profile.data.kit24.offered = true
 			Profile.save()
 			_open_tab("shop")
@@ -122,6 +123,11 @@ func _after_open() -> void:
 			Backend.log_event("card_offer_shown", {"runs": Profile.data.runs_played})
 			if await _card_offer_popup():
 				return
+	# primeira abertura: nada antes da 1ª partida (o calendário vem depois dela)
+	if int(Profile.data.runs_played) == 0:
+		_hub_tips()
+		_refresh_currency()
+		return
 	var sub := Store.claim_subscription(rng)
 	if not sub.is_empty():
 		await RewardPopup.show_on(_ui, "subscription_daily", sub).closed
@@ -301,6 +307,12 @@ func _build_home() -> void:
 	tag.offset_left = 40
 	tag.offset_right = -40
 	_home.add_child(tag)
+	# progresso das formas secretas, logo abaixo do subtítulo (não empurra o Ossinho)
+	_forms_box = CenterContainer.new()
+	_forms_box.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	_forms_box.offset_top = 414
+	_forms_box.offset_bottom = 462
+	_home.add_child(_forms_box)
 
 	# Parte de baixo: cresce para cima a partir da barra de abas, então o
 	# botão Jogar nunca fica escondido, qualquer que seja o conteúdo.
@@ -408,6 +420,21 @@ func _refresh_chips() -> void:
 		row.add_child(_loadout_card(GameData.bone_texture_path(sb), tr("loadout_start_bone"), tr(String(GameData.bone(sb).name)), "collection"))
 	else:
 		row.add_child(_loadout_card(GameData.bone_texture_path("bone_skull_basic"), tr("loadout_start_bone"), tr("loadout_choose"), "collection"))
+	# formas secretas: progresso da descoberta (toca e abre a Coleção)
+	if _forms_box:
+		for c in _forms_box.get_children():
+			c.queue_free()
+	if int(Profile.data.runs_played) > 0 and _forms_box:
+		var fp := Meta.secret_forms_progress()
+		var fc := _chip("res://art/ui/ui_event_rare.png", tr("chip_secret_forms") % [fp.x, fp.y], Color("d7aaff"))
+		fc.name = "SecretFormsChip"
+		for l in fc.find_children("*", "Label", true, false):
+			(l as Label).autowrap_mode = TextServer.AUTOWRAP_OFF
+		fc.mouse_filter = Control.MOUSE_FILTER_STOP
+		fc.gui_input.connect(func(ev: InputEvent):
+			if (ev is InputEventMouseButton and ev.pressed) or (ev is InputEventScreenTouch and ev.pressed):
+				_open_tab("collection"))
+		_forms_box.add_child(fc)
 	var stolen := Meta.hunter_stolen()
 	if not stolen.is_empty():
 		_chips.add_child(_chip(GameData.bone_texture_path(String(stolen[-1].id)), tr("chip_hunter") % stolen.size(), Color("e07a8a")))
@@ -471,8 +498,15 @@ func _refresh_tower() -> void:
 	if _play_btn:
 		_play_btn.disabled = locked
 	if _play_hint:
-		var best := int(Profile.data.get("best_index", 0))
-		_play_hint.text = tr("tower_difficulty_hint") if n > 1 and not locked else (tr("home_best_floor") % best if best > 0 else tr("home_first_run"))
+		# objetivo claro: o próximo chefe, a próxima torre ou o recorde do Infinito
+		if locked:
+			_play_hint.text = tr("tower_locked_hint") % (n - 1)
+		elif int(Profile.data.runs_played) == 0:
+			_play_hint.text = tr("home_first_run")
+		else:
+			var goal := Meta.next_objective(n)
+			_play_hint.text = tr(String(goal.key)) % goal.args if not (goal.args as Array).is_empty() else tr(String(goal.key))
+		_play_hint.add_theme_color_override("font_color", Style.C_CANDLE if int(Profile.data.runs_played) > 0 and not locked else Style.C_MUTED)
 		var curse := String(GameData.tower(n).get("curse", ""))
 		if curse != "":
 			_play_hint.text = tr("tower_curse_line") % tr(curse + "_name") + " · " + tr(curse + "_desc")
@@ -481,6 +515,7 @@ func _refresh_tower() -> void:
 ## Modo Infinito: botão abaixo do Jogar, com o recorde do jogador. Trancado
 ## (com o que falta) até vencer o Rei Rato uma vez.
 var _endless_btn: Button
+var _forms_box: CenterContainer
 
 
 func _endless_button() -> Control:

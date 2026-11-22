@@ -1666,3 +1666,29 @@ card_earned_empty,Come back tomorrow for your first daily reward.
 card_offer_text,"No ads, x2 unlocked, an exclusive skin and +50% dust every run. Right away: 500 diamonds, 3,000 dust, a rare relic and a rare chest."
 btn_card_see,See the Gravedigger's Card
 card_v_chest_one,Rare chest
+btn_relic_forge,Swap & forge (%d)
+btn_forge_all,Forge all
+forge_sub,Duplicates fuse into the equipped one (+1 level). 3 of a kind become 1 of a higher rarity.
+relic_equipped_tag,Equipped
+btn_equip_relic,Equip
+btn_fuse_relic,Fuse (+1 level)
+btn_forge_relic,Forge %d → %s
+btn_melt_relic,Melt +%s
+forge_done,Forged: %s!
+forge_all_fused,%d duplicates fused
+forge_all_forged,Forged: %s
+forge_all_nothing,Nothing to forge right now
+chip_secret_forms,Secret forms: %d/%d found
+goal_boss,Goal: beat %s (floor %d)
+goal_tower_unlock,Goal: beat %s (floor %d) and open the next tower
+goal_next_tower,Tower cleared! Next challenge: Tower %d
+goal_endless,All towers cleared! Endless: reach floor %d
+goal_tower_cleared,Tower cleared! How about a new build?
+notif_away2_title,Your skeleton misses you
+notif_away2_forms,%d secret forms are still waiting to be found. Which one is next?
+notif_away2_body,New monsters await in the crypt. Are your bones ready?
+notif_away3_title,Rewards saved for you
+notif_away3_body,Your calendar reward is waiting and Ossudo gathered bone dust. Come get it!
+notif_away7_title,The crypt is calling
+notif_away7_endless,Your Endless record is floor %d. Can you beat it?
+notif_away7_tower,Tower %d is waiting for you. Build a new body and try again!

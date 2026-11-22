@@ -1666,3 +1666,29 @@ card_earned_empty,Volte amanhã para o primeiro prêmio do dia.
 card_offer_text,"Sem anúncios, x2 liberado, skin exclusiva e +50% de pó em toda partida. Na hora: 500 diamantes, 3.000 de pó, relíquia rara e baú raro."
 btn_card_see,Ver o Cartão do Coveiro
 card_v_chest_one,Baú raro
+btn_relic_forge,Trocar e forjar (%d)
+btn_forge_all,Forjar tudo
+forge_sub,Repetidas fundem na equipada (+1 nível). 3 iguais viram 1 de raridade maior.
+relic_equipped_tag,Equipada
+btn_equip_relic,Equipar
+btn_fuse_relic,Fundir (+1 nível)
+btn_forge_relic,Forjar %d → %s
+btn_melt_relic,Derreter +%s
+forge_done,Forjado: %s!
+forge_all_fused,%d repetidas fundidas
+forge_all_forged,Forjado: %s
+forge_all_nothing,Nada para forjar agora
+chip_secret_forms,Formas secretas: %d/%d descobertas
+goal_boss,Objetivo: vencer %s (andar %d)
+goal_tower_unlock,Objetivo: vencer %s (andar %d) e abrir a próxima torre
+goal_next_tower,Torre vencida! Próximo desafio: Torre %d
+goal_endless,Todas as torres vencidas! Infinito: chegue ao andar %d
+goal_tower_cleared,Torre vencida! Que tal uma build nova?
+notif_away2_title,Seu esqueleto sente sua falta
+notif_away2_forms,Ainda faltam %d formas secretas para descobrir. Qual será a próxima?
+notif_away2_body,Monstros novos esperam na cripta. Seus ossos estão prontos?
+notif_away3_title,Prêmios guardados para você
+notif_away3_body,O calendário guardou seu prêmio e o Ossudo juntou pó de osso. Venha buscar!
+notif_away7_title,A cripta está chamando
+notif_away7_endless,Seu recorde no Infinito é o andar %d. Consegue passar dele?
+notif_away7_tower,A Torre %d espera por você. Monte um corpo novo e tente de novo!

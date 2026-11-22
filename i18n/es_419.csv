@@ -1666,3 +1666,29 @@ card_earned_empty,Vuelve mañana por tu primer premio del día.
 card_offer_text,"Sin anuncios, x2 desbloqueado, aspecto exclusivo y +50% de polvo en cada partida. Al instante: 500 diamantes, 3.000 de polvo, reliquia rara y cofre raro."
 btn_card_see,Ver la Tarjeta del Sepulturero
 card_v_chest_one,Cofre raro
+btn_relic_forge,Cambiar y forjar (%d)
+btn_forge_all,Forjar todo
+forge_sub,Las repetidas se funden en la equipada (+1 nivel). 3 iguales se vuelven 1 de rareza mayor.
+relic_equipped_tag,Equipada
+btn_equip_relic,Equipar
+btn_fuse_relic,Fundir (+1 nivel)
+btn_forge_relic,Forjar %d → %s
+btn_melt_relic,Derretir +%s
+forge_done,¡Forjado: %s!
+forge_all_fused,%d repetidas fundidas
+forge_all_forged,Forjado: %s
+forge_all_nothing,Nada que forjar ahora
+chip_secret_forms,Formas secretas: %d/%d descubiertas
+goal_boss,Objetivo: vencer a %s (piso %d)
+goal_tower_unlock,Objetivo: vencer a %s (piso %d) y abrir la siguiente torre
+goal_next_tower,¡Torre vencida! Próximo desafío: Torre %d
+goal_endless,¡Todas las torres vencidas! Infinito: llega al piso %d
+goal_tower_cleared,¡Torre vencida! ¿Qué tal una build nueva?
+notif_away2_title,Tu esqueleto te extraña
+notif_away2_forms,Aún faltan %d formas secretas por descubrir. ¿Cuál será la próxima?
+notif_away2_body,Monstruos nuevos esperan en la cripta. ¿Tus huesos están listos?
+notif_away3_title,Premios guardados para ti
+notif_away3_body,El calendario guardó tu premio y Ossudo juntó polvo de hueso. ¡Ven a buscarlo!
+notif_away7_title,La cripta te llama
+notif_away7_endless,Tu récord en el Infinito es el piso %d. ¿Puedes superarlo?
+notif_away7_tower,La Torre %d te espera. ¡Arma un cuerpo nuevo e inténtalo otra vez!

@@ -211,6 +211,10 @@
 		"max_stolen": 7
 	},
 	"relics": {
+		"_doc_forge": "Forja (1.4.3): fundir uma repetida igual dá +1 nível (fica com o nível maior das duas +1, até max_level); 3 iguais viram 1 da raridade seguinte do mesmo tipo (forge_count); derreter devolve melt_ratio do valor (melt_base pela raridade + pó gasto em níveis).",
+		"forge_count": 3,
+		"melt_ratio": 0.5,
+		"melt_base": {"common": 120, "rare": 300, "legendary": 900},
 		"upgrade_cost_base": 80,
 		"upgrade_cost_growth": 1.4,
 		"max_level": 10,

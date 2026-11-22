@@ -178,6 +178,10 @@ func _companion_gain(id: String) -> Control:
 
 func _relics() -> void:
 	var box := section("relics_title", tr("relics_sub"))
+	if Meta.relic_forge_available():
+		var fa := Style.button(tr("btn_forge_all"), "CandleButton", 64)
+		fa.pressed.connect(_forge_all)
+		box.add_child(fa)
 	var grid := GridContainer.new()
 	grid.columns = 2
 	grid.add_theme_constant_override("h_separation", 12)
@@ -218,11 +222,13 @@ func _relics() -> void:
 						Haptics.medium()
 						rebuild())
 				v.add_child(up)
-			var others := Meta.relics_owned().filter(func(x): return String(GameData.relics[x.id].slot) == slot and int(x.uid) != int(r.uid))
-			if not others.is_empty():
-				var sw := Style.button(tr("btn_switch"), "DarkButton", 52)
+			var others := Meta.relics_of_slot(slot).size() - 1
+			if others > 0:
+				# trocar e forjar na mesma janela (com rolagem: nunca passa da tela)
+				var sw := Style.button(tr("btn_relic_forge") % others, "DarkButton", 52)
+				sw.add_theme_font_size_override("font_size", 20)
 				var sl: String = slot
-				sw.pressed.connect(func(): _switch_relic(sl))
+				sw.pressed.connect(func(): _relic_forge_dialog(sl))
 				v.add_child(sw)
 		grid.add_child(c)
 	# baú de ossos
@@ -318,35 +324,151 @@ func _open_chest() -> void:
 	tw.tween_property(icon, "scale", Vector2.ONE, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 
-func _switch_relic(slot: String) -> void:
-	var bg := Widgets.dim_overlay(self, 0.8)
+## Forja das Relíquias de um tipo: equipar, fundir repetida na equipada (+1
+## nível), forjar 3 iguais em 1 melhor e derreter em pó. Lista com rolagem e
+## botões de fechar sempre visíveis (antes a lista passava da tela e prendia
+## quem tinha muitas relíquias).
+func _relic_forge_dialog(slot: String) -> void:
+	var bg := Widgets.dim_overlay(self, 0.85)
+	bg.name = "RelicForge"
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.add_child(center)
 	var p := Style.panel()
-	p.custom_minimum_size = Vector2(560, 0)
+	p.custom_minimum_size = Vector2(640, 0)
 	center.add_child(p)
-	var v := Style.vbox(12)
+	var v := Style.vbox(10)
 	p.add_child(v)
-	v.add_child(Style.title(tr(slot), 42))
-	for r in Meta.relics_owned():
-		if String(GameData.relics[r.id].slot) != slot:
+	v.add_child(Style.title(tr(slot), 40))
+	v.add_child(Style.label(tr("forge_sub"), 18, Style.C_MUTED, HORIZONTAL_ALIGNMENT_CENTER))
+	var sc := TouchScroll.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(sc)
+	var list := Style.vbox(10)
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.add_child(list)
+	var redo := func():
+		bg.queue_free()
+		rebuild()
+		_relic_forge_dialog.call_deferred(slot)
+	var eq := Meta.relic_equipped(slot)
+	# grupos: equipada sozinha; repetidas juntas por relíquia e nível
+	var groups := []
+	var seen := {}
+	for r in Meta.relics_of_slot(slot):
+		if Meta.relic_is_equipped(int(r.uid)):
+			groups.append({"r": r, "n": 1, "equipped": true})
 			continue
+		var key := "%s:%d" % [r.id, int(r.level)]
+		if seen.has(key):
+			groups[seen[key]].n += 1
+		else:
+			seen[key] = groups.size()
+			groups.append({"r": r, "n": 1, "equipped": false})
+	var forge_shown := {}
+	for gdata in groups:
+		var r: Dictionary = gdata.r
 		var rd: Dictionary = GameData.relics[r.id]
-		var b := Style.button(tr(String(rd.name)) + " +" + str(int(r.level) - 1), "DarkButton", 70)
-		b.icon = load("res://art/ui/%s.png" % r.id)
-		b.expand_icon = true
-		b.add_theme_constant_override("icon_max_width", 50)
+		var row := card(Color(Style.C_PANEL_2, 0.96), Style.C_CANDLE if gdata.equipped else Style.C_EDGE)
+		var rv := Style.vbox(6)
+		row.add_child(rv)
+		var h := Style.hbox(10)
+		h.add_child(Widgets.icon("res://art/ui/%s.png" % r.id, 56))
+		var tv := Style.vbox(2)
+		tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var title := tr(String(rd.name)) + " +" + str(int(r.level) - 1)
+		if int(gdata.n) > 1:
+			title += "  ×" + str(int(gdata.n))
+		tv.add_child(Style.bold(title, 20, Style.rarity_color(String(rd.rarity))))
+		tv.add_child(Style.label(Body.stats_compare_text({}, Meta.relic_stats_at(r, int(r.level))), 17, Style.C_TEXT))
+		if gdata.equipped:
+			tv.add_child(Style.bold(tr("relic_equipped_tag"), 16, Style.C_CANDLE))
+		h.add_child(tv)
+		rv.add_child(h)
+		if gdata.equipped:
+			list.add_child(row)
+			continue
+		var acts := HFlowContainer.new()
+		acts.add_theme_constant_override("h_separation", 8)
+		acts.add_theme_constant_override("v_separation", 8)
+		rv.add_child(acts)
 		var uid := int(r.uid)
-		b.pressed.connect(func():
+		var eb := Style.button(tr("btn_equip_relic"), "DarkButton", 50)
+		eb.add_theme_font_size_override("font_size", 18)
+		eb.pressed.connect(func():
 			Meta.equip_relic(uid)
+			Haptics.light()
+			redo.call())
+		acts.add_child(eb)
+		if not eq.is_empty() and Meta.relic_can_fuse(int(eq.uid), uid):
+			var fb := Style.button(tr("btn_fuse_relic"), "CandleButton", 50)
+			fb.add_theme_font_size_override("font_size", 18)
+			var eq_uid := int(eq.uid)
+			fb.pressed.connect(func():
+				if Meta.relic_fuse(eq_uid, uid):
+					Audio.play("upgrade")
+					Haptics.medium()
+					redo.call())
+			acts.add_child(fb)
+		var rid := String(r.id)
+		if Meta.relic_can_forge(rid) and not forge_shown.has(rid):
+			forge_shown[rid] = true
+			var nxt := Meta.relic_next_rarity_id(rid)
+			var gb := Style.button(tr("btn_forge_relic") % [int(GameData.bal("relics/forge_count", 3)), tr("rarity_" + String(GameData.relics[nxt].rarity))], "CandleButton", 50)
+			gb.add_theme_font_size_override("font_size", 18)
+			gb.pressed.connect(func():
+				var nr := Meta.relic_forge(rid)
+				if not nr.is_empty():
+					Audio.play("form")
+					Haptics.heavy()
+					toast(tr("forge_done") % tr(String(GameData.relics[nr.id].name)), Style.rarity_color(String(GameData.relics[nr.id].rarity)))
+					redo.call())
+			acts.add_child(gb)
+		var mv := Meta.relic_melt_value(r)
+		var mb := price_button(mv, "dust", true, "DarkButton")
+		mb.text = tr("btn_melt_relic") % Style.num(mv)
+		mb.custom_minimum_size = Vector2(0, 50)
+		mb.add_theme_font_size_override("font_size", 18)
+		mb.pressed.connect(func():
+			var got := Meta.relic_melt(uid)
+			if got > 0:
+				Audio.play("crush")
+				Haptics.light()
+				redo.call())
+		acts.add_child(mb)
+		list.add_child(row)
+	# altura da lista: cresce com o conteúdo, mas nunca passa da tela
+	var fit := func():
+		var avail := get_viewport_rect().size.y - 420.0
+		sc.custom_minimum_size = Vector2(0, minf(list.get_combined_minimum_size().y, maxf(240.0, avail)))
+	list.minimum_size_changed.connect(fit)
+	fit.call_deferred()
+	if Meta.relic_forge_available():
+		var fa := Style.button(tr("btn_forge_all"), "CandleButton", 60)
+		fa.pressed.connect(func():
 			bg.queue_free()
-			rebuild())
-		v.add_child(b)
+			_forge_all())
+		v.add_child(fa)
 	var close := Style.button(tr("btn_back"), "", 64)
-	close.pressed.connect(bg.queue_free)
+	close.pressed.connect(func():
+		bg.queue_free()
+		rebuild())
 	v.add_child(close)
 	Widgets.pop_in(p)
+
+
+## Forjar tudo: resumo do que aconteceu.
+func _forge_all() -> void:
+	var res := Meta.relic_forge_all()
+	Audio.play("form")
+	Haptics.heavy()
+	var parts := []
+	if int(res.fused) > 0:
+		parts.append(tr("forge_all_fused") % int(res.fused))
+	for id in res.forged:
+		parts.append(tr("forge_all_forged") % tr(String(GameData.relics[id].name)))
+	toast("\n".join(parts) if not parts.is_empty() else tr("forge_all_nothing"), Style.C_CANDLE)
+	rebuild()
 
 
 # ------------------------------------------------------------------ gabinete
