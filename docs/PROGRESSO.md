@@ -90,6 +90,11 @@
 - Continuar a partida (gravação por andar), acabamento visual (botões, feixe de raridade, cenários por região, maldição no topo, elite, números de dano, corpo recorde na tela inicial, molduras da Coleção) e correção do fechamento no Android 16.
 - Notas em `store/novidades_1.3.0.md`.
 
+### Versões 1.4.1 a 1.4.3
+- 1.4.1: comparação de ossos, Cartão do Coveiro carro-chefe (R$ 9,99), loja e menus mais leves.
+- 1.4.2: ícone novo (Ossinho dragão).
+- 1.4.3 (publicada em 22/11/2026, versionCode 163): Forja das Relíquias e correção da troca que prendia o jogador, companheira Corvina, objetivo e formas secretas na tela inicial, primeira abertura sem janelas, Kit 24h mais tarde, lembretes de 2/3/7 dias.
+
 ### Versão 1.3.1 e 1.4.0
 - 1.3.1: falhas do Play Console (anúncio x popup destruído; partículas de GPU no driver MediaTek).
 - 1.4.0: Modo Infinito (andares sem fim, recorde na tela inicial, no topo da partida e no fim), combate x2 por anúncio, desistir da partida, avaliação no Google Play, usos de diamante, Ossuário avançado, relíquias e Status mostrando ganhos, 6 monstros + 3 chefes + 15 ossos + 7 formas secretas, correções (raio do inimigo, botão de velocidade, cartão estreito). Notas em `store/novidades_1.4.0.md`.
