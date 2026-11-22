@@ -99,6 +99,9 @@ func step() -> Array:
 			elif h > 0.0:
 				_sync_last(f)
 	_companion_turn()
+	# a bicada da Corvina pode acabar com o último inimigo
+	if _check_end():
+		return _log
 	for en in enemies:
 		if en.alive() and en.guard_max > 0 and en.guard_broken_turns > 0:
 			en.guard_broken_turns -= 1
@@ -162,6 +165,19 @@ func _companion_turn() -> void:
 			_emit({"t": "heal", "dst": hero, "amount": h, "source": "companion"})
 		elif h > 0.0:
 			_sync_last(hero)
+	# Corvina: bica o inimigo com menos vida a cada N turnos (% do ataque do
+	# Ossinho, sem defesa: é um ataque certeiro do companheiro)
+	var peck := int(companion.get("peck_every", 0))
+	if peck > 0 and turn % peck == 0:
+		var targets := alive_enemies()
+		if not targets.is_empty():
+			targets.sort_custom(func(a, b): return a.hp < b.hp)
+			var t: Fighter = targets[0]
+			var dmg := maxf(1.0, roundf(hero.atk * float(companion.get("peck_pct", 0.3))))
+			t.hp -= dmg
+			_emit({"t": "companion_hit", "dst": t, "dmg": dmg})
+			if not t.alive():
+				_on_death(t)
 
 
 # ------------------------------------------------------------ Ossinho

@@ -1692,3 +1692,11 @@ notif_away3_body,El calendario guardó tu premio y Ossudo juntó polvo de hueso.
 notif_away7_title,La cripta te llama
 notif_away7_endless,Tu récord en el Infinito es el piso %d. ¿Puedes superarlo?
 notif_away7_tower,La Torre %d te espera. ¡Arma un cuerpo nuevo e inténtalo otra vez!
+companion_corvina_name,"Corvina, el cuervo de hueso"
+companion_role_striker,Ataque
+companion_corvina_desc,Picotea al enemigo más débil cada 2 turnos (40% del ataque de Huesito).
+companion_lock_companion_corvina,"Vence al Gólem Olvidado (Torre 1, piso 20)."
+companion_fx_corvina,picotea con %d%% del ataque cada %d turnos
+ability_companion_peck,Picotazo de Corvina
+log_companion_peck,Corvina picotea a %s: %d de daño
+companion_unlocked_banner,¡Nueva compañera: %s!

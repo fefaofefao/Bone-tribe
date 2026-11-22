@@ -541,6 +541,20 @@ static func companion_combat(id: String) -> Dictionary:
 	var out := e.duplicate()
 	if out.has("heal_pct"):
 		out.heal_pct = float(out.heal_pct) * (1.0 + float(c.get("per_level", 0.1)) * (companion_level(id) - 1))
+	if out.has("peck_pct"):
+		out.peck_pct = float(out.peck_pct) * (1.0 + float(c.get("per_level", 0.1)) * (companion_level(id) - 1))
+	return out
+
+
+## Companheiros liberados por chefe vencido ("unlock": "boss_<id>"): libera os
+## que faltam (inclusive para quem venceu o chefe antes desta versão).
+## Devolve os ids liberados agora.
+static func check_companion_unlocks() -> Array:
+	var out := []
+	for id in GameData.companions:
+		var u := String(GameData.companions[id].get("unlock", ""))
+		if u.begins_with("boss_") and Profile.boss_wins(u) > 0 and unlock_companion(id):
+			out.append(id)
 	return out
 
 
@@ -575,6 +589,10 @@ static func companion_effect_text(id: String, level: int) -> String:
 			return tr.call("companion_fx_lumi") % [String.num(pct * 100.0, 1), int(e.get("heal_every", 3))]
 		"companion_bigorna":
 			return tr.call("companion_fx_bigorna") % companion_uses_at(id, level)
+		"companion_corvina":
+			var pe: Dictionary = c.get("combat", {})
+			var pp := float(pe.get("peck_pct", 0.3)) * (1.0 + float(c.get("per_level", 0.1)) * (level - 1))
+			return tr.call("companion_fx_corvina") % [roundi(pp * 100.0), int(pe.get("peck_every", 2))]
 	return ""
 
 

@@ -1692,3 +1692,11 @@ notif_away3_body,O calendário guardou seu prêmio e o Ossudo juntou pó de osso
 notif_away7_title,A cripta está chamando
 notif_away7_endless,Seu recorde no Infinito é o andar %d. Consegue passar dele?
 notif_away7_tower,A Torre %d espera por você. Monte um corpo novo e tente de novo!
+companion_corvina_name,"Corvina, o corvo de ossos"
+companion_role_striker,Ataque
+companion_corvina_desc,Bica o inimigo mais fraco a cada 2 turnos (40% do ataque do Ossinho).
+companion_lock_companion_corvina,Vença o Golem Esquecido (andar 20 da Torre 1).
+companion_fx_corvina,bica com %d%% do ataque a cada %d turnos
+ability_companion_peck,Bicada da Corvina
+log_companion_peck,Corvina bica %s: %d de dano
+companion_unlocked_banner,Nova companheira: %s!

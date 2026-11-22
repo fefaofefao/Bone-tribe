@@ -1,6 +1,6 @@
 extends Node
 ## Simulação de equilíbrio (não altera o perfil real):
-##   godot --headless --path . res://tests/BalanceSim.tscn [-- players=40 runs=6]
+##   godot --headless --path . res://tests/BalanceSim.tscn [-- players=40 runs=6 companion=companion_lumi]
 ##   godot --headless --path . res://tests/BalanceSim.tscn -- mode=towers [players=12 runs=120]
 ##   godot --headless --path . res://tests/BalanceSim.tscn -- mode=endless [players=12 runs=120]
 ## Simula jogadores novos: a cada partida o pó de osso vira melhorias do Ossuário.
@@ -17,6 +17,10 @@ func _ready() -> void:
 	if args.get("mode", "") == "endless":
 		_endless(int(args.get("players", "12")), int(args.get("runs", "120")))
 		return
+	# companion=<id>: simula todos levando esse companheiro (nível 1)
+	var comp := String(args.get("companion", ""))
+	if comp != "":
+		Profile.data.companions[comp] = {"unlocked": true, "level": 1}
 	var players := int(args.get("players", "40"))
 	var runs := int(args.get("runs", "6"))
 	var backup: Dictionary = Profile.data.duplicate(true)
@@ -29,7 +33,7 @@ func _ready() -> void:
 		Profile.data.ossuary = {"hp": 0, "atk": 0, "def": 0, "drop": 0}
 		var bank := 0
 		for r in runs:
-			var ar := AutoRunner.new({"seed": p * 1000 + r})
+			var ar := AutoRunner.new({"seed": p * 1000 + r, "companion": comp})
 			var st := ar.play()
 			var rew := st.end_rewards()
 			bank += int(rew.total)

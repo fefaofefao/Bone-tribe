@@ -229,6 +229,7 @@ Isso transforma a derrota em uma história de vingança e cria um vilão que cad
 | Ossudo, o cão esqueleto | Coletor | 15% de chance de trazer um osso extra após cada combate |
 | Lumi, a vela fantasma | Cura | Cura 8% da vida do Ossinho a cada 3 turnos |
 | Bigorna, o ferreiro | Forja | Uma vez por partida, sobe um osso de comum para raro |
+| Corvina, o corvo de ossos | Ataque | Bica o inimigo com menos vida a cada 2 turnos (40% do ataque do Ossinho). Libera ao vencer o Golem Esquecido |
 
 O jogador leva 1 companheiro por partida. Cada um sobe de nível com pó de osso, e os personagens podem aparecer em Reino dos Ossos como referência cruzada.
 

@@ -1944,3 +1944,57 @@ func test_30_update_1_4_3() -> void:
 	check(Notify.scheduled.is_empty(), "voltar ao jogo cancela os lembretes")
 	Profile.data = backup
 	Profile.save()
+
+
+func test_31_companion_corvina() -> void:
+	var backup: Dictionary = Profile.data.duplicate(true)
+	check(GameData.companions.has("companion_corvina") and ResourceLoader.exists("res://art/ui/companion_corvina.png"), "Corvina existe e tem arte")
+	# liberação: vencer o Golem Esquecido (também para quem venceu antes da versão)
+	Profile.data.companions.erase("companion_corvina")
+	Profile.data.bosses_defeated.erase("boss_forgotten_golem")
+	check(Meta.check_companion_unlocks().is_empty() and not Meta.companion_unlocked("companion_corvina"), "Corvina trancada antes do Golem")
+	Profile.data.bosses_defeated["boss_forgotten_golem"] = 1
+	var got := Meta.check_companion_unlocks()
+	check(got == ["companion_corvina"] and Meta.companion_unlocked("companion_corvina"), "vencer o Golem libera a Corvina")
+	check(Meta.check_companion_unlocks().is_empty(), "liberação acontece uma vez só")
+	# combate: bica o inimigo com menos vida a cada 2 turnos
+	MonsterFactory.tower = 1
+	var st := RunState.new({"seed": 5, "companion": "companion_corvina"})
+	var hero := st.make_hero()
+	var en := [MonsterFactory.make("monster_corpse_bear", 6), MonsterFactory.make("monster_bone_wasp", 6)]
+	en[1].hp = 5.0
+	var comp := Meta.companion_combat("companion_corvina")
+	check(int(comp.peck_every) == 2 and is_equal_approx(float(comp.peck_pct), 0.4), "Corvina nível 1: 40% do ataque a cada 2 turnos")
+	var cb := Combat.new(hero, en, {"rng": st.rng, "companion": comp})
+	cb.step()
+	var pecks := 0
+	var evs := cb.step()
+	for ev in evs:
+		if String(ev.t) == "companion_hit":
+			pecks += 1
+			check(ev.dst == en[1], "bica o inimigo com menos vida")
+	check(pecks == 1, "uma bicada no 2º turno")
+	var ok_end := true
+	for sd in [1, 2, 3, 4, 5, 6, 7, 8]:
+		var s2 := RunState.new({"seed": sd, "companion": "companion_corvina"})
+		var h2 := s2.make_hero()
+		var e2 := [MonsterFactory.make("monster_bone_wasp", 3)]
+		e2[0].hp = 1.0
+		var c2 := Combat.new(h2, e2, {"rng": s2.rng, "companion": comp})
+		var guard := 0
+		while not c2.finished() and guard < 50:
+			guard += 1
+			c2.step()
+		if not c2.finished():
+			ok_end = false
+	check(ok_end, "combates com a Corvina sempre terminam (bicada que mata encerra)")
+	Profile.data.companions["companion_corvina"] = {"unlocked": true, "level": 10}
+	check(float(Meta.companion_combat("companion_corvina").peck_pct) > 0.7, "nível 10 bica mais forte")
+	check(Meta.companion_effect_text("companion_corvina", 1) != "" and Meta.companion_next_change("companion_corvina") == -1, "texto do efeito e nível máximo")
+	var src: String = load("res://scripts/scenes/run.gd").source_code
+	check(src.contains('"companion_hit":\n\t\t\t\tawait _anim_companion_hit(ev)'), "partida anima a bicada")
+	var ar := AutoRunner.new({"seed": 9, "companion": "companion_corvina"}).play()
+	check(ar.floor_n > 0, "partida automática com a Corvina")
+	MonsterFactory.tower = 1
+	Profile.data = backup
+	Profile.save()

@@ -128,6 +128,10 @@ func _after_open() -> void:
 		_hub_tips()
 		_refresh_currency()
 		return
+	# companheiro liberado por chefe já vencido (quem venceu o Golem antes da 1.4.3)
+	var newc := Meta.check_companion_unlocks()
+	if not newc.is_empty():
+		await RewardPopup.show_on(_ui, "rewards_title", newc.map(func(x): return {"type": "companion", "id": x})).closed
 	var sub := Store.claim_subscription(rng)
 	if not sub.is_empty():
 		await RewardPopup.show_on(_ui, "subscription_daily", sub).closed

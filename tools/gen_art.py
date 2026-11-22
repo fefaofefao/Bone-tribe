@@ -1893,9 +1893,62 @@ def hunter_hood():
     finish(cv, W, H, out("monsters", "boss_bone_hunter_hood.png"))
 
 
+def comp_corvina(cv, W, H):
+    """Corvina, o corvo de ossos (1.4.3): pousada numa lápide, asa aberta."""
+    by = H - 20
+    stone = Layer(W, H)
+    stone.rrect(70, by - 70, 200, by, 24)
+    paint(cv, stone, base=(110, 102, 124), shadow=(66, 60, 78), light=(150, 142, 162), outline_w=2.6)
+    crack = Layer(W, H)
+    crack.line([(120, by - 60), (128, by - 40), (118, by - 24)], 3)
+    fill(cv, crack, (60, 54, 70))
+    # asa aberta (penas escuras sobre ossos)
+    wing = Layer(W, H)
+    wing.poly([(118, by - 140), (30, by - 200), (40, by - 170), (16, by - 160), (44, by - 140), (26, by - 122), (70, by - 112), (110, by - 104)])
+    paint(cv, wing, base=(46, 36, 62), shadow=(24, 18, 34), light=(90, 74, 118), outline_w=2.6)
+    for (x0, y0, x1, y1) in [(112, by - 132, 34, by - 192), (110, by - 124, 22, by - 156), (108, by - 116, 34, by - 126)]:
+        bn = Layer(W, H)
+        bn.bone((x0, y0), (x1, y1), 3.6)
+        paint(cv, bn, outline_w=1.8)
+    # corpo (costelas) e cauda
+    tail = Layer(W, H)
+    tail.poly([(110, by - 96), (78, by - 66), (98, by - 70), (92, by - 54), (118, by - 82)])
+    paint(cv, tail, base=(46, 36, 62), shadow=(24, 18, 34), light=(90, 74, 118), outline_w=2.4)
+    body = Layer(W, H)
+    body.ellipse(140, by - 112, 34, 30)
+    paint(cv, body, base=(52, 42, 70), shadow=(28, 22, 38), light=(98, 82, 126), outline_w=2.6)
+    for i in range(3):
+        rib = Layer(W, H)
+        rib.curve([(124, by - 124 + i * 11), (142, by - 118 + i * 11), (160, by - 124 + i * 11)], 4)
+        paint(cv, rib, outline_w=1.4)
+    # pernas
+    for x in (132, 150):
+        lg = Layer(W, H)
+        lg.line([(x, by - 86), (x - 2, by - 70)], 4)
+        paint(cv, lg, outline_w=1.4)
+    # crânio de corvo com bico
+    beak = Layer(W, H)
+    beak.poly([(184, by - 160), (238, by - 148), (186, by - 138)])
+    paint(cv, beak, base=(214, 170, 70), shadow=(150, 110, 40), light=(250, 214, 120), outline_w=2.4)
+    draw_skull(cv, W, H, 170, by - 156, 30, eye_color=(185, 140, 255))
+    sp = Layer(W, H)
+    sp.circle(228, by - 178, 4)
+    sp.circle(212, by - 192, 3)
+    glow(cv, sp, (185, 140, 255), radius=6, strength=1.2)
+    fill(cv, sp, (220, 200, 255))
+
+
+def gen_corvina():
+    W, H = 260, 280
+    cv = new_canvas(W, H)
+    comp_corvina(cv, W, H)
+    finish(cv, W, H, out("ui", "companion_corvina.png"))
+    print("corvina ok")
+
+
 def gen_meta_art():
     from PIL import ImageOps
-    for cid, fn in (("companion_ossudo", comp_ossudo), ("companion_lumi", comp_lumi), ("companion_bigorna", comp_bigorna)):
+    for cid, fn in (("companion_ossudo", comp_ossudo), ("companion_lumi", comp_lumi), ("companion_bigorna", comp_bigorna), ("companion_corvina", comp_corvina)):
         W, H = 260, 280
         cv = new_canvas(W, H)
         fn(cv, W, H)

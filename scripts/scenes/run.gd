@@ -1535,6 +1535,8 @@ func _animate(evs: Array, killed: Array) -> void:
 				_relayout_enemies()
 				cam.shake(0.25)
 				await _wait(0.5)
+			"companion_hit":
+				await _anim_companion_hit(ev)
 			"special":
 				await _anim_special(ev)
 			"death":
@@ -1622,8 +1624,33 @@ func _log_event(ev: Dictionary) -> void:
 			_cp_log(tr("log_death") % _who(ev.dst), Style.C_BONE)
 		"stunned":
 			_cp_log(tr("log_stunned") % _who(ev.dst), Color("ffd84a"))
-	if combat_panel and is_instance_valid(combat_panel) and String(ev.t) in ["attack", "status", "summon", "death", "guard", "turn", "apply_status", "heal"]:
+		"companion_hit":
+			_cp_log(tr("log_companion_peck") % [_who(ev.dst), int(ev.dmg)], Color("b9a6ff"))
+	if combat_panel and is_instance_valid(combat_panel) and String(ev.t) in ["attack", "status", "summon", "death", "guard", "turn", "apply_status", "heal", "companion_hit"]:
 		combat_panel.refresh()
+
+
+## Corvina voa até o inimigo, bica e volta.
+func _anim_companion_hit(ev: Dictionary) -> void:
+	var dst: Fighter = ev.dst
+	var target := _pos_of(dst)
+	if companion_view:
+		var home := companion_view.position
+		var tw := create_tween()
+		tw.tween_property(companion_view, "global_position", target + Vector2(-60, -40), 0.16 / speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		await tw.finished
+	Audio.play("hit_crit")
+	fx.damage_number(target + Vector2(0, -60), "-%d" % int(ev.dmg), Color("b9a6ff"), false, 28)
+	var v := _view_of(dst)
+	if v and v != hero_view:
+		v.hit_anim(false)
+		v.refresh()
+	if companion_view:
+		var back := create_tween()
+		back.tween_property(companion_view, "position", Vector2(70, 772), 0.22 / speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		await back.finished
+	else:
+		await _wait(0.2)
 
 
 func _anim_attack(ev: Dictionary) -> void:
@@ -2325,6 +2352,12 @@ func _boss_floor(boss_id: String) -> void:
 	# (a 1ª vitória dele, com osso lendário e diamantes, continua nas torres)
 	if not state.endless or Profile.boss_wins(boss_id) > 0:
 		Profile.register_boss_win(boss_id)
+	# companheiro liberado por este chefe (Corvina: Golem Esquecido)
+	if not demo:
+		for cid in Meta.check_companion_unlocks():
+			_show_banner(tr("companion_unlocked_banner") % tr(String(GameData.companions[cid].name)).get_slice(",", 0), Color("b9a6ff"), 1.6)
+			Audio.play("form")
+			await _show_result(tr("companion_unlocked") % tr(String(GameData.companions[cid].name)))
 	if not demo:
 		Profile.stat_add("bosses")
 	Backend.log_event("boss_win", {"boss": boss_id, "floor": state.floor_n, "first": first})

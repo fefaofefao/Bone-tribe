@@ -215,6 +215,8 @@ func _refresh_hero_abilities() -> void:
 		lines.append(tr("special_" + String(e.get("action", ""))).trim_suffix("!") + " " + tr("next_in") % _turns_until(int(e.get("every", 3))))
 	if int(combat.companion.get("heal_every", 0)) > 0:
 		lines.append(tr("ability_companion_heal") + " " + tr("next_in") % _turns_until(int(combat.companion.heal_every)))
+	if int(combat.companion.get("peck_every", 0)) > 0:
+		lines.append(tr("ability_companion_peck") + " " + tr("next_in") % _turns_until(int(combat.companion.peck_every)))
 	if combat.hero.shield > 0.0:
 		lines.append(tr("ability_shield") % int(combat.hero.shield))
 	for l in lines:

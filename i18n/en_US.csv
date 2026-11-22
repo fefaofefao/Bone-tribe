@@ -1692,3 +1692,11 @@ notif_away3_body,Your calendar reward is waiting and Ossudo gathered bone dust. 
 notif_away7_title,The crypt is calling
 notif_away7_endless,Your Endless record is floor %d. Can you beat it?
 notif_away7_tower,Tower %d is waiting for you. Build a new body and try again!
+companion_corvina_name,"Corvina, the bone crow"
+companion_role_striker,Striker
+companion_corvina_desc,Pecks the weakest enemy every 2 turns (40% of Bonesy's attack).
+companion_lock_companion_corvina,"Beat the Forgotten Golem (Tower 1, floor 20)."
+companion_fx_corvina,pecks for %d%% of attack every %d turns
+ability_companion_peck,Corvina's peck
+log_companion_peck,Corvina pecks %s: %d damage
+companion_unlocked_banner,New companion: %s!

@@ -106,7 +106,7 @@ func _stat_value(stat: String, extra_levels: int = 0) -> String:
 
 func _companions() -> void:
 	var box := section("companions_title", tr("companions_sub"))
-	for id in ["companion_ossudo", "companion_lumi", "companion_bigorna"]:
+	for id in ["companion_ossudo", "companion_lumi", "companion_bigorna", "companion_corvina"]:
 		var c_data: Dictionary = GameData.companions.get(id, {})
 		var unlocked := Meta.companion_unlocked(id)
 		var selected: bool = String(Profile.data.get("selected_companion", "")) == id
