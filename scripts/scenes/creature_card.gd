@@ -49,10 +49,16 @@ func _ready() -> void:
 	root.add_child(row)
 	var again := Style.button(tr("btn_play_again"), "", 80)
 	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	again.pressed.connect(func(): Router.go("run", {"endless": bool(p.get("endless", false))}))
 	row.add_child(again)
 	var menu := Style.button(tr("btn_menu"), "DarkButton", 80)
 	menu.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# "Jogar de novo" também passa pelo intersticial (mesmas regras do retorno ao menu)
+	again.pressed.connect(func():
+		again.disabled = true
+		menu.disabled = true
+		if not bool(p.get("demo", false)):
+			await Ads.maybe_show_interstitial()
+		Router.go("run", {"endless": bool(p.get("endless", false))}))
 	menu.pressed.connect(func(): Router.go("title", {"after_run": not bool(p.get("demo", false))}))
 	row.add_child(menu)
 	_toast = Style.label("", 22, Style.C_TEXT, HORIZONTAL_ALIGNMENT_CENTER)

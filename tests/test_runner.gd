@@ -2030,3 +2030,22 @@ func test_32_combat_sync() -> void:
 	check(i_anim > 0 and i_wind > 0 and i_impact > i_wind, "golpe: barra muda depois do movimento, no impacto")
 	check(src.contains('if not (String(ev.t) in ["attack", "companion_hit"]) and not lifesteal:'), "golpes e roubo de vida não mudam a barra antes da hora")
 	check(src.find("await fx.orb_travel(") < src.find("_impact_hps(ev)", src.find("await fx.orb_travel(")), "roubo de vida: barra sobe quando a faísca chega")
+
+
+func test_33_interstitial_play_again() -> void:
+	var saved: Dictionary = Profile.data.duplicate(true)
+	check(int(GameData.shop.ads.interstitial.min_runs) == 2, "intersticial a partir do fim da 2ª partida")
+	Profile.data.ads.removed = false
+	Profile.data.subscription.until = 0
+	Profile.data.ads.last_interstitial = 0
+	Profile.data.runs_played = 1
+	check(not await Ads.maybe_show_interstitial(), "fim da 1ª partida: sem intersticial")
+	Profile.data.runs_played = 2
+	var seen := int(Profile.data.ads.interstitials_seen)
+	check(await Ads.maybe_show_interstitial(), "fim da 2ª partida: intersticial")
+	check(int(Profile.data.ads.interstitials_seen) == seen + 1, "conta o intersticial visto")
+	check(not await Ads.maybe_show_interstitial(), "no máximo 1 a cada 3 minutos")
+	var src := FileAccess.get_file_as_string("res://scripts/scenes/creature_card.gd")
+	var again_at := src.find("btn_play_again")
+	check(again_at > 0 and src.find("maybe_show_interstitial", again_at) > 0, "Jogar de novo passa pelo intersticial")
+	Profile.data = saved

@@ -25,7 +25,7 @@ Respostas baseadas no código do jogo (versão 1.1.0). "Não sei" = informação
 
 Máximo: 5 por partida + 6 por dia.
 
-**8. Intersticial:** a partir da 3ª partida, no máximo 1 a cada 3 minutos, sempre entre partidas (ao voltar para a tela inicial). Na prática, cerca de 1 por partida. **Sem banner.**
+**8. Intersticial:** a partir do fim da 2ª partida, no máximo 1 a cada 3 minutos, sempre entre partidas (ao voltar para a tela inicial ou ao tocar em Jogar de novo). Na prática, cerca de 1 por partida. **Sem banner.**
 
 **9. Compras** (preços BRL de referência; os preços finais por país vêm da Play Console)
 

@@ -64,14 +64,14 @@ func show_rewarded(placement: String) -> bool:
 	return granted
 
 
-## Intersticial só a partir da 3ª partida, no máximo um a cada 3 minutos,
-## sempre entre partidas. Retorna true se mostrou.
+## Intersticial a partir do fim da 2ª partida, no máximo um a cada 3 minutos,
+## sempre entre partidas (voltar ao menu ou jogar de novo). Retorna true se mostrou.
 func maybe_show_interstitial() -> bool:
 	var cfg: Dictionary = GameData.shop.get("ads", {}).get("interstitial", {})
 	var ads: Dictionary = Profile.data.ads
 	if ads.removed or Store.ad_free():
 		return false
-	if int(Profile.data.runs_played) < int(cfg.get("min_runs", 3)):
+	if int(Profile.data.runs_played) < int(cfg.get("min_runs", 2)):
 		return false
 	if Backend.now() - int(ads.last_interstitial) < int(cfg.get("min_interval_s", 180)):
 		return false

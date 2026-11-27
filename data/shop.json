@@ -330,7 +330,7 @@
 			"diamonds": 5
 		},
 		"interstitial": {
-			"min_runs": 3,
+			"min_runs": 2,
 			"min_interval_s": 180
 		},
 		"offline_double": {
