@@ -1493,7 +1493,11 @@ func _pos_of(f: Fighter) -> Vector2:
 
 func _animate(evs: Array, killed: Array) -> void:
 	for ev in evs:
-		_show_hps(ev)
+		# golpes mostram a vida nova no instante do impacto (barra, número,
+		# som e tremor juntos); o resto, na hora
+		var lifesteal := String(ev.t) == "heal" and String(ev.get("source", "")) == "lifesteal"
+		if not (String(ev.t) in ["attack", "companion_hit"]) and not lifesteal:
+			_show_hps(ev)
 		_log_event(ev)
 		match String(ev.t):
 			"attack":
@@ -1517,6 +1521,10 @@ func _animate(evs: Array, killed: Array) -> void:
 					fx.float_text(_pos_of(ev.dst) + Vector2(0, -90), tr("combat_stun"), Color("ffd84a"), 22)
 					Audio.play("stun")
 			"heal":
+				if String(ev.get("source", "")) == "lifesteal" and ev.dst.is_hero and _last_hit_pos != Vector2.ZERO:
+					await fx.orb_travel(_last_hit_pos + Vector2(0, -40), hero_view.body_center_global(), Color(0.45, 1.0, 0.6, 0.9), 0.2 / sqrt(speed))
+				if String(ev.get("source", "")) == "lifesteal":
+					_impact_hps(ev)
 				fx.damage_number(_pos_of(ev.dst) + Vector2(0, -70), "+%d" % int(ev.amount), Style.C_HEAL, false, 24)
 				if String(ev.get("source", "")) != "lifesteal" and String(ev.get("source", "")) != "regen":
 					Audio.play("heal")
@@ -1639,6 +1647,8 @@ func _anim_companion_hit(ev: Dictionary) -> void:
 		var tw := create_tween()
 		tw.tween_property(companion_view, "global_position", target + Vector2(-60, -40), 0.16 / speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		await tw.finished
+	_impact_hps(ev)
+	_last_hit_pos = target
 	Audio.play("hit_crit")
 	fx.damage_number(target + Vector2(0, -60), "-%d" % int(ev.dmg), Color("b9a6ff"), false, 28)
 	var v := _view_of(dst)
@@ -1669,6 +1679,10 @@ func _anim_attack(ev: Dictionary) -> void:
 			src_view.attack_anim(1.0, false)
 		fx.beam(_pos_of(src), _pos_of(dst), Color(0.75, 1.0, 0.6, 0.7), 5, 0.15)
 	var hit_pos := _pos_of(dst)
+	# impacto: agora a vida muda (barra do Ossinho, barra do monstro e painel)
+	_impact_hps(ev)
+	if src.is_hero or src.is_ally:
+		_last_hit_pos = hit_pos
 	if ev.dodged:
 		if dst_view:
 			dst_view.dodge_anim()
@@ -1713,6 +1727,19 @@ func _anim_attack(ev: Dictionary) -> void:
 	elif dst.is_hero:
 		Haptics.light()
 	await _wait(0.26 if kind != "ally" else 0.14)
+
+
+var _last_hit_pos := Vector2.ZERO
+
+
+func _impact_hps(ev: Dictionary) -> void:
+	_show_hps(ev)
+	for f in ev.get("hps", {}):
+		var v := _view_of(f) if is_instance_valid(f) else null
+		if v and v != hero_view:
+			v.refresh()
+	if combat_panel and is_instance_valid(combat_panel):
+		combat_panel.refresh()
 
 
 func _hitstop(t: float) -> void:

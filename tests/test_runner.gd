@@ -1998,3 +1998,35 @@ func test_31_companion_corvina() -> void:
 	MonsterFactory.tower = 1
 	Profile.data = backup
 	Profile.save()
+
+
+func test_32_combat_sync() -> void:
+	# números: dano à direita, cura à esquerda, e números seguidos no mesmo alvo empilham
+	var fx: Node = load("res://scripts/scenes/fx_layer.gd").new()
+	get_tree().root.add_child(fx)
+	await get_tree().process_frame
+	var pos := Vector2(400, 600)
+	fx.damage_number(pos, "12", Color.WHITE)
+	fx.damage_number(pos, "+5", Style.C_HEAL)
+	fx.damage_number(pos, "7", Color.WHITE)
+	var labels: Array = fx.get_children().filter(func(c): return c is Label)
+	check(labels.size() == 3, "três números criados")
+	if labels.size() == 3:
+		var dmg1: Label = labels[0]
+		var heal: Label = labels[1]
+		var dmg2: Label = labels[2]
+		check(heal.position.x + heal.size.x * 0.5 < dmg1.position.x + dmg1.size.x * 0.5 - 40.0, "cura nasce à esquerda do dano")
+		check(heal.position.y < dmg1.position.y - 20.0 and dmg2.position.y < heal.position.y - 20.0, "números seguidos no mesmo alvo sobem um degrau cada")
+	fx.float_text(Vector2(100, 100), "Bloqueado", Color.WHITE)
+	var ft: Label = fx.get_children().filter(func(c): return c is Label)[-1]
+	check(absf(ft.position.x + ft.size.x * 0.5 - 100.0) < 8.0, "textos (Bloqueado, Esquivou) continuam centralizados")
+	fx.queue_free()
+	await get_tree().process_frame
+	# impacto: a vida do golpe muda no impacto; o roubo de vida só quando a faísca chega
+	var src: String = load("res://scripts/scenes/run.gd").source_code
+	var i_anim := src.find("func _anim_attack(ev: Dictionary) -> void:")
+	var i_impact := src.find("_impact_hps(ev)", i_anim)
+	var i_wind := src.find("await _wait(0.12)", i_anim)
+	check(i_anim > 0 and i_wind > 0 and i_impact > i_wind, "golpe: barra muda depois do movimento, no impacto")
+	check(src.contains('if not (String(ev.t) in ["attack", "companion_hit"]) and not lifesteal:'), "golpes e roubo de vida não mudam a barra antes da hora")
+	check(src.find("await fx.orb_travel(") < src.find("_impact_hps(ev)", src.find("await fx.orb_travel(")), "roubo de vida: barra sobe quando a faísca chega")

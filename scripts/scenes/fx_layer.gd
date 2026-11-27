@@ -91,7 +91,28 @@ func light_flash(pos: Vector2, color: Color, energy := 1.2, size := 2.5, time :=
 	tw.tween_callback(l.queue_free)
 
 
-func damage_number(pos: Vector2, text: String, color: Color, crit := false, size_px := 34) -> void:
+## Números no mesmo alvo em sequência: o próximo sobe um degrau, em vez de
+## nascer em cima do anterior (golpe + cura, vários golpes seguidos).
+var _num_stack: Dictionary = {}   # célula do alvo -> {"t": ms, "n": degraus}
+
+
+func _stack_offset(pos: Vector2) -> float:
+	var key := Vector2i(int(pos.x / 60.0), int(pos.y / 60.0))
+	var now := Time.get_ticks_msec()
+	var e: Dictionary = _num_stack.get(key, {"t": 0, "n": 0})
+	var n := int(e.n) + 1 if now - int(e.t) < 450 else 0
+	_num_stack[key] = {"t": now, "n": mini(n, 3)}
+	return -34.0 * mini(n, 3)
+
+
+func damage_number(pos: Vector2, text: String, color: Color, crit := false, size_px := 34, sided := true) -> void:
+	# dano à direita do alvo, cura à esquerda: nunca no mesmo ponto
+	var heal := text.begins_with("+") and color.g > color.r and color.g > color.b
+	# empilha por alvo (antes de separar os lados): golpe e cura seguidos
+	# também sobem um degrau
+	pos.y += _stack_offset(pos)
+	if sided and not crit:
+		pos.x += -42.0 if heal else 30.0
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_override("font", Style.font_bold)
@@ -103,7 +124,7 @@ func damage_number(pos: Vector2, text: String, color: Color, crit := false, size
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.size = Vector2(260, fs + 12)
 	l.pivot_offset = l.size * 0.5
-	l.position = pos - l.size * 0.5 + Vector2(randf_range(-18, 18), 0)
+	l.position = pos - l.size * 0.5 + Vector2(randf_range(-6, 6), 0)
 	l.z_index = 60
 	add_child(l)
 	l.scale = Vector2.ONE * (0.3 if crit else 0.6)
@@ -115,11 +136,10 @@ func damage_number(pos: Vector2, text: String, color: Color, crit := false, size
 		l.rotation = deg_to_rad(randf_range(-14.0, -6.0))
 		var rt := l.create_tween()
 		rt.tween_property(l, "rotation", 0.0, 0.35).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-	elif text.begins_with("+") and color.g > color.r and color.g > color.b:
-		# cura: sobe fazendo um arco leve para o lado
-		var side := -1.0 if randf() < 0.5 else 1.0
+	elif heal:
+		# cura: sobe fazendo um arco leve para a esquerda (lado da cura)
 		var at := l.create_tween()
-		at.tween_property(l, "position:x", l.position.x + 34.0 * side, 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		at.tween_property(l, "position:x", l.position.x - 26.0, 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	var tw := l.create_tween()
 	tw.tween_property(l, "scale", Vector2.ONE * (1.35 if crit else 1.0), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.parallel().tween_property(l, "position:y", l.position.y - 46, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -130,8 +150,30 @@ func damage_number(pos: Vector2, text: String, color: Color, crit := false, size
 	tw.tween_callback(l.queue_free)
 
 
+## Faísca que viaja de um ponto a outro (roubo de vida: do inimigo ao Ossinho).
+## Use com await: termina quando chega.
+func orb_travel(from: Vector2, to: Vector2, color: Color, time := 0.22) -> void:
+	var s := Sprite2D.new()
+	s.texture = load("res://art/fx/fx_soft.png")
+	s.modulate = color
+	s.scale = Vector2.ONE * 0.5
+	s.global_position = from
+	s.z_index = 55
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	s.material = add
+	add_child(s)
+	var mid := (from + to) * 0.5 + Vector2(0, -90)
+	var tw := s.create_tween()
+	tw.tween_method(func(t: float):
+		s.global_position = from.lerp(mid, t).lerp(mid.lerp(to, t), t), 0.0, 1.0, time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tw.parallel().tween_property(s, "scale", Vector2.ONE * 0.8, time)
+	await tw.finished
+	s.queue_free()
+
+
 func float_text(pos: Vector2, text: String, color: Color, size_px := 28) -> void:
-	damage_number(pos, text, color, false, size_px)
+	damage_number(pos, text, color, false, size_px, false)
 
 
 func bone_burst(pos: Vector2, count := 12, big := false) -> void:
